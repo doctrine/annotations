@@ -3,8 +3,6 @@
 namespace Doctrine\Tests;
 
 use Doctrine\Tests\Common;
-use Doctrine\Tests\ORM;
-use Doctrine\Tests\DBAL;
 
 if (!defined('PHPUnit_MAIN_METHOD')) {
     define('PHPUnit_MAIN_METHOD', 'AllTests::main');
@@ -24,8 +22,6 @@ class AllTests
         $suite = new DoctrineTestSuite('Doctrine Tests');
 
         $suite->addTest(Common\AllTests::suite());
-        $suite->addTest(DBAL\AllTests::suite());
-        $suite->addTest(ORM\AllTests::suite());
 
         return $suite;
     }
