@@ -233,13 +233,12 @@ class Parser
         }
 
         // Effectively pick the name of the class (append default NS if none, grab from NS alias, etc)
-        if (count($nameParts) == 1) {
-            if (strpos($nameParts[0], ':')) {
-                list ($alias, $simpleName) = explode(':', $nameParts[0]);
-                $name = $this->_namespaceAliases[$alias] . $simpleName;
-            } else {
-                $name = $this->_defaultAnnotationNamespace . $nameParts[0];
-            }
+        if (strpos($nameParts[0], ':')) {
+            list ($alias, $nameParts[0]) = explode(':', $nameParts[0]);
+            $name = $this->_namespaceAliases[$alias] . implode('\\', $nameParts);
+        }
+        else if (count($nameParts) == 1) {
+            $name = $this->_defaultAnnotationNamespace . $nameParts[0];
         } else {
             $name = implode('\\', $nameParts);
         }
