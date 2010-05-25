@@ -95,7 +95,7 @@
         Builds distributable PEAR packages.
     -->
     <target name="build-packages" depends="build-common">
-        <d51pearpkg2 baseinstalldir="/" dir="${build.dir}/common/DoctrineCommon-${version}">
+        <d51pearpkg2 baseinstalldir="/" dir="${build.dir}/common">
            <name>DoctrineCommon</name>
            <summary>Common Doctrine code</summary>
            <channel>pear.doctrine-project.org</channel>
