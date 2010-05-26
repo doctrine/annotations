@@ -26,6 +26,9 @@
         <include name="Doctrine/Common/**"/>
     </fileset>
 
+    <!--
+        Clean the directory for the next build.
+    -->
     <target name="clean">
         <available file="./build.properties" property="build_properties_exist" value="true"/>
         <fail unless="build_properties_exist" message="The build.properties file is missing." />
@@ -35,6 +38,9 @@
         <delete dir="${report.dir}" includeemptydirs="true" />
     </target>
 
+    <!--
+        Prepare the new build directories after cleaning
+    -->
     <target name="prepare" depends="clean">
         <echo msg="Creating build directory: ${build.dir}" />
         <mkdir dir="${build.dir}" />
@@ -46,13 +52,18 @@
         <mkdir dir="${report.dir}/tests"/>
     </target>
 
+    <!--
+        Builds Common package, preparing it for distribution.
+    -->
     <target name="build-common">
         <copy todir="${build.dir}/common">
             <fileset refid="shared-artifacts"/>
         </copy>
-        <copy todir="${build.dir}/common/DoctrineCommon-${version}">
+        <copy todir="${build.dir}/common">
             <fileset refid="common-sources"/>
         </copy>
+        <exec command="sed 's/${version}-DEV/${version}/' ${build.dir}/common/Doctrine/Common/Version.php > ${build.dir}/common/Doctrine/Common/Version2.php" passthru="true" />
+        <exec command="mv ${build.dir}/common/Doctrine/Common/Version2.php ${build.dir}/common/Doctrine/Common/Version.php" passthru="true" />
     </target>
 
     <target name="build" depends="test, build-common"/>
@@ -77,7 +88,6 @@
         <phpunitreport infile="${build.dir}/logs/testsuites.xml" format="frames" todir="${report.dir}/tests" />
 
         <tstamp/>
-        <!--<svnlastrevision svnpath="${svn.path}" workingcopy="." propertyname="svn.lastrevision"/>-->
         <copy file="${build.dir}/logs/testsuites.xml" tofile="${log.archive.dir}/latest/log.xml" overwrite="true"/>
 
         <if><equals arg1="${test.pmd_reports}" arg2="1" />
@@ -112,6 +122,7 @@
                <pear minimum_version="1.6.0" recommended_version="1.6.1" />
            </dependencies>
         </d51pearpkg2>
-        <tar destfile="${dist.dir}/DoctrineCommon-${version_name}.tgz" basedir="${build.dir}/common" compression="gzip" />
+        <exec command="pear package" dir="${build.dir}/common" passthru="true" />
+        <exec command="mv DoctrineCommon-${version}.tgz ../../dist" dir="${build.dir}/common" passthru="true" />
     </target>
 </project>
