@@ -74,12 +74,29 @@ class Parser
     private $_context = '';
 
     /**
+     * Whether or not to try and autoload annotation classes
+     *
+     * @var boolean
+     */
+    private $_autoloadAnnotationClasses = false;
+
+    /**
      * Constructs a new AnnotationParser.
      *
      */
     public function __construct()
     {
         $this->_lexer = new Lexer;
+    }
+
+    /**
+     * Set whether or not to try and autoload annotation classes
+     *
+     * @param boolean $bool
+     */
+    public function setAutoloadAnnotationClasses($bool)
+    {
+        $this->_autoloadAnnotationClasses = $bool;
     }
 
     /**
@@ -248,7 +265,7 @@ class Parser
             ( ! $this->_isNestedAnnotation && $this->_lexer->lookahead != null &&
             ! $this->_lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS) &&
             ! $this->_lexer->isNextToken(Lexer::T_AT)) ||
-            ! class_exists($name, false)
+            ! class_exists($name, $this->_autoloadAnnotationClasses)
         ) {
             $this->_lexer->skipUntil(Lexer::T_AT);
 
