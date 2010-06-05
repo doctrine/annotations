@@ -109,7 +109,7 @@ class Parser
      *
      * @param string $docBlockString
      * @param string $context
-     * @return array Array of Annotations. If no annotations are found, an empty array is returned.
+     * @return array Array of annotations. If no annotations are found, an empty array is returned.
      */
     public function parse($docBlockString, $context='')
     {
@@ -215,7 +215,7 @@ class Parser
      * SimpleName     ::= identifier
      * Alias          ::= identifier
      *
-     * @return mixed False if it is not a valid Annotation; instance of Annotation subclass otherwise.
+     * @return mixed False if it is not a valid annotation.
      */
     public function Annotation()
     {
@@ -236,8 +236,7 @@ class Parser
         if (strpos($nameParts[0], ':')) {
             list ($alias, $nameParts[0]) = explode(':', $nameParts[0]);
             $name = $this->_namespaceAliases[$alias] . implode('\\', $nameParts);
-        }
-        else if (count($nameParts) == 1) {
+        } else if (count($nameParts) == 1) {
             $name = $this->_defaultAnnotationNamespace . $nameParts[0];
         } else {
             $name = implode('\\', $nameParts);
