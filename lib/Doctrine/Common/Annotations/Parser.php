@@ -19,25 +19,27 @@
 
 namespace Doctrine\Common\Annotations;
 
+use Doctrine\Common\ClassLoader;
+
 /**
  * A simple parser for docblock annotations.
  *
- * @since   2.0
- * @author  Benjamin Eberlei <kontakt@beberlei.de>
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
+ * @since 2.0
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author Jonathan Wage <jonwage@gmail.com>
+ * @author Roman Borschel <roman@code-factory.org>
  */
 class Parser
 {
     /**
-     * Tags that are stripped prior to parsing in order to reduce parsing overhead.
+     * Some common tags that are stripped prior to parsing in order to reduce parsing overhead.
      *
      * @var array
      */
-    private static $_strippedInlineTags = array(
-        "{@example", "{@id", "{@internal", "{@inheritdoc",
-        "{@link", "{@source", "{@toc", "{@tutorial", "*/"
+    private static $strippedTags = array(
+        "{@internal", "{@inheritdoc", "{@link", "@param", "@author", "@return",
+        "@since", "@var", "@see", "@deprecated", "@copyright"
     );
 
     /**
@@ -48,14 +50,14 @@ class Parser
     private $_lexer;
 
     /**
-     * Flag to control if the current Annotation is nested or not.
+     * Flag to control if the current annotation is nested or not.
      *
      * @var boolean
      */
     private $_isNestedAnnotation = false;
 
     /**
-     * Default namespace for Annotations.
+     * Default namespace for annotations.
      *
      * @var string
      */
@@ -75,7 +77,6 @@ class Parser
 
     /**
      * Constructs a new AnnotationParser.
-     *
      */
     public function __construct()
     {
@@ -86,7 +87,7 @@ class Parser
      * Sets the default namespace that is assumed for an annotation that does not
      * define a namespace prefix.
      *
-     * @param $defaultNamespace
+     * @param string $defaultNamespace
      */
     public function setDefaultAnnotationNamespace($defaultNamespace)
     {
@@ -96,8 +97,8 @@ class Parser
     /**
      * Sets an alias for an annotation namespace.
      *
-     * @param $namespace
-     * @param $alias
+     * @param string $namespace
+     * @param string $alias
      */
     public function setAnnotationNamespaceAlias($namespace, $alias)
     {
@@ -107,8 +108,8 @@ class Parser
     /**
      * Parses the given docblock string for annotations.
      *
-     * @param string $docBlockString
-     * @param string $context
+     * @param string $docBlockString The docblock string to parse.
+     * @param string $context The parsing context.
      * @return array Array of annotations. If no annotations are found, an empty array is returned.
      */
     public function parse($docBlockString, $context='')
@@ -116,7 +117,7 @@ class Parser
         $this->_context = $context;
 
         // Strip out some known inline tags.
-        $input = str_replace(self::$_strippedInlineTags, '', $docBlockString);
+        $input = str_replace(self::$strippedTags, '', $docBlockString);
 
         // Cut of the beginning of the input until the first '@'.
         $input = substr($input, strpos($input, '@'));
@@ -136,7 +137,7 @@ class Parser
      * Attempts to match the given token with the current lookahead token.
      * If they match, updates the lookahead token; otherwise raises a syntax error.
      *
-     * @param int|string token type or value
+     * @param int Token type.
      * @return bool True if tokens match; false otherwise.
      */
     public function match($token)
@@ -191,15 +192,15 @@ class Parser
 
         if ($annot !== false) {
             $annotations[get_class($annot)] = $annot;
+            $this->_lexer->skipUntil(Lexer::T_AT);
         }
 
         while ($this->_lexer->lookahead !== null && $this->_lexer->isNextToken(Lexer::T_AT)) {
             $this->_isNestedAnnotation = false;
-
             $annot = $this->Annotation();
-
             if ($annot !== false) {
                 $annotations[get_class($annot)] = $annot;
+                $this->_lexer->skipUntil(Lexer::T_AT);
             }
         }
 
@@ -242,15 +243,14 @@ class Parser
             $name = implode('\\', $nameParts);
         }
 
-        // Is it really an annotation class?
+        // Is it really an annotation?
         if (
             ( ! $this->_isNestedAnnotation && $this->_lexer->lookahead != null &&
             ! $this->_lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS) &&
             ! $this->_lexer->isNextToken(Lexer::T_AT)) ||
-            ! class_exists($name, true)
+            ! ClassLoader::classExists($name)
         ) {
             $this->_lexer->skipUntil(Lexer::T_AT);
-
             return false;
         }
 
