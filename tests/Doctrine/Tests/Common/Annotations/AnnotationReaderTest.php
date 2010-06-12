@@ -102,6 +102,17 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $reader->getPropertyAnnotations($property);
     }
 
+    /**
+     * @group regression
+     */
+    public function testMultipleAnnotationsOnSameLine()
+    {
+        $reader = $this->createAnnotationReader();
+        $class = new \ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClass2');
+        $annotations = $reader->getPropertyAnnotations($class->getProperty('id'));
+        $this->assertEquals(3, count($annotations));
+    }
+
     public function createAnnotationReader()
     {
         $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
@@ -147,6 +158,19 @@ class DummyClass {
     }
 }
 
+class DummyClass2 {
+    /**
+     * @DummyId @DummyColumn(type="integer") @DummyGeneratedValue
+     * @var integer
+     */
+    private $id;
+}
+
+class DummyId extends \Doctrine\Common\Annotations\Annotation {}
+class DummyColumn extends \Doctrine\Common\Annotations\Annotation {
+    public $type;
+}
+class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation {}
 class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
     public $dummyValue;
 }
