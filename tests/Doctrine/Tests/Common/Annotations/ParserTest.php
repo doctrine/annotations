@@ -89,6 +89,38 @@ DOCBLOCK;
         $this->assertEquals("bar", $annot->foo);
     }
 
+    /**
+     * @group debug
+     */
+    public function testTypicalMethodDocBlock()
+    {
+        $parser = $this->createTestParser();
+
+        $docblock = <<<DOCBLOCK
+/**
+ * Some nifty method.
+ *
+ * @since 2.0
+ * @Doctrine\Tests\Common\Annotations\Name(foo="bar")
+ * @param string \$foo This is foo.
+ * @param mixed \$bar This is bar.
+ * @return string Foo and bar.
+ * @This is irrelevant
+ * @Marker
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+        $this->assertEquals(2, count($result));
+        $this->assertTrue(isset($result['Doctrine\Tests\Common\Annotations\Name']));
+        $this->assertTrue(isset($result['Doctrine\Tests\Common\Annotations\Marker']));
+        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $this->assertTrue($annot instanceof Name);
+        $this->assertEquals("bar", $annot->foo);
+        $marker = $result['Doctrine\Tests\Common\Annotations\Marker'];
+        $this->assertTrue($marker instanceof Marker);
+    }
+
     public function testNamespaceAliasedAnnotations()
     {
         $parser = new Parser;
@@ -212,3 +244,5 @@ DOCBLOCK;
 class Name extends \Doctrine\Common\Annotations\Annotation {
     public $foo;
 }
+
+class Marker {}
