@@ -15,8 +15,25 @@ class ClassLoaderTest extends \Doctrine\Tests\DoctrineTestCase
         $classLoader->setFileExtension('.class.php');
         $classLoader->setNamespaceSeparator('_');
 
+        $this->assertTrue($classLoader->canLoadClass('ClassLoaderTest_ClassA'));
+        $this->assertTrue($classLoader->canLoadClass('ClassLoaderTest_ClassB'));
+        $this->assertTrue($classLoader->canLoadClass('ClassLoaderTest_ClassC'));
+        $this->assertFalse($classLoader->canLoadClass('OtherClass'));
         $this->assertEquals($classLoader->loadClass('ClassLoaderTest_ClassA'), true);
         $this->assertEquals($classLoader->loadClass('ClassLoaderTest_ClassB'), true);
         $this->assertEquals($classLoader->loadClass('ClassLoaderTest_ClassC'), true);
+    }
+
+    public function testClassExists()
+    {
+        $this->assertEquals(1, count(spl_autoload_functions()));
+        $this->assertFalse(ClassLoader::classExists('ClassD'));
+        $badLoader = function($className) {
+            require __DIR__ . '/ClassLoaderTest/ClassD.php';
+            return true;
+        };
+        spl_autoload_register($badLoader);
+        $this->assertTrue(ClassLoader::classExists('ClassD'));
+        spl_autoload_unregister($badLoader);
     }
 }

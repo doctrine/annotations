@@ -193,6 +193,7 @@ class ClassLoader
         if (class_exists($className, false)) {
             return true;
         }
+
         foreach (spl_autoload_functions() as $loader) {
             if (is_array($loader)) { // array(???, ???)
                 if (is_object($loader[0])) {
@@ -210,8 +211,11 @@ class ClassLoader
                 if ($loader($className)) {
                     return true;
                 }
+            } else if (is_string($loader) && $loader($className)) {
+                return true;
             }
         }
+
         return false;
     }
 }
