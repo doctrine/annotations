@@ -33,10 +33,10 @@ namespace Doctrine\Common;
  */
 class ClassLoader
 {
-    private $_fileExtension = '.php';
-    private $_namespace;
-    private $_includePath;
-    private $_namespaceSeparator = '\\';
+    private $fileExtension = '.php';
+    private $namespace;
+    private $includePath;
+    private $namespaceSeparator = '\\';
 
     /**
      * Creates a new <tt>ClassLoader</tt> that loads classes of the
@@ -51,8 +51,8 @@ class ClassLoader
      */
     public function __construct($ns = null, $includePath = null)
     {
-        $this->_namespace = $ns;
-        $this->_includePath = $includePath;
+        $this->namespace = $ns;
+        $this->includePath = $includePath;
     }
 
     /**
@@ -62,7 +62,7 @@ class ClassLoader
      */
     public function setNamespaceSeparator($sep)
     {
-        $this->_namespaceSeparator = $sep;
+        $this->namespaceSeparator = $sep;
     }
 
     /**
@@ -72,7 +72,7 @@ class ClassLoader
      */
     public function getNamespaceSeparator()
     {
-        return $this->_namespaceSeparator;
+        return $this->namespaceSeparator;
     }
 
     /**
@@ -82,7 +82,7 @@ class ClassLoader
      */
     public function setIncludePath($includePath)
     {
-        $this->_includePath = $includePath;
+        $this->includePath = $includePath;
     }
 
     /**
@@ -92,7 +92,7 @@ class ClassLoader
      */
     public function getIncludePath()
     {
-        return $this->_includePath;
+        return $this->includePath;
     }
 
     /**
@@ -102,7 +102,7 @@ class ClassLoader
      */
     public function setFileExtension($fileExtension)
     {
-        $this->_fileExtension = $fileExtension;
+        $this->fileExtension = $fileExtension;
     }
 
     /**
@@ -112,7 +112,7 @@ class ClassLoader
      */
     public function getFileExtension()
     {
-        return $this->_fileExtension;
+        return $this->fileExtension;
     }
 
     /**
@@ -139,13 +139,13 @@ class ClassLoader
      */
     public function loadClass($className)
     {
-        if ($this->_namespace !== null && strpos($className, $this->_namespace.$this->_namespaceSeparator) !== 0) {
+        if ($this->namespace !== null && strpos($className, $this->namespace.$this->namespaceSeparator) !== 0) {
             return false;
         }
 
-        require ($this->_includePath !== null ? $this->_includePath . DIRECTORY_SEPARATOR : '')
-               . str_replace($this->_namespaceSeparator, DIRECTORY_SEPARATOR, $className)
-               . $this->_fileExtension;
+        require ($this->includePath !== null ? $this->includePath . DIRECTORY_SEPARATOR : '')
+               . str_replace($this->namespaceSeparator, DIRECTORY_SEPARATOR, $className)
+               . $this->fileExtension;
         
         return true;
     }
@@ -159,12 +159,12 @@ class ClassLoader
      */
     public function canLoadClass($className)
     {
-        if ($this->_namespace !== null && strpos($className, $this->_namespace.$this->_namespaceSeparator) !== 0) {
+        if ($this->namespace !== null && strpos($className, $this->namespace.$this->namespaceSeparator) !== 0) {
             return false;
         }
-        return file_exists(($this->_includePath !== null ? $this->_includePath . DIRECTORY_SEPARATOR : '')
-               . str_replace($this->_namespaceSeparator, DIRECTORY_SEPARATOR, $className)
-               . $this->_fileExtension);
+        return file_exists(($this->includePath !== null ? $this->includePath . DIRECTORY_SEPARATOR : '')
+               . str_replace($this->namespaceSeparator, DIRECTORY_SEPARATOR, $className)
+               . $this->fileExtension);
     }
 
     /**
@@ -207,15 +207,34 @@ class ClassLoader
                 } else if ($loader[0]::$loader[1]($className)) { // array('ClassName', 'methodName')
                     return true;
                 }
-            } else if ($loader instanceof \Closure) {
+            } else if ($loader instanceof \Closure) { // function($className) {..}
                 if ($loader($className)) {
                     return true;
                 }
-            } else if (is_string($loader) && $loader($className)) {
+            } else if (is_string($loader) && $loader($className)) { // "MyClass::loadClass"
                 return true;
             }
         }
 
         return false;
+    }
+
+    /**
+     * Gets the <tt>ClassLoader</tt> from the SPL autoload stack that is responsible
+     * for (and is able to load) the class with the given name.
+     *
+     * @param string $className The name of the class.
+     * @return The <tt>ClassLoader</tt> for the class or NULL if no such <tt>ClassLoader</tt> exists.
+     */
+    public static function getClassLoader($className)
+    {
+         foreach (spl_autoload_functions() as $loader) {
+            if (is_array($loader) && $loader[0] instanceof ClassLoader &&
+                    $loader[0]->canLoadClass($className)) {
+                return $loader[0];
+            }
+        }
+
+        return null;
     }
 }

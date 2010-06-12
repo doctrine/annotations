@@ -33,17 +33,17 @@ abstract class Lexer
     /**
      * @var array Array of scanned tokens
      */
-    private $_tokens = array();
+    private $tokens = array();
 
     /**
      * @var integer Current lexer position in input string
      */
-    private $_position = 0;
+    private $position = 0;
 
     /**
      * @var integer Current peek of current lexer position
      */
-    private $_peek = 0;
+    private $peek = 0;
 
     /**
      * @var array The next token in the input.
@@ -65,7 +65,7 @@ abstract class Lexer
      */
     public function setInput($input)
     {
-        $this->_tokens = array();
+        $this->tokens = array();
         $this->reset();
         $this->_scan($input);
     }
@@ -77,8 +77,8 @@ abstract class Lexer
     {
         $this->lookahead = null;
         $this->token = null;
-        $this->_peek = 0;
-        $this->_position = 0;
+        $this->peek = 0;
+        $this->position = 0;
     }
 
     /**
@@ -86,7 +86,7 @@ abstract class Lexer
      */
     public function resetPeek()
     {
-        $this->_peek = 0;
+        $this->peek = 0;
     }
 
     /**
@@ -96,7 +96,7 @@ abstract class Lexer
      */
     public function resetPosition($position = 0)
     {
-        $this->_position = $position;
+        $this->position = $position;
     }
     
     /**
@@ -123,10 +123,10 @@ abstract class Lexer
      */
     public function moveNext()
     {
-        $this->_peek = 0;
+        $this->peek = 0;
         $this->token = $this->lookahead;
-        $this->lookahead = (isset($this->_tokens[$this->_position]))
-            ? $this->_tokens[$this->_position++] : null;
+        $this->lookahead = (isset($this->tokens[$this->position]))
+            ? $this->tokens[$this->position++] : null;
         
         return $this->lookahead !== null;
     }
@@ -162,8 +162,8 @@ abstract class Lexer
      */
     public function peek()
     {
-        if (isset($this->_tokens[$this->_position + $this->_peek])) {
-            return $this->_tokens[$this->_position + $this->_peek++];
+        if (isset($this->tokens[$this->position + $this->peek])) {
+            return $this->tokens[$this->position + $this->peek++];
         } else {
             return null;
         }
@@ -177,7 +177,7 @@ abstract class Lexer
     public function glimpse()
     {
         $peek = $this->peek();
-        $this->_peek = 0;
+        $this->peek = 0;
         return $peek;
     }
     
@@ -202,7 +202,7 @@ abstract class Lexer
             // Must remain before 'value' assignment since it can change content
             $type = $this->_getType($match[0]);
             
-            $this->_tokens[] = array(
+            $this->tokens[] = array(
                 'value' => $match[0],
                 'type'  => $type,
                 'position' => $match[1],

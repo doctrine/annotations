@@ -1,7 +1,5 @@
 <?php
 /*
- *  $Id$
- *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -24,10 +22,7 @@ namespace Doctrine\Common\Annotations;
 /**
  * Simple lexer for docblock annotations.
  *
- * @license http://www.opensource.org/licenses/lgpl-license.php LGPL
- * @link    www.doctrine-project.org
  * @since   2.0
- * @version $Revision$
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
  * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author  Jonathan Wage <jonwage@gmail.com>
@@ -78,7 +73,7 @@ class Lexer extends \Doctrine\Common\Lexer
     protected function _getType(&$value)
     {
         $type = self::T_NONE;
-        $newVal = $this->_getNumeric($value);
+        $newVal = $this->getNumeric($value);
         
         // Checking numeric value
         if ($newVal !== false) {
@@ -139,8 +134,9 @@ class Lexer extends \Doctrine\Common\Lexer
      *
      * @param mixed $value Value to be inspected
      * @return boolean|integer|float Processed value
+     * @todo Inline
      */
-    private function _getNumeric($value)
+    private function getNumeric($value)
     {
         if ( ! is_scalar($value)) {
             return false;

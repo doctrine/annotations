@@ -48,14 +48,14 @@ class AnnotationReader
      *
      * @var Doctrine\Common\Annotations\Parser
      */
-    private $_parser;
+    private $parser;
     
     /**
      * Cache mechanism to store processed Annotations
      *
      * @var Doctrine\Common\Cache\Cache
      */
-    private $_cache;
+    private $cache;
     
     /**
      * Constructor. Initializes a new AnnotationReader that uses the given Cache provider.
@@ -64,18 +64,18 @@ class AnnotationReader
      */
     public function __construct(Cache $cache = null)
     {
-        $this->_parser = new Parser;
-        $this->_cache = $cache ?: new \Doctrine\Common\Cache\ArrayCache;
+        $this->parser = new Parser;
+        $this->cache = $cache ?: new \Doctrine\Common\Cache\ArrayCache;
     }
 
     /**
-     * Set whether or not to try and autoload annotation classes
+     * Set whether or not to try and autoload annotation classes.
      *
      * @param boolean $bool
      */
     public function setAutoloadAnnotationClasses($bool)
     {
-        $this->_parser->setAutoloadAnnotationClasses($bool);
+        $this->parser->setAutoloadAnnotationClasses($bool);
     }
 
     /**
@@ -86,7 +86,7 @@ class AnnotationReader
      */
     public function setDefaultAnnotationNamespace($defaultNamespace)
     {
-        $this->_parser->setDefaultAnnotationNamespace($defaultNamespace);
+        $this->parser->setDefaultAnnotationNamespace($defaultNamespace);
     }
 
     /**
@@ -97,7 +97,7 @@ class AnnotationReader
      */
     public function setAnnotationNamespaceAlias($namespace, $alias)
     {
-        $this->_parser->setAnnotationNamespaceAlias($namespace, $alias);
+        $this->parser->setAnnotationNamespaceAlias($namespace, $alias);
     }
 
     /**
@@ -112,12 +112,12 @@ class AnnotationReader
         $cacheKey = $class->getName() . self::$CACHE_SALT;
 
         // Attempt to grab data from cache
-        if (($data = $this->_cache->fetch($cacheKey)) !== false) {
+        if (($data = $this->cache->fetch($cacheKey)) !== false) {
             return $data;
         }
         
-        $annotations = $this->_parser->parse($class->getDocComment(), 'class ' . $class->getName());
-        $this->_cache->save($cacheKey, $annotations, null);
+        $annotations = $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
+        $this->cache->save($cacheKey, $annotations, null);
         
         return $annotations;
     }
@@ -149,13 +149,13 @@ class AnnotationReader
         $cacheKey = $property->getDeclaringClass()->getName() . '$' . $property->getName() . self::$CACHE_SALT;
 
         // Attempt to grab data from cache
-        if (($data = $this->_cache->fetch($cacheKey)) !== false) {
+        if (($data = $this->cache->fetch($cacheKey)) !== false) {
             return $data;
         }
         
         $context = 'property ' . $property->getDeclaringClass()->getName() . "::\$" . $property->getName();
-        $annotations = $this->_parser->parse($property->getDocComment(), $context);
-        $this->_cache->save($cacheKey, $annotations, null);
+        $annotations = $this->parser->parse($property->getDocComment(), $context);
+        $this->cache->save($cacheKey, $annotations, null);
         
         return $annotations;
     }
@@ -187,13 +187,13 @@ class AnnotationReader
         $cacheKey = $method->getDeclaringClass()->getName() . '#' . $method->getName() . self::$CACHE_SALT;
 
         // Attempt to grab data from cache
-        if (($data = $this->_cache->fetch($cacheKey)) !== false) {
+        if (($data = $this->cache->fetch($cacheKey)) !== false) {
             return $data;
         } 
 
         $context = 'method ' . $method->getDeclaringClass()->getName() . '::' . $method->getName() . '()';
-        $annotations = $this->_parser->parse($method->getDocComment(), $context);
-        $this->_cache->save($cacheKey, $annotations, null);
+        $annotations = $this->parser->parse($method->getDocComment(), $context);
+        $this->cache->save($cacheKey, $annotations, null);
         
         return $annotations;
     }

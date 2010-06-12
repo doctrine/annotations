@@ -47,40 +47,40 @@ class Parser
      *
      * @var Doctrine\Common\Annotations\Lexer
      */
-    private $_lexer;
+    private $lexer;
 
     /**
      * Flag to control if the current annotation is nested or not.
      *
      * @var boolean
      */
-    private $_isNestedAnnotation = false;
+    private $isNestedAnnotation = false;
 
     /**
      * Default namespace for annotations.
      *
      * @var string
      */
-    private $_defaultAnnotationNamespace = '';
+    private $defaultAnnotationNamespace = '';
 
     /**
      * Hashmap to store namespace aliases.
      *
      * @var array
      */
-    private $_namespaceAliases = array();
+    private $namespaceAliases = array();
 
     /**
      * @var string
      */
-    private $_context = '';
+    private $context = '';
 
     /**
      * Constructs a new AnnotationParser.
      */
     public function __construct()
     {
-        $this->_lexer = new Lexer;
+        $this->lexer = new Lexer;
     }
 
     /**
@@ -91,7 +91,7 @@ class Parser
      */
     public function setDefaultAnnotationNamespace($defaultNamespace)
     {
-        $this->_defaultAnnotationNamespace = $defaultNamespace;
+        $this->defaultAnnotationNamespace = $defaultNamespace;
     }
 
     /**
@@ -102,7 +102,7 @@ class Parser
      */
     public function setAnnotationNamespaceAlias($namespace, $alias)
     {
-        $this->_namespaceAliases[$alias] = $namespace;
+        $this->namespaceAliases[$alias] = $namespace;
     }
 
     /**
@@ -114,7 +114,7 @@ class Parser
      */
     public function parse($docBlockString, $context='')
     {
-        $this->_context = $context;
+        $this->context = $context;
 
         // Strip out some known inline tags.
         $input = str_replace(self::$strippedTags, '', $docBlockString);
@@ -122,11 +122,11 @@ class Parser
         // Cut of the beginning of the input until the first '@'.
         $input = substr($input, strpos($input, '@'));
 
-        $this->_lexer->reset();
-        $this->_lexer->setInput(trim($input, '* /'));
-        $this->_lexer->moveNext();
+        $this->lexer->reset();
+        $this->lexer->setInput(trim($input, '* /'));
+        $this->lexer->moveNext();
 
-        if ($this->_lexer->isNextToken(Lexer::T_AT)) {
+        if ($this->lexer->isNextToken(Lexer::T_AT)) {
             return $this->Annotations();
         }
 
@@ -142,10 +142,10 @@ class Parser
      */
     public function match($token)
     {
-        if ( ! ($this->_lexer->lookahead['type'] === $token)) {
-            $this->syntaxError($this->_lexer->getLiteral($token));
+        if ( ! ($this->lexer->lookahead['type'] === $token)) {
+            $this->syntaxError($this->lexer->getLiteral($token));
         }
-        $this->_lexer->moveNext();
+        $this->lexer->moveNext();
     }
 
     /**
@@ -158,19 +158,19 @@ class Parser
     private function syntaxError($expected, $token = null)
     {
         if ($token === null) {
-            $token = $this->_lexer->lookahead;
+            $token = $this->lexer->lookahead;
         }
 
         $message =  "Expected {$expected}, got ";
 
-        if ($this->_lexer->lookahead === null) {
+        if ($this->lexer->lookahead === null) {
             $message .= 'end of string';
         } else {
             $message .= "'{$token['value']}' at position {$token['position']}";
         }
 
-        if (strlen($this->_context)) {
-            $message .= ' in ' . $this->_context;
+        if (strlen($this->context)) {
+            $message .= ' in ' . $this->context;
         }
 
         $message .= '.';
@@ -185,22 +185,22 @@ class Parser
      */
     public function Annotations()
     {
-        $this->_isNestedAnnotation = false;
+        $this->isNestedAnnotation = false;
 
         $annotations = array();
         $annot = $this->Annotation();
 
         if ($annot !== false) {
             $annotations[get_class($annot)] = $annot;
-            $this->_lexer->skipUntil(Lexer::T_AT);
+            $this->lexer->skipUntil(Lexer::T_AT);
         }
 
-        while ($this->_lexer->lookahead !== null && $this->_lexer->isNextToken(Lexer::T_AT)) {
-            $this->_isNestedAnnotation = false;
+        while ($this->lexer->lookahead !== null && $this->lexer->isNextToken(Lexer::T_AT)) {
+            $this->isNestedAnnotation = false;
             $annot = $this->Annotation();
             if ($annot !== false) {
                 $annotations[get_class($annot)] = $annot;
-                $this->_lexer->skipUntil(Lexer::T_AT);
+                $this->lexer->skipUntil(Lexer::T_AT);
             }
         }
 
@@ -225,42 +225,42 @@ class Parser
 
         $this->match(Lexer::T_AT);
         $this->match(Lexer::T_IDENTIFIER);
-        $nameParts[] = $this->_lexer->token['value'];
+        $nameParts[] = $this->lexer->token['value'];
 
-        while ($this->_lexer->isNextToken(Lexer::T_NAMESPACE_SEPARATOR)) {
+        while ($this->lexer->isNextToken(Lexer::T_NAMESPACE_SEPARATOR)) {
             $this->match(Lexer::T_NAMESPACE_SEPARATOR);
             $this->match(Lexer::T_IDENTIFIER);
-            $nameParts[] = $this->_lexer->token['value'];
+            $nameParts[] = $this->lexer->token['value'];
         }
 
         // Effectively pick the name of the class (append default NS if none, grab from NS alias, etc)
         if (strpos($nameParts[0], ':')) {
             list ($alias, $nameParts[0]) = explode(':', $nameParts[0]);
-            $name = $this->_namespaceAliases[$alias] . implode('\\', $nameParts);
+            $name = $this->namespaceAliases[$alias] . implode('\\', $nameParts);
         } else if (count($nameParts) == 1) {
-            $name = $this->_defaultAnnotationNamespace . $nameParts[0];
+            $name = $this->defaultAnnotationNamespace . $nameParts[0];
         } else {
             $name = implode('\\', $nameParts);
         }
 
         // Is it really an annotation?
         if (
-            ( ! $this->_isNestedAnnotation && $this->_lexer->lookahead != null &&
-            ! $this->_lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS) &&
-            ! $this->_lexer->isNextToken(Lexer::T_AT)) ||
+            ( ! $this->isNestedAnnotation && $this->lexer->lookahead != null &&
+            ! $this->lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS) &&
+            ! $this->lexer->isNextToken(Lexer::T_AT)) ||
             ! ClassLoader::classExists($name)
         ) {
-            $this->_lexer->skipUntil(Lexer::T_AT);
+            $this->lexer->skipUntil(Lexer::T_AT);
             return false;
         }
 
         // Next will be nested
-        $this->_isNestedAnnotation = true;
+        $this->isNestedAnnotation = true;
 
-        if ($this->_lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS)) {
+        if ($this->lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS)) {
             $this->match(Lexer::T_OPEN_PARENTHESIS);
 
-            if ( ! $this->_lexer->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
+            if ( ! $this->lexer->isNextToken(Lexer::T_CLOSE_PARENTHESIS)) {
                 $values = $this->Values();
             }
 
@@ -280,14 +280,14 @@ class Parser
         $values = array();
 
         // Handle the case of a single array as value, i.e. @Foo({....})
-        if ($this->_lexer->isNextToken(Lexer::T_OPEN_CURLY_BRACES)) {
+        if ($this->lexer->isNextToken(Lexer::T_OPEN_CURLY_BRACES)) {
             $values['value'] = $this->Value();
             return $values;
         }
 
         $values[] = $this->Value();
 
-        while ($this->_lexer->isNextToken(Lexer::T_COMMA)) {
+        while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
             $this->match(Lexer::T_COMMA);
             $value = $this->Value();
 
@@ -319,7 +319,7 @@ class Parser
      */
     public function Value()
     {
-        $peek = $this->_lexer->glimpse();
+        $peek = $this->lexer->glimpse();
 
         if ($peek['value'] === '=') {
             return $this->FieldAssignment();
@@ -335,26 +335,26 @@ class Parser
      */
     public function PlainValue()
     {
-        if ($this->_lexer->isNextToken(Lexer::T_OPEN_CURLY_BRACES)) {
+        if ($this->lexer->isNextToken(Lexer::T_OPEN_CURLY_BRACES)) {
             return $this->Arrayx();
         }
 
-        if ($this->_lexer->isNextToken(Lexer::T_AT)) {
+        if ($this->lexer->isNextToken(Lexer::T_AT)) {
             return $this->Annotation();
         }
 
-        switch ($this->_lexer->lookahead['type']) {
+        switch ($this->lexer->lookahead['type']) {
             case Lexer::T_STRING:
                 $this->match(Lexer::T_STRING);
-                return $this->_lexer->token['value'];
+                return $this->lexer->token['value'];
 
             case Lexer::T_INTEGER:
                 $this->match(Lexer::T_INTEGER);
-                return $this->_lexer->token['value'];
+                return $this->lexer->token['value'];
 
             case Lexer::T_FLOAT:
                 $this->match(Lexer::T_FLOAT);
-                return $this->_lexer->token['value'];
+                return $this->lexer->token['value'];
 
             case Lexer::T_TRUE:
                 $this->match(Lexer::T_TRUE);
@@ -378,7 +378,7 @@ class Parser
     public function FieldAssignment()
     {
         $this->match(Lexer::T_IDENTIFIER);
-        $fieldName = $this->_lexer->token['value'];
+        $fieldName = $this->lexer->token['value'];
         $this->match(Lexer::T_EQUALS);
 
         return array($fieldName => $this->PlainValue());
@@ -396,7 +396,7 @@ class Parser
         $this->match(Lexer::T_OPEN_CURLY_BRACES);
         $values[] = $this->ArrayEntry();
 
-        while ($this->_lexer->isNextToken(Lexer::T_COMMA)) {
+        while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
             $this->match(Lexer::T_COMMA);
             $values[] = $this->ArrayEntry();
         }
@@ -425,14 +425,14 @@ class Parser
      */
     public function ArrayEntry()
     {
-        $peek = $this->_lexer->glimpse();
+        $peek = $this->lexer->glimpse();
 
         if ($peek['value'] == '=') {
             $this->match(
-                $this->_lexer->isNextToken(Lexer::T_INTEGER) ? Lexer::T_INTEGER : Lexer::T_STRING
+                $this->lexer->isNextToken(Lexer::T_INTEGER) ? Lexer::T_INTEGER : Lexer::T_STRING
             );
 
-            $key = $this->_lexer->token['value'];
+            $key = $this->lexer->token['value'];
             $this->match(Lexer::T_EQUALS);
 
             return array($key, $this->PlainValue());

@@ -27,13 +27,19 @@ class ClassLoaderTest extends \Doctrine\Tests\DoctrineTestCase
     public function testClassExists()
     {
         $this->assertEquals(1, count(spl_autoload_functions()));
-        $this->assertFalse(ClassLoader::classExists('ClassD'));
+        $this->assertFalse(ClassLoader::classExists('ClassLoaderTest\ClassD'));
         $badLoader = function($className) {
             require __DIR__ . '/ClassLoaderTest/ClassD.php';
             return true;
         };
         spl_autoload_register($badLoader);
-        $this->assertTrue(ClassLoader::classExists('ClassD'));
+        $this->assertTrue(ClassLoader::classExists('ClassLoaderTest\ClassD'));
         spl_autoload_unregister($badLoader);
+    }
+
+    public function testGetClassLoader()
+    {
+        $this->assertTrue(ClassLoader::getClassLoader(__CLASS__) instanceof \Doctrine\Common\ClassLoader);
+        $this->assertNull(ClassLoader::getClassLoader('This\Class\Does\Not\Exist'));
     }
 }
