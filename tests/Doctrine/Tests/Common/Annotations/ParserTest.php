@@ -79,6 +79,7 @@ DOCBLOCK;
  * 
  * @author Mr.X
  * @Doctrine\Tests\Common\Annotations\Name(foo="bar")
+ * @ignore
  */
 DOCBLOCK;
 
