@@ -76,11 +76,41 @@ class Parser
     private $context = '';
 
     /**
+     * @var boolean Whether to try to autoload annotations that are not yet defined.
+     */
+    private $autoloadAnnotations = false;
+
+    /**
      * Constructs a new AnnotationParser.
      */
     public function __construct()
     {
         $this->lexer = new Lexer;
+    }
+
+    /**
+     * Sets a flag whether to try to autoload annotation classes, as well as to distinguish
+     * between what is an annotation and what not by triggering autoloading.
+     *
+     * NOTE: Autoloading of annotation classes is inefficient and requires silently failing
+     *       autoloaders. In particular, setting this option to TRUE renders the Parser
+     *       incompatible with a {@link ClassLoader}.
+     * @param boolean $bool Boolean flag.
+     */
+    public function setAutoloadAnnotations($bool)
+    {
+        $this->autoloadAnnotations = $bool;
+    }
+
+    /**
+     * Gets a flag whether to try to autoload annotation classes.
+     *
+     * @see setAutoloadAnnotations
+     * @return boolean
+     */
+    public function getAutoloadAnnotations()
+    {
+        return $this->autoloadAnnotations;
     }
 
     /**
@@ -244,10 +274,10 @@ class Parser
         }
 
         // Is it really an annotation?
-        // If the lookahead is "(" it surely is, otherwise classExists decides.
+        // If the lookahead is "(" it surely is, otherwise class_exists decides.
         if (
             ($this->lexer->lookahead == null || ! $this->lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS)) &&
-            ! ClassLoader::classExists($name)
+            ! class_exists($name, $this->autoloadAnnotations)
         ) {
             $this->lexer->skipUntil(Lexer::T_AT);
             return false;

@@ -12,6 +12,12 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
     {
         $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
         $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
+        
+        $this->assertFalse($reader->getAutoloadAnnotations());
+        $reader->setAutoloadAnnotations(true);
+        $this->assertTrue($reader->getAutoloadAnnotations());
+        $reader->setAutoloadAnnotations(false);
+        $this->assertFalse($reader->getAutoloadAnnotations());
     
         $class = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClass');
         $classAnnots = $reader->getClassAnnotations($class);

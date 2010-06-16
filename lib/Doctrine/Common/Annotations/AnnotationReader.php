@@ -101,6 +101,31 @@ class AnnotationReader
     }
 
     /**
+     * Sets a flag whether to try to autoload annotation classes, as well as to distinguish
+     * between what is an annotation and what not by triggering autoloading.
+     *
+     * NOTE: Autoloading of annotation classes is inefficient and requires silently failing
+     *       autoloaders. In particular, setting this option to TRUE renders this AnnotationReader
+     *       incompatible with a {@link ClassLoader}.
+     * @param boolean $bool Boolean flag.
+     */
+    public function setAutoloadAnnotations($bool)
+    {
+        $this->parser->setAutoloadAnnotations($bool);
+    }
+
+    /**
+     * Gets a flag whether to try to autoload annotation classes.
+     *
+     * @see setAutoloadAnnotations
+     * @return boolean
+     */
+    public function getAutoloadAnnotations()
+    {
+        return $this->parser->getAutoloadAnnotations();
+    }
+
+    /**
      * Gets the annotations applied to a class.
      * 
      * @param string|ReflectionClass $class The name or ReflectionClass of the class from which

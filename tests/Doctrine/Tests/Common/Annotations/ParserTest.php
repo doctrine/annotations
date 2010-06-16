@@ -12,6 +12,8 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
     {
         $parser = $this->createTestParser();
         
+        $this->assertFalse($parser->getAutoloadAnnotations());
+        
         // Marker annotation
         $result = $parser->parse("@Name");
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
@@ -77,7 +79,9 @@ DOCBLOCK;
 /**
  * Some nifty class.
  * 
- * @author Mr.X
+ * @package foo
+ * @subpackage bar
+ * @author Mr.X <mr@x.com>
  * @Doctrine\Tests\Common\Annotations\Name(foo="bar")
  * @ignore
  */
