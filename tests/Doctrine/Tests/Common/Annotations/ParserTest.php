@@ -126,6 +126,39 @@ DOCBLOCK;
         $this->assertTrue($marker instanceof Marker);
     }
 
+    /**
+     * @group DDC-575
+     */
+    public function testRegressionDDC575()
+    {
+        $parser = $this->createTestParser();
+
+        $docblock = <<<DOCBLOCK
+/**
+ * @Name
+ *
+ * Will trigger error.
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+
+        $this->assertArrayHasKey("Doctrine\Tests\Common\Annotations\Name", $result);
+
+        $docblock = <<<DOCBLOCK
+/**
+ * @Name
+ * @Marker
+ *
+ * Will trigger error.
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+
+        $this->assertArrayHasKey("Doctrine\Tests\Common\Annotations\Name", $result);
+    }
+
     public function testNamespaceAliasedAnnotations()
     {
         $parser = new Parser;
