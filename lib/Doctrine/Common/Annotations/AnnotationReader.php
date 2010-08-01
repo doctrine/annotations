@@ -146,7 +146,7 @@ class AnnotationReader
         
         return $annotations;
     }
-    
+
     /**
      * Gets a class annotation.
      * 
