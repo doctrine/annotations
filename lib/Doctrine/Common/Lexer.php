@@ -67,7 +67,7 @@ abstract class Lexer
     {
         $this->tokens = array();
         $this->reset();
-        $this->_scan($input);
+        $this->scan($input);
     }
     
     /**
@@ -152,7 +152,7 @@ abstract class Lexer
      */
     public function isA($value, $token)
     {
-        return $this->_getType($value) === $token;
+        return $this->getType($value) === $token;
     }
 
     /**
@@ -186,7 +186,7 @@ abstract class Lexer
      *
      * @param string $input a query string
      */
-    protected function _scan($input)
+    protected function scan($input)
     {
         static $regex;
 
@@ -200,7 +200,7 @@ abstract class Lexer
 
         foreach ($matches as $match) {
             // Must remain before 'value' assignment since it can change content
-            $type = $this->_getType($match[0]);
+            $type = $this->getType($match[0]);
             
             $this->tokens[] = array(
                 'value' => $match[0],
@@ -251,5 +251,5 @@ abstract class Lexer
      * @param string $value
      * @return integer
      */
-    abstract protected function _getType(&$value);
+    abstract protected function getType(&$value);
 }

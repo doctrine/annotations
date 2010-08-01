@@ -22,6 +22,11 @@ namespace Doctrine\Common\Annotations;
 /**
  * Simple lexer for docblock annotations.
  *
+ * This Lexer can be subclassed to customize certain aspects of the annotation
+ * lexing (token recognition) process. Note though that currently no special care
+ * is taken to maintain full backwards compatibility for subclasses. Implementation
+ * details of the default Lexer can change without explicit notice.
+ *
  * @since   2.0
  * @author  Benjamin Eberlei <kontakt@beberlei.de>
  * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
@@ -70,7 +75,7 @@ class Lexer extends \Doctrine\Common\Lexer
     /**
      * @inheritdoc
      */
-    protected function _getType(&$value)
+    protected function getType(&$value)
     {
         $type = self::T_NONE;
         $newVal = $this->getNumeric($value);

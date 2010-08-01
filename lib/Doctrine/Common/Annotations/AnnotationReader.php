@@ -19,9 +19,10 @@
 
 namespace Doctrine\Common\Annotations;
 
-use \ReflectionClass, 
-    \ReflectionMethod, 
-    \ReflectionProperty,
+use Closure,
+    ReflectionClass,
+    ReflectionMethod, 
+    ReflectionProperty,
     Doctrine\Common\Cache\Cache;
 
 /**
@@ -61,10 +62,11 @@ class AnnotationReader
      * Constructor. Initializes a new AnnotationReader that uses the given Cache provider.
      * 
      * @param Cache $cache The cache provider to use. If none is provided, ArrayCache is used.
+     * @param Parser $parser The parser to use. If none is provided, the default parser is used.
      */
-    public function __construct(Cache $cache = null)
+    public function __construct(Cache $cache = null, Parser $parser = null)
     {
-        $this->parser = new Parser;
+        $this->parser = $parser ?: new Parser;
         $this->cache = $cache ?: new \Doctrine\Common\Cache\ArrayCache;
     }
 
@@ -87,6 +89,23 @@ class AnnotationReader
     public function setDefaultAnnotationNamespace($defaultNamespace)
     {
         $this->parser->setDefaultAnnotationNamespace($defaultNamespace);
+    }
+
+    /**
+     * Sets the custom function to use for creating new annotations on the
+     * underlying parser.
+     *
+     * The function is supplied two arguments. The first argument is the name
+     * of the annotation and the second argument an array of values for this
+     * annotation. The function is assumed to return an object or NULL.
+     * Whenever the function returns NULL for an annotation, the implementation falls
+     * back to the default annotation creation process of the underlying parser.
+     *
+     * @param Closure $func
+     */
+    public function setAnnotationCreationFunction(Closure $func)
+    {
+        $this->parser->setAnnotationCreationFunction($func);
     }
 
     /**

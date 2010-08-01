@@ -2,7 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\AnnotationReader;
+use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
 require_once __DIR__ . '/../../TestInit.php';
 
@@ -19,7 +19,7 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $reader->setAutoloadAnnotations(false);
         $this->assertFalse($reader->getAutoloadAnnotations());
     
-        $class = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClass');
+        $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClass');
         $classAnnots = $reader->getClassAnnotations($class);
         
         $annotName = 'Doctrine\Tests\Common\Annotations\DummyAnnotation';
@@ -72,7 +72,7 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
             "Doctrine\Tests\Common\Annotations\DummyClassSyntaxError."
         );
 
-        $class = new \ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClassSyntaxError');
+        $class = new ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClassSyntaxError');
 
         $reader = $this->createAnnotationReader();
         $reader->getClassAnnotations($class);
@@ -86,7 +86,7 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
             "method Doctrine\Tests\Common\Annotations\DummyClassMethodSyntaxError::foo()."
         );
 
-        $class = new \ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClassMethodSyntaxError');
+        $class = new ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClassMethodSyntaxError');
         $method = $class->getMethod('foo');
 
         $reader = $this->createAnnotationReader();
@@ -101,7 +101,7 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
             "property Doctrine\Tests\Common\Annotations\DummyClassPropertySyntaxError::\$foo."
         );
 
-        $class = new \ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClassPropertySyntaxError');
+        $class = new ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClassPropertySyntaxError');
         $property = $class->getProperty('foo');
 
         $reader = $this->createAnnotationReader();
@@ -114,9 +114,27 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
     public function testMultipleAnnotationsOnSameLine()
     {
         $reader = $this->createAnnotationReader();
-        $class = new \ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClass2');
+        $class = new ReflectionClass('\Doctrine\Tests\Common\Annotations\DummyClass2');
         $annotations = $reader->getPropertyAnnotations($class->getProperty('id'));
         $this->assertEquals(3, count($annotations));
+    }
+
+    public function testCustomAnnotationCreationFunction()
+    {
+        $reader = $this->createAnnotationReader();
+        $reader->setAnnotationCreationFunction(function($name, $values) {
+            if ($name == 'Doctrine\Tests\Common\Annotations\DummyAnnotation') {
+                $a = new CustomDummyAnnotationClass;
+                $a->setDummyValue($values['dummyValue']);
+                return $a;
+            }
+        });
+
+        $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClass');
+        $classAnnots = $reader->getClassAnnotations($class);
+        $this->assertTrue(isset($classAnnots['Doctrine\Tests\Common\Annotations\CustomDummyAnnotationClass']));
+        $annot = $classAnnots['Doctrine\Tests\Common\Annotations\CustomDummyAnnotationClass'];
+        $this->assertEquals('hello', $annot->getDummyValue());
     }
 
     public function createAnnotationReader()
@@ -124,6 +142,18 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
         $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
         return $reader;
+    }
+}
+
+class CustomDummyAnnotationClass {
+    private $dummyValue;
+
+    public function setDummyValue($value) {
+        $this->dummyValue = $value;
+    }
+
+    public function getDummyValue() {
+        return $this->dummyValue;
     }
 }
 
