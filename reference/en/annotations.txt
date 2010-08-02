@@ -1,0 +1,156 @@
+The Doctrine Annotations library was born from a need in the [Doctrine2 ORM](http://www.doctrine-project.org/projects/orm)
+to allow the mapping information to be specified inside the doc-blocks of classes,
+properties and methods. The library is independent and can be used in your own libraries
+to implement doc block annotations.
+
+++ Setup and Configuration
+
+To use the annotations library is simple, you just need to create a new `AnnotationReader`
+instance:
+
+    [php]
+    $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+
+The `AnnotationReader` class takes two optional constructor arguments:
+
+ * **Doctrine\Common\Cache\Cache $cache** - The cache driver to use for caching read annotations.
+ * **Doctrine\Common\Annotations\Parser $parser** - The annotations parser class to use to parse the doc-block annotations.
+
+So for more control you can do the following:
+
+    [php]
+    $reader = new \Doctrine\Common\Annotations\AnnotationReader(
+        new \Doctrine\Common\Cache\ApcCache(),
+        new \Doctrine\Common\Annotations\Parser()
+    );
+
++++ Autoload Annotation Classes
+
+If you want Doctrine to try and autoload annotation classes with `class_exists()` then you
+need to configure the `AnnotationReader` instance to do so:
+
+    [php]
+    $reader->setAutoloadAnnotationClasses(true);
+
+If this is set to false then all annotation classes must be previously manually loaded.
+
++++ Default Namespace
+
+If you don't want to specify the fully qualified class name you can set the default
+annotation namespace using the `setDefaultAnnotationNamespace()` method. The following
+is an example where we specify the fully qualified class name for the annotation:
+
+
+    [php]
+    /** @MyCompany\Annotations\Foo */
+    class Test
+    {
+    }
+
+To shorten the above code you can configure the default namespace to be `MyCompany\Annotations`:
+
+    [php]
+    $reader->setDefaultAnnotationNamespace('MyCompany\Annotations');
+
+Now it can look something like:
+
+    [php]
+    /** @Foo */
+    class Test
+    {
+    }
+
+A little nicer looking!
+
++++ Namespace Aliases
+
+Again to save you from having to specify the fully qualified class name you can set an alias
+for a namespace of annotation classes:
+
+    [php]
+    $reader->setAnnotationNamespaceAlias('MyCompany\Annotations', 'my');
+
+So now you could do something like this:
+
+    [php]
+    /** @my:Foo */
+    class Test
+    {
+    }
+
+Again, a bit nicer looking than the fully qualified class name!
+
++++ Annotation Creation
+
+If you want to customize the creation process of the annotation class instances then you
+have two options, you can sub-class the `Doctrine\Common\Annotations\Parser` class and
+override the `newAnnotation()` method:
+
+    [php]
+    class MyParser extends Parser
+    {
+        protected function newAnnotation($name, array $values)
+        {
+            return new $name($values);
+        }
+    }
+
+The other option is to use the `setAnnotationCreationFunction()` method to specify a closure
+to execute:
+
+    [php]
+    $reader->setAnnotationCreationFunction(function($name, array $values) {
+        return new $name($values);
+    });
+
+++ Usage
+
+Using the library API is simple. First lets define some annotation classes:
+
+    [php]
+    namespace MyCompany\Annotations;
+    
+    class Foo extends \Doctrine\Common\Annotations\Annotation
+    {
+        public $bar;
+    }
+
+    class Bar
+    {
+        public $foo;
+    }
+
+Now to use the annotations you would just need to do the following:
+
+    /**
+     * @Foo(bar="test")
+     * @Bar(foo="test")
+     */
+    class User
+    {
+    }
+
+Now we can write a script to get the annotations above:
+
+    [php]
+    $reflClass = new ReflectionClass('User');
+    $classAnnotations = $reader->getClassAnnotations($reflClass);
+    echo $classAnnotations['MyCompany\Annotations\Foo']->bar; // prints foo
+    echo $classAnnotations['MyCompany\Annotations\Foo']->foo; // prints bar
+
+You have a complete API for retrieving annotation class instances from a class, property
+or method docblock:
+
+ * getClassAnnotations(ReflectionClass $class)
+ * getClassAnnotation(ReflectionClass $class, $annotation)
+ * getPropertyAnnotations(ReflectionProperty $property)
+ * getPropertyAnnotation(ReflectionProperty $property, $annotation)
+ * getMethodAnnotations(ReflectionMethod $method)
+ * getMethodAnnotation(ReflectionMethod $method, $annotation)
+
+> **CAUTION**
+> The AnnotationReader works and caches under the assumption that all annotations of a
+> doc-block are processed at once. That means that annotation classes that do not exist and
+> aren't loaded and cannot be autoloaded (using setAutoloadAnnotationClasses()) would never
+> be visible and not accessible if a cache is used unless the cache is cleared and the
+> annotations requested again, this time with all annotations defined.
