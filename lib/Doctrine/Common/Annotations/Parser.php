@@ -322,12 +322,8 @@ class Parser
             $name = implode('\\', $nameParts);
         }
 
-        // Is it really an annotation?
-        // If the lookahead is "(" it surely is, otherwise class_exists decides.
-        if (
-            ($this->lexer->lookahead == null || ! $this->lexer->isNextToken(Lexer::T_OPEN_PARENTHESIS)) &&
-            ! class_exists($name, $this->autoloadAnnotations)
-        ) {
+        // Does the annotation class exist?
+        if ( ! class_exists($name, $this->autoloadAnnotations)) {
             $this->lexer->skipUntil(Lexer::T_AT);
             return false;
         }
