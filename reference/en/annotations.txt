@@ -122,9 +122,10 @@ Using the library API is simple. First lets define some annotation classes:
 
 Now to use the annotations you would just need to do the following:
 
+    [php]
     /**
-     * @Foo(bar="test")
-     * @Bar(foo="test")
+     * @Foo(bar="foo")
+     * @Bar(foo="bar")
      */
     class User
     {
