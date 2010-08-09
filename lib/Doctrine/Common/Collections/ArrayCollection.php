@@ -139,13 +139,12 @@ class ArrayCollection implements Collection
         $key = array_search($element, $this->_elements, true);
         
         if ($key !== false) {
-            $removed = $this->_elements[$key];
             unset($this->_elements[$key]);
             
-            return $removed;
+            return true;
         }
         
-        return null;
+        return false;
     }
 
     /**

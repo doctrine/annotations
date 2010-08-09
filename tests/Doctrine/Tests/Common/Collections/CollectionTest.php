@@ -158,15 +158,20 @@ class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
     {
         $this->_coll[] = 'one';
         $this->_coll[] = 'two';
-        $this->_coll->remove(0);
+        $el = $this->_coll->remove(0);
+
+        $this->assertEquals('one', $el);
         $this->assertEquals($this->_coll->contains('one'), false);
+        $this->assertNull($this->_coll->remove(0));
     }
 
     public function testRemoveElement()
     {
         $this->_coll[] = 'one';
         $this->_coll[] = 'two';
-        $this->_coll->removeElement('two');
-        $this->assertEquals($this->_coll->contains('two'), false);
+        
+        $this->assertTrue($this->_coll->removeElement('two'));
+        $this->assertFalse($this->_coll->contains('two'));
+        $this->assertFalse($this->_coll->removeElement('two'));
     }
 }
