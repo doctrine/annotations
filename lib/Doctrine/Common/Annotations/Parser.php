@@ -43,8 +43,7 @@ class Parser
      * @var array
      */
     private static $strippedTags = array(
-        "{@internal", "{@inheritdoc", "{@link", "@param", "@author", "@return",
-        "@since", "@var", "@see", "@deprecated", "@copyright"
+        "{@internal", "{@inheritdoc", "{@link"
     );
 
     /**

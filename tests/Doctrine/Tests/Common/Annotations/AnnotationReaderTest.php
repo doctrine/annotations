@@ -137,6 +137,16 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertEquals('hello', $annot->getDummyValue());
     }
 
+    public function testNonAnnotationProblem()
+    {
+        $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
+        $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
+
+        $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassNonAnnotationProblem');
+        $annotations = $reader->getPropertyAnnotations($class->getProperty('foo'));
+        $this->assertNotEmpty($annotations);
+    }
+
     public function createAnnotationReader()
     {
         $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
@@ -243,6 +253,16 @@ class DummyClassPropertySyntaxError
 {
     /**
      * @DummyAnnotation(@)
+     */
+    public $foo;
+}
+
+class DummyClassNonAnnotationProblem
+{
+    /**
+     * @DummyAnnotation
+     *
+     * @var \Test
      */
     public $foo;
 }
