@@ -144,7 +144,8 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
 
         $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassNonAnnotationProblem');
         $annotations = $reader->getPropertyAnnotations($class->getProperty('foo'));
-        $this->assertNotEmpty($annotations);
+        $this->assertArrayHasKey('Doctrine\Tests\Common\Annotations\DummyAnnotation', $annotations);
+        $this->assertType('Doctrine\Tests\Common\Annotations\DummyAnnotation', $annotations['Doctrine\Tests\Common\Annotations\DummyAnnotation']);
     }
 
     public function createAnnotationReader()

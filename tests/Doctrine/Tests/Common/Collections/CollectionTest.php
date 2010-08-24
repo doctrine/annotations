@@ -8,6 +8,9 @@ require_once __DIR__ . '/../../TestInit.php';
 
 class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
 {
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $_coll;
 
     protected function setUp()
@@ -173,5 +176,22 @@ class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertTrue($this->_coll->removeElement('two'));
         $this->assertFalse($this->_coll->contains('two'));
         $this->assertFalse($this->_coll->removeElement('two'));
+    }
+
+    public function testSlice()
+    {
+        $this->_coll[] = 'one';
+        $this->_coll[] = 'two';
+        $this->_coll[] = 'three';
+
+        $slice = $this->_coll->slice(0, 1);
+        $this->assertType('array', $slice);
+        $this->assertEquals(array('one'), $slice);
+
+        $slice = $this->_coll->slice(1);
+        $this->assertEquals(array(1 => 'two', 2 => 'three'), $slice);
+
+        $slice = $this->_coll->slice(1, 1);
+        $this->assertEquals(array(1 => 'two'), $slice);
     }
 }
