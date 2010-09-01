@@ -301,13 +301,13 @@ DOCBLOCK;
 
     /**
      * @group DCOM-6
-     *
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
      */
     public function testNonexistantNamespaceAlias()
     {
         $parser = new Parser;
-        $parser->parse('@nonalias:Name(foo="bar")');
+        $result = $parser->parse('@nonalias:Name(foo="bar")');
+
+        $this->assertEquals(0, count($result));
     }
 }
 

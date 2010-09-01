@@ -318,7 +318,8 @@ class Parser
 
             // If the namespace alias doesnt exist, throw exception
             if ( ! isset($this->namespaceAliases[$alias])) {
-                $this->syntaxError('a valid namespace alias', $this->lexer->token);
+                $this->lexer->skipUntil(Lexer::T_AT);
+                return false;
             }
 
             $name = $this->namespaceAliases[$alias] . implode('\\', $nameParts);
