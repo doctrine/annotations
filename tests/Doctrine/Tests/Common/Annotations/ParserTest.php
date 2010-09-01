@@ -298,6 +298,17 @@ DOCBLOCK;
             $this->fail($e->getMessage());
         }
     }
+
+    /**
+     * @group DCOM-6
+     *
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     */
+    public function testNonexistantNamespaceAlias()
+    {
+        $parser = new Parser;
+        $parser->parse('@nonalias:Name(foo="bar")');
+    }
 }
 
 class Name extends \Doctrine\Common\Annotations\Annotation {

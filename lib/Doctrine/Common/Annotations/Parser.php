@@ -276,6 +276,7 @@ class Parser
         while ($this->lexer->lookahead !== null && $this->lexer->isNextToken(Lexer::T_AT)) {
             $this->isNestedAnnotation = false;
             $annot = $this->Annotation();
+
             if ($annot !== false) {
                 $annotations[get_class($annot)] = $annot;
                 $this->lexer->skipUntil(Lexer::T_AT);
@@ -314,6 +315,12 @@ class Parser
         // Effectively pick the name of the class (append default NS if none, grab from NS alias, etc)
         if (strpos($nameParts[0], ':')) {
             list ($alias, $nameParts[0]) = explode(':', $nameParts[0]);
+
+            // If the namespace alias doesnt exist, throw exception
+            if ( ! isset($this->namespaceAliases[$alias])) {
+                $this->syntaxError('a valid namespace alias', $this->lexer->token);
+            }
+
             $name = $this->namespaceAliases[$alias] . implode('\\', $nameParts);
         } else if (count($nameParts) == 1) {
             $name = $this->defaultAnnotationNamespace . $nameParts[0];
