@@ -285,7 +285,7 @@ DOCBLOCK;
     {
         $docblock = <<<DOCBLOCK
 /**
- * @throws\RuntimeException
+ * @throws \RuntimeException
  */
 class A {
 }
