@@ -25,7 +25,7 @@ namespace Doctrine\Common;
  * of a specific namespace or all namespaces and it is suitable for working together
  * with other autoloaders in the SPL autoload stack.
  * 
- * If no include path is configured through {@link setIncludePath}, a ClassLoader
+ * If no include path is configured through the constructor or {@link setIncludePath}, a ClassLoader
  * relies on the PHP <code>include_path</code>.
  * 
  * @author Roman Borschel <roman@code-factory.org>
