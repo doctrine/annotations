@@ -277,6 +277,27 @@ DOCBLOCK;
             $this->fail($e->getMessage());
         }
     }
+
+    /**
+     * @group DCOM-14
+     */
+    public function testIgnorePHPDocThrowTag()
+    {
+        $docblock = <<<DOCBLOCK
+/**
+ * @throws\RuntimeException
+ */
+class A {
+}
+DOCBLOCK;
+
+        try {
+            $parser = $this->createTestParser();
+            $result = $parser->parse($docblock);
+        } catch (Exception $e) {
+            $this->fail($e->getMessage());
+        }
+    }
 }
 
 class Name extends \Doctrine\Common\Annotations\Annotation {
