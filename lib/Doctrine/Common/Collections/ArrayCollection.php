@@ -97,7 +97,7 @@ class ArrayCollection implements Collection
      */
     public function next()
     {
-        next($this->_elements);
+        return next($this->_elements);
     }
     
     /**
