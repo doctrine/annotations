@@ -316,7 +316,7 @@ class Parser
         if (strpos($nameParts[0], ':')) {
             list ($alias, $nameParts[0]) = explode(':', $nameParts[0]);
 
-            // If the namespace alias doesnt exist, throw exception
+            // If the namespace alias doesnt exist, skip until next annotation
             if ( ! isset($this->namespaceAliases[$alias])) {
                 $this->lexer->skipUntil(Lexer::T_AT);
                 return false;
