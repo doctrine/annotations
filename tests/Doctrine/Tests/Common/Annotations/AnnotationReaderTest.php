@@ -148,11 +148,24 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertType('Doctrine\Tests\Common\Annotations\DummyAnnotation', $annotations['Doctrine\Tests\Common\Annotations\DummyAnnotation']);
     }
 
+    /**
+     * @return AnnotationReader
+     */
     public function createAnnotationReader()
     {
         $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
         $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
         return $reader;
+    }
+
+    /**
+     * @group DCOM-25
+     */
+    public function testSetAutoloadAnnotations()
+    {
+        $reader = $this->createAnnotationReader();
+        $reader->setAutoloadAnnotations(true);
+        $this->assertTrue($reader->getAutoloadAnnotations());
     }
 }
 

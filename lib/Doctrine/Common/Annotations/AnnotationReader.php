@@ -71,16 +71,6 @@ class AnnotationReader
     }
 
     /**
-     * Set whether or not to try and autoload annotation classes.
-     *
-     * @param boolean $bool
-     */
-    public function setAutoloadAnnotationClasses($bool)
-    {
-        $this->parser->setAutoloadAnnotationClasses($bool);
-    }
-
-    /**
      * Sets the default namespace that the AnnotationReader should assume for annotations
      * with not fully qualified names.
      * 
