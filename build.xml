@@ -56,6 +56,7 @@
         Builds Common package, preparing it for distribution.
     -->
     <target name="build-common">
+        <exec command="grep '${version}' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
         <copy todir="${build.dir}/common">
             <fileset refid="shared-artifacts"/>
         </copy>
@@ -66,7 +67,7 @@
         <exec command="mv ${build.dir}/common/Doctrine/Common/Version2.php ${build.dir}/common/Doctrine/Common/Version.php" passthru="true" />
     </target>
 
-    <target name="build" depends="test, build-common"/>
+    <target name="build" depends="prepare,build-common"/>
     
     <!-- 
         Runs the full test suite.
@@ -113,6 +114,7 @@
            <lead user="jwage" name="Jonathan H. Wage" email="jonwage@gmail.com" />
            <lead user="guilhermeblanco" name="Guilherme Blanco" email="guilhermeblanco@gmail.com" />
            <lead user="romanb" name="Roman Borschel" email="roman@code-factory.org" />
+           <lead user="beberlei" name="Benjamin Eberlei" email="kontakt@beberlei.de" />
            <license>LGPL</license>
            <version release="${version}" api="${version}" />
            <stability release="${stability}" api="${stability}" />
@@ -124,5 +126,38 @@
         </d51pearpkg2>
         <exec command="pear package" dir="${build.dir}/common" passthru="true" />
         <exec command="mv DoctrineCommon-${version}.tgz ../../dist" dir="${build.dir}/common" passthru="true" />
+        <tar destfile="dist/DoctrineCommon-${version}-full.tar.gz" compression="gzip" basedir="${build.dir}">
+            <fileset dir="${build.dir}">
+                <include name="**/**" />
+                <exclude name="logs/" />
+            </fileset>
+        </tar>
     </target>
+
+    <target name="git-tag">
+        <exec command="grep '${version}' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
+        <exec command="git tag -a ${version}" passthru="true" />
+        <exec command="git push origin ${version}" passthru="true" />
+    </target>
+
+    <target name="pirum-release">
+        <exec command="pirum add ${project.pirum_dir} ${project.basedir}/dist/DoctrineCommon-${version}.tgz" dir="."  passthru="true" />
+        <exec command="pirum build ${project.pirum_dir}" passthru="true" />
+    </target>
+
+    <target name="distribute-download">
+        <copy file="dist/DoctrineCommon-${version}-full.tar.gz" todir="${project.download_dir}" />
+    </target>
+
+    <target name="update-dev-version">
+        <exec command="grep '${version}' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
+        <propertyprompt propertyName="next_version" defaultValue="${version}" promptText="Enter next version string (without -DEV)" />
+        <exec command="sed 's/${version}-DEV/${next_version}-DEV/' ${project.basedir}/lib/Doctrine/Common/Version.php > ${project.basedir}/lib/Doctrine/Common/Version2.php" passthru="true" />
+        <exec command="mv ${project.basedir}/lib/Doctrine/Common/Version2.php ${project.basedir}/lib/Doctrine/Common/Version.php" passthru="true" />
+        <exec command="git add ${project.basedir}/lib/Doctrine/Common/Version.php" passthru="true" />
+        <exec command="git commit -m 'Bump Dev Version to ${next_version}'" passthru="true" />
+        <exec command="git push origin master" passthru="true" />
+    </target>
+
+    <target name="release" depends="git-tag,build-packages,distribute-download,pirum-release,update-dev-version" />
 </project>

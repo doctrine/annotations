@@ -11,7 +11,7 @@
  * to kontakt@beberlei.de so I can send you a copy immediately.
  */
 
-require_once 'PHPUnit/Framework.php';
+require_once 'PHPUnit/Autoload.php';
 
 /**
  * A more flexible and powerful PHPUnit Task than the native Phing one.
@@ -110,7 +110,6 @@ class NativePhpunitTask extends Task
             'printer' => $printer,
         );
 
-        require_once "PHPUnit/TextUI/TestRunner.php";
         $runner = new PHPUnit_TextUI_TestRunner();
         $suite = $runner->getTest($this->test, $this->testfile, true);
 
