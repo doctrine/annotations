@@ -101,8 +101,8 @@ class AnnotationReader
     /**
      * Sets an alias for an annotation namespace.
      * 
-     * @param $namespace
-     * @param $alias
+     * @param string $namespace
+     * @param string $alias
      */
     public function setAnnotationNamespaceAlias($namespace, $alias)
     {
@@ -137,7 +137,7 @@ class AnnotationReader
     /**
      * Gets the annotations applied to a class.
      * 
-     * @param string|ReflectionClass $class The name or ReflectionClass of the class from which
+     * @param ReflectionClass $class The ReflectionClass of the class from which
      * the class annotations should be read.
      * @return array An array of Annotations.
      */
@@ -159,7 +159,8 @@ class AnnotationReader
     /**
      * Gets a class annotation.
      * 
-     * @param $class
+     * @param ReflectionClass $class The ReflectionClass of the class from which
+     * the class annotations should be read.
      * @param string $annotation The name of the annotation.
      * @return The Annotation or NULL, if the requested annotation does not exist.
      */
@@ -173,7 +174,6 @@ class AnnotationReader
     /**
      * Gets the annotations applied to a property.
      * 
-     * @param string|ReflectionClass $class The name or ReflectionClass of the class that owns the property.
      * @param string|ReflectionProperty $property The name or ReflectionProperty of the property
      * from which the annotations should be read.
      * @return array An array of Annotations.
@@ -211,8 +211,7 @@ class AnnotationReader
     /**
      * Gets the annotations applied to a method.
      * 
-     * @param string|ReflectionClass $class The name or ReflectionClass of the class that owns the method.
-     * @param string|ReflectionMethod $property The name or ReflectionMethod of the method from which
+     * @param ReflectionMethod $property The name or ReflectionMethod of the method from which
      * the annotations should be read.
      * @return array An array of Annotations.
      */
