@@ -55,15 +55,12 @@
         Builds Common package, preparing it for distribution.
     -->
     <target name="build-common">
-        <exec command="grep '${version}' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
         <copy todir="${build.dir}/common">
             <fileset refid="shared-artifacts"/>
         </copy>
         <copy todir="${build.dir}/common">
             <fileset refid="common-sources"/>
         </copy>
-        <exec command="sed 's/${version}-DEV/${version}/' ${build.dir}/common/Doctrine/Common/Version.php > ${build.dir}/common/Doctrine/Common/Version2.php" passthru="true" />
-        <exec command="mv ${build.dir}/common/Doctrine/Common/Version2.php ${build.dir}/common/Doctrine/Common/Version.php" passthru="true" />
     </target>
 
     <target name="build" depends="prepare,build-common"/>
@@ -134,7 +131,10 @@
     </target>
 
     <target name="git-tag">
-        <exec command="grep '${version}' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
+        <exec command="grep '${version}-DEV' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
+        <exec command="sed 's/${version}-DEV/${version}/' ${project.basedir}/lib/Doctrine/Common/Version.php > ${project.basedir}/lib/Doctrine/Common/Version2.php" passthru="true" />
+        <exec command="mv ${project.basedir}/lib/Doctrine/Common/Version2.php ${project.basedir}/lib/Doctrine/Common/Version.php" passthru="true" />
+        <exec command="git commit -a -m 'Release {$version}'" />
         <exec command="git tag -a ${version}" passthru="true" />
         <exec command="git push origin ${version}" passthru="true" />
     </target>
@@ -151,7 +151,7 @@
     <target name="update-dev-version">
         <exec command="grep '${version}' ${project.basedir}/lib/Doctrine/Common/Version.php" checkreturn="true"/>
         <propertyprompt propertyName="next_version" defaultValue="${version}" promptText="Enter next version string (without -DEV)" />
-        <exec command="sed 's/${version}-DEV/${next_version}-DEV/' ${project.basedir}/lib/Doctrine/Common/Version.php > ${project.basedir}/lib/Doctrine/Common/Version2.php" passthru="true" />
+        <exec command="sed 's/${version}/${next_version}-DEV/' ${project.basedir}/lib/Doctrine/Common/Version.php > ${project.basedir}/lib/Doctrine/Common/Version2.php" passthru="true" />
         <exec command="mv ${project.basedir}/lib/Doctrine/Common/Version2.php ${project.basedir}/lib/Doctrine/Common/Version.php" passthru="true" />
         <exec command="git add ${project.basedir}/lib/Doctrine/Common/Version.php" passthru="true" />
         <exec command="git commit -m 'Bump Dev Version to ${next_version}'" passthru="true" />
