@@ -10,3 +10,5 @@ test.phpunit_generate_coverage=0
 test.pmd_reports=0
 test.pdepend_exec=
 test.phpmd_exec=
+project.pirum_dir=
+project.download_dir=
