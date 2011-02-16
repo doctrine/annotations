@@ -100,7 +100,7 @@ interface ObjectManager
     public function flush();
 
     /**
-     * Gets the repository for an entity class.
+     * Gets the repository for a class.
      *
      * @param string $className
      * @return \Doctrine\Common\Persistence\ObjectRepository
