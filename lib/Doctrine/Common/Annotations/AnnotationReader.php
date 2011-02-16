@@ -42,7 +42,7 @@ class AnnotationReader
      * @var string
      * @static
      */
-    private static $CACHE_SALT = '@<Annot>';
+    private static $CACHE_SALT = '@[Annot]';
     
     /**
      * Annotations Parser
