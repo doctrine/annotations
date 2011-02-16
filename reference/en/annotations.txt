@@ -30,7 +30,7 @@ If you want Doctrine to try and autoload annotation classes with `class_exists()
 need to configure the `AnnotationReader` instance to do so:
 
     [php]
-    $reader->setAutoloadAnnotations(true);
+    $reader->setAutoloadAnnotationClasses(true);
 
 If this is set to false then all annotation classes must be previously manually loaded.
 
