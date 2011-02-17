@@ -164,11 +164,12 @@ class ClassLoader
         }
 
         $file = str_replace($this->namespaceSeparator, DIRECTORY_SEPARATOR, $className) . $this->fileExtension;
+
         if ($this->includePath !== null) {
             return file_exists($this->includePath . DIRECTORY_SEPARATOR . $file);
-        } else {
-            return self::fileExistsInIncludePath($file);
         }
+
+        return self::fileExistsInIncludePath($file);
     }
 
     /**
