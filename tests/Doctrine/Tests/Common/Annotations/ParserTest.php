@@ -52,7 +52,27 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
         $nestedArray = $annot->foo[2];
         $this->assertTrue(isset($nestedArray['key']));
         $this->assertTrue($nestedArray['key'] instanceof Name);
-        
+
+        // Multiple values
+        $result = $parser->parse('@Name(@Name, @Name)');
+        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+
+        $this->assertTrue($annot instanceof Name);
+        $this->assertTrue(is_array($annot->value));
+        $this->assertTrue($annot->value[0] instanceof Name);
+        $this->assertTrue($annot->value[1] instanceof Name);
+
+        // Multiple types as values
+        $result = $parser->parse('@Name(foo="Bar", @Name, {"key1"="value1", "key2"="value2"})');
+        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+
+        $this->assertTrue($annot instanceof Name);
+        $this->assertTrue(is_array($annot->value));
+        $this->assertTrue($annot->value[0] instanceof Name);
+        $this->assertTrue(is_array($annot->value[1]));
+        $this->assertEquals('value1', $annot->value[1]['key1']);
+        $this->assertEquals('value2', $annot->value[1]['key2']);
+
         // Complete docblock
         $docblock = <<<DOCBLOCK
 /**

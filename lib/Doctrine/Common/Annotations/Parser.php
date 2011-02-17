@@ -375,21 +375,27 @@ class Parser
 
         while ($this->lexer->isNextToken(Lexer::T_COMMA)) {
             $this->match(Lexer::T_COMMA);
+            $token = $this->lexer->lookahead;
             $value = $this->Value();
 
-            if ( ! is_array($value)) {
-                $this->syntaxError('Value', $value);
+            if ( ! is_object($value) && ! is_array($value)) {
+                $this->syntaxError('Value', $token);
             }
 
             $values[] = $value;
         }
 
         foreach ($values as $k => $value) {
-            if (is_array($value) && is_string(key($value))) {
-                $key = key($value);
-                $values[$key] = $value[$key];
-            } else {
+            if (is_object($value) && $value instanceof \stdClass) {
+                $values[$value->name] = $value->value;
+            } else if ( ! isset($values['value'])){
                 $values['value'] = $value;
+            } else {
+                if ( ! is_array($values['value'])) {
+                    $values['value'] = array($values['value']);
+                }
+
+                $values['value'][] = $value;
             }
 
             unset($values[$k]);
@@ -467,7 +473,11 @@ class Parser
         $fieldName = $this->lexer->token['value'];
         $this->match(Lexer::T_EQUALS);
 
-        return array($fieldName => $this->PlainValue());
+        $item = new \stdClass();
+        $item->name  = $fieldName;
+        $item->value = $this->PlainValue();
+
+        return $item;
     }
 
     /**
