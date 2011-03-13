@@ -99,7 +99,7 @@ class Parser
 
     /**
      * Gets the lexer used by this parser.
-     * 
+     *
      * @return Lexer The lexer.
      */
     public function getLexer()

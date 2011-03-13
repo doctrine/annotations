@@ -11,16 +11,16 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
     public function testBasicAnnotations()
     {
         $parser = $this->createTestParser();
-        
+
         $this->assertFalse($parser->getAutoloadAnnotations());
-        
+
         // Marker annotation
         $result = $parser->parse("@Name");
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
         $this->assertTrue($annot instanceof Name);
         $this->assertNull($annot->value);
         $this->assertNull($annot->foo);
-        
+
         // Associative arrays
         $result = $parser->parse('@Name(foo={"key1" = "value1"})');
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
@@ -37,7 +37,7 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertFalse(isset($annot->value[0]));
         $this->assertFalse(isset($annot->value[1]));
         $this->assertFalse(isset($annot->value[3]));
-        
+
         // Nested arrays with nested annotations
         $result = $parser->parse('@Name(foo={1,2, {"key"=@Name}})');
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
@@ -48,7 +48,7 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertEquals(1, $annot->foo[0]);
         $this->assertEquals(2, $annot->foo[1]);
         $this->assertTrue(is_array($annot->foo[2]));
-        
+
         $nestedArray = $annot->foo[2];
         $this->assertTrue(isset($nestedArray['key']));
         $this->assertTrue($nestedArray['key'] instanceof Name);
@@ -77,7 +77,7 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
         $docblock = <<<DOCBLOCK
 /**
  * Some nifty class.
- * 
+ *
  * @author Mr.X
  * @Name(foo="bar")
  */
@@ -90,15 +90,15 @@ DOCBLOCK;
         $this->assertEquals("bar", $annot->foo);
         $this->assertNull($annot->value);
     }
-    
+
     public function testNamespacedAnnotations()
     {
         $parser = new Parser;
-        
+
         $docblock = <<<DOCBLOCK
 /**
  * Some nifty class.
- * 
+ *
  * @package foo
  * @subpackage bar
  * @author Mr.X <mr@x.com>
@@ -227,7 +227,28 @@ DOCBLOCK;
         $parser = $this->createTestParser();
         $parser->parse("@Name(foo='bar')");
     }
-    
+
+    /**
+     * @group DCOM-41
+     */
+    public function testAnnotationDoesntThrowExceptionWhenAtSignIsNotFollowedByIdentifier()
+    {
+        $parser = new Parser();
+        $result = $parser->parse("'@'");
+
+        $this->assertEquals(0, count($result));
+    }
+
+    /**
+     * @group DCOM-41
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     */
+    public function testAnnotationThrowsExceptionWhenAtSignIsNotFollowedByIdentifierInNestedAnnotation()
+    {
+        $parser = new Parser();
+        $result = $parser->parse("@Doctrine\Tests\Common\Annotations\Name(@')");
+    }
+
     /**
      * @group parse
      */
@@ -238,12 +259,12 @@ DOCBLOCK;
         $docblock = <<<DOCBLOCK
 /**
  * Some nifty class.
- * 
+ *
  * @author Mr.X
  * @alias:Name(foo="stuff")
  */
 DOCBLOCK;
-        
+
         $result = $parser->parse($docblock);
         $this->assertEquals(1, count($result));
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
@@ -272,7 +293,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
         $parser->parse("@Name(foo='bar')", "class \Doctrine\Tests\Common\Annotations\Name");
     }
-    
+
     /**
      * @group DDC-183
      */
@@ -285,11 +306,11 @@ DOCBLOCK;
 class A {
 }
 DOCBLOCK;
-        
+
         //$lexer = new \Doctrine\Common\Annotations\Lexer();
         //$lexer->setInput(trim($docblock, '/ *'));
         //var_dump($lexer);
-        
+
         try {
             $parser = $this->createTestParser();
             $result = $parser->parse($docblock);
