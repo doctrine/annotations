@@ -78,12 +78,9 @@ class Lexer extends \Doctrine\Common\Lexer
     protected function getType(&$value)
     {
         $type = self::T_NONE;
-        $newVal = $this->getNumeric($value);
         
         // Checking numeric value
-        if ($newVal !== false) {
-            $value = $newVal;
-            
+        if (is_numeric($value)) {
             return (strpos($value, '.') !== false || stripos($value, 'e') !== false)
                 ? self::T_FLOAT : self::T_INTEGER;
         }
@@ -132,26 +129,5 @@ class Lexer extends \Doctrine\Common\Lexer
         }
 
         return $type;
-    }
-
-    /**
-     * Checks if a value is numeric or not
-     *
-     * @param mixed $value Value to be inspected
-     * @return boolean|integer|float Processed value
-     * @todo Inline
-     */
-    private function getNumeric($value)
-    {
-        if ( ! is_scalar($value)) {
-            return false;
-        }
-
-        // Checking for valid numeric numbers: 1.234, -1.234e-2
-        if (is_numeric($value)) {
-            return $value;
-        }
-
-        return false;
     }
 }
