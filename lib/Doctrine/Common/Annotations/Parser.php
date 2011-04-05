@@ -313,6 +313,7 @@ class Parser
         }
 
         // Effectively pick the name of the class (append default NS if none, grab from NS alias, etc)
+        $namespacedAnnotation = false;
         if (strpos($nameParts[0], ':')) {
             list ($alias, $nameParts[0]) = explode(':', $nameParts[0]);
 
@@ -323,6 +324,7 @@ class Parser
             }
 
             $name = $this->namespaceAliases[$alias] . implode('\\', $nameParts);
+            $namespacedAnnotation = true;
         } else if (count($nameParts) == 1) {
             $name = $this->defaultAnnotationNamespace . $nameParts[0];
         } else {
@@ -331,6 +333,10 @@ class Parser
 
         // Does the annotation class exist?
         if ( ! class_exists($name, $this->autoloadAnnotations)) {
+            if ($namespacedAnnotation) {
+                throw AnnotationException::semanticalError('Annotation class "' . $name . '" does not exist.');
+            }
+
             $this->lexer->skipUntil(Lexer::T_AT);
             return false;
         }

@@ -329,6 +329,21 @@ DOCBLOCK;
 
         $this->assertEquals(0, count($result));
     }
+
+    /**
+     * @group DCOM-44
+     */
+    public function testNonexistantAliasedAnnotation()
+    {
+        $parser = new Parser;
+        $parser->setAnnotationNamespaceAlias('Doctrine\Tests\Common\Annotations\\', 'common');
+
+        $this->setExpectedException(
+            "Doctrine\Common\Annotations\AnnotationException",
+            "[Semantical Error] Annotation class \"Doctrine\Tests\Common\Annotations\Foo\" does not exist."
+        );
+        $result = $parser->parse('@common:Foo');
+    }
 }
 
 class Name extends \Doctrine\Common\Annotations\Annotation {
