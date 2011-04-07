@@ -341,6 +341,30 @@ DOCBLOCK;
     }
 
     /**
+     * @group DCOM-38
+     */
+    public function testCastInt()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse("@Name(foo=1234)");
+        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $this->assertInternalType('int', $annot->foo);
+    }
+
+    /**
+     * @group DCOM-38
+     */
+    public function testCastFloat()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse("@Name(foo=1234.345)");
+        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $this->assertInternalType('float', $annot->foo);
+    }
+
+    /**
      * @group DCOM-6
      */
     public function testNonexistantNamespaceAlias()
