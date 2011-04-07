@@ -455,11 +455,11 @@ class Parser
 
             case Lexer::T_INTEGER:
                 $this->match(Lexer::T_INTEGER);
-                return $this->lexer->token['value'];
+                return (int)$this->lexer->token['value'];
 
             case Lexer::T_FLOAT:
                 $this->match(Lexer::T_FLOAT);
-                return $this->lexer->token['value'];
+                return (float)$this->lexer->token['value'];
 
             case Lexer::T_TRUE:
                 $this->match(Lexer::T_TRUE);
