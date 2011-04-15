@@ -469,6 +469,10 @@ class Parser
                 $this->match(Lexer::T_FALSE);
                 return false;
 
+            case Lexer::T_NULL:
+                $this->match(Lexer::T_NULL);
+                return null;
+
             default:
                 $this->syntaxError('PlainValue');
         }
