@@ -340,10 +340,6 @@ class Parser
 
         // Does the annotation class exist?
         if ( ! class_exists($name, $this->autoloadAnnotations)) {
-            if ($namespacedAnnotation) {
-                throw AnnotationException::semanticalError('Annotation class "' . $name . '" does not exist.');
-            }
-
             $this->lexer->skipUntil(Lexer::T_AT);
             return false;
         }
