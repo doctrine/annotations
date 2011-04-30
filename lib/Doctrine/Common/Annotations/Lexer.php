@@ -51,6 +51,7 @@ class Lexer extends \Doctrine\Common\Lexer
     const T_OPEN_CURLY_BRACES   = 108;
     const T_OPEN_PARENTHESIS    = 109;
     const T_TRUE                = 110;
+    const T_NULL                = 111;
     
     /**
      * @inheritdoc
@@ -121,6 +122,9 @@ class Lexer extends \Doctrine\Common\Lexer
 
                 case 'false': 
                     return self::T_FALSE;
+
+                case 'null':
+                    return self::T_NULL;
 
                 default:
                     if (ctype_alpha($value[0]) || $value[0] === '_') {
