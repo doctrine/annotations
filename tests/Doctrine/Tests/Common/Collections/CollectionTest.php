@@ -4,8 +4,6 @@ namespace Doctrine\Tests\Common\Collections;
 
 use Doctrine\Tests;
 
-require_once __DIR__ . '/../../TestInit.php';
-
 class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
 {
     /**

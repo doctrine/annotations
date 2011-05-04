@@ -4,8 +4,6 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
-require_once __DIR__ . '/../../TestInit.php';
-
 class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
 {
     public function testAnnotations()

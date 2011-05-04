@@ -4,8 +4,6 @@ namespace Doctrine\Tests\Common;
 
 use Doctrine\Common\ClassLoader;
 
-require_once __DIR__ . '/../TestInit.php';
-
 class ClassLoaderTest extends \Doctrine\Tests\DoctrineTestCase
 {
     public function testClassLoader()

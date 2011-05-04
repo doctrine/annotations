@@ -5,8 +5,6 @@ namespace Doctrine\Tests\Common;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\EventArgs;
 
-require_once __DIR__ . '/../TestInit.php';
-
 class EventManagerTest extends \Doctrine\Tests\DoctrineTestCase
 {
     /* Some pseudo events */
