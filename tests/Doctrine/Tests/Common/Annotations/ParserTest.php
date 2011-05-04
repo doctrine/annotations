@@ -29,7 +29,7 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertTrue(isset($annot->foo['key1']));
 
         // Numerical arrays
-        $result = $parser->parse('@Name({2="foo", 4="bar"})');
+        $result = $parser->parse('@Name({2="foo", 4=\'bar\'})');
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
         $this->assertTrue(is_array($annot->value));
         $this->assertEquals('foo', $annot->value[2]);
