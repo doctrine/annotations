@@ -29,7 +29,7 @@ class ParserTest extends \Doctrine\Tests\DoctrineTestCase
         $this->assertTrue(isset($annot->foo['key1']));
 
         // Numerical arrays
-        $result = $parser->parse('@Name({2="foo", 4="bar"})');
+        $result = $parser->parse('@Name({2="foo", 4=\'bar\'})');
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
         $this->assertTrue(is_array($annot->value));
         $this->assertEquals('foo', $annot->value[2]);
@@ -217,15 +217,15 @@ DOCBLOCK;
         $this->assertEquals(0, count($result));
     }
 
-    public function testAnnotationDontAcceptSingleQuotes()
+    public function testAnnotationAcceptsSingleQuotes()
     {
-        $this->setExpectedException(
-            'Doctrine\Common\Annotations\AnnotationException',
-            "[Syntax Error] Expected PlainValue, got ''' at position 10."
-        );
-
         $parser = $this->createTestParser();
-        $parser->parse("@Name(foo='bar')");
+        $result = $parser->parse("@Name(foo='bar')");
+
+        $this->assertEquals(1, count($result));
+        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $this->assertTrue($annot instanceof Name);
+        $this->assertEquals('bar', $annot->foo);
     }
 
     /**
@@ -286,12 +286,12 @@ DOCBLOCK;
     {
         $this->setExpectedException(
             'Doctrine\Common\Annotations\AnnotationException',
-            "[Syntax Error] Expected PlainValue, got ''' at position 10 ".
+            "[Syntax Error] Expected PlainValue, got 'x' at position 10 ".
             "in class \Doctrine\Tests\Common\Annotations\Name"
         );
 
         $parser = $this->createTestParser();
-        $parser->parse("@Name(foo='bar')", "class \Doctrine\Tests\Common\Annotations\Name");
+        $parser->parse("@Name(foo=x)", "class \Doctrine\Tests\Common\Annotations\Name");
     }
 
     /**
