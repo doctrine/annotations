@@ -183,7 +183,7 @@ class CollectionTest extends \Doctrine\Tests\DoctrineTestCase
         $this->_coll[] = 'three';
 
         $slice = $this->_coll->slice(0, 1);
-        $this->assertType('array', $slice);
+        $this->assertInternalType('array', $slice);
         $this->assertEquals(array('one'), $slice);
 
         $slice = $this->_coll->slice(1);
