@@ -4,8 +4,6 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Lexer;
 
-require_once __DIR__ . '/../../TestInit.php';
-
 class LexerTest extends \Doctrine\Tests\DoctrineTestCase
 {
     public function testMarkerAnnotation()
