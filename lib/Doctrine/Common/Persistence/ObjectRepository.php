@@ -68,12 +68,4 @@ interface ObjectRepository
      * @return object The object.
      */
     public function findOneBy(array $criteria);
-
-    /**
-     * Find Many documents of the given repositories type by id.
-     *
-     * @param array $ids of identifiers
-     * @return array of object instances
-     */
-    public function findMany(array $ids);
 }
