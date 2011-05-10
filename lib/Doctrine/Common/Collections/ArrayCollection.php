@@ -225,8 +225,11 @@ class ArrayCollection implements Collection
      */
     public function exists(Closure $p)
     {
-        foreach ($this->_elements as $key => $element)
-            if ($p($key, $element)) return true;
+        foreach ($this->_elements as $key => $element) {
+            if ($p($key, $element)) {
+                return true;
+            }
+        }
         return false;
     }
 

@@ -80,16 +80,14 @@ class NativePhpunitTask extends Task
         require_once "PHPUnit/Runner/Version.php";
         $version = PHPUnit_Runner_Version::id();
 
-        if (version_compare($version, '3.4.0') < 0)
-        {
+        if (version_compare($version, '3.4.0') < 0) {
             throw new BuildException("NativePHPUnitTask requires PHPUnit version >= 3.2.0", $this->getLocation());
         }
 
         require_once 'PHPUnit/Util/Filter.php';
 
         // point PHPUnit_MAIN_METHOD define to non-existing method
-        if (!defined('PHPUnit_MAIN_METHOD'))
-        {
+        if (!defined('PHPUnit_MAIN_METHOD')) {
             define('PHPUnit_MAIN_METHOD', 'PHPUnitTask::undefined');
         }
     }
