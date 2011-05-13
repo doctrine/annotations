@@ -165,6 +165,17 @@ class AnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $reader->setAutoloadAnnotations(true);
         $this->assertTrue($reader->getAutoloadAnnotations());
     }
+    
+    public function testEmailAsAnnotation()
+    {
+        $reader = new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache);
+        $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
+        
+        $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassWithEmail');
+        $classAnnots = $reader->getClassAnnotations($class);
+        
+        $this->assertEquals(1, count($classAnnots));
+    }
 }
 
 class CustomDummyAnnotationClass {
@@ -277,4 +288,12 @@ class DummyClassNonAnnotationProblem
      * @var \Test
      */
     public $foo;
+}
+
+/**
+ * @DummyAnnotation Foo bar <foobar@1domain.com>
+ */
+class DummyClassWithEmail
+{
+    
 }
