@@ -372,6 +372,20 @@ DOCBLOCK;
 
         $this->assertEquals(0, count($result));
     }
+
+    /**
+     * @group DCOM-46
+     */
+    public function testSupportsMultipleDeclaration()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse("@Name(foo=1234.345) @Name(foo=10)");
+        $annots = $result['Doctrine\Tests\Common\Annotations\Name'];
+        
+        $this->assertInternalType('array', $annots);
+        $this->assertEquals(2, count($annots));
+    }
 }
 
 class Name extends \Doctrine\Common\Annotations\Annotation {

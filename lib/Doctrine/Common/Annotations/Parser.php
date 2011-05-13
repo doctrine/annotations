@@ -290,7 +290,17 @@ class Parser
             $this->isNestedAnnotation = false;
             
             if (($annot = $this->Annotation()) !== false) {
-                $annotations[get_class($annot)] = $annot;
+                $class = get_class($annot);
+                
+                if (isset($annotations[$class])) {
+                    if ( ! is_array($annotations[$class])) {
+                        $annotations[$class] = array($annotations[$class]);
+                    }
+                    
+                    $annotations[$class][] = $annot;
+                } else {
+                    $annotations[$class] = $annot;
+                }
             }
         }
 
