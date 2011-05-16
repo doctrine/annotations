@@ -69,15 +69,6 @@ class DocParser
     private $classExists = array();
 
     /**
-     * Whether to index annotations by their class.
-     *
-     * If set to true, duplicate annotations will override each other.
-     *
-     * @var boolean
-     */
-    private $indexByClass = false;
-
-    /**
      * Whether annotations that have not been imported should be ignored.
      *
      * @var boolean
@@ -152,16 +143,6 @@ class DocParser
     public function setImports(array $imports)
     {
         $this->imports = $imports;
-    }
-
-    public function setIndexByClass($bool)
-    {
-        $this->indexByClass = (Boolean) $bool;
-    }
-
-    public function isIndexByClass()
-    {
-        return $this->indexByClass;
     }
 
     public function setIgnoreNotImportedAnnotations($bool)
@@ -292,14 +273,7 @@ class DocParser
 
             $this->isNestedAnnotation = false;
             if (false !== $annot = $this->Annotation()) {
-                if ($this->indexByClass) {
-                    if (isset($annotations[$name = get_class($annot)])) {
-                        throw AnnotationException::semanticalError(sprintf('The annotation "@%s" has been declared twice in %s.', $name, $this->context));
-                    }
-                    $annotations[$name] = $annot;
-                } else {
-                    $annotations[] = $annot;
-                }
+                $annotations[] = $annot;
             }
         }
 
