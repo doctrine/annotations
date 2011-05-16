@@ -58,7 +58,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER, got ')' at position 18 in class Doctrine\Tests\Common\Annotations\DummyClassSyntaxError.
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in class Doctrine\Tests\Common\Annotations\DummyClassSyntaxError.
      */
     public function testClassSyntaxErrorContext()
     {
@@ -68,7 +68,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER, got ')' at position 18 in method Doctrine\Tests\Common\Annotations\DummyClassMethodSyntaxError::foo().
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in method Doctrine\Tests\Common\Annotations\DummyClassMethodSyntaxError::foo().
      */
     public function testMethodSyntaxErrorContext()
     {
@@ -78,7 +78,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER, got ')' at position 18 in property Doctrine\Tests\Common\Annotations\DummyClassPropertySyntaxError::$foo.
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in property Doctrine\Tests\Common\Annotations\DummyClassPropertySyntaxError::$foo.
      */
     public function testPropertySyntaxErrorContext()
     {
