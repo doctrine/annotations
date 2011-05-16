@@ -1,12 +1,5 @@
 <?php
-
 /*
- * This file is part of the Annotations library.
- *
- * Portions of this code were received from the Doctrine Project under the LGPL
- * license. All other code is (C) 2011 Johannes M. Schmitt <schmittjoh@gmail.com>
- * and subject to the following license:
- *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -20,7 +13,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * This software consists of voluntary contributions made by many individuals
- * and is licensed under the LGPL.
+ * and is licensed under the LGPL. For more information, see
+ * <http://www.doctrine-project.org>.
  */
 
 namespace Doctrine\Common\Annotations\Annotation;
