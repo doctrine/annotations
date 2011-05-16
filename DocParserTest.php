@@ -14,7 +14,7 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
 
         // Nested arrays with nested annotations
         $result = $parser->parse('@Name(foo={1,2, {"key"=@Name}})');
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
 
         $this->assertTrue($annot instanceof Name);
         $this->assertNull($annot->value);
@@ -36,21 +36,21 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
 
         // Marker annotation
         $result = $parser->parse("@Name");
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
         $this->assertNull($annot->value);
         $this->assertNull($annot->foo);
 
         // Associative arrays
         $result = $parser->parse('@Name(foo={"key1" = "value1"})');
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertNull($annot->value);
         $this->assertTrue(is_array($annot->foo));
         $this->assertTrue(isset($annot->foo['key1']));
 
         // Numerical arrays
         $result = $parser->parse('@Name({2="foo", 4="bar"})');
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertTrue(is_array($annot->value));
         $this->assertEquals('foo', $annot->value[2]);
         $this->assertEquals('bar', $annot->value[4]);
@@ -60,7 +60,7 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
 
         // Multiple values
         $result = $parser->parse('@Name(@Name, @Name)');
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
 
         $this->assertTrue($annot instanceof Name);
         $this->assertTrue(is_array($annot->value));
@@ -69,7 +69,7 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
 
         // Multiple types as values
         $result = $parser->parse('@Name(foo="Bar", @Name, {"key1"="value1", "key2"="value2"})');
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
 
         $this->assertTrue($annot instanceof Name);
         $this->assertTrue(is_array($annot->value));
@@ -90,7 +90,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
         $this->assertEquals(1, count($result));
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
         $this->assertEquals("bar", $annot->foo);
         $this->assertNull($annot->value);
@@ -99,7 +99,6 @@ DOCBLOCK;
     public function testNamespacedAnnotations()
     {
         $parser = new DocParser;
-        $parser->setIndexByClass(true);
         $parser->setIgnoreNotImportedAnnotations(true);
 
         $docblock = <<<DOCBLOCK
@@ -116,7 +115,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
         $this->assertEquals(1, count($result));
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
         $this->assertEquals("bar", $annot->foo);
     }
@@ -144,12 +143,12 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
         $this->assertEquals(2, count($result));
-        $this->assertTrue(isset($result['Doctrine\Tests\Common\Annotations\Name']));
-        $this->assertTrue(isset($result['Doctrine\Tests\Common\Annotations\Marker']));
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $this->assertTrue(isset($result[0]));
+        $this->assertTrue(isset($result[1]));
+        $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
         $this->assertEquals("bar", $annot->foo);
-        $marker = $result['Doctrine\Tests\Common\Annotations\Marker'];
+        $marker = $result[1];
         $this->assertTrue($marker instanceof Marker);
     }
 
@@ -170,7 +169,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
 
-        $this->assertArrayHasKey("Doctrine\Tests\Common\Annotations\Name", $result);
+        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Name", $result[0]);
 
         $docblock = <<<DOCBLOCK
 /**
@@ -183,7 +182,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
 
-        $this->assertArrayHasKey("Doctrine\Tests\Common\Annotations\Name", $result);
+        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Name", $result[0]);
     }
 
     /**
@@ -233,7 +232,6 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $parser->setIndexByClass(true);
         $parser->setImports(array(
             'Name' => 'Doctrine\Tests\Common\Annotations\Name',
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations',
@@ -307,7 +305,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $result = $parser->parse("@Name(foo=1234)");
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertInternalType('int', $annot->foo);
     }
 
@@ -319,7 +317,7 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $result = $parser->parse("@Name(foo=1234.345)");
-        $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
+        $annot = $result[0];
         $this->assertInternalType('float', $annot->foo);
     }
 }
