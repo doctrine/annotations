@@ -296,15 +296,13 @@ class DocParser
         $this->match(DocLexer::T_AT);
 
         // check if we have an annotation
-        if (!$this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)
-            && !$this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
-            // this will trigger an exception
-            $this->match(DocLexer::T_IDENTIFIER);
-        } else if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
+        if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
             $this->lexer->moveNext();
             $name = $this->lexer->token['value'];
-        } else {
+        } else if ($this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
             $name = '';
+        } else {
+            $this->syntaxError('namespace separator or identifier');
         }
 
         while ($this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen($this->lexer->token['value']) && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
@@ -319,7 +317,7 @@ class DocParser
         }
 
         // only process names which are not fully qualified, yet
-        if (0 !== strpos($name, '\\') && !$this->classExists($name)) {
+        if ('\\' !== $name[0] && !$this->classExists($name)) {
             $parts = explode('\\', $name);
             $alias = array_shift($parts);
             if (isset($this->imports[$loweredAlias = strtolower($alias)])) {

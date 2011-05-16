@@ -164,10 +164,6 @@ class Reader implements ReaderInterface
     {
         $annotations = $this->getClassAnnotations($class);
 
-        if ($this->parser->isIndexByClass()) {
-            return isset($annotations[$annotationName]) ? $annotations[$annotationName] : null;
-        }
-
         foreach ($annotations as $annotation) {
             if ($annotation instanceof $annotationName) {
                 return $annotation;
@@ -205,10 +201,6 @@ class Reader implements ReaderInterface
     {
         $annotations = $this->getPropertyAnnotations($property);
 
-        if ($this->parser->isIndexByClass()) {
-            return isset($annotations[$annotationName]) ? $annotations[$annotationName] : null;
-        }
-
         foreach ($annotations as $annotation) {
             if ($annotation instanceof $annotationName) {
                 return $annotation;
@@ -245,10 +237,6 @@ class Reader implements ReaderInterface
     public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
     {
         $annotations = $this->getMethodAnnotations($method);
-
-        if ($this->parser->isIndexByClass()) {
-            return isset($annotations[$annotationName]) ? $annotations[$annotationName] : null;
-        }
 
         foreach ($annotations as $annotation) {
             if ($annotation instanceof $annotationName) {
