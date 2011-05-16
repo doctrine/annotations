@@ -199,7 +199,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\Exception\SyntaxException
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected PlainValue, got ''' at position 10.
      */
     public function testAnnotationDontAcceptSingleQuotes()
@@ -221,7 +221,7 @@ DOCBLOCK;
 
     /**
      * @group DCOM-41
-     * @expectedException Doctrine\Common\Annotations\Exception\SyntaxException
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
      */
     public function testAnnotationThrowsExceptionWhenAtSignIsNotFollowedByIdentifierInNestedAnnotation()
     {
@@ -244,7 +244,7 @@ DOCBLOCK;
 
     /**
      * @group DDC-78
-     * @expectedException Doctrine\Common\Annotations\Exception\SyntaxException
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected PlainValue, got ''' at position 10 in class \Doctrine\Tests\Common\Annotations\Name
      */
     public function testSyntaxErrorWithContextDescription()
