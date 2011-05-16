@@ -17,13 +17,38 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations\Exception;
+namespace Doctrine\Common\Annotations;
 
 /**
- * This exception is thrown when a semantical error is encountered.
+ * Description of AnnotationException
  *
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @since   2.0
+ * @author  Benjamin Eberlei <kontakt@beberlei.de>
+ * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author  Jonathan Wage <jonwage@gmail.com>
+ * @author  Roman Borschel <roman@code-factory.org>
  */
-class SemanticalException extends \RuntimeException implements Exception
+class AnnotationException extends \Exception
 {
+    /**
+     * Creates a new AnnotationException describing a Syntax error.
+     *
+     * @param string $message Exception message
+     * @return AnnotationException
+     */
+    public static function syntaxError($message)
+    {
+        return new self('[Syntax Error] ' . $message);
+    }
+
+    /**
+     * Creates a new AnnotationException describing a Semantical error.
+     *
+     * @param string $message Exception message
+     * @return AnnotationException
+     */
+    public static function semanticalError($message)
+    {
+        return new self('[Semantical Error] ' . $message);
+    }
 }

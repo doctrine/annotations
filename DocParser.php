@@ -19,8 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Doctrine\Common\Annotations\Exception\SyntaxException;
-use Doctrine\Common\Annotations\Exception\SemanticalException;
 use Closure;
 use ReflectionClass;
 
@@ -243,7 +241,7 @@ class DocParser
 
         $message .= '.';
 
-        throw new SyntaxException($message);
+        throw AnnotationException::syntaxError($message);
     }
 
     /**
@@ -296,7 +294,7 @@ class DocParser
             if (false !== $annot = $this->Annotation()) {
                 if ($this->indexByClass) {
                     if (isset($annotations[$name = get_class($annot)])) {
-                        throw new SemanticalException(sprintf('The annotation "@%s" has been declared twice in %s.', $name, $this->context));
+                        throw AnnotationException::semanticalError(sprintf('The annotation "@%s" has been declared twice in %s.', $name, $this->context));
                     }
                     $annotations[$name] = $annot;
                 } else {
@@ -362,12 +360,12 @@ class DocParser
                     return false;
                 }
 
-                throw new SemanticalException(sprintf('The annotation "@%s" in %s was never imported.', $name, $this->context));
+                throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported.', $name, $this->context));
             }
         }
 
         if (!$this->classExists($name)) {
-            throw new SemanticalException(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
+            throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
 
         // at this point, $name contains the fully qualified class name of the
