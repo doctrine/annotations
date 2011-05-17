@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations\Annotation;
+namespace Doctrine\Common\Annotations;
 
 /**
  * Annotations class
