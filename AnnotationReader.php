@@ -35,7 +35,7 @@ use ReflectionProperty;
  * @author  Roman Borschel <roman@code-factory.org>
  * @author  Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class Reader implements ReaderInterface
+class AnnotationReader implements ReaderInterface
 {
     /**
      * Global map for imports.
