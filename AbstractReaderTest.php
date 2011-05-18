@@ -5,7 +5,7 @@ namespace Doctrine\Tests\Common\Annotations;
 use Doctrine\Common\Annotations\DoctrineReader;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
-use ReflectionClass, Doctrine\Common\Annotations\Reader;
+use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
 
@@ -297,19 +297,19 @@ class DummyClass2 {
     private $id;
 }
 
-class DummyId extends \Doctrine\Common\Annotations\Annotation\Annotation {}
-class DummyColumn extends \Doctrine\Common\Annotations\Annotation\Annotation {
+class DummyId extends \Doctrine\Common\Annotations\Annotation {}
+class DummyColumn extends \Doctrine\Common\Annotations\Annotation {
     public $type;
 }
-class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation\Annotation {}
-class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation\Annotation {
+class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation {}
+class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
     public $dummyValue;
 }
-class DummyJoinColumn extends \Doctrine\Common\Annotations\Annotation\Annotation {
+class DummyJoinColumn extends \Doctrine\Common\Annotations\Annotation {
     public $name;
     public $referencedColumnName;
 }
-class DummyJoinTable extends \Doctrine\Common\Annotations\Annotation\Annotation {
+class DummyJoinTable extends \Doctrine\Common\Annotations\Annotation {
     public $name;
     public $joinColumns;
     public $inverseJoinColumns;
@@ -358,14 +358,14 @@ class DummyClassNonAnnotationProblem
 
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
-class Name extends \Doctrine\Common\Annotations\Annotation\Annotation
+class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
 }
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 
-class Name extends \Doctrine\Common\Annotations\Annotation\Annotation
+class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
 }

@@ -4,7 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\PhpParser;
 
-require_once __DIR__.'/ReaderTest.php';
+require_once __DIR__.'/AnnotationReaderTest.php';
 require_once __DIR__.'/Fixtures/NonNamespacedClass.php';
 
 class PhpParserTest extends \PHPUnit_Framework_TestCase

@@ -7,7 +7,7 @@ use Doctrine\Common\Annotations\Cache\InMemoryCache;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\DocLexer;
 use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Annotations\AnnotationReader;
 
 class PerformanceTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,7 +16,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testCachedReadPerformanceWithInMemory()
     {
-        $reader = new CachedReader(new Reader(), new InMemoryCache());
+        $reader = new CachedReader(new AnnotationReader(), new InMemoryCache());
         $method = $this->getMethod();
 
         $time = microtime(true);
@@ -36,12 +36,12 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
         $method = $this->getMethod();
 
         // prime cache
-        $reader = new CachedReader(new Reader(), new FileCache(sys_get_temp_dir()));
+        $reader = new CachedReader(new AnnotationReader(), new FileCache(sys_get_temp_dir()));
         $reader->getMethodAnnotations($method);
 
         $time = microtime(true);
         for ($i=0,$c=500; $i<$c; $i++) {
-            $reader = new CachedReader(new Reader(), new FileCache(sys_get_temp_dir()));
+            $reader = new CachedReader(new AnnotationReader(), new FileCache(sys_get_temp_dir()));
             $reader->getMethodAnnotations($method);
             clearstatcache();
         }
@@ -55,12 +55,12 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testReadPerformance()
     {
-        $reader = new Reader();
+        $reader = new AnnotationReader();
         $method = $this->getMethod();
 
         $time = microtime(true);
         for ($i=0,$c=150; $i<$c; $i++) {
-            $reader = new Reader();
+            $reader = new AnnotationReader();
             $reader->getMethodAnnotations($method);
         }
         $time = microtime(true) - $time;

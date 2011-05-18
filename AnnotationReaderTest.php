@@ -2,9 +2,9 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\Reader;
+use Doctrine\Common\Annotations\AnnotationReader;
 
-class ReaderTest extends AbstractReaderTest
+class AnnotationReaderTest extends AbstractReaderTest
 {
     public function testGetIsAutoloadAnnotations()
     {
@@ -19,6 +19,6 @@ class ReaderTest extends AbstractReaderTest
 
     protected function getReader()
     {
-        return new Reader();
+        return new AnnotationReader();
     }
 }

@@ -322,7 +322,7 @@ DOCBLOCK;
     }
 }
 
-class Name extends \Doctrine\Common\Annotations\Annotation\Annotation {
+class Name extends \Doctrine\Common\Annotations\Annotation {
     public $foo;
 }
 
@@ -330,5 +330,5 @@ class Marker {}
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
-class Name extends \Doctrine\Common\Annotations\Annotation\Annotation {
+class Name extends \Doctrine\Common\Annotations\Annotation {
 }

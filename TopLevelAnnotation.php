@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\Common\Annotations\Annotation\Annotation;
+use Doctrine\Common\Annotations\Annotation;
 
 class TopLevelAnnotation extends Annotation
 {
