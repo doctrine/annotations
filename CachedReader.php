@@ -26,12 +26,12 @@ use Doctrine\Common\Annotations\Cache\CacheInterface;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class CachedReader implements ReaderInterface
+class CachedReader implements Reader
 {
     private $delegate;
     private $cache;
 
-    public function __construct(ReaderInterface $reader, CacheInterface $cache)
+    public function __construct(Reader $reader, CacheInterface $cache)
     {
         $this->delegate = $reader;
         $this->cache = $cache;

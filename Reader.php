@@ -24,7 +24,7 @@ namespace Doctrine\Common\Annotations;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface ReaderInterface
+interface Reader
 {
     function getClassAnnotations(\ReflectionClass $class);
     function getClassAnnotation(\ReflectionClass $class, $annotationName);
