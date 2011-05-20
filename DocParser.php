@@ -23,12 +23,9 @@ use Closure;
 use ReflectionClass;
 
 /**
- * A simple parser for docblock annotations.
+ * A parser for docblock annotations.
  *
- * This Parser can be subclassed to customize certain aspects of the annotation
- * parsing and/or creation process. Note though that currently no special care
- * is taken to maintain full backwards compatibility for subclasses. Implementation
- * details of the default Parser can change without explicit notice.
+ * It is strongly discouraged to change the default annotation parsing process.
  *
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
@@ -36,7 +33,7 @@ use ReflectionClass;
  * @author Roman Borschel <roman@code-factory.org>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class DocParser
+final class DocParser
 {
     /**
      * The lexer.
@@ -98,9 +95,9 @@ class DocParser
     /**
      * Constructs a new DocParser.
      */
-    public function __construct(DocLexer $lexer = null)
+    public function __construct()
     {
-        $this->lexer = $lexer ?: new DocLexer;
+        $this->lexer = new DocLexer;
     }
 
     /**
@@ -148,11 +145,6 @@ class DocParser
     public function setIgnoreNotImportedAnnotations($bool)
     {
         $this->ignoreNotImportedAnnotations = (Boolean) $bool;
-    }
-
-    public function isIgnoreNotImportedAnnotations()
-    {
-        return $this->ignoreNotImportedAnnotations;
     }
 
     /**

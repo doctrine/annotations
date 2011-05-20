@@ -24,7 +24,7 @@ namespace Doctrine\Common\Annotations;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class PhpParser
+final class PhpParser
 {
     private $tokens;
 

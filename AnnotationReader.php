@@ -35,7 +35,7 @@ use ReflectionProperty;
  * @author  Roman Borschel <roman@code-factory.org>
  * @author  Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class AnnotationReader implements Reader
+final class AnnotationReader implements Reader
 {
     /**
      * Global map for imports.
@@ -101,15 +101,15 @@ class AnnotationReader implements Reader
      *
      * @param DocParser $parser The parser to use. If none is provided, the default parser is used.
      */
-    public function __construct(DocParser $parser = null)
+    public function __construct()
     {
-        $this->parser = $parser ?: new DocParser;
+        $this->parser = new DocParser;
 
-        $this->preParser = new DocParser();
+        $this->preParser = new DocParser;
         $this->preParser->setImports(self::$globalImports);
         $this->preParser->setIgnoreNotImportedAnnotations(true);
 
-        $this->phpParser = new PhpParser();
+        $this->phpParser = new PhpParser;
     }
 
     /**
