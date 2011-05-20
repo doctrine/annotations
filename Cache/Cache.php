@@ -24,7 +24,7 @@ namespace Doctrine\Common\Annotations\Cache;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-interface CacheInterface
+interface Cache
 {
     /**
      * Returns the class annotations

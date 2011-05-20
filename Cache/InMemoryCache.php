@@ -26,7 +26,7 @@ namespace Doctrine\Common\Annotations\Cache;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class InMemoryCache implements CacheInterface
+class InMemoryCache implements Cache
 {
     private $classAnnotations = array();
     private $propertyAnnotations = array();

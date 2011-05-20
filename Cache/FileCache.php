@@ -24,7 +24,7 @@ namespace Doctrine\Common\Annotations\Cache;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class FileCache implements CacheInterface
+class FileCache implements Cache
 {
     private $dir;
     private $debug;

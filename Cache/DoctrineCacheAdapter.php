@@ -2,9 +2,9 @@
 
 namespace Doctrine\Common\Annotations\Cache;
 
-use Doctrine\Common\Cache\Cache;
+use Doctrine\Common\Cache\Cache as DoctrineCache;
 
-class DoctrineCacheAdapter implements CacheInterface
+class DoctrineCacheAdapter implements Cache
 {
     const PREFIX = '[@Annot]';
 
@@ -12,7 +12,7 @@ class DoctrineCacheAdapter implements CacheInterface
     private $prefix;
     private $debug;
 
-    public function __construct(Cache $cache, $debug = false, $prefix = self::PREFIX)
+    public function __construct(DoctrineCache $cache, $debug = false, $prefix = self::PREFIX)
     {
         $this->cache = $cache;
         $this->debug = $debug;

@@ -19,7 +19,7 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Doctrine\Common\Annotations\Cache\CacheInterface;
+use Doctrine\Common\Annotations\Cache\Cache;
 
 /**
  * A cache aware annotation reader.
@@ -32,7 +32,7 @@ final class CachedReader implements Reader
     private $cache;
     private $loadedAnnotations = array();
 
-    public function __construct(Reader $reader, CacheInterface $cache)
+    public function __construct(Reader $reader, Cache $cache)
     {
         $this->delegate = $reader;
         $this->cache = $cache;
@@ -67,7 +67,7 @@ final class CachedReader implements Reader
 
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
-        if (!isset($this->loadedAnnotations[$key = $property->getDeclaringClass()->getName().'$'.$property->getName()])) {
+        if (isset($this->loadedAnnotations[$key = $property->getDeclaringClass()->getName().'$'.$property->getName()])) {
             return $this->loadedAnnotations[$key];
         }
 
