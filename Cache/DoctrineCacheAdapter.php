@@ -6,81 +6,99 @@ use Doctrine\Common\Cache\Cache;
 
 class DoctrineCacheAdapter implements CacheInterface
 {
-    const PREFIX = '[@Annotations]';
+    const PREFIX = '[@Annot]';
 
     private $cache;
     private $prefix;
-    private $annotations = array();
+    private $debug;
 
-    public function __construct(Cache $cache, $prefix = self::PREFIX)
+    public function __construct(Cache $cache, $debug = false, $prefix = self::PREFIX)
     {
         $this->cache = $cache;
+        $this->debug = $debug;
         $this->prefix = $prefix;
     }
 
     public function getClassAnnotationsFromCache(\ReflectionClass $class)
     {
-        $key = $this->prefix.$class->getName();
+        $key = $class->getName();
 
-        if (isset($this->annotations[$key])) {
-            return $this->annotations[$key];
-        }
-
-        if (!$this->cache->has($key)) {
+        if (!$this->cache->has($this->prefix.$key)) {
             return null;
         }
 
-        return $this->annotations[$key] = unserialize($this->cache->fetch($key));
+        if ($this->debug
+            && (false !== $filename = $class->getFilename())
+            && $this->cache->fetch($this->prefix.'[C]'.$key) < filemtime($filename)) {
+            $this->cache->delete($this->prefix.$key);
+            $this->cache->delete($this->prefix.'[C]'.$key);
+
+            return null;
+        }
+
+        return unserialize($this->cache->fetch($this->prefix.$key));
     }
 
     public function getMethodAnnotationsFromCache(\ReflectionMethod $method)
     {
-        $key = $this->prefix.$method->getDeclaringClass()->getName().'#'.$method->getName();
+        $class = $method->getDeclaringClass();
+        $key = $class->getName().'#'.$method->getName();
 
-        if (isset($this->annotations[$key])) {
-            return $this->annotations[$key];
-        }
-
-        if (!$this->cache->has($key)) {
+        if (!$this->cache->has($this->prefix.$key)) {
             return null;
         }
 
-        return $this->annotations[$key] = unserialize($this->cache->fetch($key));
+        if ($this->debug
+            && (false !== $filename = $class->getFilename())
+            && $this->cache->fetch($this->prefix.'[C]'.$key) < filemtime($filename)) {
+            $this->cache->delete($this->prefix.$key);
+            $this->cache->delete($this->prefix.'[C]'.$key);
+
+            return null;
+        }
+
+        return unserialize($this->cache->fetch($this->prefix.$key));
     }
 
     public function getPropertyAnnotationsFromCache(\ReflectionProperty $property)
     {
-        $key = $this->prefix.$property->getDeclaringClass()->getName().'$'.$property->getName();
+        $class = $property->getDeclaringClass();
+        $key = $class->getName().'$'.$property->getName();
 
-        if (isset($this->annotations[$key])) {
-            return $this->annotations[$key];
-        }
-
-        if (!$this->cache->has($key)) {
+        if (!$this->cache->has($this->prefix.$key)) {
             return null;
         }
 
-        return $this->annotations[$key] = unserialize($this->cache->fetch($key));
+        if ($this->debug
+            && (false !== $filename = $class->getFilename())
+            && $this->cache->fetch($this->prefix.'[C]'.$key) < filemtime($filename)) {
+            $this->cache->delete($this->prefix.$key);
+            $this->cache->delete($this->prefix.'[C]'.$key);
+
+            return null;
+        }
+
+        return unserialize($this->cache->fetch($this->prefix.$key));
     }
 
     public function putClassAnnotationsInCache(\ReflectionClass $class, array $annotations)
     {
-        $key = $this->prefix.$class->getName();
-        $this->annotations[$key] = $annotations;
-        $this->cache->save($key, serialize($annotations));
+        $key = $class->getName();
+        $this->cache->save($this->prefix.$key, serialize($annotations));
+        $this->cache->save($this->prefix.'[C]'.$key, time());
     }
 
     public function putPropertyAnnotationsInCache(\ReflectionProperty $property, array $annotations)
     {
-        $key = $this->prefix.$property->getDeclaringClass()->getName().'$'.$property->getName();
-        $this->annotations[$key] = $annotations;
-        $this->cache->save($key, serialize($annotations));
+        $key = $property->getDeclaringClass()->getName().'$'.$property->getName();
+        $this->cache->save($this->prefix.$key, serialize($annotations));
+        $this->cache->save($this->prefix.'[C]'.$key, time());
     }
 
     public function putMethodAnnotationsInCache(\ReflectionMethod $method, array $annotations)
     {
-        $key = $this->prefix.$method->getDeclaringClass()->getName().'#'.$method->getName();
-        $this->annotations[$key] = $annotations;
-        $this->cache->save($key, serialize($annotations));
+        $key = $method->getDeclaringClass()->getName().'#'.$method->getName();
+        $this->cache->save($this->prefix.$key, serialize($annotations));
+        $this->cache->save($this->prefix.'[C]'.$key, time());
     }
 }

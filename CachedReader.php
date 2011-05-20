@@ -26,10 +26,11 @@ use Doctrine\Common\Annotations\Cache\CacheInterface;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class CachedReader implements Reader
+final class CachedReader implements Reader
 {
     private $delegate;
     private $cache;
+    private $loadedAnnotations = array();
 
     public function __construct(Reader $reader, CacheInterface $cache)
     {
@@ -39,14 +40,18 @@ class CachedReader implements Reader
 
     public function getClassAnnotations(\ReflectionClass $class)
     {
+        if (isset($this->loadedAnnotations[$name = $class->getName()])) {
+            return $this->loadedAnnotations[$name];
+        }
+
         if (null !== $annots = $this->cache->getClassAnnotationsFromCache($class)) {
-            return $annots;
+            return $this->loadedAnnotations[$name] = $annots;
         }
 
         $annots = $this->delegate->getClassAnnotations($class);
         $this->cache->putClassAnnotationsInCache($class, $annots);
 
-        return $annots;
+        return $this->loadedAnnotations[$name] = $annots;
     }
 
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
@@ -62,14 +67,18 @@ class CachedReader implements Reader
 
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
+        if (!isset($this->loadedAnnotations[$key = $property->getDeclaringClass()->getName().'$'.$property->getName()])) {
+            return $this->loadedAnnotations[$key];
+        }
+
         if (null !== $annots = $this->cache->getPropertyAnnotationsFromCache($property)) {
-            return $annots;
+            return $this->loadedAnnotations[$key] = $annots;
         }
 
         $annots = $this->delegate->getPropertyAnnotations($property);
         $this->cache->putPropertyAnnotationsInCache($property, $annots);
 
-        return $annots;
+        return $this->loadedAnnotations[$key] = $annots;
     }
 
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
@@ -85,14 +94,18 @@ class CachedReader implements Reader
 
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
+        if (isset($this->loadedAnnotations[$key = $method->getDeclaringClass()->getName().'#'.$method->getName()])) {
+            return $this->loadedAnnotations[$key];
+        }
+
         if (null !== $annots = $this->cache->getMethodAnnotationsFromCache($method)) {
-            return $annots;
+            return $this->loadedAnnotations[$key] = $annots;
         }
 
         $annots = $this->delegate->getMethodAnnotations($method);
         $this->cache->putMethodAnnotationsInCache($method, $annots);
 
-        return $annots;
+        return $this->loadedAnnotations[$key] = $annots;
     }
 
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
