@@ -310,12 +310,13 @@ final class DocParser
 
         // only process names which are not fully qualified, yet
         if ('\\' !== $name[0] && !$this->classExists($name)) {
-            $parts = explode('\\', $name);
-            $alias = array_shift($parts);
+            $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
+
             if (isset($this->imports[$loweredAlias = strtolower($alias)])) {
-                $name = $this->imports[$loweredAlias];
-                if ($parts) {
-                    $name .= '\\'.implode('\\', $parts);
+                if (false !== $pos) {
+                    $name = $this->imports[$loweredAlias].substr($name, $pos);
+                } else {
+                    $name = $this->imports[$loweredAlias];
                 }
             } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
                  $name = $this->imports['__NAMESPACE__'].'\\'.$name;
