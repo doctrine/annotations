@@ -4,8 +4,9 @@ namespace Doctrine\Tests\Common\Annotations\Regression;
 
 use Doctrine\Tests\Common\Annotations\DummyAnnotation;
 use Doctrine\Tests\Common\Annotations\DummyJoinColumn;
-
-use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Tests\Common\Annotations\Name;
+use ReflectionClass;
+use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\IndexedReader;
 
 /**
@@ -182,10 +183,12 @@ class BCAnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
     
     public function testNamespaceAliasedAnnotations()
     {
-        $parser = new Parser;
-        $parser->setAnnotationNamespaceAlias('Doctrine\Tests\Common\Annotations\\', 'alias');
+        $reader = new IndexedReader(new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache));
+        $reader->setAnnotationNamespaceAlias('Doctrine\Tests\Common\Annotations\\', 'alias');
 
-        $result = $parser->parse('@alias:Name(foo="bar")');
+        $reflClass = new ReflectionClass('Doctrine\Tests\Common\Annotations\Regression\AliasNamespace');
+        
+        $result = $reader->getPropertyAnnotations($reflClass->getProperty('bar'));
         $this->assertEquals(1, count($result));
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
         $this->assertTrue($annot instanceof Name);
@@ -193,14 +196,16 @@ class BCAnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
     }
 
     /**
-* @group DCOM-4
-*/
+     * @group DCOM-4
+     */
     public function testNamespaceAliasAnnotationWithSeparator()
     {
-        $parser = new Parser;
-        $parser->setAnnotationNamespaceAlias('Doctrine\Tests\Common\\', 'alias');
+        $reader = new IndexedReader(new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache));
+        $reader->setAnnotationNamespaceAlias('Doctrine\Tests\Common\\', 'alias');
 
-        $result = $parser->parse('@alias:Annotations\Name(foo="bar")');
+        $reflClass = new ReflectionClass('Doctrine\Tests\Common\Annotations\Regression\AliasNamespace');
+        
+        $result = $reader->getPropertyAnnotations($reflClass->getProperty('foo'));
         $this->assertEquals(1, count($result));
         $annot = $result['Doctrine\Tests\Common\Annotations\Name'];
         $this->assertTrue($annot instanceof Name);
@@ -220,10 +225,13 @@ class CustomDummyAnnotationClass {
     }
 }
 
-class NamespaceParserTest
+class AliasNamespace
 {
+
+    /**
+     * @alias:Name(foo="bar")
+     */
     public $bar;
-    
     /**
      * @alias:Annotations\Name(foo="bar")
      */
