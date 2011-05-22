@@ -90,7 +90,12 @@ final class DocParser
     /**
      * @var boolean
      */
-    private $autoloadAnnotations = true;
+    private $autoloadAnnotations = false;
+    
+    /**
+     * @var Closure
+     */
+    private $creationFn = null;
 
     /**
      * Constructs a new DocParser.
@@ -111,6 +116,15 @@ final class DocParser
     public function setIgnoredAnnotationNames(array $names)
     {
         $this->ignoredAnnotationNames = $names;
+    }
+    
+    /**
+     * @deprecated Will be removed in 3.0
+     * @param \Closure $func
+     */
+    public function setAnnotationCreationFunction(\Closure $func)
+    {
+        $this->creationFn = $func;
     }
 
     /**
@@ -320,6 +334,8 @@ final class DocParser
                 }
             } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
                  $name = $this->imports['__NAMESPACE__'].'\\'.$name;
+            } elseif (isset($this->imports['__DEFAULT__']) && $this->classExists($this->imports['__DEFAULT__'].'\\'.$name)) {
+                 $name = $this->imports['__DEFAULT__'].'\\'.$name;
             } else {
                 if ($this->ignoreNotImportedAnnotations) {
                     return false;
@@ -350,7 +366,17 @@ final class DocParser
 
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
-
+        
+        return $this->newAnnotation($name, $values);
+    }
+    
+    private function newAnnotation($name, $values)
+    {
+        if ($this->creationFn !== null) {
+            $fn = $this->creationFn;
+            return $fn($name, $values);
+        }
+        
         return new $name($values);
     }
 

@@ -26,6 +26,9 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
 
+require_once __DIR__ . '/Annotation/IgnoreAnnotation.php';
+require_once __DIR__ . '/Annotation/ParseAnnotation.php';
+
 /**
  * A reader for docblock annotations.
  *
@@ -95,6 +98,11 @@ final class AnnotationReader implements Reader
      * @var array
      */
     private $ignoredAnnotationNames = array();
+    
+    /**
+     * @var string
+     */
+    private $defaultAnnotationNamespace = false;
 
     /**
      * Constructor. Initializes a new AnnotationReader that uses the given Cache provider.
@@ -110,6 +118,36 @@ final class AnnotationReader implements Reader
         $this->preParser->setIgnoreNotImportedAnnotations(true);
 
         $this->phpParser = new PhpParser;
+    }
+    
+    /**
+     * Sets the default namespace that the AnnotationReader should assume for annotations
+     * with not fully qualified names.
+     *
+     * @deprecated This method will be removed in Doctrine Common 3.0
+     * @param string $defaultNamespace
+     */
+    public function setDefaultAnnotationNamespace($defaultNamespace)
+    {
+        $this->defaultAnnotationNamespace = $defaultNamespace;
+    }
+
+    /**
+     * Sets the custom function to use for creating new annotations on the
+     * underlying parser.
+     *
+     * The function is supplied two arguments. The first argument is the name
+     * of the annotation and the second argument an array of values for this
+     * annotation. The function is assumed to return an object or NULL.
+     * Whenever the function returns NULL for an annotation, the implementation falls
+     * back to the default annotation creation process of the underlying parser.
+     *
+     * @deprecated This method will be removed in Doctrine Common 3.0
+     * @param Closure $func
+     */
+    public function setAnnotationCreationFunction(Closure $func)
+    {
+        $this->parser->setAnnotationCreationFunction($func);
     }
 
     /**
@@ -133,6 +171,17 @@ final class AnnotationReader implements Reader
      * @return boolean
      */
     public function isAutoloadAnnotations()
+    {
+        return $this->parser->isAutoloadAnnotations();
+    }
+    
+    /**
+     * Gets a flag whether to try to autoload annotation classes.
+     * 
+     * @deprecated Will be removed in 3.0, use {@see isAutoloadAnnotations()} instead.
+     * @return bool
+     */
+    public function getAutoloadAnnotations()
     {
         return $this->parser->isAutoloadAnnotations();
     }
