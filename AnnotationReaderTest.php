@@ -10,11 +10,11 @@ class AnnotationReaderTest extends AbstractReaderTest
     {
         $reader = $this->getReader();
 
-        $this->assertTrue($reader->isAutoloadAnnotations());
-        $reader->setAutoloadAnnotations(false);
         $this->assertFalse($reader->isAutoloadAnnotations());
         $reader->setAutoloadAnnotations(true);
         $this->assertTrue($reader->isAutoloadAnnotations());
+        $reader->setAutoloadAnnotations(false);
+        $this->assertFalse($reader->isAutoloadAnnotations());
     }
 
     protected function getReader()

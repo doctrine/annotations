@@ -356,6 +356,15 @@ class DummyClassNonAnnotationProblem
     public $foo;
 }
 
+
+/**
+* @DummyAnnotation Foo bar <foobar@1domain.com>
+*/
+class DummyClassWithEmail
+{
+    
+}
+
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
 class Name extends \Doctrine\Common\Annotations\Annotation
@@ -369,4 +378,3 @@ class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
 }
-

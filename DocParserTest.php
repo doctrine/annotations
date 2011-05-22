@@ -32,7 +32,8 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = $this->createTestParser();
 
-        $this->assertTrue($parser->isAutoloadAnnotations());
+        $this->assertFalse($parser->isAutoloadAnnotations());
+        $parser->setAutoloadAnnotations(true);
 
         // Marker annotation
         $result = $parser->parse("@Name");

@@ -9,6 +9,10 @@ use Doctrine\Common\Annotations\DocLexer;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\AnnotationReader;
 
+require_once __DIR__ . '/Fixtures/Annotation/Route.php';
+require_once __DIR__ . '/Fixtures/Annotation/Template.php';
+require_once __DIR__ . '/Fixtures/Annotation/Secure.php';
+
 class PerformanceTest extends \PHPUnit_Framework_TestCase
 {
     /**
