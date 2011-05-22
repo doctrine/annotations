@@ -103,6 +103,11 @@ final class AnnotationReader implements Reader
      * @var string
      */
     private $defaultAnnotationNamespace = false;
+    
+    /**
+     * @var bool
+     */
+    private $enablePhpImports = true;
 
     /**
      * Constructor. Initializes a new AnnotationReader that uses the given Cache provider.
@@ -118,6 +123,21 @@ final class AnnotationReader implements Reader
         $this->preParser->setIgnoreNotImportedAnnotations(true);
 
         $this->phpParser = new PhpParser;
+    }
+    
+    /**
+     * Detect imports by parsing the use statements of affected files.
+     * 
+     * @param bool $flag 
+     */
+    public function setEnableParsePhpImports($flag)
+    {
+        $this->enablePhpImports = $flag;
+    }
+    
+    public function isParsePhpImportsEnabled()
+    {
+        return $this->enablePhpImports;
     }
     
     /**
@@ -355,7 +375,7 @@ final class AnnotationReader implements Reader
         $name = $class->getName();
         $this->imports[$name] = array_merge(
             self::$globalImports,
-            $this->phpParser->parseClass($class),
+            ($this->enablePhpImports) ? $this->phpParser->parseClass($class) : array(),
             array('__NAMESPACE__' => $class->getNamespaceName())
         );
         $this->ignoredAnnotationNames[$name] = array_unique($ignoredAnnotationNames);
