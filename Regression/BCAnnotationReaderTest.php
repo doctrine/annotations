@@ -157,6 +157,7 @@ class BCAnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
     {
         $reader = new IndexedReader(new AnnotationReader(new \Doctrine\Common\Cache\ArrayCache));
         $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
+        $reader->setEnableParsePhpImports(false);
         return $reader;
     }
 
