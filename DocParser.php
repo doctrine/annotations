@@ -83,6 +83,11 @@ final class DocParser
     private $ignoredAnnotationNames = array();
 
     /**
+     * @var array
+     */
+    private $namespaceAliases = array();
+
+    /**
      * @var string
      */
     private $context = '';
@@ -159,6 +164,11 @@ final class DocParser
     public function setIgnoreNotImportedAnnotations($bool)
     {
         $this->ignoreNotImportedAnnotations = (Boolean) $bool;
+    }
+
+    public function setAnnotationNamespaceAlias($namespace, $alias)
+    {
+        $this->namespaceAliases[$alias] = $namespace;
     }
 
     /**
@@ -320,6 +330,16 @@ final class DocParser
         // check if name is supposed to be ignored
         if (!$this->isNestedAnnotation && in_array($name, $this->ignoredAnnotationNames, true)) {
             return false;
+        }
+
+        if (strpos($name, ":") !== false) {
+            list ($alias, $name) = explode(':', $name);
+            // If the namespace alias doesnt exist, skip until next annotation
+            if ( ! isset($this->namespaceAliases[$alias])) {
+                $this->lexer->skipUntil(DocLexer::T_AT);
+                return false;
+            }
+            $name = $this->namespaceAliases[$alias] . $name;
         }
 
         // only process names which are not fully qualified, yet

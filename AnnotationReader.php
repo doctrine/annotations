@@ -151,6 +151,17 @@ final class AnnotationReader implements Reader
     }
 
     /**
+     * Sets an alias for an annotation namespace.
+     *
+     * @param string $namespace
+     * @param string $alias
+     */
+    public function setAnnotationNamespaceAlias($namespace, $alias)
+    {
+        $this->parser->setAnnotationNamespaceAlias($namespace, $alias);
+    }
+
+    /**
      * Sets a flag whether to auto-load annotation classes or not.
      *
      * NOTE: It is recommended to turn auto-loading on if your auto-loader
