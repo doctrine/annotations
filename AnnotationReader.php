@@ -128,6 +128,7 @@ final class AnnotationReader implements Reader
     /**
      * Detect imports by parsing the use statements of affected files.
      * 
+     * @deprecated Will be removed in 3.0, imports will always be enabled.
      * @param bool $flag 
      */
     public function setEnableParsePhpImports($flag)
@@ -135,6 +136,10 @@ final class AnnotationReader implements Reader
         $this->enablePhpImports = $flag;
     }
     
+    /**
+     * @deprecated Will be removed in 3.0, imports will always be enabled.
+     * @return bool
+     */
     public function isParsePhpImportsEnabled()
     {
         return $this->enablePhpImports;
@@ -378,6 +383,9 @@ final class AnnotationReader implements Reader
             ($this->enablePhpImports) ? $this->phpParser->parseClass($class) : array(),
             array('__NAMESPACE__' => $class->getNamespaceName())
         );
+        if ($this->defaultAnnotationNamespace) {
+            $this->imports[$name]['__DEFAULT__'] = $this->defaultAnnotationNamespace;
+        }
         $this->ignoredAnnotationNames[$name] = array_unique($ignoredAnnotationNames);
     }
 }

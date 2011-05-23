@@ -44,7 +44,7 @@ final class PhpParser
         // This is a short-cut for code that follows some conventions:
         // - namespaced
         // - one class per file
-        if (preg_match_all('#\bnamespace\b.*?\b(?:class|interface)\s+[^\s]+\b#s', $src, $matches)) {
+        if (preg_match_all('#\bnamespace\b.*?\b(?:class|interface)\s+[^\s]+\b#s', $src, $matches) && count($matches[0]) == 1) {
             foreach ($matches[0] as $match) {
                 $classes = $this->parse('<?php '.$match, $name);
 
