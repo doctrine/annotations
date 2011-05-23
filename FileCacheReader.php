@@ -136,7 +136,7 @@ class FileCacheReader implements Reader
      * @param string $annotationName The name of the annotation.
      * @return The Annotation or NULL, if the requested annotation does not exist.
      */
-    public function getClassAnnotation(ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
         $annotations = $this->getClassAnnotations($class);
 
@@ -156,7 +156,7 @@ class FileCacheReader implements Reader
      * @param string $annotationName The name of the annotation.
      * @return The Annotation or NULL, if the requested annotation does not exist.
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
         $annotations = $this->getMethodAnnotations($method);
 
@@ -176,7 +176,7 @@ class FileCacheReader implements Reader
      * @param string $annotationName The name of the annotation.
      * @return The Annotation or NULL, if the requested annotation does not exist.
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {
         $annotations = $this->getPropertyAnnotations($property);
 
