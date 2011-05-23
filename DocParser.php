@@ -274,12 +274,10 @@ final class DocParser
 
     /**
      * Annotation     ::= "@" AnnotationName ["(" [Values] ")"]
-     * AnnotationName ::= QualifiedName | SimpleName | AliasedName
+     * AnnotationName ::= QualifiedName | SimpleName
      * QualifiedName  ::= NameSpacePart "\" {NameSpacePart "\"}* SimpleName
-     * AliasedName    ::= Alias ":" SimpleName
      * NameSpacePart  ::= identifier
      * SimpleName     ::= identifier
-     * Alias          ::= identifier
      *
      * @return mixed False if it is not a valid annotation.
      */
