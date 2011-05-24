@@ -61,7 +61,7 @@ final class AnnotationReader implements Reader
         'access', 'author', 'copyright', 'deprecated', 'example', 'ignore',
         'internal', 'link', 'see', 'since', 'tutorial', 'version', 'package',
         'subpackage', 'name', 'global', 'param', 'return', 'staticvar',
-        'static', 'var', 'throws', 'inheritdoc',
+        'static', 'var', 'throws', 'inheritdoc', 'inheritDoc', 'license', 'todo',
     );
 
     /**
