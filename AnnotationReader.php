@@ -27,7 +27,6 @@ use ReflectionMethod;
 use ReflectionProperty;
 
 require_once __DIR__ . '/Annotation/IgnoreAnnotation.php';
-require_once __DIR__ . '/Annotation/ParseAnnotation.php';
 
 /**
  * A reader for docblock annotations.
@@ -47,22 +46,35 @@ final class AnnotationReader implements Reader
      */
     private static $globalImports = array(
         'ignoreannotation' => 'Doctrine\Common\Annotations\Annotation\IgnoreAnnotation',
-        'parseannotation'  => 'Doctrine\Common\Annotations\Annotation\ParseAnnotation',
     );
 
     /**
-     * A list of globally ignored annotation names.
+     * A list with annotations that are not causing exceptions when not resolved to an annotation class.
      *
      * The names are case sensitive.
      *
      * @var array
      */
     private static $globalIgnoredNames = array(
-        'access', 'author', 'copyright', 'deprecated', 'example', 'ignore',
-        'internal', 'link', 'see', 'since', 'tutorial', 'version', 'package',
-        'subpackage', 'name', 'global', 'param', 'return', 'staticvar',
-        'static', 'var', 'throws', 'inheritdoc', 'inheritDoc', 'license', 'todo',
+        'access'=> true, 'author'=> true, 'copyright'=> true, 'deprecated'=> true,
+        'example'=> true, 'ignore'=> true, 'internal'=> true, 'link'=> true, 'see'=> true,
+        'since'=> true, 'tutorial'=> true, 'version'=> true, 'package'=> true,
+        'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
+        'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
+        'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true, 
+        'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'depcreated'=> true,
+        'deprec'=> true, 'author'=> true,
     );
+    
+    /**
+     * Add a new annotation to the globally ignored annotation names with regard to exception handling.
+     * 
+     * @param string $name 
+     */
+    static public function addGlobalIgnoredName($name)
+    {
+        self::$globalIgnoredNames[$name] = true;
+    }
 
     /**
      * Annotations Parser
@@ -352,7 +364,9 @@ final class AnnotationReader implements Reader
     private function getIgnoredAnnotationNames(ReflectionClass $class)
     {
         if (isset($this->ignoredAnnotationNames[$name = $class->getName()])) {
-            return $this->ignoredAnnotationNames[$name];
+            return $this->ignoredAnnotationNames[$name]
+                ? array_merge(self::$globalIgnoredNames, $this->ignoredAnnotationNames[$name])
+                : self::$globalIgnoredNames;
         }
         $this->collectParsingMetadata($class);
 
@@ -377,14 +391,14 @@ final class AnnotationReader implements Reader
     private function collectParsingMetadata(ReflectionClass $class)
     {
         $imports = self::$globalImports;
-        $ignoredAnnotationNames = self::$globalIgnoredNames;
+        $ignoredAnnotationNames = array();
 
         $annotations = $this->preParser->parse($class->getDocComment());
         foreach ($annotations as $annotation) {
             if ($annotation instanceof IgnoreAnnotation) {
-                $ignoredAnnotationNames = array_merge($ignoredAnnotationNames, $annotation->names);
-            } else if ($annotation instanceof ParseAnnotation) {
-                $ignoredAnnotationNames = array_diff($ignoredAnnotationNames, $annotation->names);
+                foreach ($annotation->names AS $annot) {
+                    $ignoredAnnotationNames[$annot] = true;
+                }
             }
         }
 
@@ -397,6 +411,6 @@ final class AnnotationReader implements Reader
         if ($this->defaultAnnotationNamespace) {
             $this->imports[$name]['__DEFAULT__'] = $this->defaultAnnotationNamespace;
         }
-        $this->ignoredAnnotationNames[$name] = array_unique($ignoredAnnotationNames);
+        $this->ignoredAnnotationNames[$name] = $ignoredAnnotationNames;
     }
 }
