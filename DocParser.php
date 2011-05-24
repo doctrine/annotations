@@ -73,7 +73,7 @@ final class DocParser
     private $ignoreNotImportedAnnotations = false;
 
     /**
-     * A list with annotations that are to be ignored during the parsing process.
+     * A list with annotations that are not causing exceptions when not resolved to an annotation class.
      *
      * The names must be the raw names as used in the class, not the fully qualified
      * class names.
@@ -301,11 +301,6 @@ final class DocParser
             $name .= '\\'.$this->lexer->token['value'];
         }
 
-        // check if name is supposed to be ignored
-        if (!$this->isNestedAnnotation && in_array($name, $this->ignoredAnnotationNames, true)) {
-            return false;
-        }
-
         // only process names which are not fully qualified, yet
         if ('\\' !== $name[0] && !$this->classExists($name)) {
             $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
@@ -319,7 +314,7 @@ final class DocParser
             } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
                  $name = $this->imports['__NAMESPACE__'].'\\'.$name;
             } else {
-                if ($this->ignoreNotImportedAnnotations) {
+                if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
                     return false;
                 }
 
