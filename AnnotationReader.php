@@ -126,6 +126,17 @@ final class AnnotationReader implements Reader
     }
     
     /**
+     * Ignore not imported annotations and not throw an exception.
+     * 
+     * @deprecated 
+     * @param bool $bool
+     */
+    public function setIgnoreNotImportedAnnotations($bool)
+    {
+        $this->parser->setIgnoreNotImportedAnnotations($bool);
+    }
+    
+    /**
      * Detect imports by parsing the use statements of affected files.
      * 
      * @deprecated Will be removed in 3.0, imports will always be enabled.
