@@ -166,16 +166,6 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Name', $annotation);
     }
 
-    /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage The annotation "@var" in property Doctrine\Tests\Common\Annotations\TestParseAnnotationClass::$field was never imported.
-     */
-    public function testParseAnnotation()
-    {
-        $reader = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\TestParseAnnotationClass', 'field'));
-    }
-
     abstract protected function getReader();
 }
 
