@@ -60,7 +60,7 @@ final class AnnotationReader implements Reader
         'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
         'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
         'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true, 
-        'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'depcreated'=> true,
+        'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'deprecated'=> true,
         'deprec'=> true, 'author'=> true,
     );
     
