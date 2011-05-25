@@ -320,6 +320,25 @@ DOCBLOCK;
         $annot = $result[0];
         $this->assertInternalType('float', $annot->foo);
     }
+
+    public function testReservedKeywordsInAnnotations()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse('@Doctrine\Tests\Common\Annotations\True');
+        $this->assertTrue($result[0] instanceof True);
+        $result = $parser->parse('@Doctrine\Tests\Common\Annotations\False');
+        $this->assertTrue($result[0] instanceof False);
+        $result = $parser->parse('@Doctrine\Tests\Common\Annotations\Null');
+        $this->assertTrue($result[0] instanceof Null);
+
+        $result = $parser->parse('@True');
+        $this->assertTrue($result[0] instanceof True);
+        $result = $parser->parse('@False');
+        $this->assertTrue($result[0] instanceof False);
+        $result = $parser->parse('@Null');
+        $this->assertTrue($result[0] instanceof Null);
+    }
 }
 
 class Name extends \Doctrine\Common\Annotations\Annotation {
@@ -327,6 +346,12 @@ class Name extends \Doctrine\Common\Annotations\Annotation {
 }
 
 class Marker {}
+
+class True {}
+
+class False {}
+
+class Null {}
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
