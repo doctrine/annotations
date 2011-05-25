@@ -181,8 +181,14 @@ final class DocParser
      */
     private function match($token)
     {
-        if ( ! ($this->lexer->lookahead['type'] === $token)) {
-            $this->syntaxError($this->lexer->getLiteral($token));
+        if ( is_array($token) ) {
+            if ( ! (in_array($this->lexer->lookahead['type'], $token))) {
+                $this->syntaxError($this->lexer->getLiteral($token));
+            }
+        } else {
+            if ( ! ($this->lexer->lookahead['type'] === $token)) {
+                $this->syntaxError($this->lexer->getLiteral($token));
+            }
         }
         $this->lexer->moveNext();
     }
@@ -297,7 +303,8 @@ final class DocParser
 
         while ($this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen($this->lexer->token['value']) && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
             $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
-            $this->match(DocLexer::T_IDENTIFIER);
+            // True, False, and Null are valid class names
+            $this->match(array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL));
             $name .= '\\'.$this->lexer->token['value'];
         }
 
