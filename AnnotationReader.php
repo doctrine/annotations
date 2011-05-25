@@ -19,7 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Doctrine\Common\Annotations\Annotation\ParseAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Closure;
 use ReflectionClass;
@@ -59,15 +58,15 @@ final class AnnotationReader implements Reader
         'since'=> true, 'tutorial'=> true, 'version'=> true, 'package'=> true,
         'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
         'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
-        'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true, 
+        'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true,
         'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'deprecated'=> true,
         'deprec'=> true, 'author'=> true,
     );
-    
+
     /**
      * Add a new annotation to the globally ignored annotation names with regard to exception handling.
-     * 
-     * @param string $name 
+     *
+     * @param string $name
      */
     static public function addGlobalIgnoredName($name)
     {
@@ -269,9 +268,7 @@ final class AnnotationReader implements Reader
     private function getIgnoredAnnotationNames(ReflectionClass $class)
     {
         if (isset($this->ignoredAnnotationNames[$name = $class->getName()])) {
-            return $this->ignoredAnnotationNames[$name]
-                ? array_merge(self::$globalIgnoredNames, $this->ignoredAnnotationNames[$name])
-                : self::$globalIgnoredNames;
+            return $this->ignoredAnnotationNames[$name];
         }
         $this->collectParsingMetadata($class);
 
@@ -296,7 +293,7 @@ final class AnnotationReader implements Reader
     private function collectParsingMetadata(ReflectionClass $class)
     {
         $imports = self::$globalImports;
-        $ignoredAnnotationNames = array();
+        $ignoredAnnotationNames = self::$globalIgnoredNames;
 
         $annotations = $this->preParser->parse($class->getDocComment());
         foreach ($annotations as $annotation) {
