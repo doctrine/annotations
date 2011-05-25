@@ -93,6 +93,13 @@ final class DocParser
     private $autoloadAnnotations = true;
 
     /**
+     * An array of all valid tokens for a class name.
+     *
+     * @var array
+     */
+    private $classIdentifiers = array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL);
+
+    /**
      * Constructs a new DocParser.
      */
     public function __construct()
@@ -181,15 +188,10 @@ final class DocParser
      */
     private function match($token)
     {
-        if ( is_array($token) ) {
-            if ( ! (in_array($this->lexer->lookahead['type'], $token))) {
-                $this->syntaxError($this->lexer->getLiteral($token));
-            }
-        } else {
-            if ( ! ($this->lexer->lookahead['type'] === $token)) {
-                $this->syntaxError($this->lexer->getLiteral($token));
-            }
+        if ( ! $this->lexer->isNextToken($token) ) {
+            $this->syntaxError($this->lexer->getLiteral($token));
         }
+
         $this->lexer->moveNext();
     }
 
@@ -263,7 +265,7 @@ final class DocParser
             // make sure the @ is followed by either a namespace separator, or
             // an identifier token
             if ((null === $peek = $this->lexer->glimpse())
-                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && DocLexer::T_IDENTIFIER !== $peek['type'])
+                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && !in_array($peek['type'], $this->classIdentifiers, true))
                 || $peek['position'] !== $this->lexer->lookahead['position'] + 1) {
                 $this->lexer->moveNext();
                 continue;
@@ -292,7 +294,7 @@ final class DocParser
         $this->match(DocLexer::T_AT);
 
         // check if we have an annotation
-        if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
+        if ($this->lexer->isNextToken($this->classIdentifiers)) {
             $this->lexer->moveNext();
             $name = $this->lexer->token['value'];
         } else if ($this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
@@ -303,8 +305,7 @@ final class DocParser
 
         while ($this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen($this->lexer->token['value']) && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
             $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
-            // True, False, and Null are valid class names
-            $this->match(array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL));
+            $this->match($this->classIdentifiers);
             $name .= '\\'.$this->lexer->token['value'];
         }
 
