@@ -339,6 +339,17 @@ DOCBLOCK;
         $result = $parser->parse('@Null');
         $this->assertTrue($result[0] instanceof Null);
     }
+
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER or Doctrine\Common\Annotations\DocLexer::T_TRUE or Doctrine\Common\Annotations\DocLexer::T_FALSE or Doctrine\Common\Annotations\DocLexer::T_NULL, got '3.42' at position 5.
+     */
+    public function testInvalidIdentifierInAnnotation()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse('@Foo\3.42');
+    }
 }
 
 class Name extends \Doctrine\Common\Annotations\Annotation {
