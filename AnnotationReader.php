@@ -19,7 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Doctrine\Common\Annotations\Annotation\ParseAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Closure;
 use ReflectionClass;
@@ -61,15 +60,15 @@ final class AnnotationReader implements Reader
         'since'=> true, 'tutorial'=> true, 'version'=> true, 'package'=> true,
         'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
         'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
-        'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true, 
+        'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true,
         'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'deprecated'=> true,
-        'deprec'=> true, 'author'=> true,
+        'deprec'=> true, 'author'=> true, 'property' => true, 'method' => true,
     );
-    
+
     /**
      * Add a new annotation to the globally ignored annotation names with regard to exception handling.
-     * 
-     * @param string $name 
+     *
+     * @param string $name
      */
     static public function addGlobalIgnoredName($name)
     {
@@ -110,12 +109,12 @@ final class AnnotationReader implements Reader
      * @var array
      */
     private $ignoredAnnotationNames = array();
-    
+
     /**
      * @var string
      */
     private $defaultAnnotationNamespace = false;
-    
+
     /**
      * @var bool
      */
@@ -136,29 +135,29 @@ final class AnnotationReader implements Reader
 
         $this->phpParser = new PhpParser;
     }
-    
+
     /**
      * Ignore not imported annotations and not throw an exception.
-     * 
-     * @deprecated 
+     *
+     * @deprecated
      * @param bool $bool
      */
     public function setIgnoreNotImportedAnnotations($bool)
     {
         $this->parser->setIgnoreNotImportedAnnotations($bool);
     }
-    
+
     /**
      * Detect imports by parsing the use statements of affected files.
-     * 
+     *
      * @deprecated Will be removed in 3.0, imports will always be enabled.
-     * @param bool $flag 
+     * @param bool $flag
      */
     public function setEnableParsePhpImports($flag)
     {
         $this->enablePhpImports = $flag;
     }
-    
+
     /**
      * @deprecated Will be removed in 3.0, imports will always be enabled.
      * @return bool
@@ -167,7 +166,7 @@ final class AnnotationReader implements Reader
     {
         return $this->enablePhpImports;
     }
-    
+
     /**
      * Sets the default namespace that the AnnotationReader should assume for annotations
      * with not fully qualified names.
@@ -233,10 +232,10 @@ final class AnnotationReader implements Reader
     {
         return $this->parser->isAutoloadAnnotations();
     }
-    
+
     /**
      * Gets a flag whether to try to autoload annotation classes.
-     * 
+     *
      * @deprecated Will be removed in 3.0, use {@see isAutoloadAnnotations()} instead.
      * @return bool
      */
@@ -364,9 +363,7 @@ final class AnnotationReader implements Reader
     private function getIgnoredAnnotationNames(ReflectionClass $class)
     {
         if (isset($this->ignoredAnnotationNames[$name = $class->getName()])) {
-            return $this->ignoredAnnotationNames[$name]
-                ? array_merge(self::$globalIgnoredNames, $this->ignoredAnnotationNames[$name])
-                : self::$globalIgnoredNames;
+            return $this->ignoredAnnotationNames[$name];
         }
         $this->collectParsingMetadata($class);
 
@@ -391,7 +388,7 @@ final class AnnotationReader implements Reader
     private function collectParsingMetadata(ReflectionClass $class)
     {
         $imports = self::$globalImports;
-        $ignoredAnnotationNames = array();
+        $ignoredAnnotationNames = self::$globalIgnoredNames;
 
         $annotations = $this->preParser->parse($class->getDocComment());
         foreach ($annotations as $annotation) {

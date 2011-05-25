@@ -36,6 +36,13 @@ use ReflectionClass;
 final class DocParser
 {
     /**
+     * An array of all valid tokens for a class name.
+     *
+     * @var array
+     */
+    private static $classIdentifiers = array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL);
+
+    /**
      * The lexer.
      *
      * @var Doctrine\Common\Annotations\DocLexer
@@ -205,10 +212,29 @@ final class DocParser
      */
     private function match($token)
     {
-        if ( ! ($this->lexer->lookahead['type'] === $token)) {
+        if ( ! $this->lexer->isNextToken($token) ) {
             $this->syntaxError($this->lexer->getLiteral($token));
         }
-        $this->lexer->moveNext();
+
+        return $this->lexer->moveNext();
+    }
+
+    /**
+     * Attempts to match the current lookahead token with any of the given tokens.
+     *
+     * If any of them matches, this method updates the lookahead token; otherwise
+     * a syntax error is raised.
+     *
+     * @param array $tokens
+     * @return bool
+     */
+    private function matchAny(array $tokens)
+    {
+        if ( ! $this->lexer->isNextTokenAny($tokens)) {
+            $this->syntaxError(implode(' or ', array_map(array($this->lexer, 'getLiteral'), $tokens)));
+        }
+
+        return $this->lexer->moveNext();
     }
 
     /**
@@ -281,7 +307,7 @@ final class DocParser
             // make sure the @ is followed by either a namespace separator, or
             // an identifier token
             if ((null === $peek = $this->lexer->glimpse())
-                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && DocLexer::T_IDENTIFIER !== $peek['type'])
+                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && !in_array($peek['type'], self::$classIdentifiers, true))
                 || $peek['position'] !== $this->lexer->lookahead['position'] + 1) {
                 $this->lexer->moveNext();
                 continue;
@@ -300,8 +326,8 @@ final class DocParser
      * Annotation     ::= "@" AnnotationName ["(" [Values] ")"]
      * AnnotationName ::= QualifiedName | SimpleName
      * QualifiedName  ::= NameSpacePart "\" {NameSpacePart "\"}* SimpleName
-     * NameSpacePart  ::= identifier
-     * SimpleName     ::= identifier
+     * NameSpacePart  ::= identifier | null | false | true
+     * SimpleName     ::= identifier | null | false | true
      *
      * @return mixed False if it is not a valid annotation.
      */
@@ -310,7 +336,7 @@ final class DocParser
         $this->match(DocLexer::T_AT);
 
         // check if we have an annotation
-        if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
+        if ($this->lexer->isNextTokenAny(self::$classIdentifiers)) {
             $this->lexer->moveNext();
             $name = $this->lexer->token['value'];
         } else if ($this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
@@ -321,7 +347,7 @@ final class DocParser
 
         while ($this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen($this->lexer->token['value']) && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
             $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
-            $this->match(DocLexer::T_IDENTIFIER);
+            $this->matchAny(self::$classIdentifiers);
             $name .= '\\'.$this->lexer->token['value'];
         }
 
