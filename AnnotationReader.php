@@ -63,6 +63,7 @@ final class AnnotationReader implements Reader
         'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true,
         'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'deprecated'=> true,
         'deprec'=> true, 'author'=> true, 'property' => true, 'method' => true,
+        'abstract'=> true, 'exception'=> true, 'magic' => true,
     );
 
     /**
