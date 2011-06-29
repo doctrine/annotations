@@ -357,13 +357,13 @@ class Name extends \Doctrine\Common\Annotations\Annotation {
     public $foo;
 }
 
-class Marker {}
+class Marker extends \Doctrine\Common\Annotations\Annotation {}
 
-class True {}
+class True extends \Doctrine\Common\Annotations\Annotation {}
 
-class False {}
+class False extends \Doctrine\Common\Annotations\Annotation {}
 
-class Null {}
+class Null extends \Doctrine\Common\Annotations\Annotation {}
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 

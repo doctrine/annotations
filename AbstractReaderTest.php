@@ -7,6 +7,14 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
+use Doctrine\Tests\Common\Annotations\DummyAnnotation;
+use Doctrine\Tests\Common\Annotations\Name;
+use Doctrine\Tests\Common\Annotations\DummyId;
+use Doctrine\Tests\Common\Annotations\DummyJoinTable;
+use Doctrine\Tests\Common\Annotations\DummyJoinColumn;
+use Doctrine\Tests\Common\Annotations\DummyColumn;
+use Doctrine\Tests\Common\Annotations\DummyGeneratedValue;
+
 require_once __DIR__ . '/TopLevelAnnotation.php';
 
 abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase

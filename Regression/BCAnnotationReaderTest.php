@@ -6,6 +6,9 @@ use ReflectionClass;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\IndexedReader;
 
+use Doctrine\Tests\Common\Annotations\DummyJoinTable;
+use Doctrine\Tests\Common\Annotations\DummyId;
+
 /**
  * Important: This class needs a different namespace than Doctrine\Tests\Common\Annotations\
  * to be able to really test the set default annotation namespace functionality.
