@@ -373,7 +373,9 @@ final class DocParser
                 }
             } elseif (isset($this->imports['__DEFAULT__']) && $this->classExists($this->imports['__DEFAULT__'].$name)) {
                  $name = $this->imports['__DEFAULT__'].$name;
-            } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
+            } elseif (isset($this->imports['__NAMESPACE__']) &&
+                    $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name) && 
+                    is_subclass_of($this->imports['__NAMESPACE__'].'\\'.$name, 'Doctrine\Common\Annotations\Annotation')) {
                  $name = $this->imports['__NAMESPACE__'].'\\'.$name;
             } else {
                 if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
