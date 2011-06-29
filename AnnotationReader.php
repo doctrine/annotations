@@ -393,11 +393,13 @@ final class AnnotationReader implements Reader
         $imports = self::$globalImports;
         $ignoredAnnotationNames = self::$globalIgnoredNames;
 
-        $annotations = $this->preParser->parse($class->getDocComment());
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof IgnoreAnnotation) {
-                foreach ($annotation->names AS $annot) {
-                    $ignoredAnnotationNames[$annot] = true;
+        if ($this->enablePhpImports) {
+            $annotations = $this->preParser->parse($class->getDocComment());
+            foreach ($annotations as $annotation) {
+                if ($annotation instanceof IgnoreAnnotation) {
+                    foreach ($annotation->names AS $annot) {
+                        $ignoredAnnotationNames[$annot] = true;
+                    }
                 }
             }
         }

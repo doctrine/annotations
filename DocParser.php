@@ -373,9 +373,7 @@ final class DocParser
                 }
             } elseif (isset($this->imports['__DEFAULT__']) && $this->classExists($this->imports['__DEFAULT__'].$name)) {
                  $name = $this->imports['__DEFAULT__'].$name;
-            } elseif (isset($this->imports['__NAMESPACE__']) &&
-                    $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name) && 
-                    is_subclass_of($this->imports['__NAMESPACE__'].'\\'.$name, 'Doctrine\Common\Annotations\Annotation')) {
+            } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
                  $name = $this->imports['__NAMESPACE__'].'\\'.$name;
             } else {
                 if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
@@ -388,6 +386,10 @@ final class DocParser
 
         if (!$this->classExists($name)) {
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
+        }
+
+        if (!is_subclass_of($name, 'Doctrine\Common\Annotations\Annotation')) {
+            return false;
         }
 
         // at this point, $name contains the fully qualified class name of the
