@@ -406,7 +406,7 @@ final class AnnotationReader implements Reader
         $this->imports[$name] = array_merge(
             self::$globalImports,
             ($this->enablePhpImports) ? $this->phpParser->parseClass($class) : array(),
-            array('__NAMESPACE__' => $class->getNamespaceName())
+            ($this->enablePhpImports) ? array('__NAMESPACE__' => $class->getNamespaceName()) : array()
         );
         if ($this->defaultAnnotationNamespace) {
             $this->imports[$name]['__DEFAULT__'] = $this->defaultAnnotationNamespace;
