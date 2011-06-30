@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures\Annotation;
 
+/** @Annotation */
 class Secure
 {
     private $roles;

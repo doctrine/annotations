@@ -352,19 +352,25 @@ DOCBLOCK;
     }
 }
 
+/** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation {
     public $foo;
 }
 
+/** @Annotation */
 class Marker {}
 
+/** @Annotation */
 class True {}
 
+/** @Annotation */
 class False {}
 
+/** @Annotation */
 class Null {}
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
+/** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation {
 }

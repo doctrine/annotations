@@ -287,18 +287,24 @@ class DummyClass2 {
     private $id;
 }
 
+/** @Annotation */
 class DummyId extends \Doctrine\Common\Annotations\Annotation {}
+/** @Annotation */
 class DummyColumn extends \Doctrine\Common\Annotations\Annotation {
     public $type;
 }
+/** @Annotation */
 class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation {}
+/** @Annotation */
 class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
     public $dummyValue;
 }
+/** @Annotation */
 class DummyJoinColumn extends \Doctrine\Common\Annotations\Annotation {
     public $name;
     public $referencedColumnName;
 }
+/** @Annotation */
 class DummyJoinTable extends \Doctrine\Common\Annotations\Annotation {
     public $name;
     public $joinColumns;
@@ -348,6 +354,7 @@ class DummyClassNonAnnotationProblem
 
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
+/** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
@@ -355,6 +362,7 @@ class Name extends \Doctrine\Common\Annotations\Annotation
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 
+/** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
