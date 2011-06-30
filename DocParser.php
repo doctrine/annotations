@@ -334,6 +334,7 @@ final class DocParser
         }
 
         // only process names which are not fully qualified, yet
+        $originalName = $name;
         if ('\\' !== $name[0] && !$this->classExists($name)) {
             $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
 
@@ -367,11 +368,11 @@ final class DocParser
             $ref = new \ReflectionClass($name);
 
             if (false === strpos($ref->getDocComment(), '@Annotation')) {
-                if (isset($this->ignoredAnnotationNames[$ref->getShortName()])) {
+                if (isset($this->ignoredAnnotationNames[$originalName])) {
                     return false;
                 }
 
-                throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $ref->getShortName(), $this->context));
+                throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $originalName, $this->context));
             }
             $this->isAnnotation[$name] = true;
         }
