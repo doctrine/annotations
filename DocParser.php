@@ -100,6 +100,12 @@ final class DocParser
     private $autoloadAnnotations = true;
 
     /**
+     * Hash-map for caching annotation classes to avoid reparsing their doc-blocks
+     * @var array
+     */
+    private $isAnnotation = array();
+
+    /**
      * Constructs a new DocParser.
      */
     public function __construct()
@@ -355,6 +361,20 @@ final class DocParser
         // at this point, $name contains the fully qualified class name of the
         // annotation, and it is also guaranteed that this class exists, and
         // that it is loaded
+
+        // verify that the class is really meant to be an annotation and not just any ordinary class
+        if (!isset($this->isAnnotation[$name])) {
+            $ref = new \ReflectionClass($name);
+
+            if (false === strpos($ref->getDocComment(), '@Annotation')) {
+                if (isset($this->ignoredAnnotationNames[$ref->getShortName()])) {
+                    return false;
+                }
+
+                throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to doc comment of the class.', $name));
+            }
+            $this->isAnnotation[$name] = true;
+        }
 
         // Next will be nested
         $this->isNestedAnnotation = true;
