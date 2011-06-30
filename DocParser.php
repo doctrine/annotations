@@ -388,7 +388,9 @@ final class DocParser
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
 
-        if (!is_subclass_of($name, 'Doctrine\Common\Annotations\Annotation')) {
+        // Verifies that the annotation class extends any class that contains "Annotation".
+        // This is done to avoid coupling of Doctrine Annotations against other libraries.
+        if (strpos(implode(" ", class_parents($name)), '\Annotation') === false) {
             return false;
         }
 
