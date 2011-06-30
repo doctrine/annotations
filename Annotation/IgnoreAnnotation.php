@@ -23,6 +23,7 @@ namespace Doctrine\Common\Annotations\Annotation;
  * Annotation that can be used to signal to the parser to ignore specific
  * annotations during the parsing process.
  *
+ * @Annotation
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 final class IgnoreAnnotation
