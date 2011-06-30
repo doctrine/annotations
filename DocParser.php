@@ -371,7 +371,7 @@ final class DocParser
                     return false;
                 }
 
-                throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to doc comment of the class.', $name));
+                throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If not, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of "%s".', $name, $name, $ref->getShortName(), $this->context));
             }
             $this->isAnnotation[$name] = true;
         }
