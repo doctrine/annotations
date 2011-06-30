@@ -71,6 +71,14 @@ final class DocParser
      * @var array
      */
     private $classExists = array();
+    
+    /**
+     *
+     * @var This hashmap is used internally to cache if a class is an annotation or not.
+     * 
+     * @var array
+     */
+    private $isAnnotation = array();
 
     /**
      * Whether annotations that have not been imported should be ignored.
@@ -387,12 +395,14 @@ final class DocParser
         if (!$this->classExists($name)) {
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
+        
+        if (!$this->isAnnotation($name)) {
+            return false;
+        }
 
         // Verifies that the annotation class extends any class that contains "Annotation".
         // This is done to avoid coupling of Doctrine Annotations against other libraries.
-        if (strpos(implode(" ", class_parents($name)), '\Annotation') === false) {
-            return false;
-        }
+        
 
         // at this point, $name contains the fully qualified class name of the
         // annotation, and it is also guaranteed that this class exists, and
@@ -413,6 +423,29 @@ final class DocParser
         }
         
         return $this->newAnnotation($name, $values);
+    }
+    
+    /**
+     * Verify that the found class is actually an annotation.
+     * 
+     * This can be detected through two mechanisms:
+     * 1. Class extends Doctrine\Common\Annotations\Annotation
+     * 2. The class level docblock contains the string "@Annotation"
+     * 
+     * @param string $name
+     * @return bool
+     */
+    private function isAnnotation($name)
+    {
+        if (!isset($this->isAnnotation[$name])) {
+            if (is_subclass_of($name, 'Doctrine\Common\Annotations\Annotation')) {
+                $this->isAnnotation[$name] = true;
+            } else {
+                $reflClass = new \ReflectionClass($name);
+                $this->isAnnotation[$name] = strpos($reflClass->getDocComment(), "@Annotation") !== false;
+            }
+        }
+        return $this->isAnnotation[$name];
     }
     
     private function newAnnotation($name, $values)
