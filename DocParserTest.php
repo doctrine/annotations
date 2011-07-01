@@ -32,9 +32,6 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
     {
         $parser = $this->createTestParser();
 
-        $this->assertFalse($parser->isAutoloadAnnotations());
-        $parser->setAutoloadAnnotations(true);
-
         // Marker annotation
         $result = $parser->parse("@Name");
         $annot = $result[0];
@@ -237,7 +234,7 @@ DOCBLOCK;
         $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
         
         $parser = new DocParser();
-        $parser->addAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
+        $parser->registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
         $parser->setImports(array(
             'autoload' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload',
         ));
@@ -252,7 +249,7 @@ DOCBLOCK;
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
         $parser->setImports(array(
-            'Name' => 'Doctrine\Tests\Common\Annotations\Name',
+            'name' => 'Doctrine\Tests\Common\Annotations\Name',
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations',
         ));
 
