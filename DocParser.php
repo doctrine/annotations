@@ -106,16 +106,23 @@ final class DocParser
      * @var string
      */
     private $context = '';
-
-    /**
-     * @var boolean
-     */
-    private $autoloadAnnotations = false;
     
     /**
      * @var Closure
      */
     private $creationFn = null;
+    
+    /**
+     * A map of namespaces to use for autoloading purposes based on a PSR-0 convention.
+     * 
+     * Contains the namespace as key and an array of direectories as value. If the value is NULL
+     * the include path is used for checking for the corresponding file.
+     * 
+     * This autoloading mechanism does not utilize the PHP autoloading but implements autoloading on its own.
+     * 
+     * @var array
+     */
+    private $autoloadNamespaces = array();
 
     /**
      * Constructs a new DocParser.
@@ -146,6 +153,17 @@ final class DocParser
     {
         $this->creationFn = $func;
     }
+    
+    /**
+     * Add a namespace with one or many directories to look for files or null for the include path.
+     * 
+     * @param string $namespace
+     * @param string|array|null $dirs 
+     */
+    public function addAutoloadNamespace($namespace, $dirs = null)
+    {
+        $this->autoloadNamespaces[$namespace] = $dirs;
+    }
 
     /**
      * Sets a flag whether to auto-load annotation classes or not.
@@ -157,7 +175,7 @@ final class DocParser
      */
     public function setAutoloadAnnotations($bool)
     {
-        $this->autoloadAnnotations = $bool;
+        
     }
 
     /**
@@ -168,7 +186,7 @@ final class DocParser
      */
     public function isAutoloadAnnotations()
     {
-        return $this->autoloadAnnotations;
+        return false;
     }
 
     public function setImports(array $imports)
@@ -276,8 +294,8 @@ final class DocParser
     }
 
     /**
-     * This will prevent going through the auto-loader on each occurence of the
-     * annotation.
+     * Attempt to check if a class exists or not. This never goes through the PHP autoloading mechanism
+     * but implements its own PSR-0 compliant silently failing autoloader.
      *
      * @param string $fqcn
      * @return boolean
@@ -287,8 +305,45 @@ final class DocParser
         if (isset($this->classExists[$fqcn])) {
             return $this->classExists[$fqcn];
         }
+        
+        // first check if the class already exists, maybe loaded through another AnnotationReader
+        if (class_exists($fqcn, false)) {
+            return $this->classExists[$fqcn] = true;
+        }
+        
+        // class was not found, lets try to "autoload" it silently
+        $this->autoloadAnnotation($fqcn);
 
-        return $this->classExists[$fqcn] = class_exists($fqcn, $this->autoloadAnnotations);
+        // final check, does this class exist?
+        return $this->classExists[$fqcn] = class_exists($fqcn, false);
+    }
+    
+    /**
+     * Autoload an annotation class silently.
+     * 
+     * @param string $fqcn
+     * @return void
+     */
+    private function autoloadAnnotation($fqcn)
+    {
+        foreach ($this->autoloadNamespaces AS $namespace => $dirs) {
+            if (strpos($fqcn, $namespace) === 0) {
+                $file = str_replace("\\", DIRECTORY_SEPARATOR, $fqcn) . ".php";
+                if ($dirs === null) {
+                    if (ClassLoader::fileExistsInIncludePath($file)) {
+                        require $file;
+                        return;
+                    }
+                } else {
+                    foreach((array)$dirs AS $dir) {
+                        if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
+                            require $dir . DIRECTORY_SEPARATOR . $file;
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
