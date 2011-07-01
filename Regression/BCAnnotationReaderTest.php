@@ -18,12 +18,6 @@ class BCAnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
     public function testAnnotations()
     {
         $reader = $this->createAnnotationReader();
-        
-        $this->assertFalse($reader->getAutoloadAnnotations());
-        $reader->setAutoloadAnnotations(true);
-        $this->assertTrue($reader->getAutoloadAnnotations());
-        $reader->setAutoloadAnnotations(false);
-        $this->assertFalse($reader->getAutoloadAnnotations());
     
         $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\Regression\DummyClass');
         $classAnnots = $reader->getClassAnnotations($class);
@@ -118,16 +112,6 @@ class BCAnnotationReaderTest extends \Doctrine\Tests\DoctrineTestCase
         $reader->setDefaultAnnotationNamespace('Doctrine\Tests\Common\Annotations\\');
         $reader->setEnableParsePhpImports(false);
         return $reader;
-    }
-
-    /**
-     * @group DCOM-25
-     */
-    public function testSetAutoloadAnnotations()
-    {
-        $reader = $this->createAnnotationReader();
-        $reader->setAutoloadAnnotations(true);
-        $this->assertTrue($reader->getAutoloadAnnotations());
     }
     
     public function testEmailAsAnnotation()
