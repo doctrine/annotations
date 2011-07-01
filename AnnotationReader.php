@@ -147,7 +147,7 @@ final class AnnotationReader implements Reader
      */
     public function setIgnoreNotImportedAnnotations($bool)
     {
-        $this->parser->setIgnoreNotImportedAnnotations($bool);
+        return;
     }
 
     /**
@@ -210,6 +210,21 @@ final class AnnotationReader implements Reader
     {
         $this->parser->setAnnotationNamespaceAlias($namespace, $alias);
     }
+    
+    public function registerAnnotationNamespace($namespace, $dirs)
+    {
+        $this->parser->registerAutoloadNamespace($namespace, $dirs);
+    }
+    
+    public function registerAnnotationNamespaces($namespaces)
+    {
+        $this->parser->registerAutoloadNamespaces($namespaces);
+    }
+    
+    public function registerAnnotationFile($file)
+    {
+        $this->parser->registerAnnotationFile($file);
+    }
 
     /**
      * Sets a flag whether to auto-load annotation classes or not.
@@ -233,7 +248,7 @@ final class AnnotationReader implements Reader
      */
     public function isAutoloadAnnotations()
     {
-        return $this->parser->isAutoloadAnnotations();
+        return false;
     }
 
     /**
@@ -244,7 +259,7 @@ final class AnnotationReader implements Reader
      */
     public function getAutoloadAnnotations()
     {
-        return $this->parser->isAutoloadAnnotations();
+        return false;
     }
 
     /**

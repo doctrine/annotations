@@ -160,33 +160,29 @@ final class DocParser
      * @param string $namespace
      * @param string|array|null $dirs 
      */
-    public function addAutoloadNamespace($namespace, $dirs = null)
+    public function registerAutoloadNamespace($namespace, $dirs = null)
     {
         $this->autoloadNamespaces[$namespace] = $dirs;
     }
-
+    
     /**
-     * Sets a flag whether to auto-load annotation classes or not.
-     *
-     * NOTE: It is recommend to turn auto-loading on if your auto-loader supports
-     *       silent failing.
-     *
-     * @param boolean $bool Boolean flag.
+     * Register multiple namespaces
+     * 
+     * @param array $namespaces
      */
-    public function setAutoloadAnnotations($bool)
+    public function registerAutoloadNamespaces(array $namespaces)
     {
-        
+        $this->autoloadNamespaces = array_merge($this->autoloadNamespaces, $namespaces);
     }
-
+    
     /**
-     * Gets a flag whether to try to autoload annotation classes.
-     *
-     * @see setAutoloadAnnotations
-     * @return boolean
+     * Register a file with annotations by including it and making the classes visible to class_exists().
+     * 
+     * @param string $file 
      */
-    public function isAutoloadAnnotations()
+    public function registerAnnotationFile($file)
     {
-        return false;
+        require_once $file;
     }
 
     public function setImports(array $imports)
