@@ -142,12 +142,11 @@ final class AnnotationReader implements Reader
     /**
      * Ignore not imported annotations and not throw an exception.
      *
-     * @deprecated
      * @param bool $bool
      */
     public function setIgnoreNotImportedAnnotations($bool)
     {
-        return;
+        $this->parser->setIgnoreNotImportedAnnotations($bool);
     }
 
     /**
