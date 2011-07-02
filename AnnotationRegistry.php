@@ -80,6 +80,7 @@ final class AnnotationRegistry
      * Register an autoloading callabale for annotations, much like spl_autoload_register().
      * 
      * NOTE: These class loaders HAVE to be silent when a class was not found!
+     * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      * 
      * @param callabale $callabale 
      */
@@ -105,13 +106,13 @@ final class AnnotationRegistry
                 if ($dirs === null) {
                     if (ClassLoader::fileExistsInIncludePath($file)) {
                         require $file;
-                        return;
+                        return true;
                     }
                 } else {
                     foreach((array)$dirs AS $dir) {
                         if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
                             require $dir . DIRECTORY_SEPARATOR . $file;
-                            return;
+                            return true;
                         }
                     }
                 }
@@ -119,7 +120,10 @@ final class AnnotationRegistry
         }
         
         foreach (self::$loaders AS $loader) {
-            call_user_func($loader, $class);
+            if (call_user_func($loader, $class) === true) {
+                return true;
+            }
         }
+        return false;
     }
 }

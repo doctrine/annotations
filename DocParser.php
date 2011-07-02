@@ -263,12 +263,9 @@ final class DocParser
         if (class_exists($fqcn, false)) {
             return $this->classExists[$fqcn] = true;
         }
-        
-        // class was not found, lets try to "autoload" it silently
-        AnnotationRegistry::loadAnnotationClass($fqcn);
 
         // final check, does this class exist?
-        return $this->classExists[$fqcn] = class_exists($fqcn, false);
+        return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
     }
 
     /**
