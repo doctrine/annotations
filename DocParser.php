@@ -111,18 +111,6 @@ final class DocParser
      * @var Closure
      */
     private $creationFn = null;
-    
-    /**
-     * A map of namespaces to use for autoloading purposes based on a PSR-0 convention.
-     * 
-     * Contains the namespace as key and an array of direectories as value. If the value is NULL
-     * the include path is used for checking for the corresponding file.
-     * 
-     * This autoloading mechanism does not utilize the PHP autoloading but implements autoloading on its own.
-     * 
-     * @var array
-     */
-    private $autoloadNamespaces = array();
 
     /**
      * Constructs a new DocParser.
@@ -152,37 +140,6 @@ final class DocParser
     public function setAnnotationCreationFunction(\Closure $func)
     {
         $this->creationFn = $func;
-    }
-    
-    /**
-     * Add a namespace with one or many directories to look for files or null for the include path.
-     * 
-     * @param string $namespace
-     * @param string|array|null $dirs 
-     */
-    public function registerAutoloadNamespace($namespace, $dirs = null)
-    {
-        $this->autoloadNamespaces[$namespace] = $dirs;
-    }
-    
-    /**
-     * Register multiple namespaces
-     * 
-     * @param array $namespaces
-     */
-    public function registerAutoloadNamespaces(array $namespaces)
-    {
-        $this->autoloadNamespaces = array_merge($this->autoloadNamespaces, $namespaces);
-    }
-    
-    /**
-     * Register a file with annotations by including it and making the classes visible to class_exists().
-     * 
-     * @param string $file 
-     */
-    public function registerAnnotationFile($file)
-    {
-        require_once $file;
     }
 
     public function setImports(array $imports)
@@ -308,38 +265,10 @@ final class DocParser
         }
         
         // class was not found, lets try to "autoload" it silently
-        $this->autoloadAnnotation($fqcn);
+        AnnotationRegistry::loadAnnotationClass($fqcn);
 
         // final check, does this class exist?
         return $this->classExists[$fqcn] = class_exists($fqcn, false);
-    }
-    
-    /**
-     * Autoload an annotation class silently.
-     * 
-     * @param string $fqcn
-     * @return void
-     */
-    private function autoloadAnnotation($fqcn)
-    {
-        foreach ($this->autoloadNamespaces AS $namespace => $dirs) {
-            if (strpos($fqcn, $namespace) === 0) {
-                $file = str_replace("\\", DIRECTORY_SEPARATOR, $fqcn) . ".php";
-                if ($dirs === null) {
-                    if (ClassLoader::fileExistsInIncludePath($file)) {
-                        require $file;
-                        return;
-                    }
-                } else {
-                    foreach((array)$dirs AS $dir) {
-                        if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
-                            require $dir . DIRECTORY_SEPARATOR . $file;
-                            return;
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**
