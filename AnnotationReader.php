@@ -211,42 +211,6 @@ final class AnnotationReader implements Reader
     }
 
     /**
-     * Sets a flag whether to auto-load annotation classes or not.
-     *
-     * NOTE: It is recommended to turn auto-loading on if your auto-loader
-     *       supports silent failing. For this reason, setting this to TRUE
-     *       renders the parser incompatible with {@link ClassLoader}.
-     *
-     * @param boolean $bool Boolean flag.
-     */
-    public function setAutoloadAnnotations($bool)
-    {
-        $this->parser->setAutoloadAnnotations($bool);
-    }
-
-    /**
-     * Gets a flag whether to try to autoload annotation classes.
-     *
-     * @see setAutoloadAnnotations
-     * @return boolean
-     */
-    public function isAutoloadAnnotations()
-    {
-        return false;
-    }
-
-    /**
-     * Gets a flag whether to try to autoload annotation classes.
-     *
-     * @deprecated Will be removed in 3.0, use {@see isAutoloadAnnotations()} instead.
-     * @return bool
-     */
-    public function getAutoloadAnnotations()
-    {
-        return false;
-    }
-
-    /**
      * Gets the annotations applied to a class.
      *
      * @param string|ReflectionClass $class The name or ReflectionClass of the class from which
