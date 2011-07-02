@@ -104,14 +104,16 @@ final class AnnotationRegistry
             if (strpos($class, $namespace) === 0) {
                 $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
                 if ($dirs === null) {
-                    if (ClassLoader::fileExistsInIncludePath($file)) {
-                        require $file;
-                        return true;
-                    }
-                } else {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
                         return true;
+                    }
+                } else {
+                    foreach((array)$dirs AS $dir) {
+                        if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
+                            require $dir . DIRECTORY_SEPARATOR . $file;
+                            return true;
+                        }
                     }
                 }
             }
