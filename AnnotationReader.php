@@ -130,6 +130,8 @@ final class AnnotationReader implements Reader
      */
     public function __construct()
     {
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
+        
         $this->parser = new DocParser;
 
         $this->preParser = new DocParser;
