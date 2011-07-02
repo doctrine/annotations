@@ -54,6 +54,8 @@ class AnnotationRegistry
     /**
      * Add a namespace with one or many directories to look for files or null for the include path.
      * 
+     * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
+     * 
      * @param string $namespace
      * @param string|array|null $dirs 
      */
@@ -64,6 +66,8 @@ class AnnotationRegistry
     
     /**
      * Register multiple namespaces
+     * 
+     * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      * 
      * @param array $namespaces
      */

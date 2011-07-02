@@ -248,7 +248,7 @@ final class DocParser
 
     /**
      * Attempt to check if a class exists or not. This never goes through the PHP autoloading mechanism
-     * but implements its own PSR-0 compliant silently failing autoloader.
+     * but uses the {@link AnnotationRegistry} to load classes.
      *
      * @param string $fqcn
      * @return boolean
