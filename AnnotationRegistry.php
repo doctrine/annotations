@@ -109,11 +109,9 @@ final class AnnotationRegistry
                         return true;
                     }
                 } else {
-                    foreach((array)$dirs AS $dir) {
-                        if (file_exists($dir . DIRECTORY_SEPARATOR . $file)) {
-                            require $dir . DIRECTORY_SEPARATOR . $file;
-                            return true;
-                        }
+                    if ($path = stream_resolve_include_path($file)) {
+                        require $path;
+                        return true;
                     }
                 }
             }
