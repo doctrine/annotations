@@ -95,11 +95,6 @@ final class DocParser
     private $context = '';
 
     /**
-     * @var boolean
-     */
-    private $autoloadAnnotations = true;
-
-    /**
      * Hash-map for caching annotation classes to avoid reparsing their doc-blocks
      * @var array
      */
@@ -124,30 +119,6 @@ final class DocParser
     public function setIgnoredAnnotationNames(array $names)
     {
         $this->ignoredAnnotationNames = $names;
-    }
-
-    /**
-     * Sets a flag whether to auto-load annotation classes or not.
-     *
-     * NOTE: It is recommend to turn auto-loading on if your auto-loader supports
-     *       silent failing.
-     *
-     * @param boolean $bool Boolean flag.
-     */
-    public function setAutoloadAnnotations($bool)
-    {
-        $this->autoloadAnnotations = $bool;
-    }
-
-    /**
-     * Gets a flag whether to try to autoload annotation classes.
-     *
-     * @see setAutoloadAnnotations
-     * @return boolean
-     */
-    public function isAutoloadAnnotations()
-    {
-        return $this->autoloadAnnotations;
     }
 
     public function setImports(array $imports)
@@ -250,8 +221,8 @@ final class DocParser
     }
 
     /**
-     * This will prevent going through the auto-loader on each occurence of the
-     * annotation.
+     * Attempt to check if a class exists or not. This never goes through the PHP autoloading mechanism
+     * but uses the {@link AnnotationRegistry} to load classes.
      *
      * @param string $fqcn
      * @return boolean
@@ -261,9 +232,16 @@ final class DocParser
         if (isset($this->classExists[$fqcn])) {
             return $this->classExists[$fqcn];
         }
+        
+        // first check if the class already exists, maybe loaded through another AnnotationReader
+        if (class_exists($fqcn, false)) {
+            return $this->classExists[$fqcn] = true;
+        }
 
-        return $this->classExists[$fqcn] = class_exists($fqcn, $this->autoloadAnnotations);
+        // final check, does this class exist?
+        return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
     }
+
 
     /**
      * Annotations ::= Annotation {[ "*" ]* [Annotation]}*

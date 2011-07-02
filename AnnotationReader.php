@@ -118,6 +118,8 @@ final class AnnotationReader implements Reader
      */
     public function __construct()
     {
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
+        
         $this->parser = new DocParser;
 
         $this->preParser = new DocParser;
@@ -125,31 +127,6 @@ final class AnnotationReader implements Reader
         $this->preParser->setIgnoreNotImportedAnnotations(true);
 
         $this->phpParser = new PhpParser;
-    }
-
-    /**
-     * Sets a flag whether to auto-load annotation classes or not.
-     *
-     * NOTE: It is recommended to turn auto-loading on if your auto-loader
-     *       supports silent failing. For this reason, setting this to TRUE
-     *       renders the parser incompatible with {@link ClassLoader}.
-     *
-     * @param boolean $bool Boolean flag.
-     */
-    public function setAutoloadAnnotations($bool)
-    {
-        $this->parser->setAutoloadAnnotations($bool);
-    }
-
-    /**
-     * Gets a flag whether to try to autoload annotation classes.
-     *
-     * @see setAutoloadAnnotations
-     * @return boolean
-     */
-    public function isAutoloadAnnotations()
-    {
-        return $this->parser->isAutoloadAnnotations();
     }
 
     /**
