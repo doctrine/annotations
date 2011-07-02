@@ -19,7 +19,7 @@
 
 namespace Doctrine\Common\Annotations;
 
-class AnnotationRegistry
+final class AnnotationRegistry
 {
     /**
      * A map of namespaces to use for autoloading purposes based on a PSR-0 convention.
