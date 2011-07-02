@@ -5,6 +5,7 @@ namespace Doctrine\Tests\Common\Annotations;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class DocParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -234,7 +235,9 @@ DOCBLOCK;
         $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
         
         $parser = new DocParser();
-        $parser->registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
+        
+        AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
+        
         $parser->setImports(array(
             'autoload' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload',
         ));
