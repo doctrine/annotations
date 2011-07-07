@@ -232,7 +232,7 @@ final class DocParser
         if (isset($this->classExists[$fqcn])) {
             return $this->classExists[$fqcn];
         }
-        
+
         // first check if the class already exists, maybe loaded through another AnnotationReader
         if (class_exists($fqcn, false)) {
             return $this->classExists[$fqcn] = true;
@@ -502,7 +502,7 @@ final class DocParser
     }
 
     /**
-     * Array ::= "{" ArrayEntry {"," ArrayEntry}* "}"
+     * Array ::= "{" ArrayEntry {"," ArrayEntry}* [","] "}"
      *
      * @return array
      */
@@ -515,6 +515,12 @@ final class DocParser
 
         while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
             $this->match(DocLexer::T_COMMA);
+
+            // optional trailing comma
+            if ($this->lexer->isNextToken(DocLexer::T_CLOSE_CURLY_BRACES)) {
+                break;
+            }
+
             $values[] = $this->ArrayEntry();
         }
 
