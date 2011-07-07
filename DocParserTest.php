@@ -226,24 +226,24 @@ DOCBLOCK;
         $parser = new DocParser();
         $result = $parser->parse("@Doctrine\Tests\Common\Annotations\Name(@')");
     }
-    
+
     /**
      * @group DCOM-56
      */
     public function testAutoloadAnnotation()
     {
         $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
-        
+
         $parser = new DocParser();
-        
+
         // its already done in TestInit.php but this makes it explicit
         AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
-        
+
         $parser->setImports(array(
             'autoload' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload',
         ));
         $annotations = $parser->parse('@Autoload');
-        
+
         $this->assertEquals(1, count($annotations));
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
     }
@@ -367,8 +367,19 @@ DOCBLOCK;
     public function testInvalidIdentifierInAnnotation()
     {
         $parser = $this->createTestParser();
+        $parser->parse('@Foo\3.42');
+    }
 
-        $result = $parser->parse('@Foo\3.42');
+    public function testTrailingCommaIsAllowed()
+    {
+        $parser = $this->createTestParser();
+
+        $annots = $parser->parse('@Name({
+            "Foo",
+            "Bar",
+        })');
+        $this->assertEquals(1, count($annots));
+        $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
 }
 
