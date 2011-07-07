@@ -109,7 +109,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
 
         $this->assertNotNull($annot = $reader->getPropertyAnnotation(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\DummyClassNonAnnotationProblem', 'foo'), $name = 'Doctrine\Tests\Common\Annotations\DummyAnnotation'));
-        $this->assertType($name, $annot);
+        $this->assertInstanceOf($name, $annot);
     }
 
     public function testImportWithConcreteAnnotation()
