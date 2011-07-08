@@ -331,6 +331,18 @@ DOCBLOCK;
     /**
      * @group DCOM-38
      */
+    public function testCastNegativeInt()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse("@Name(foo=-1234)");
+        $annot = $result[0];
+        $this->assertInternalType('int', $annot->foo);
+    }
+
+    /**
+     * @group DCOM-38
+     */
     public function testCastFloat()
     {
         $parser = $this->createTestParser();
