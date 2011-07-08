@@ -340,6 +340,22 @@ DOCBLOCK;
         $this->assertInternalType('float', $annot->foo);
     }
 
+    /**
+     * @group DCOM-38
+     */
+    public function testCastNegativeFloat()
+    {
+        $parser = $this->createTestParser();
+
+        $result = $parser->parse("@Name(foo=-1234.345)");
+        $annot = $result[0];
+        $this->assertInternalType('float', $annot->foo);
+        
+        $result = $parser->parse("@Marker(-1234.345)");
+        $annot = $result[0];
+        $this->assertInternalType('float', $annot->value);
+    }
+
     public function testReservedKeywordsInAnnotations()
     {
         $parser = $this->createTestParser();
