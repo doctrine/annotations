@@ -67,6 +67,7 @@ final class PhpParser
         $content = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
         $this->tokens = token_get_all('<?php ' . $content);
         $this->numTokens = count($this->tokens);
+        $this->pointer = 0;
 
         $statements = $this->parseUseStatements($class->getNamespaceName());
 
