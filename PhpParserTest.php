@@ -158,4 +158,22 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
             'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
+
+    public function testIfPointerResetsOnMultipleParsingTries()
+    {
+        $parser = new PhpParser();
+        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceWithClosureDeclaration');
+
+        $this->assertEquals(array(
+            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
+            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+        ), $parser->parseClass($class));
+
+        $this->assertEquals(array(
+            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
+            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+        ), $parser->parseClass($class));
+    }
 }
