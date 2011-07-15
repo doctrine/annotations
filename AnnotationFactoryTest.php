@@ -71,6 +71,49 @@ class AnnotationFactoryTest extends \PHPUnit_Framework_TestCase
 
     }
     
+    /**
+     * @group AnnotationFactory
+     */
+    public function testValues()
+    {
+        $class      = __NAMESPACE__.'\SomeAnnotationClassName';
+        $factory    = new AnnotationFactory();
+        
+        $annot      = $factory->newAnnotation($class,array("data"=>"Some data"));
+        $this->assertEquals($annot->data, "Some data");
+        $this->assertNull($annot->name);
+        
+        
+        $annot      = $factory->newAnnotation($class,array("name"=>"Some name"));
+        $this->assertEquals($annot->name, "Some name");
+        $this->assertNull($annot->data);
+       
+        
+        $annot      = $factory->newAnnotation($class,array("value"=>"Some data"));
+        $this->assertEquals($annot->data, "Some data");
+        $this->assertNull($annot->name);
+        
+        
+        $annot      = $factory->newAnnotation($class,array("name"=>"Some name",'data'=>"Some data"));
+        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals($annot->data, "Some data");
+        
+       
+    }
+    
+    
+    /**
+     * @group AnnotationFactory
+     * @expectedException \BadMethodCallException
+     */
+    public function testSetValuesExeption()
+    {
+        $class      = __NAMESPACE__.'\SomeAnnotationClassName';
+        $factory    = new AnnotationFactory();
+        
+        $annot      = $factory->newAnnotation($class, array("invalidaProperty"=>"Some value"));
+    }
+    
     
     /**
      * @group AnnotationFactory
