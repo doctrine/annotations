@@ -48,6 +48,13 @@ final class DocParser
      * @var Doctrine\Common\Annotations\DocLexer
      */
     private $lexer;
+    
+    /**
+     * The Factory.
+     * 
+     * @var Doctrine\Common\Annotations\AnnotationFactory
+     */
+    private $factory;
 
     /**
      * Flag to control if the current annotation is nested or not.
@@ -106,6 +113,7 @@ final class DocParser
     public function __construct()
     {
         $this->lexer = new DocLexer;
+        $this->factory = new AnnotationFactory();
     }
 
     /**
@@ -369,7 +377,7 @@ final class DocParser
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
 
-        return new $name($values);
+        return $this->factory->newAnnotation($name, $values);
     }
 
     /**
