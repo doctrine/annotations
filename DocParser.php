@@ -272,11 +272,7 @@ final class DocParser
     {
         if (!isset(self::$isAnnotation[$className])) {
             $class = $this->getAnnotationClass($className);
-            if (false === strpos($class->getDocComment(), '@Annotation')) {
-                self::$isAnnotation[$className] = false;
-            }else{
-                self::$isAnnotation[$className] = true;
-            }
+            self::$isAnnotation[$className] = strpos($class->getDocComment(), '@Annotation');
         }
         
         return self::$isAnnotation[$className];
@@ -291,10 +287,11 @@ final class DocParser
      */
     private function hasConstructor($className)
     {
-        if (!isset(self::$hasConstructor[$className]))
-        {
-            self::$hasConstructor[$className] = $this->getAnnotationClass($className)->getConstructor() != null;
+        if (!isset(self::$hasConstructor[$className])) {
+            $constructor = $this->getAnnotationClass($className)->getConstructor();
+            self::$hasConstructor[$className] = ($constructor != null) && ($constructor->getNumberOfParameters() > 0);
         }
+        
         return self::$hasConstructor[$className];
     }
 
@@ -308,10 +305,10 @@ final class DocParser
      */
     private function hasProperty($className, $property)
     {
-        if (!isset(self::$hasProperty[$className][$property]))
-        {
+        if (!isset(self::$hasProperty[$className][$property])) {
             self::$hasProperty[$className][$property] = $this->getAnnotationClass($className)->hasProperty($property);
         }
+        
         return self::$hasProperty[$className][$property];
     }
 
@@ -323,10 +320,10 @@ final class DocParser
      */
     private function getAnnotationClass($className)
     {
-        if (!isset($this->annotations[$className]))
-        {
+        if (!isset($this->annotations[$className])) {
             $this->annotations[$className] = new \ReflectionClass($className);
         }
+        
         return $this->annotations[$className];
     }
 
@@ -338,15 +335,13 @@ final class DocParser
      */
     private function getProperties($className)
     {
-        if (!isset(self::$properties[$className]))
-        {
+        if (!isset(self::$properties[$className])) {
             $list = (array) $this->getAnnotationClass($className)->getProperties();
-            self::$properties[$className] = array();
-            foreach ($list as $property)
-            {
+            foreach ($list as $property) {
                 self::$properties[$className][] = $property->getName();
             }
         }
+        
         return self::$properties[$className];
     }
 
@@ -360,35 +355,21 @@ final class DocParser
      */
     private function setValues($className, $instance, array $values)
     {
-        if (!empty($values))
-        {
-            foreach ($values as $property => $value)
-            {
-                if (!$this->hasProperty($className, $property))
-                {
-                    if ($property == 'value')
-                    {
+        if (!empty($values)) {
+            foreach ($values as $property => $value) {
+                
+                if (!$this->hasProperty($className, $property)) {
+                    if ($property == 'value') {
                         $properties = $this->getProperties($className);
                         $property   = reset($properties);
-                    } else
-                    {
+                    } else {
                         throw new \BadMethodCallException(
                                 sprintf("Unknown property '%s' on object '%s'.", $property, $className)
                         );
                     }
                 }
-                
-                $prop = $this->getAnnotationClass($className)->getProperty($property);
 
-                if ($prop->isPublic())
-                {
-                    $instance->{$property} = $value;
-                } else
-                {
-                    $prop->setAccessible(true);
-                    $prop->setValue($instance, $value);
-                    $prop->setAccessible(false);
-                }
+                $instance->{$property} = $value;
             }
         }
         
