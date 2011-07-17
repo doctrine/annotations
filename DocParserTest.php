@@ -252,6 +252,20 @@ DOCBLOCK;
         $this->assertEquals($annot->name, "Some name");
         $this->assertEquals($annot->data, "Some data");
         
+        
+                $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationWithConstructorWithoutParams(name = "Some name")
+ */
+DOCBLOCK;
+        
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals($annot->data, "Some data");
+        
     }
     
     /**
@@ -504,17 +518,21 @@ DOCBLOCK;
 /** @Annotation */
 class SomeAnnotationClassNameWithoutConstructor 
 {
-    private $data;
-    private $name;
-    
-    public function __get($name)
-    {
-        if(isset($this->$name)){
-            return $this->$name;
-        }
-        return null;
-    }
+    public $data;
+    public $name;
 }
+
+/** @Annotation */
+class SomeAnnotationWithConstructorWithoutParams
+{
+    function __construct()
+    {
+        $this->data = "Some data";
+    }
+    public $data;
+    public $name;
+}
+
 
 /** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation {
