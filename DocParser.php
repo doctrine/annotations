@@ -41,14 +41,14 @@ final class DocParser
      * @var array
      */
     private static $classIdentifiers = array(DocLexer::T_IDENTIFIER, DocLexer::T_TRUE, DocLexer::T_FALSE, DocLexer::T_NULL);
-  
+
     /**
      * The lexer.
      *
      * @var Doctrine\Common\Annotations\DocLexer
      */
     private $lexer;
-    
+
     /**
      * Flag to control if the current annotation is nested or not.
      *
@@ -99,7 +99,7 @@ final class DocParser
      * @var array
      */
     private static $isAnnotation = array();
-    
+
     /**
      * @var Hash-map of ReflectionClass
      */
@@ -150,7 +150,7 @@ final class DocParser
     {
         $this->ignoreNotImportedAnnotations = (Boolean) $bool;
     }
-    
+
     /**
      * Parses the given docblock string for annotations.
      *
@@ -261,7 +261,7 @@ final class DocParser
         // final check, does this class exist?
         return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
     }
-    
+
      /**
      * Verify that the class is really meant to be an annotation and not just any ordinary class
      *
@@ -274,10 +274,9 @@ final class DocParser
             $class = $this->getAnnotationClass($className);
             self::$isAnnotation[$className] = strpos($class->getDocComment(), '@Annotation');
         }
-        
+
         return self::$isAnnotation[$className];
     }
-    
     
     /**
      * Check if a class has a constructor.
@@ -294,7 +293,6 @@ final class DocParser
         
         return self::$hasConstructor[$className];
     }
-
    
     /**
      * Check if a class has the property.
@@ -375,7 +373,6 @@ final class DocParser
         
         return $instance;
     }
-
 
     /**
      * Annotations ::= Annotation {[ "*" ]* [Annotation]}*
@@ -498,11 +495,9 @@ final class DocParser
         }
 
                   
-        if ($this->hasConstructor($name))
-        {
+        if ($this->hasConstructor($name)){
             return new $name($values);
-        } else
-        {
+        } else{
             return $this->setValues($name, new $name(), $values);
         }
     }
