@@ -174,6 +174,26 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Name', $annotation);
     }
 
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage The class "Doctrine\Tests\Common\Annotations\Fixtures\NoAnnotation" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\Tests\Common\Annotations\Fixtures\NoAnnotation". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageClass.
+     */
+    public function testErrorWhenInvalidAnnotationIsUsed()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageClass');
+        $reader->getClassAnnotations($ref);
+    }
+
+    public function testInvalidAnnotationUsageButIgnoredClass()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageButIgnoredClass');
+        $annots = $reader->getClassAnnotations($ref);
+
+        $this->assertEquals(2, count($annots));
+    }
+
     abstract protected function getReader();
 }
 
@@ -295,18 +315,24 @@ class DummyClass2 {
     private $id;
 }
 
+/** @Annotation */
 class DummyId extends \Doctrine\Common\Annotations\Annotation {}
+/** @Annotation */
 class DummyColumn extends \Doctrine\Common\Annotations\Annotation {
     public $type;
 }
+/** @Annotation */
 class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation {}
+/** @Annotation */
 class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
     public $dummyValue;
 }
+/** @Annotation */
 class DummyJoinColumn extends \Doctrine\Common\Annotations\Annotation {
     public $name;
     public $referencedColumnName;
 }
+/** @Annotation */
 class DummyJoinTable extends \Doctrine\Common\Annotations\Annotation {
     public $name;
     public $joinColumns;
@@ -365,6 +391,7 @@ class DummyClassWithEmail
 
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
+/** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
@@ -372,6 +399,7 @@ class Name extends \Doctrine\Common\Annotations\Annotation
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 
+/** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
