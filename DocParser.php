@@ -103,7 +103,7 @@ final class DocParser
     /**
      * @var Hash-map of ReflectionClass
      */
-    private $annotations = array();
+    private static $annotations = array();
     
     /**
      * @var Hash-map for caching to avoid reparsing class properties.
@@ -262,54 +262,6 @@ final class DocParser
         return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
     }
 
-     /**
-     * Verify that the class is really meant to be an annotation and not just any ordinary class
-     *
-     * @param string $className
-     * @return boolean
-     */
-    private function isAnnotation($className)
-    {
-        if (!isset(self::$isAnnotation[$className])) {
-            $class = $this->getAnnotationClass($className);
-            self::$isAnnotation[$className] = strpos($class->getDocComment(), '@Annotation');
-        }
-
-        return self::$isAnnotation[$className];
-    }
-    
-    /**
-     * Check if a class has a constructor.
-     * 
-     * @param  string $className
-     * @return bool 
-     */
-    private function hasConstructor($className)
-    {
-        if (!isset(self::$hasConstructor[$className])) {
-            $constructor = $this->getAnnotationClass($className)->getConstructor();
-            self::$hasConstructor[$className] = ($constructor != null) && ($constructor->getNumberOfParameters() > 0);
-        }
-        
-        return self::$hasConstructor[$className];
-    }
-   
-    /**
-     * Check if a class has the property.
-     * 
-     * @param   string $className
-     * @param   string $property
-     * @return  bool
-     */
-    private function hasProperty($className, $property)
-    {
-        if (!isset(self::$hasProperty[$className][$property])) {
-            self::$hasProperty[$className][$property] = $this->getAnnotationClass($className)->hasProperty($property);
-        }
-        
-        return self::$hasProperty[$className][$property];
-    }
-
     /**
      * Returns a ReflectionClass from hash-map or creates if does not exist.
      * 
@@ -318,11 +270,11 @@ final class DocParser
      */
     private function getAnnotationClass($className)
     {
-        if (!isset($this->annotations[$className])) {
-            $this->annotations[$className] = new \ReflectionClass($className);
+        if (!isset(self::$annotations[$className])) {
+            self::$annotations[$className] = new \ReflectionClass($className);
         }
         
-        return $this->annotations[$className];
+        return self::$annotations[$className];
     }
 
     /**
@@ -334,44 +286,13 @@ final class DocParser
     private function getProperties($className)
     {
         if (!isset(self::$properties[$className])) {
-            $list = (array) $this->getAnnotationClass($className)->getProperties();
+            $list = (array) $this->getAnnotationClass($className)->getProperties(\ReflectionProperty::IS_PUBLIC);
             foreach ($list as $property) {
                 self::$properties[$className][] = $property->getName();
             }
         }
         
         return self::$properties[$className];
-    }
-
-    /**
-     * Sets key-value for properties to be defined in this class
-     * 
-     * @param   string  $className
-     * @param   mixed   $instance
-     * @param   array   $values 
-     * @return  mixed
-     */
-    private function setValues($className, $instance, array $values)
-    {
-        if (!empty($values)) {
-            foreach ($values as $property => $value) {
-                
-                if (!$this->hasProperty($className, $property)) {
-                    if ($property == 'value') {
-                        $properties = $this->getProperties($className);
-                        $property   = reset($properties);
-                    } else {
-                        throw new \BadMethodCallException(
-                                sprintf("Unknown property '%s' on object '%s'.", $property, $className)
-                        );
-                    }
-                }
-
-                $instance->{$property} = $value;
-            }
-        }
-        
-        return $instance;
     }
 
     /**
@@ -473,11 +394,16 @@ final class DocParser
         // that it is loaded
 
         // verify that the class is really meant to be an annotation and not just any ordinary class
-        if (!$this->isAnnotation($name)) {
-            if (isset($this->ignoredAnnotationNames[$originalName])) {
-                return false;
+        if (!isset(self::$isAnnotation[$name])) {
+
+            if (false === strpos($this->getAnnotationClass($name)->getDocComment(), '@Annotation')) {
+                if (isset($this->ignoredAnnotationNames[$originalName])) {
+                    return false;
+                }
+
+                throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $originalName, $this->context));
             }
-            throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $originalName, $this->context));
+            self::$isAnnotation[$name] = true;
         }
 
         // Next will be nested
@@ -494,11 +420,38 @@ final class DocParser
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
 
+         if (!isset(self::$hasConstructor[$name])){
+            $constructor = $this->getAnnotationClass($name)->getConstructor();
+            self::$hasConstructor[$name] = ($constructor != null) && ($constructor->getNumberOfParameters() > 0);
+        }
+        
                   
-        if ($this->hasConstructor($name)){
+        if (self::$hasConstructor[$name]){
             return new $name($values);
         } else{
-            return $this->setValues($name, new $name(), $values);
+            
+            $instance = new $name();
+            foreach ($values as $property => $value) {
+                
+                if (!isset(self::$hasProperty[$name][$property])){
+                    self::$hasProperty[$name][$property] = $this->getAnnotationClass($name)->hasProperty($property);
+                }
+        
+                if (!self::$hasProperty[$name][$property]){
+                    if ($property != 'value') {
+                        throw new \BadMethodCallException(
+                                sprintf("Unknown property '%s' on object '%s'.", $property, $name)
+                        );
+                    } else {
+                        $properties = $this->getProperties($name);
+                        $property   = reset($properties);
+                    }
+                }
+
+                $instance->{$property} = $value;
+            }
+            
+            return $instance;
         }
     }
 
