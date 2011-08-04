@@ -151,6 +151,123 @@ DOCBLOCK;
         $this->assertTrue($marker instanceof Marker);
     }
 
+
+    public function testAnnotationWithoutConstructor()
+    {
+        $parser = $this->createTestParser();
+        
+        
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor("Some data")
+ */
+DOCBLOCK;
+
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertNotNull($annot);
+        $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
+        
+        $this->assertNull($annot->name);
+        $this->assertNotNull($annot->data);
+        $this->assertEquals($annot->data, "Some data");
+        
+
+        
+        
+$docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor(name="Some Name", data = "Some data")
+ */
+DOCBLOCK;
+         
+
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertNotNull($annot);
+        $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
+        
+        $this->assertEquals($annot->name, "Some Name");
+        $this->assertEquals($annot->data, "Some data");
+        
+         
+        
+        
+$docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor(data = "Some data")
+ */
+DOCBLOCK;
+                
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+                
+        $this->assertEquals($annot->data, "Some data");
+        $this->assertNull($annot->name);
+        
+
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor(name = "Some name")
+ */
+DOCBLOCK;
+            
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertEquals($annot->name, "Some name");
+        $this->assertNull($annot->data);
+   
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor("Some data")
+ */
+DOCBLOCK;
+        
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertEquals($annot->data, "Some data");
+        $this->assertNull($annot->name);
+        
+
+        
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor("Some data",name = "Some name")
+ */
+DOCBLOCK;
+        
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals($annot->data, "Some data");
+        
+        
+                $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationWithConstructorWithoutParams(name = "Some name")
+ */
+DOCBLOCK;
+        
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $annot      = $result[0];
+        
+        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals($annot->data, "Some data");
+        
+    }
+    
     /**
      * @group DDC-575
      */
@@ -183,7 +300,7 @@ DOCBLOCK;
 
         $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Name", $result[0]);
     }
-
+    
     /**
      * @group DDC-77
      */
@@ -408,6 +525,21 @@ DOCBLOCK;
         $this->assertTrue($result[0] instanceof Null);
     }
 
+     /**
+     * @expectedException \BadMethodCallException
+     */
+    public function testSetValuesExeption()
+    {
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructor(invalidaProperty = "Some val")
+ */
+DOCBLOCK;
+                
+        $this->createTestParser()->parse($docblock);
+        $this->assertEquals(count($result), 1);
+    }
+    
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER or Doctrine\Common\Annotations\DocLexer::T_TRUE or Doctrine\Common\Annotations\DocLexer::T_FALSE or Doctrine\Common\Annotations\DocLexer::T_NULL, got '3.42' at position 5.
@@ -430,6 +562,25 @@ DOCBLOCK;
         $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
 }
+
+/** @Annotation */
+class SomeAnnotationClassNameWithoutConstructor 
+{
+    public $data;
+    public $name;
+}
+
+/** @Annotation */
+class SomeAnnotationWithConstructorWithoutParams
+{
+    function __construct()
+    {
+        $this->data = "Some data";
+    }
+    public $data;
+    public $name;
+}
+
 
 /** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation {
