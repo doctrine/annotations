@@ -155,8 +155,8 @@ DOCBLOCK;
     public function testAnnotationWithoutConstructor()
     {
         $parser = $this->createTestParser();
-        
-        
+
+
         $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationClassNameWithoutConstructor("Some data")
@@ -166,108 +166,108 @@ DOCBLOCK;
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-        
+
         $this->assertNotNull($annot);
         $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
-        
+
         $this->assertNull($annot->name);
         $this->assertNotNull($annot->data);
         $this->assertEquals($annot->data, "Some data");
-        
 
-        
-        
+
+
+
 $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationClassNameWithoutConstructor(name="Some Name", data = "Some data")
  */
 DOCBLOCK;
-         
+
 
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-        
+
         $this->assertNotNull($annot);
         $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
-        
+
         $this->assertEquals($annot->name, "Some Name");
         $this->assertEquals($annot->data, "Some data");
-        
-         
-        
-        
+
+
+
+
 $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationClassNameWithoutConstructor(data = "Some data")
  */
 DOCBLOCK;
-                
+
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-                
+
         $this->assertEquals($annot->data, "Some data");
         $this->assertNull($annot->name);
-        
+
 
         $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationClassNameWithoutConstructor(name = "Some name")
  */
 DOCBLOCK;
-            
+
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-        
+
         $this->assertEquals($annot->name, "Some name");
         $this->assertNull($annot->data);
-   
+
         $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationClassNameWithoutConstructor("Some data")
  */
 DOCBLOCK;
-        
+
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-        
+
         $this->assertEquals($annot->data, "Some data");
         $this->assertNull($annot->name);
-        
 
-        
+
+
         $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationClassNameWithoutConstructor("Some data",name = "Some name")
  */
 DOCBLOCK;
-        
+
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-        
+
         $this->assertEquals($annot->name, "Some name");
         $this->assertEquals($annot->data, "Some data");
-        
-        
+
+
                 $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationWithConstructorWithoutParams(name = "Some name")
  */
 DOCBLOCK;
-        
+
         $result     = $parser->parse($docblock);
         $this->assertEquals(count($result), 1);
         $annot      = $result[0];
-        
+
         $this->assertEquals($annot->name, "Some name");
         $this->assertEquals($annot->data, "Some data");
-        
+
     }
-    
+
     /**
      * @group DDC-575
      */
@@ -300,7 +300,7 @@ DOCBLOCK;
 
         $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Name", $result[0]);
     }
-    
+
     /**
      * @group DDC-77
      */
@@ -353,27 +353,6 @@ DOCBLOCK;
 
         $parser = new DocParser();
 
-        AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
-
-        $parser->setImports(array(
-            'autoload' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload',
-        ));
-        $annotations = $parser->parse('@Autoload');
-
-        $this->assertEquals(1, count($annotations));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
-    }
-
-    /**
-     * @group DCOM-56
-     */
-    public function testAutoloadAnnotation()
-    {
-        $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
-
-        $parser = new DocParser();
-
-        // its already done in TestInit.php but this makes it explicit
         AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
 
         $parser->setImports(array(
@@ -526,7 +505,8 @@ DOCBLOCK;
     }
 
      /**
-     * @expectedException \BadMethodCallException
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Creation Error] The annotation @SomeAnnotationClassNameWithoutConstructor declared on some class does not have a property named "invalidaProperty". Available properties: data, name
      */
     public function testSetValuesExeption()
     {
@@ -535,11 +515,11 @@ DOCBLOCK;
  * @SomeAnnotationClassNameWithoutConstructor(invalidaProperty = "Some val")
  */
 DOCBLOCK;
-                
-        $this->createTestParser()->parse($docblock);
+
+        $this->createTestParser()->parse($docblock, 'some class');
         $this->assertEquals(count($result), 1);
     }
-    
+
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER or Doctrine\Common\Annotations\DocLexer::T_TRUE or Doctrine\Common\Annotations\DocLexer::T_FALSE or Doctrine\Common\Annotations\DocLexer::T_NULL, got '3.42' at position 5.
@@ -564,7 +544,7 @@ DOCBLOCK;
 }
 
 /** @Annotation */
-class SomeAnnotationClassNameWithoutConstructor 
+class SomeAnnotationClassNameWithoutConstructor
 {
     public $data;
     public $name;
@@ -588,7 +568,9 @@ class Name extends \Doctrine\Common\Annotations\Annotation {
 }
 
 /** @Annotation */
-class Marker {}
+class Marker {
+    public $value;
+}
 
 /** @Annotation */
 class True {}

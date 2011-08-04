@@ -43,9 +43,9 @@ class CachedReaderTest extends AbstractReaderTest
         ;
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
-        $this->assertEquals(array(
-            new Route(array('value' => '/someprefix')),
-        ), $reader->getClassAnnotations(new \ReflectionClass($name)));
+        $route = new Route();
+        $route->pattern = '/someprefix';
+        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($name)));
     }
 
     protected function getReader()
