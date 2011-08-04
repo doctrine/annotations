@@ -51,4 +51,17 @@ class AnnotationException extends \Exception
     {
         return new self('[Semantical Error] ' . $message);
     }
+
+    /**
+     * Creates a new AnnotationException describing an error which occurred during
+     * the creation of the annotation.
+     *
+     * @since 2.2
+     * @param string $message
+     * @return AnnotationException
+     */
+    public static function creationError($message)
+    {
+        return new self('[Creation Error] ' . $message);
+    }
 }

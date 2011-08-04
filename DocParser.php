@@ -73,14 +73,6 @@ final class DocParser
     private $classExists = array();
 
     /**
-     *
-     * @var This hashmap is used internally to cache if a class is an annotation or not.
-     *
-     * @var array
-     */
-    private $isAnnotation = array();
-
-    /**
      * Whether annotations that have not been imported should be ignored.
      *
      * @var boolean
@@ -119,17 +111,17 @@ final class DocParser
      * @var Hash-map of ReflectionClass
      */
     private static $annotations = array();
-    
+
     /**
      * @var Hash-map for caching to avoid reparsing class properties.
      */
     private static $properties = array();
-    
+
     /**
      * @var Hash-map for caching to avoid reparsing.
      */
     private static $hasProperty = array();
-    
+
     /**
      * @var Hash-map for caching to avoid reparsing class constructor.
      */
@@ -294,7 +286,7 @@ final class DocParser
 
     /**
      * Returns a ReflectionClass from hash-map or creates if does not exist.
-     * 
+     *
      * @param   string $className
      * @return \ReflectionClass
      */
@@ -303,25 +295,26 @@ final class DocParser
         if (!isset(self::$annotations[$className])) {
             self::$annotations[$className] = new \ReflectionClass($className);
         }
-        
+
         return self::$annotations[$className];
     }
 
     /**
      * Returns an array with the names of class properties
-     * 
+     *
      * @param    string $className
-     * @return   array 
+     * @return   array
      */
     private function getProperties($className)
     {
         if (!isset(self::$properties[$className])) {
-            $list = (array) $this->getAnnotationClass($className)->getProperties(\ReflectionProperty::IS_PUBLIC);
-            foreach ($list as $property) {
-                self::$properties[$className][] = $property->getName();
+            self::$properties[$className] = array();
+
+            foreach ($this->getAnnotationClass($className)->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+                self::$properties[$className][] = $property->name;
             }
         }
-        
+
         return self::$properties[$className];
     }
 
@@ -463,39 +456,42 @@ final class DocParser
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
 
-         if (!isset(self::$hasConstructor[$name])){
+        if (!isset(self::$hasConstructor[$name])) {
             $constructor = $this->getAnnotationClass($name)->getConstructor();
-            self::$hasConstructor[$name] = ($constructor != null) && ($constructor->getNumberOfParameters() > 0);
+            self::$hasConstructor[$name] = null !== $constructor && $constructor->getNumberOfParameters() > 0;
         }
-        
-                  
-        if (self::$hasConstructor[$name]){
+
+        // check if the annotation expects values via the constructor,
+        // or directly injected into public properties
+        if (self::$hasConstructor[$name]) {
             return new $name($values);
-        } else{
-            
-            $instance = new $name();
-            foreach ($values as $property => $value) {
-                
-                if (!isset(self::$hasProperty[$name][$property])){
-                    self::$hasProperty[$name][$property] = $this->getAnnotationClass($name)->hasProperty($property);
-                }
-        
-                if (!self::$hasProperty[$name][$property]){
-                    if ($property != 'value') {
-                        throw new \BadMethodCallException(
-                                sprintf("Unknown property '%s' on object '%s'.", $property, $name)
-                        );
-                    } else {
-                        $properties = $this->getProperties($name);
-                        $property   = reset($properties);
-                    }
+        }
+
+        $instance = new $name();
+        foreach ($values as $property => $value) {
+            if (!isset(self::$hasProperty[$name][$property])) {
+                $refClass = $this->getAnnotationClass($name);
+                self::$hasProperty[$name][$property] = $refClass->hasProperty($property) && $refClass->getProperty($property)->isPublic();
+            }
+
+            if (!self::$hasProperty[$name][$property]) {
+                if ('value' !== $property) {
+                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not have a property named "%s". Available properties: %s', $originalName, $this->context, $property, implode(', ', $this->getProperties($name))));
                 }
 
-                $instance->{$property} = $value;
+                // handle the case if the property has no annotations
+                if (!$properties = $this->getProperties($name)) {
+                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)));
+                }
+
+                // choose the first property as default property
+                $property   = reset($properties);
             }
-            
-            return $instance;
+
+            $instance->{$property} = $value;
         }
+
+        return $instance;
     }
 
     /**

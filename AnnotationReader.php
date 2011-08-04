@@ -277,7 +277,7 @@ final class AnnotationReader implements Reader
         $imports = self::$globalImports;
         $ignoredAnnotationNames = self::$globalIgnoredNames;
 
-        $annotations = $this->preParser->parse($class->getDocComment());
+        $annotations = $this->preParser->parse($class->getDocComment(), 'class '.$class->name);
         foreach ($annotations as $annotation) {
             if ($annotation instanceof IgnoreAnnotation) {
                 foreach ($annotation->names AS $annot) {
