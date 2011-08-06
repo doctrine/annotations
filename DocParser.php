@@ -21,6 +21,7 @@ namespace Doctrine\Common\Annotations;
 
 use Closure;
 use ReflectionClass;
+use Doctrine\Common\Annotations\Annotation\Target;
 
 /**
  * A parser for docblock annotations.
@@ -48,6 +49,20 @@ final class DocParser
      * @var Doctrine\Common\Annotations\DocLexer
      */
     private $lexer;
+    
+    /**
+     * The DocBlock Target
+     * 
+     * @var \Reflector
+     */
+    private $target;
+    
+    /**
+     * Doc Parser used to collect annotation target
+     *
+     * @var Doctrine\Common\Annotations\DocParser
+     */
+    private static $preParser;
 
     /**
      * Flag to control if the current annotation is nested or not.
@@ -119,6 +134,11 @@ final class DocParser
      * @var Hash-map for caching to avoid reparsing class constructor.
      */
     private static $hasConstructor = array();
+    
+     /**
+     * @var Hash-map for caching to avoid reparsing  annotation class target.
+     */
+    private static $checkTarget = array();
 
     /**
      * Constructs a new DocParser.
@@ -149,6 +169,16 @@ final class DocParser
     public function setIgnoreNotImportedAnnotations($bool)
     {
         $this->ignoreNotImportedAnnotations = (Boolean) $bool;
+    }
+    
+     /**
+     * Sets current target context that is being parsed.
+     * 
+     * @param string $target 
+     */
+    public function setTarget($target)
+    {
+        $this->target = $target;
     }
 
     /**
@@ -260,6 +290,46 @@ final class DocParser
 
         // final check, does this class exist?
         return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
+    }
+    
+    /**
+     * @param string $annotName
+     */
+    private function checkTarget($annotName)
+    {
+        if (false !== $pos = strpos($input = $this->getAnnotationClass($annotName)->getDocComment(), '@Target')) {
+            
+            $parser = $this->getPreParser();
+            $parser->parse($input);
+            $parser->lexer->setInput(trim(substr($input, $pos), '* /'));
+            $parser->lexer->moveNext();
+            
+            if(null != ($target = $parser->Annotation())){
+                if (!in_array(Target::TARGET_ALL, $target->value) && !in_array($this->target, $target->value)) {
+                    throw AnnotationException::semanticalError(
+                        sprintf('Declaration of "@%s" is not compatible with annotation target [%s]"%s".', 
+                            $annotName, implode(", ", $target->value), ($this->context?", $this->context":""))
+                    );
+                }
+            }
+        }
+        self::$checkTarget[$this->context][$annotName] = true;
+    }
+    
+    /**
+     * @return DocParser
+     */
+    private function getPreParser()
+    {
+        if(self::$preParser == null){
+            self::$preParser = new self();
+            self::$preParser->setIgnoreNotImportedAnnotations(true);
+            self::$preParser->setImports(array(
+                'target' => 'Doctrine\Common\Annotations\Annotation\Target'
+            ));
+            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Target.php');
+        }
+        return self::$preParser;
     }
 
     /**
@@ -408,6 +478,10 @@ final class DocParser
 
         // Next will be nested
         $this->isNestedAnnotation = true;
+        
+        if ($this->target!= null && !isset(self::$checkTarget[$this->context][$name])){
+            $this->checkTarget($name);
+        }
 
         $values = array();
         if ($this->lexer->isNextToken(DocLexer::T_OPEN_PARENTHESIS)) {
@@ -420,7 +494,7 @@ final class DocParser
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
 
-         if (!isset(self::$hasConstructor[$name])){
+        if (!isset(self::$hasConstructor[$name])){
             $constructor = $this->getAnnotationClass($name)->getConstructor();
             self::$hasConstructor[$name] = ($constructor != null) && ($constructor->getNumberOfParameters() > 0);
         }

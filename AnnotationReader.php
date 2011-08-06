@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\Common\Annotations\Annotation\Target;
 use Closure;
 use ReflectionClass;
 use ReflectionMethod;
@@ -138,6 +139,7 @@ final class AnnotationReader implements Reader
      */
     public function getClassAnnotations(ReflectionClass $class)
     {
+        $this->parser->setTarget(Target::TARGET_CLASS);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
@@ -176,6 +178,7 @@ final class AnnotationReader implements Reader
     {
         $class = $property->getDeclaringClass();
         $context = 'property ' . $class->getName() . "::\$" . $property->getName();
+        $this->parser->setTarget(Target::TARGET_PROPERTY);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
@@ -213,6 +216,7 @@ final class AnnotationReader implements Reader
     {
         $class = $method->getDeclaringClass();
         $context = 'method ' . $class->getName() . '::' . $method->getName() . '()';
+        $this->parser->setTarget(Target::TARGET_METHOD);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
