@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Common\Annotations\Annotation\Target;
 
 class DocParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -265,6 +266,86 @@ DOCBLOCK;
         
         $this->assertEquals($annot->name, "Some name");
         $this->assertEquals($annot->data, "Some data");
+        
+    }
+    
+     public function testAnnotationTarget()
+    {
+        
+        $parser = new DocParser;
+        $parser->setImports(array(
+            '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation',
+        ));
+        $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithValidAnnotationTarget');
+        
+
+        $context    = 'class ' . $class->getName();
+        $docComment = $class->getDocComment();
+        
+        $parser->setTarget(Target::TARGET_CLASS);
+        $this->assertNotNull($parser->parse($docComment,$context));
+        
+        
+        $property   = $class->getProperty('foo');
+        $docComment = $property->getDocComment();
+        $context    = 'property ' . $class->getName() . "::\$" . $property->getName();
+        
+        $parser->setTarget(Target::TARGET_PROPERTY);
+        $this->assertNotNull($parser->parse($docComment,$context));
+        
+        
+        
+        $method     = $class->getMethod('someFunction');
+        $docComment = $property->getDocComment();
+        $context    = 'method ' . $class->getName() . '::' . $method->getName() . '()';
+        
+        $parser->setTarget(Target::TARGET_METHOD);
+        $this->assertNotNull($parser->parse($docComment,$context));
+        
+        
+        try {
+            $class      = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass');
+            $context    = 'class ' . $class->getName();
+            $docComment = $class->getDocComment();
+
+            $parser->setTarget(Target::TARGET_CLASS);
+            $parser->parse($class->getDocComment(),$context);
+            
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertNotNull($exc->getMessage());
+        }
+        
+        
+        try {
+            
+            $class      = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod');
+            $method     = $class->getMethod('functionName');
+            $docComment = $method->getDocComment();
+            $context    = 'method ' . $class->getName() . '::' . $method->getName() . '()';
+        
+            $parser->setTarget(Target::TARGET_METHOD);
+            $parser->parse($docComment,$context);
+            
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertNotNull($exc->getMessage());
+        }
+        
+        
+        try {
+            $class      = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty');
+            $property   = $class->getProperty('foo');
+            $docComment = $property->getDocComment();
+            $context    = 'property ' . $class->getName() . "::\$" . $property->getName();
+
+            $parser->setTarget(Target::TARGET_PROPERTY);
+            $parser->parse($docComment,$context);
+
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertNotNull($exc->getMessage());
+        }
         
     }
     

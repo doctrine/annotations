@@ -55,7 +55,47 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $classAnnot = $reader->getClassAnnotation($class, 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
         $this->assertEquals('hello', $classAnnot->dummyValue);
     }
+    
+    public function testAnnotationsWithValidMarkers()
+    {
+        $reader = $this->getReader();
+        $class  = new ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithValidAnnotationTarget');
 
+        $this->assertEquals(1,count($reader->getClassAnnotations($class)));
+        $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('foo'))));
+        $this->assertEquals(1,count($reader->getMethodAnnotations($class->getMethod('someFunction'))));
+    }
+    
+     /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotationTargetMethod" is not compatible with annotation target [METHOD]", class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass".
+     */
+    public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
+    {
+        $reader  = $this->getReader();
+        $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass'));
+    }
+    
+     /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotationTargetClass" is not compatible with annotation target [CLASS]", property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo".
+     */
+    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
+    {
+        $reader  = $this->getReader();
+        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty', 'foo'));
+    }
+    
+     /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotationTargetClass" is not compatible with annotation target [CLASS]", method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName()".
+     */
+    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
+    {
+        $reader  = $this->getReader();
+        $reader->getMethodAnnotations(new \ReflectionMethod('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod', 'functionName'));
+    }
+    
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in class Doctrine\Tests\Common\Annotations\DummyClassSyntaxError.
