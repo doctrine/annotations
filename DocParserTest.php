@@ -352,7 +352,7 @@ DOCBLOCK;
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_CLOSE_PARENTHESIS, got '\' at position 14 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedExceptionMessage [Syntax Error] Expected namespace separator or identifier, got ')' at position 9 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testAnnotationTargetSyntaxError()
     {
