@@ -68,7 +68,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotationTargetMethod" is not compatible with annotation target [METHOD]", class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass".
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetMethod" is not compatible with annotation target [METHOD], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
@@ -78,7 +78,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotationTargetClass" is not compatible with annotation target [CLASS]", property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo".
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo.
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
@@ -88,7 +88,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotationTargetClass" is not compatible with annotation target [CLASS]", method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName()".
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName().
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {

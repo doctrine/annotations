@@ -269,12 +269,12 @@ DOCBLOCK;
         
     }
     
-     public function testAnnotationTarget()
+    public function testAnnotationTarget()
     {
         
         $parser = new DocParser;
         $parser->setImports(array(
-            '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation',
+            '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Fixtures',
         ));
         $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithValidAnnotationTarget');
         
@@ -347,6 +347,25 @@ DOCBLOCK;
             $this->assertNotNull($exc->getMessage());
         }
         
+    }
+    
+    
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_CLOSE_PARENTHESIS, got '\' at position 14 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
+     */
+    public function testAnnotationTargetSyntaxError()
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'class ' . 'SomeClassName';
+        $docblock   = <<<DOCBLOCK
+/**
+ * @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError()
+ */
+DOCBLOCK;
+        
+        $parser->setTarget(Target::TARGET_CLASS);    
+        $parser->parse($docblock,$context);
     }
     
     /**
