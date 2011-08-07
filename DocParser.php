@@ -293,30 +293,35 @@ final class DocParser
     }
     
     /**
-     * @param string $annotName
+     * Checks if the annotation can be used in the current target.
+     * 
+     * @param   string $name        The annotation name
+     * @throws  AnnotationException Throws an AnnotationException if the target is invalid
      */
-    private function checkTarget($annotName)
+    private function checkTarget($name)
     {
-        if (false !== $pos = strpos($input = $this->getAnnotationClass($annotName)->getDocComment(), '@Target')) {
+        if (false !== $pos = strpos($input = $this->getAnnotationClass($name)->getDocComment(), '@Target')) {
             
-            $parser = $this->getPreParser();
-            $parser->parse($input);
+            $parser = self::$preParser ?: $this->getPreParser();
             $parser->lexer->setInput(trim(substr($input, $pos), '* /'));
             $parser->lexer->moveNext();
+            $parser->context = 'class @' . $name;
             
             if(null != ($target = $parser->Annotation())){
                 if (!in_array(Target::TARGET_ALL, $target->value) && !in_array($this->target, $target->value)) {
                     throw AnnotationException::semanticalError(
-                        sprintf('Declaration of "@%s" is not compatible with annotation target [%s]"%s".', 
-                            $annotName, implode(", ", $target->value), ($this->context?", $this->context":""))
+                        sprintf('Declaration of "@%s" is not compatible with annotation target [%s], %s.', 
+                            $name, implode(", ", $target->value), $this->context)
                     );
                 }
             }
         }
-        self::$checkTarget[$this->context][$annotName] = true;
+        self::$checkTarget[$this->context][$name] = true;
     }
     
     /**
+     * Returns the DocParser used to collect annotation target
+     * 
      * @return DocParser
      */
     private function getPreParser()
@@ -335,7 +340,7 @@ final class DocParser
     /**
      * Returns a ReflectionClass from hash-map or creates if does not exist.
      * 
-     * @param   string $className
+     * @param  string $className    The annotation name
      * @return \ReflectionClass
      */
     private function getAnnotationClass($className)
@@ -350,7 +355,7 @@ final class DocParser
     /**
      * Returns an array with the names of class properties
      * 
-     * @param    string $className
+     * @param    string $className  The annotation name
      * @return   array 
      */
     private function getProperties($className)
@@ -479,7 +484,7 @@ final class DocParser
         // Next will be nested
         $this->isNestedAnnotation = true;
         
-        if ($this->target!= null && !isset(self::$checkTarget[$this->context][$name])){
+        if (!isset(self::$checkTarget[$this->context][$name]) && $this->target && $this->context){
             $this->checkTarget($name);
         }
 

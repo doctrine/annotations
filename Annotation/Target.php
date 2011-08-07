@@ -31,17 +31,27 @@ namespace Doctrine\Common\Annotations\Annotation;
  */
 final class Target
 {
-    const TARGET_ALL                = 'ALL';
-    const TARGET_CLASS              = 'CLASS';
-    const TARGET_METHOD             = 'METHOD';
-    const TARGET_PROPERTY           = 'PROPERTY';
+    const TARGET_ALL        = 'ALL';
+    const TARGET_CLASS      = 'CLASS';
+    const TARGET_METHOD     = 'METHOD';
+    const TARGET_PROPERTY   = 'PROPERTY';
 
+    /**
+     * @var array
+     */
+    public $value;
+    
+    /**
+     * Annotation construct
+     * 
+     * @param array $values 
+     */
     public function __construct(array $values)
     {
-        if (is_string($values['value'])) {
+        if (is_string($values['value'])){
             $values['value'] = array($values['value']);
         }
-        if (!is_array($values['value'])) {
+        if (!is_array($values['value'])){
             throw new \InvalidArgumentException(
                 sprintf('@Target expects either a string value, or an array of strings, "%s" given.', 
                     is_object($values['value']) ? get_class($values['value']) : gettype($values['value'])
@@ -50,27 +60,4 @@ final class Target
         }
         $this->value = $values['value'];
     }
-    
-    
-    /**
-     * @var string
-     */
-    public $value = 'ALL';
-
-    /**
-     * {@inheritDoc}
-     */
-    public function strategyClass()
-    {
-        return 'Doctrine\Common\Annotations\Markers\TargetStrategy';
-    }
-    
-    /**
-     * {@inheritDoc}
-     */ 
-    public function priority()
-    {
-        return 0;
-    }
-
 }

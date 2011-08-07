@@ -114,8 +114,6 @@ final class AnnotationReader implements Reader
 
     /**
      * Constructor. Initializes a new AnnotationReader that uses the given Cache provider.
-     *
-     * @param DocParser $parser The parser to use. If none is provided, the default parser is used.
      */
     public function __construct()
     {
@@ -133,8 +131,8 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a class.
      *
-     * @param string|ReflectionClass $class The name or ReflectionClass of the class from which
-     * the class annotations should be read.
+     * @param ReflectionClass $class The ReflectionClass of the class from which
+     *                               the class annotations should be read.
      * @return array An array of Annotations.
      */
     public function getClassAnnotations(ReflectionClass $class)
@@ -170,8 +168,8 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a property.
      *
-     * @param string|ReflectionProperty $property The name or ReflectionProperty of the property
-     * from which the annotations should be read.
+     * @param ReflectionProperty $property The ReflectionProperty of the property
+     *                                     from which the annotations should be read.
      * @return array An array of Annotations.
      */
     public function getPropertyAnnotations(ReflectionProperty $property)
@@ -208,8 +206,8 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a method.
      *
-     * @param ReflectionMethod $property The name or ReflectionMethod of the method from which
-     * the annotations should be read.
+     * @param ReflectionMethod $property The ReflectionMethod of the method from which
+     *                                   the annotations should be read.
      * @return array An array of Annotations.
      */
     public function getMethodAnnotations(ReflectionMethod $method)
