@@ -327,7 +327,7 @@ final class DocParser
         if($isAnnotation){
             
             //Checks if the annotation has @Target annotation
-            if (false !== ($pos = strpos($docComment, '@Target'))) {
+            if (strpos($docComment, '@Target')) {
                 foreach (self::$metadataParser->parse($docComment,'class @' . $name) as $annotation) {
                     // get the first
                     if($annotation instanceof Target){
