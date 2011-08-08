@@ -76,7 +76,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod" is not compatible with annotation target [METHOD, PROPERTY], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
+     * @expectedExceptionMessage Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod" is not compatible with annotation target [METHOD, PROPERTY], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
@@ -86,7 +86,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo.
+     * @expectedExceptionMessage Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo.
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
@@ -96,7 +96,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName().
+     * @expectedExceptionMessage Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName().
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
@@ -106,7 +106,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Syntax Error] Expected namespace separator or identifier, got ')' at position 9 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock()
     {
@@ -116,7 +116,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Syntax Error] Expected namespace separator or identifier, got ')' at position 9 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock()
     {
@@ -126,7 +126,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Syntax Error] Expected namespace separator or identifier, got ')' at position 9 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock()
     {

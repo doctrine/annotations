@@ -352,7 +352,7 @@ DOCBLOCK;
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Creation Error] Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testAnnotationTargetSyntaxError()
     {
