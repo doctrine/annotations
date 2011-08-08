@@ -2,16 +2,16 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetMethod;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod;
 
 /**
- * @AnnotationTargetMethod("Some data")
+ * @AnnotationTargetPropertyMethod("Some data")
  */
 class ClassWithInvalidAnnotationTargetAtClass
 {
     
     /**
-     * @AnnotationTargetMethod("Bar")
+     * @AnnotationTargetPropertyMethod("Bar")
      */
     public $foo;
 }

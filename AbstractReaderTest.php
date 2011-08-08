@@ -68,7 +68,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetMethod" is not compatible with annotation target [METHOD], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
+     * @expectedExceptionMessage [Semantical Error] Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod" is not compatible with annotation target [METHOD, PROPERTY], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
