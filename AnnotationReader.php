@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\Common\Annotations\Annotation\Target;
 use Closure;
 use ReflectionClass;
 use ReflectionMethod;
@@ -134,12 +135,13 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a class.
      *
-     * @param string|ReflectionClass $class The name or ReflectionClass of the class from which
-     * the class annotations should be read.
+     * @param ReflectionClass $class The ReflectionClass of the class from which
+     *                               the class annotations should be read.
      * @return array An array of Annotations.
      */
     public function getClassAnnotations(ReflectionClass $class)
     {
+        $this->parser->setTarget(Target::TARGET_CLASS);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
@@ -170,14 +172,15 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a property.
      *
-     * @param string|ReflectionProperty $property The name or ReflectionProperty of the property
-     * from which the annotations should be read.
+     * @param ReflectionProperty $property The ReflectionProperty of the property
+     *                                     from which the annotations should be read.
      * @return array An array of Annotations.
      */
     public function getPropertyAnnotations(ReflectionProperty $property)
     {
         $class = $property->getDeclaringClass();
         $context = 'property ' . $class->getName() . "::\$" . $property->getName();
+        $this->parser->setTarget(Target::TARGET_PROPERTY);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
@@ -207,14 +210,15 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a method.
      *
-     * @param ReflectionMethod $property The name or ReflectionMethod of the method from which
-     * the annotations should be read.
+     * @param ReflectionMethod $property The ReflectionMethod of the method from which
+     *                                   the annotations should be read.
      * @return array An array of Annotations.
      */
     public function getMethodAnnotations(ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
         $context = 'method ' . $class->getName() . '::' . $method->getName() . '()';
+        $this->parser->setTarget(Target::TARGET_METHOD);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
