@@ -31,10 +31,27 @@ namespace Doctrine\Common\Annotations\Annotation;
  */
 final class Target
 {
-    const TARGET_ALL        = 'ALL';
-    const TARGET_CLASS      = 'CLASS';
-    const TARGET_METHOD     = 'METHOD';
-    const TARGET_PROPERTY   = 'PROPERTY';
+    const TARGET_CLASS              = 1;
+    const TARGET_METHOD             = 2;
+    const TARGET_PROPERTY           = 4;
+    const TARGET_NESTED_ANNOTATION  = 8;
+    const TARGET_ALL                = 15;
+    
+    const TARGET_LITERAL_ALL                = 'ALL';
+    const TARGET_LITERAL_CLASS              = 'CLASS';
+    const TARGET_LITERAL_METHOD             = 'METHOD';
+    const TARGET_LITERAL_PROPERTY           = 'PROPERTY';
+    const TARGET_LITERAL_NESTED_ANNOTATION  = 'NESTED_ANNOTATION';
+    
+    private static $map = array(
+        self::TARGET_LITERAL_ALL                => self::TARGET_ALL,
+        self::TARGET_LITERAL_CLASS              => self::TARGET_CLASS,
+        self::TARGET_LITERAL_METHOD             => self::TARGET_METHOD,
+        self::TARGET_LITERAL_PROPERTY           => self::TARGET_PROPERTY,
+        self::TARGET_LITERAL_NESTED_ANNOTATION  => self::TARGET_NESTED_ANNOTATION,
+    );
+    
+    
 
     /**
      * @var array
@@ -59,5 +76,29 @@ final class Target
             );
         }
         $this->value = $values['value'];
+    }
+    
+    /**
+     * Returns the allowed usage targets as bitmask.
+     *
+     * @return integer
+     */
+    public function getBitmask(){
+        $bitmask = 0;
+        foreach ($this->value as $literal) {
+            if(isset(self::$map[$literal])){
+                $bitmask += self::$map[$literal];
+            }
+        }
+        return $bitmask;
+    }
+    
+    /**
+     * Returns the literal target declaration.
+     *
+     * @return string
+     */
+    public function getLiteral(){
+        return implode(', ', $this->value);
     }
 }
