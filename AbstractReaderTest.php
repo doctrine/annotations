@@ -72,11 +72,12 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1,count($reader->getClassAnnotations($class)));
         $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('foo'))));
         $this->assertEquals(1,count($reader->getMethodAnnotations($class->getMethod('someFunction'))));
+        $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('nested'))));
     }
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod" is not compatible with annotation target [METHOD, PROPERTY], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
+     * @expectedExceptionMessage Declaration of "@AnnotationTargetPropertyMethod" is not compatible with annotation target [METHOD, PROPERTY], class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass.
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
@@ -86,7 +87,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo.
+     * @expectedExceptionMessage Declaration of "@AnnotationTargetClass" is not compatible with annotation target [CLASS], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo.
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
@@ -96,7 +97,17 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Declaration of "@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass" is not compatible with annotation target [CLASS], method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName().
+     * @expectedExceptionMessage Declaration of "@AnnotationTargetNestedAnnotation" is not compatible with annotation target [NESTED_ANNOTATION], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar.
+     */
+    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
+    {
+        $reader  = $this->getReader();
+        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty', 'bar'));
+    }
+    
+     /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage Declaration of "@AnnotationTargetClass" is not compatible with annotation target [CLASS], method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName().
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {

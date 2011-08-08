@@ -254,7 +254,7 @@ DOCBLOCK;
         $this->assertEquals($annot->data, "Some data");
 
 
-                $docblock = <<<DOCBLOCK
+        $docblock = <<<DOCBLOCK
 /**
  * @SomeAnnotationWithConstructorWithoutParams(name = "Some name")
  */
@@ -266,7 +266,16 @@ DOCBLOCK;
 
         $this->assertEquals($annot->name, "Some name");
         $this->assertEquals($annot->data, "Some data");
+        
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructorAndProperties()
+ */
+DOCBLOCK;
 
+        $result     = $parser->parse($docblock);
+        $this->assertEquals(count($result), 1);
+        $this->assertTrue($result[0] instanceof SomeAnnotationClassNameWithoutConstructorAndProperties);
     }
     
     public function testAnnotationTarget()
@@ -349,6 +358,41 @@ DOCBLOCK;
         
     }
     
+    
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on  does not accept any values, but got {"value":"Foo"}.
+     */
+    public function testWithoutConstructorWhenIsNotDefaultValue()
+    {
+        $parser     = $this->createTestParser();
+        $docblock   = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructorAndProperties("Foo")
+ */
+DOCBLOCK;
+
+        
+        $parser->setTarget(Target::TARGET_CLASS);    
+        $parser->parse($docblock);
+    }
+    
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on  does not accept any values, but got {"value":"Foo"}.
+     */
+    public function testWithoutConstructorWhenHasNoProperties()
+    {
+        $parser     = $this->createTestParser();
+        $docblock   = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructorAndProperties(value = "Foo")
+ */
+DOCBLOCK;
+
+        $parser->setTarget(Target::TARGET_CLASS);    
+        $parser->parse($docblock);
+    }
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
@@ -661,6 +705,10 @@ class SomeAnnotationWithConstructorWithoutParams
     public $name;
 }
 
+/** @Annotation */
+class SomeAnnotationClassNameWithoutConstructorAndProperties
+{
+}
 
 /** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation {
