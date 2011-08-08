@@ -33,6 +33,7 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * @author Jonathan Wage <jonwage@gmail.com>
  * @author Roman Borschel <roman@code-factory.org>
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
 final class DocParser
 {
@@ -51,9 +52,9 @@ final class DocParser
     private $lexer;
     
     /**
-     * The DocBlock Target
+     * Current target context
      * 
-     * @var \Reflector
+     * @var string
      */
     private $target;
     
@@ -329,6 +330,9 @@ final class DocParser
             
             foreach ($parser->parse($input,$context) as $annotation) {
                 if($annotation instanceof Target){
+                    
+                    //if not all targets
+                    //and anotation does not support current target
                     if (!in_array(Target::TARGET_ALL, $annotation->value) && !in_array($this->target, $annotation->value)) {
                         throw AnnotationException::creationError(
                             sprintf('Declaration of "@%s" is not compatible with annotation target [%s], %s.', 
@@ -520,6 +524,7 @@ final class DocParser
         // Next will be nested
         $this->isNestedAnnotation = true;
         
+        //if the annotation has not yet been verified in the current context
         if (!isset(self::$checkTarget[$this->context][$name]) && $this->target && $this->context){
             $this->checkTarget($name);
         }

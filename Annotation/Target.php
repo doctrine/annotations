@@ -25,7 +25,7 @@ namespace Doctrine\Common\Annotations\Annotation;
  * Annotation that can be used to signal to the parser 
  * to check the annotation target during the parsing process.
  *
- * @author  Fabio B. Silva <fabio.bat.silva@gmail.com>
+ * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  * 
  * @Annotation
  */
