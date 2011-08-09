@@ -492,7 +492,7 @@ final class DocParser
         $this->isNestedAnnotation = true;
         
         //if target is nested annotation
-        $target = $wasNested ? Target::TARGET_NESTED_ANNOTATION : $this->target;
+        $target = $wasNested ? Target::TARGET_ANNOTATION : $this->target;
         
         //if anotation does not support current target
         if (0 == (self::$annotationMetadata[$name]['targetBitmask'] & $target) && $target){

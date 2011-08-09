@@ -34,24 +34,18 @@ final class Target
     const TARGET_CLASS              = 1;
     const TARGET_METHOD             = 2;
     const TARGET_PROPERTY           = 4;
-    const TARGET_NESTED_ANNOTATION  = 8;
+    const TARGET_ANNOTATION         = 8;
     const TARGET_ALL                = 15;
-    
-    const TARGET_LITERAL_ALL                = 'ALL';
-    const TARGET_LITERAL_CLASS              = 'CLASS';
-    const TARGET_LITERAL_METHOD             = 'METHOD';
-    const TARGET_LITERAL_PROPERTY           = 'PROPERTY';
-    const TARGET_LITERAL_NESTED_ANNOTATION  = 'NESTED_ANNOTATION';
     
     /**
      * @var array
      */
     private static $map = array(
-        self::TARGET_LITERAL_ALL                => self::TARGET_ALL,
-        self::TARGET_LITERAL_CLASS              => self::TARGET_CLASS,
-        self::TARGET_LITERAL_METHOD             => self::TARGET_METHOD,
-        self::TARGET_LITERAL_PROPERTY           => self::TARGET_PROPERTY,
-        self::TARGET_LITERAL_NESTED_ANNOTATION  => self::TARGET_NESTED_ANNOTATION,
+        'ALL'         => self::TARGET_ALL,
+        'CLASS'       => self::TARGET_CLASS,
+        'METHOD'      => self::TARGET_METHOD,
+        'PROPERTY'    => self::TARGET_PROPERTY,
+        'ANNOTATION'  => self::TARGET_ANNOTATION,
     );
     
     
