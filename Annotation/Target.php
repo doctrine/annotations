@@ -43,6 +43,9 @@ final class Target
     const TARGET_LITERAL_PROPERTY           = 'PROPERTY';
     const TARGET_LITERAL_NESTED_ANNOTATION  = 'NESTED_ANNOTATION';
     
+    /**
+     * @var array
+     */
     private static $map = array(
         self::TARGET_LITERAL_ALL                => self::TARGET_ALL,
         self::TARGET_LITERAL_CLASS              => self::TARGET_CLASS,

@@ -295,12 +295,8 @@ final class DocParser
      *
      * @param   string $name        The annotation name
      */
-    private function collectParsingMetadata($name)
+    private function collectAnnotationMetadata($name)
     {
-        if(isset(self::$annotationMetadata[$name])){
-            return self::$annotationMetadata[$name];
-        }
-        
         if(self::$metadataParser == null){
             self::$metadataParser = new self();
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
@@ -318,8 +314,8 @@ final class DocParser
         $defaultProperty    = null;
         $hasConstructor     = false;
         $properties         = array();
+        $targetLiteral      = null;
         $targetBitmask      = Target::TARGET_ALL;
-        $targetLiteral      = Target::TARGET_LITERAL_ALL;
         $isAnnotation       = (false !== strpos($docComment, '@Annotation'));
         
         
@@ -476,13 +472,13 @@ final class DocParser
         // at this point, $name contains the fully qualified class name of the
         // annotation, and it is also guaranteed that this class exists, and
         // that it is loaded
-        
-        $this->collectParsingMetadata($name);
-        
-        // Next will be nested
-        $wasNested = $this->isNestedAnnotation;
-        $this->isNestedAnnotation = true;
 
+        
+        // collects the metadata annotation only if there is not yet
+        if(!isset(self::$annotationMetadata[$name])){
+            $this->collectAnnotationMetadata($name);
+        }
+        
         // verify that the class is really meant to be an annotation and not just any ordinary class
         if (!self::$annotationMetadata[$name]['isAnnotation'] === true) {
             if (isset($this->ignoredAnnotationNames[$originalName])) {
@@ -491,12 +487,16 @@ final class DocParser
             throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $originalName, $this->context));
         }
         
+        // Next will be nested
+        $wasNested = $this->isNestedAnnotation;
+        $this->isNestedAnnotation = true;
+        
         //if target is nested annotation
         $target = $wasNested ? Target::TARGET_NESTED_ANNOTATION : $this->target;
         
         //if anotation does not support current target
-        if (0 == (self::$annotationMetadata[$name]['targetBitmask'] & $target) && $this->context && $target){
-            throw AnnotationException::creationError(
+        if (0 == (self::$annotationMetadata[$name]['targetBitmask'] & $target) && $target){
+            throw AnnotationException::semanticalError(
                 sprintf('Declaration of "@%s" is not compatible with annotation target [%s], %s.', 
                      $originalName,  self::$annotationMetadata[$name]['targetLiteral'], $this->context)
             );
