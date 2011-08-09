@@ -314,8 +314,8 @@ final class DocParser
         $defaultProperty    = null;
         $hasConstructor     = false;
         $properties         = array();
-        $targetLiteral      = null;
-        $targetBitmask      = Target::TARGET_ALL;
+        $targetsLiteral     = null;
+        $targets            = Target::TARGET_ALL;
         $isAnnotation       = (false !== strpos($docComment, '@Annotation'));
         
         
@@ -327,8 +327,8 @@ final class DocParser
                 foreach (self::$metadataParser->parse($docComment,'class @' . $name) as $annotation) {
                     // get the first
                     if($annotation instanceof Target){
-                        $targetBitmask = $annotation->getBitmask();
-                        $targetLiteral = $annotation->getLiteral();
+                        $targets         = $annotation->targets;
+                        $targetsLiteral  = $annotation->literal;
                         break;
                     }
                 }
@@ -353,10 +353,10 @@ final class DocParser
         
         
         self::$annotationMetadata[$name] = array(
+            'targets'           => $targets,
             'properties'        => $properties,
             'isAnnotation'      => $isAnnotation,
-            'targetBitmask'     => $targetBitmask,
-            'targetLiteral'     => $targetLiteral,
+            'targetsLiteral'    => $targetsLiteral,
             'hasConstructor'    => $hasConstructor,
             'defaultProperty'   => $defaultProperty
         );
@@ -495,10 +495,10 @@ final class DocParser
         $target = $wasNested ? Target::TARGET_ANNOTATION : $this->target;
         
         //if anotation does not support current target
-        if (0 == (self::$annotationMetadata[$name]['targetBitmask'] & $target) && $target){
+        if (0 == (self::$annotationMetadata[$name]['targets'] & $target) && $target){
             throw AnnotationException::semanticalError(
                 sprintf('Declaration of "@%s" is not compatible with annotation target [%s], %s.', 
-                     $originalName,  self::$annotationMetadata[$name]['targetLiteral'], $this->context)
+                     $originalName,  self::$annotationMetadata[$name]['targetsLiteral'], $this->context)
             );
         }
 

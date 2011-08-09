@@ -48,12 +48,26 @@ final class Target
         'ANNOTATION'  => self::TARGET_ANNOTATION,
     );
     
-    
-
     /**
      * @var array
      */
     public $value;
+    
+    /**
+     * Targets as bitmask.
+     * 
+     * @var integer
+     */
+    public $targets;
+    
+    
+    /**
+     * Literal target declaration.
+     * 
+     * @var integer
+     */
+    public $literal;
+    
     
     /**
      * Annotation construct
@@ -62,6 +76,9 @@ final class Target
      */
     public function __construct(array $values)
     {
+        if (!isset($values['value'])){
+            $values['value'] = null;
+        }
         if (is_string($values['value'])){
             $values['value'] = array($values['value']);
         }
@@ -72,30 +89,21 @@ final class Target
                 )
             );
         }
-        $this->value = $values['value'];
-    }
-    
-    /**
-     * Returns the allowed usage targets as bitmask.
-     *
-     * @return integer
-     */
-    public function getBitmask(){
+        
         $bitmask = 0;
-        foreach ($this->value as $literal) {
-            if(isset(self::$map[$literal])){
-                $bitmask += self::$map[$literal];
+        foreach ($values['value'] as $literal) {
+            if(!isset(self::$map[$literal])){
+                throw new \InvalidArgumentException(
+                    sprintf('Invalid Target "%s". Available targets: [%s]',
+                            $literal,  implode(', ', array_keys(self::$map)))
+                );
             }
+            $bitmask += self::$map[$literal];
         }
-        return $bitmask;
+        
+        $this->targets  = $bitmask;
+        $this->value    = $values['value'];
+        $this->literal  = implode(', ', $this->value);
     }
     
-    /**
-     * Returns the literal target declaration.
-     *
-     * @return string
-     */
-    public function getLiteral(){
-        return implode(', ', $this->value);
-    }
 }
