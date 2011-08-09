@@ -4,9 +4,9 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
 /**
  * @Annotation
- * @Target({ "NESTED_ANNOTATION" })
+ * @Target({ "ANNOTATION" })
  */
-final class AnnotationTargetNestedAnnotation
+final class AnnotationTargetAnnotation
 {
     public $data;
     public $name;

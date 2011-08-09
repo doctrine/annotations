@@ -3,7 +3,7 @@
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass;
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetNestedAnnotation;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation;
 
 /**
  * @AnnotationTargetClass("Some data")
@@ -18,7 +18,7 @@ class ClassWithInvalidAnnotationTargetAtProperty
     
     
     /**
-     * @AnnotationTargetNestedAnnotation("Foo")
+     * @AnnotationTargetAnnotation("Foo")
      */
     public $bar;
 }

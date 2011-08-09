@@ -34,7 +34,7 @@ class ClassWithValidAnnotationTarget
     
     
     /**
-     * @AnnotationTargetAll(@AnnotationTargetNestedAnnotation)
+     * @AnnotationTargetAll(@AnnotationTargetAnnotation)
      */
     public $nested;
 

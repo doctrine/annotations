@@ -97,7 +97,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Declaration of "@AnnotationTargetNestedAnnotation" is not compatible with annotation target [NESTED_ANNOTATION], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar.
+     * @expectedExceptionMessage Declaration of "@AnnotationTargetAnnotation" is not compatible with annotation target [ANNOTATION], property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar.
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
