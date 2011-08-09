@@ -20,13 +20,12 @@
 
 namespace Doctrine\Common\Annotations\Annotation;
 
-
 /**
- * Annotation that can be used to signal to the parser 
+ * Annotation that can be used to signal to the parser
  * to check the annotation target during the parsing process.
  *
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
- * 
+ *
  * @Annotation
  */
 final class Target
@@ -36,7 +35,7 @@ final class Target
     const TARGET_PROPERTY           = 4;
     const TARGET_ANNOTATION         = 8;
     const TARGET_ALL                = 15;
-    
+
     /**
      * @var array
      */
@@ -47,32 +46,30 @@ final class Target
         'PROPERTY'    => self::TARGET_PROPERTY,
         'ANNOTATION'  => self::TARGET_ANNOTATION,
     );
-    
+
     /**
      * @var array
      */
     public $value;
-    
+
     /**
      * Targets as bitmask.
-     * 
+     *
      * @var integer
      */
     public $targets;
-    
-    
+
     /**
      * Literal target declaration.
-     * 
+     *
      * @var integer
      */
     public $literal;
-    
-    
+
     /**
      * Annotation construct
-     * 
-     * @param array $values 
+     *
+     * @param array $values
      */
     public function __construct(array $values)
     {
@@ -84,12 +81,12 @@ final class Target
         }
         if (!is_array($values['value'])){
             throw new \InvalidArgumentException(
-                sprintf('@Target expects either a string value, or an array of strings, "%s" given.', 
+                sprintf('@Target expects either a string value, or an array of strings, "%s" given.',
                     is_object($values['value']) ? get_class($values['value']) : gettype($values['value'])
                 )
             );
         }
-        
+
         $bitmask = 0;
         foreach ($values['value'] as $literal) {
             if(!isset(self::$map[$literal])){
@@ -100,10 +97,9 @@ final class Target
             }
             $bitmask += self::$map[$literal];
         }
-        
+
         $this->targets  = $bitmask;
         $this->value    = $values['value'];
         $this->literal  = implode(', ', $this->value);
     }
-    
 }
