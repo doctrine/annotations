@@ -413,6 +413,42 @@ DOCBLOCK;
     }
     
     /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, ANNOTATION]
+     */
+    public function testAnnotationWithInvalidTargetDeclarationError()
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'class ' . 'SomeClassName';
+        $docblock   = <<<DOCBLOCK
+/**
+ * @AnnotationWithInvalidTargetDeclaration()
+ */
+DOCBLOCK;
+        
+        $parser->setTarget(Target::TARGET_CLASS);    
+        $parser->parse($docblock,$context);
+    }
+        
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage @Target expects either a string value, or an array of strings, "NULL" given.
+     */
+    public function testAnnotationWithTargetEmptyError()
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'class ' . 'SomeClassName';
+        $docblock   = <<<DOCBLOCK
+/**
+ * @AnnotationWithTargetEmpty()
+ */
+DOCBLOCK;
+        
+        $parser->setTarget(Target::TARGET_CLASS);    
+        $parser->parse($docblock,$context);
+    }
+    
+    /**
      * @group DDC-575
      */
     public function testRegressionDDC575()
@@ -706,9 +742,19 @@ class SomeAnnotationWithConstructorWithoutParams
 }
 
 /** @Annotation */
-class SomeAnnotationClassNameWithoutConstructorAndProperties
-{
-}
+class SomeAnnotationClassNameWithoutConstructorAndProperties{}
+
+/** 
+ * @Annotation 
+ * @Target("Foo")
+ */
+class AnnotationWithInvalidTargetDeclaration{}
+
+/** 
+ * @Annotation 
+ * @Target
+ */
+class AnnotationWithTargetEmpty{}
 
 /** @Annotation */
 class Name extends \Doctrine\Common\Annotations\Annotation {
