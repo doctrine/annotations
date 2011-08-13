@@ -27,7 +27,9 @@ use Doctrine\Common\Annotations\Annotation\Target;
  * This annotation reader is intended to be used in projects where you have
  * full-control over all annotations that are available.
  *
+ * @since  2.2
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
 class SimpleAnnotationReader implements Reader
 {
