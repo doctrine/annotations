@@ -319,6 +319,7 @@ final class DocParser
     {
         if(self::$metadataParser == null){
             self::$metadataParser = new self();
+            self::$metadataParser->setTarget(Target::TARGET_CLASS);
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
             self::$metadataParser->setImports(array(
                 'target' => 'Doctrine\Common\Annotations\Annotation\Target'
@@ -342,8 +343,6 @@ final class DocParser
 
         // verify that the class is really meant to be an annotation
         if ($metadata['is_annotation']) {
-            self::$metadataParser->setTarget(Target::TARGET_CLASS);
-            
             foreach (self::$metadataParser->parse($docComment, 'class @' . $name) as $annotation) {
                 if ($annotation instanceof Target) {
                     $metadata['targets']         = $annotation->targets;
@@ -353,8 +352,6 @@ final class DocParser
 
             // if not has a constructor will inject values into public properties
             if (false === $metadata['has_constructor']) {
-                self::$metadataParser->setTarget(Target::TARGET_PROPERTY);
-                
                 //collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
