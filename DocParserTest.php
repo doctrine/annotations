@@ -358,6 +358,78 @@ DOCBLOCK;
         
     }
     
+    public function testAnnotationWithVarType()
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::$invalidProperty.';
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType(%s = %s)';
+        $parser->setTarget(Target::TARGET_PROPERTY);
+
+        
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'mixed','true'), $context));
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'mixed','123'), $context));
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'mixed','1.23'), $context));
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'mixed','"string val"'), $context));
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'mixed','@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'), $context));
+        
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'boolean','true'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'boolean','123'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "boolean" must be an boolean, integer given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'bool','false'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'bool','123'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "bool" must be an bool, integer given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+        
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'float','123.321'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'float','123'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "float" must be an float, integer given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'integer','123'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'integer','"string val"'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "integer" must be an integer, string given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+        
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'string','"string val"'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'string','123'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "string" must be an string, integer given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+        
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'array','{1,2,3,4}'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'array','123'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "array" must be an array, integer given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+        
+        
+        $this->assertNotEmpty($parser->parse(sprintf($docblock,'annotation','@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'), $context));
+        try {
+            $parser->parse(sprintf($docblock,'annotation','123'), $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains('Atrribute "annotation" must be an Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll, integer given. @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::$invalidProperty.', $exc->getMessage());
+        }
+        
+    }
     
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
