@@ -6,7 +6,7 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  * @Annotation
  * @Target("ALL")
  */
-final class AnnotationTargetAll
+class AnnotationTargetAll
 {
     public $data;
     public $name;
