@@ -132,15 +132,16 @@ final class DocParser
             'is_annotation'    => true,
         ),
     );
-    
+
     /**
      * Hash-map for handle types declaration
-     * 
+     *
      * @var array
      */
     private static $typeMap = array(
         'float'     => 'double',
         'bool'      => 'boolean',
+        'int'       => 'integer',
     );
 
     /**
@@ -352,26 +353,34 @@ final class DocParser
 
             // if not has a constructor will inject values into public properties
             if (false === $metadata['has_constructor']) {
-                //collect all public properties
+                // collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
-                    
-                    //Checks if the property has @var annotation
-                    if (preg_match('/@var\s+([^\s]+)/',$property->getDocComment(), $matches)) {
-                        //literal type declaration
+
+                    // checks if the property has @var annotation
+                    if ((false !== $propertyComment = $property->getDocComment())
+                        && false !== strpos($propertyComment, '@var')
+                        && preg_match('/@var\s+([^\s]+)/',$propertyComment, $matches)) {
+                        // literal type declaration
                         $value = $matches[1];
-                        
-                        //handle internal type declaration
-                        $type  = isset(self::$typeMap[$value]) ? self::$typeMap[$value] : $value;
-                       
-                        //handle the case if the property type is mixed
-                        if($type !== 'mixed'){
-                            //Checks if the property has @var array<type> annotation
-                            if(preg_match('/array<(.*?)>/',$type,$matches)){
-                                $type       = 'array';
-                                $arrayType  = isset(self::$typeMap[$matches[1]]) ? self::$typeMap[$matches[1]] : $matches[1];
+
+                        // handle internal type declaration
+                        $type = isset(self::$typeMap[$value]) ? self::$typeMap[$value] : $value;
+
+                        // handle the case if the property type is mixed
+                        if ('mixed' !== $type) {
+                            // Checks if the property has @var array<type> annotation
+                            if (false !== $pos = strpos($type, '<')) {
+                                $arrayType = substr($type, $pos+1, -1);
+                                $type = 'array';
+
+                                if (isset(self::$typeMap[$arrayType])) {
+                                    $arrayType = self::$typeMap[$arrayType];
+                                }
+
                                 $metadata['attribute_types'][$property->name]['array_type'] = $arrayType;
                             }
+
                             $metadata['attribute_types'][$property->name]['type']   = $type;
                             $metadata['attribute_types'][$property->name]['value']  = $value;
                         }
@@ -555,29 +564,28 @@ final class DocParser
                     throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)));
                 }
             }
-            
-            //checks if the attribute type matches
-            if(isset(self::$annotationMetadata[$name]['attribute_types'][$property]) && $value !== null){
+
+            // checks if the attribute type matches
+            if (null !== $value && isset(self::$annotationMetadata[$name]['attribute_types'][$property])) {
                 $type = self::$annotationMetadata[$name]['attribute_types'][$property]['type'];
-                
-                if($type === 'array'){
+
+                if ($type === 'array') {
                     // Handle the case of a single value
-                    if(!is_array($value)){
+                    if (!is_array($value)) {
                         $value = array($value);
                     }
-                    
-                    //checks if the attribute has array type declaration
-                    if(isset(self::$annotationMetadata[$name]['attribute_types'][$property]['array_type'])){
+
+                    // checks if the attribute has array type declaration, such as "array<string>"
+                    if (isset(self::$annotationMetadata[$name]['attribute_types'][$property]['array_type'])) {
                         $arrayType = self::$annotationMetadata[$name]['attribute_types'][$property]['array_type'];
                         foreach ($value as $item) {
-                            if((gettype($item) !== $arrayType) && (!$item instanceof $arrayType)){
-                                throw AnnotationException::creationError(sprintf('Atrribute "%s" expects either a %s value, or an array of %s, %s given. @%s declared on %s.', $property, $arrayType, $arrayType,( is_object($item)? get_class($item):gettype($item) ), $originalName, $this->context));
+                            if (gettype($item) !== $arrayType && !$item instanceof $arrayType) {
+                                throw AnnotationException::typeError($property, $originalName, $this->context, 'either a(n) '.$arrayType.', or an array of '.$arrayType.'s', $item);
                             }
                         }
                     }
-                
-                }elseif((gettype($value) !== $type) && (!$value instanceof $type)){
-                    throw AnnotationException::creationError(sprintf('Atrribute "%s" must be an %s, %s given. @%s declared on %s.', $property, self::$annotationMetadata[$name]['attribute_types'][$property]['value'], ( is_object($value)? get_class($value):gettype($value) ), $originalName, $this->context));
+                } elseif (gettype($value) !== $type && !$value instanceof $type) {
+                    throw AnnotationException::typeError($property, $originalName, $this->context, 'a(n) '.self::$annotationMetadata[$name]['attribute_types'][$property]['value'], $value);
                 }
             }
 

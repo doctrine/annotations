@@ -64,4 +64,27 @@ class AnnotationException extends \Exception
     {
         return new self('[Creation Error] ' . $message);
     }
+
+    /**
+     * Creates a new AnnotationException describing an type error of an attribute.
+     *
+     * @since 2.2
+     * @param string $attributeName
+     * @param string $annotationName
+     * @param string $context
+     * @param string $expected
+     * @param mixed $actual
+     * @return AnnotationException
+     */
+    public static function typeError($attributeName, $annotationName, $context, $expected, $actual)
+    {
+        return new self(sprintf(
+            '[Type Error] Attribute "%s" of @%s declared on %s expects %s, but got %s.',
+            $attributeName,
+            $annotationName,
+            $context,
+            $expected,
+            is_object($actual) ? 'an instance of '.get_class($actual) : gettype($actual)
+        ));
+    }
 }
