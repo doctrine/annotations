@@ -366,8 +366,14 @@ final class DocParser
                        
                         //handle the case if the property type is mixed
                         if($type !== 'mixed'){
-                            $metadata['attribute_types'][$property->name]['type']  = $type;
-                            $metadata['attribute_types'][$property->name]['value'] = $value;
+                            //Checks if the property has @var array<type> annotation
+                            if(preg_match('/array<(.*?)>/',$type,$matches)){
+                                $type       = 'array';
+                                $arrayType  = isset(self::$typeMap[$matches[1]]) ? self::$typeMap[$matches[1]] : $matches[1];
+                                $metadata['attribute_types'][$property->name]['array_type'] = $arrayType;
+                            }
+                            $metadata['attribute_types'][$property->name]['type']   = $type;
+                            $metadata['attribute_types'][$property->name]['value']  = $value;
                         }
                     }
                 }
@@ -551,9 +557,26 @@ final class DocParser
             }
             
             //checks if the attribute type matches
-            if(isset(self::$annotationMetadata[$name]['attribute_types'][$property]) && $value != null){
+            if(isset(self::$annotationMetadata[$name]['attribute_types'][$property]) && $value !== null){
                 $type = self::$annotationMetadata[$name]['attribute_types'][$property]['type'];
-                if((gettype($value) !== $type) && (!$value instanceof $type)){
+                
+                if($type === 'array'){
+                    // Handle the case of a single value
+                    if(!is_array($value)){
+                        $value = array($value);
+                    }
+                    
+                    //checks if the attribute has array type declaration
+                    if(isset(self::$annotationMetadata[$name]['attribute_types'][$property]['array_type'])){
+                        $arrayType = self::$annotationMetadata[$name]['attribute_types'][$property]['array_type'];
+                        foreach ($value as $item) {
+                            if((gettype($item) !== $arrayType) && (!$item instanceof $arrayType)){
+                                throw AnnotationException::creationError(sprintf('Atrribute "%s" expects either a %s value, or an array of %s, %s given. @%s declared on %s.', $property, $arrayType, $arrayType,( is_object($item)? get_class($item):gettype($item) ), $originalName, $this->context));
+                            }
+                        }
+                    }
+                
+                }elseif((gettype($value) !== $type) && (!$value instanceof $type)){
                     throw AnnotationException::creationError(sprintf('Atrribute "%s" must be an %s, %s given. @%s declared on %s.', $property, self::$annotationMetadata[$name]['attribute_types'][$property]['value'], ( is_object($value)? get_class($value):gettype($value) ), $originalName, $this->context));
                 }
             }
