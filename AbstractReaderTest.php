@@ -74,7 +74,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1,count($reader->getMethodAnnotations($class->getMethod('someFunction'))));
         $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('nested'))));
     }
-    
+
     public function testAnnotationsWithVarType()
     {
         $reader = $this->getReader();
@@ -82,8 +82,8 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1,count($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
         $this->assertEquals(1,count($barAnnot = $reader->getMethodAnnotations($class->getMethod('bar'))));
-        
-        $this->assertInternalType('string',  $fooAnnot[0]->string); 
+
+        $this->assertInternalType('string',  $fooAnnot[0]->string);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', $barAnnot[0]->annotation);
     }
 
@@ -156,10 +156,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader  = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithTargetSyntaxError','bar'));
     }
-    
+
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Atrribute "string" must be an string, integer given. @AnnotationWithVarType declared on property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty.
+     * @expectedExceptionMessage [Type Error] Attribute "string" of @AnnotationWithVarType declared on property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty expects a(n) string, but got integer.
      */
     public function testClassWithPropertyInvalidVarTypeError()
     {
@@ -168,10 +168,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
         $reader->getPropertyAnnotations($class->getProperty('invalidProperty'));
     }
-    
+
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Atrribute "annotation" must be an Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll, Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation given. @AnnotationWithVarType declared on method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType::invalidMethod().
+     * @expectedExceptionMessage [Type Error] Attribute "annotation" of @AnnotationWithVarType declared on method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType::invalidMethod() expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll, but got an instance of Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation.
      */
     public function testClassWithMethodInvalidVarTypeError()
     {
