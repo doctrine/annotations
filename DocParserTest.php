@@ -921,16 +921,16 @@ DOCBLOCK;
 /** 
  * @Annotation
  * @Attributes({
-                 @Attribute("data", type = "array<string>"),
-                 @Attribute("name", type = "string")
+                 @Attribute("data", type = "array<string>", required = true),
+                 @Attribute("name", type = "string"       , required = false)
               })
  */
 class SomeAnnotationWithConstructorWithTypeValidation
 {
     function __construct(array $params)
     {
-        $this->data = isset ($params['data']) ? $params['data'] : null;
-        $this->name = isset ($params['name']) ? $params['name'] : null;
+        $this->data = $params['data'];
+        $this->name = $params['name'];
     }
     public $data;
     public $name;
