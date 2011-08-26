@@ -125,51 +125,67 @@ final class DocParser
      */
     private static $annotationMetadata = array(
         'Doctrine\Common\Annotations\Annotation\Target' => array(
-            'default_property' => null,
+            'is_annotation'    => true,
             'has_constructor'  => true,
             'properties'       => array(),
-            'attribute_types'  => array(),
             'targets_literal'  => 'ANNOTATION_CLASS',
             'targets'          => Target::TARGET_CLASS,
-            'is_annotation'    => true,
+            'default_property' => 'value',
+            'attribute_types'  => array(
+                'value'  => array(
+                    'required'  => false,
+                    'type'      =>'array',
+                    'array_type'=>'string',
+                    'value'     =>'array<string>'
+                )
+             ),
         ),
         'Doctrine\Common\Annotations\Annotation\Attribute' => array(
-            'default_property' => 'name',
+            'is_annotation'    => true,
             'has_constructor'  => false,
+            'targets_literal'  => 'ANNOTATION_ANNOTATION',
+            'targets'          => Target::TARGET_ANNOTATION,
+            'default_property' => 'name',
             'properties'       => array(
-                'name'  => 'name',
-                'type'  => 'type'
+                'name'      => 'name',
+                'type'      => 'type',
+                'required'  => 'required'
             ),
             'attribute_types'  => array(
-                'name'  => array(
+                'value'  => array(
+                    'required'  => true,
                     'type'      =>'string',
                     'value'     =>'string'
                 ),
                 'type'  => array(
+                    'required'  =>true,
                     'type'      =>'string',
                     'value'     =>'string'
+                ),
+                'required'  => array(
+                    'required'  =>true,
+                    'type'      =>'boolean',
+                    'value'     =>'boolean'
                 )
              ),
-            'targets_literal'  => 'ANNOTATION_ANNOTATION',
-            'targets'          => Target::TARGET_ANNOTATION,
-            'is_annotation'    => true,
         ),
         'Doctrine\Common\Annotations\Annotation\Attributes' => array(
-            'default_property' => 'value',
+            'is_annotation'    => true,
             'has_constructor'  => false,
+            'targets_literal'  => 'ANNOTATION_CLASS',
+            'targets'          => Target::TARGET_CLASS,
+            'default_property' => 'value',
             'properties'       => array(
                 'value' => 'value'
             ),
             'attribute_types'  => array(
                 'value' => array(
                     'type'      =>'array',
+                    'required'  =>true,
                     'array_type'=>'Doctrine\Common\Annotations\Annotation\Attribute',
                     'value'     =>'array<Doctrine\Common\Annotations\Annotation\Attribute>'
                 )
              ),
-            'targets_literal'  => 'ANNOTATION_CLASS',
-            'targets'          => Target::TARGET_CLASS,
-            'is_annotation'    => true,
         ),
     );
 
@@ -410,8 +426,9 @@ final class DocParser
                                 $metadata['attribute_types'][$attrib->name]['array_type'] = $arrayType;
                             }
 
-                            $metadata['attribute_types'][$attrib->name]['type']   = $type;
-                            $metadata['attribute_types'][$attrib->name]['value']  = $attrib->type;
+                            $metadata['attribute_types'][$attrib->name]['type']     = $type;
+                            $metadata['attribute_types'][$attrib->name]['value']    = $attrib->type;
+                            $metadata['attribute_types'][$attrib->name]['required'] = $attrib->required;
                         }
                     }
                 }
@@ -447,8 +464,9 @@ final class DocParser
                                 $metadata['attribute_types'][$property->name]['array_type'] = $arrayType;
                             }
 
-                            $metadata['attribute_types'][$property->name]['type']   = $type;
-                            $metadata['attribute_types'][$property->name]['value']  = $value;
+                            $metadata['attribute_types'][$property->name]['type']       = $type;
+                            $metadata['attribute_types'][$property->name]['value']      = $value;
+                            $metadata['attribute_types'][$property->name]['required']   = false;  // TODO - use @Required
                         }
                     }
                 }
@@ -613,7 +631,15 @@ final class DocParser
         }
 
         foreach (self::$annotationMetadata[$name]['attribute_types'] as $property => $type) {
-            if(isset($values[$property])){
+            if(!isset($values[$property])){
+                $values[$property] = null;
+            }
+            
+            if($values[$property] === null){
+                if ($type['required'] === true) {
+                    throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
+                }
+            }else{
                 if ($type['type'] === 'array') {
                     // Handle the case of a single value
                     if (!is_array($values[$property])) {

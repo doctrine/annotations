@@ -40,5 +40,10 @@ final class Attribute
      * @var string
      */
     public $type;
+    
+    /**
+     * @var boolean
+     */
+    public $required = false;
 
 }
