@@ -357,6 +357,21 @@ DOCBLOCK;
         }
 
     }
+    
+     /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage Attribute "data" of @SomeAnnotationWithConstructorWithTypeValidation declared on property SomeClassName::$invalidProperty. expects either a(n) string, or an array of strings, but got integer.
+     */
+    public function testWithConstructorWithTypeValidationError()
+    {
+
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::$invalidProperty.';
+        $docblock   = '@SomeAnnotationWithConstructorWithTypeValidation(data = 123)';
+        $parser->setTarget(Target::TARGET_PROPERTY);
+
+        $parser->parse($docblock, $context);
+    }
 
     public function getAnnotationVarTypeProviderValid()
     {
@@ -901,6 +916,24 @@ DOCBLOCK;
         $this->assertEquals(1, count($annots));
         $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
+}
+
+/** 
+ * @Annotation
+ * @Attributes({
+                 @Attribute("data", type = "array<string>"),
+                 @Attribute("name", type = "string")
+              })
+ */
+class SomeAnnotationWithConstructorWithTypeValidation
+{
+    function __construct(array $params)
+    {
+        $this->data = isset ($params['data']) ? $params['data'] : null;
+        $this->name = isset ($params['name']) ? $params['name'] : null;
+    }
+    public $data;
+    public $name;
 }
 
 /** @Annotation */
