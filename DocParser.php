@@ -412,9 +412,12 @@ final class DocParser
                     
                 }elseif ($annotation instanceof Attributes) {
                     foreach ($annotation->value as $attrib) {
-                        if ('mixed' !== $attrib->type) {
-                            $type = $attrib->type;
-                            // Checks if the property has @var array<type> annotation
+                        // handle internal type declaration
+                        $type = isset(self::$typeMap[$attrib->type]) ? self::$typeMap[$attrib->type] : $attrib->type;
+                        
+                        // handle the case if the property type is mixed
+                        if ('mixed' !== $type) {
+                            // Checks if the property has array<type>
                             if (false !== $pos = strpos($type, '<')) {
                                 $arrayType  = substr($type, $pos+1, -1);
                                 $type       = 'array';
