@@ -374,7 +374,7 @@ final class DocParser
      */
     private function collectAnnotationMetadata($name)
     {
-        if(self::$metadataParser == null){
+        if (self::$metadataParser == null){
             self::$metadataParser = new self();
             self::$metadataParser->setTarget(Target::TARGET_CLASS);
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
@@ -410,7 +410,7 @@ final class DocParser
                     $metadata['targets']         = $annotation->targets;
                     $metadata['targets_literal'] = $annotation->literal;
                     
-                }elseif ($annotation instanceof Attributes) {
+                } elseif ($annotation instanceof Attributes) {
                     foreach ($annotation->value as $attrib) {
                         // handle internal type declaration
                         $type = isset(self::$typeMap[$attrib->type]) ? self::$typeMap[$attrib->type] : $attrib->type;
@@ -634,15 +634,15 @@ final class DocParser
         }
 
         foreach (self::$annotationMetadata[$name]['attribute_types'] as $property => $type) {
-            if(!isset($values[$property])){
+            if (!isset($values[$property])){
                 $values[$property] = null;
             }
             
-            if($values[$property] === null){
-                if ($type['required'] === true) {
+            if ($values[$property] === null){
+                if ($type['required']) {
                     throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
                 }
-            }else{
+            } else {
                 if ($type['type'] === 'array') {
                     // Handle the case of a single value
                     if (!is_array($values[$property])) {
