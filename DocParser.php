@@ -163,7 +163,7 @@ final class DocParser
                     'value'     =>'string'
                 ),
                 'required'  => array(
-                    'required'  =>true,
+                    'required'  =>false,
                     'type'      =>'boolean',
                     'value'     =>'boolean'
                 )
