@@ -553,7 +553,8 @@ DOCBLOCK;
 
         $this->assertTrue(sizeof($result) === 1);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes', $result[0]);
-        $this->assertNotNull($result[0]->$attribute);
+        $getter = "get".ucfirst($attribute);
+        $this->assertNotNull($result[0]->$getter());
     }
     
    /**
