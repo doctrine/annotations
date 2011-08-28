@@ -469,7 +469,7 @@ final class DocParser
 
                             $metadata['attribute_types'][$property->name]['type']       = $type;
                             $metadata['attribute_types'][$property->name]['value']      = $value;
-                            $metadata['attribute_types'][$property->name]['required']   = false;  // TODO - use @Required
+                            $metadata['attribute_types'][$property->name]['required']   = false !== strpos($propertyComment, '@Required');
                         }
                     }
                 }

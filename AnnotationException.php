@@ -102,7 +102,7 @@ class AnnotationException extends \Exception
     public static function requiredError($attributeName, $annotationName, $context, $expected)
     {
         return new self(sprintf(
-            '[Type Error] Attribute "%s" of @%s declared on %s expects %s, but got NULL.',
+            '[Type Error] Attribute "%s" of @%s declared on %s expects %s. This value should not be null.',
             $attributeName,
             $annotationName,
             $context,
