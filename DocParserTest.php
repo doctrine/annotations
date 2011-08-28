@@ -358,21 +358,6 @@ DOCBLOCK;
 
     }
     
-     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage Attribute "data" of @SomeAnnotationWithConstructorWithTypeValidation declared on property SomeClassName::$invalidProperty. expects either a(n) string, or an array of strings, but got integer.
-     */
-    public function testWithConstructorWithTypeValidationError()
-    {
-
-        $parser     = $this->createTestParser();
-        $context    = 'property SomeClassName::$invalidProperty.';
-        $docblock   = '@SomeAnnotationWithConstructorWithTypeValidation(data = 123)';
-        $parser->setTarget(Target::TARGET_PROPERTY);
-
-        $parser->parse($docblock, $context);
-    }
-
     public function getAnnotationVarTypeProviderValid()
     {
         //({attribute name}, {attribute value})
@@ -553,7 +538,61 @@ DOCBLOCK;
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
         }
     }
+    
+    /**
+     * @dataProvider getAnnotationVarTypeProviderValid
+     */
+    public function testAnnotationWithAttributes($attribute, $value)
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::$invalidProperty.';
+        $docblock   = sprintf('@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes(%s = %s)',$attribute, $value);
+        $parser->setTarget(Target::TARGET_PROPERTY);
 
+        $result = $parser->parse($docblock, $context);
+
+        $this->assertTrue(sizeof($result) === 1);
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes', $result[0]);
+        $this->assertNotNull($result[0]->$attribute);
+    }
+    
+   /**
+     * @dataProvider getAnnotationVarTypeProviderInvalid
+     */
+    public function testAnnotationWithAttributesError($attribute,$type,$value,$given)
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::invalidProperty.';
+        $docblock   = sprintf('@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes(%s = %s)',$attribute, $value);
+        $parser->setTarget(Target::TARGET_PROPERTY);
+
+        try {
+            $parser->parse($docblock, $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
+        }
+    }
+    
+     
+   /**
+     * @dataProvider getAnnotationVarTypeArrayProviderInvalid
+     */
+    public function testAnnotationWithAttributesWithVarTypeArrayError($attribute,$type,$value,$given)
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::invalidProperty.';
+        $docblock   = sprintf('@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes(%s = %s)',$attribute, $value);
+        $parser->setTarget(Target::TARGET_PROPERTY);
+
+        try {
+            $parser->parse($docblock, $context);
+            $this->fail();
+        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
+        }
+    }
+    
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on  does not accept any values, but got {"value":"Foo"}.
@@ -916,24 +955,6 @@ DOCBLOCK;
         $this->assertEquals(1, count($annots));
         $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
-}
-
-/** 
- * @Annotation
- * @Attributes({
-                 @Attribute("data", type = "array<string>", required = true),
-                 @Attribute("name", type = "string"       , required = false)
-              })
- */
-class SomeAnnotationWithConstructorWithTypeValidation
-{
-    function __construct(array $params)
-    {
-        $this->data = $params['data'];
-        $this->name = $params['name'];
-    }
-    public $data;
-    public $name;
 }
 
 /** @Annotation */
