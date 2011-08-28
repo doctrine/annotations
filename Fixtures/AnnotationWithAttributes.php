@@ -14,8 +14,8 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
      @Attribute("integer",              type = "integer"),
      @Attribute("array",                type = "array"),
      @Attribute("annotation",           type = "annotation"),
-     @Attribute("arrayOfIntegers",      type = "array"),
-     @Attribute("arrayOfAnnotations",   type = "annotation"),
+     @Attribute("arrayOfIntegers",      type = "Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll"),
+     @Attribute("arrayOfAnnotations",   type = "array<Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll>"),
    })
  */
 final class AnnotationWithAttributes
