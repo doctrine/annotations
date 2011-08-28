@@ -96,7 +96,6 @@ class AnnotationException extends \Exception
      * @param string $annotationName
      * @param string $context
      * @param string $expected
-     * @param mixed $actual
      * @return AnnotationException
      */
     public static function requiredError($attributeName, $annotationName, $context, $expected)
