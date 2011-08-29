@@ -26,8 +26,6 @@ use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
 
-require_once __DIR__ . '/Annotation/IgnoreAnnotation.php';
-
 /**
  * A reader for docblock annotations.
  *
