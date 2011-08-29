@@ -632,35 +632,39 @@ final class DocParser
 
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
-
+        
+        // checks all declared attributes
         foreach (self::$annotationMetadata[$name]['attribute_types'] as $property => $type) {
+            
+            //handle a not given attribute
             if (!isset($values[$property])){
                 $values[$property] = null;
             }
             
+            //handle a not given attribute or null value
             if ($values[$property] === null){
                 if ($type['required']) {
                     throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
                 }
-            } else {
-                if ($type['type'] === 'array') {
-                    // Handle the case of a single value
-                    if (!is_array($values[$property])) {
-                        $values[$property] = array($values[$property]);
-                    }
+                continue;
+            }
+            
+            if ($type['type'] === 'array') {
+                // handle the case of a single value
+                if (!is_array($values[$property])) {
+                    $values[$property] = array($values[$property]);
+                }
 
-                    // checks if the attribute has array type declaration, such as "array<string>"
-                    if (isset($type['array_type'])) {
-                        $arrayType = $type['array_type'];
-                        foreach ($values[$property] as $item) {
-                            if (gettype($item) !== $arrayType && !$item instanceof $arrayType) {
-                                throw AnnotationException::typeError($property, $originalName, $this->context, 'either a(n) '.$arrayType.', or an array of '.$arrayType.'s', $item);
-                            }
+                // checks if the attribute has array type declaration, such as "array<string>"
+                if (isset($type['array_type'])) {
+                    foreach ($values[$property] as $item) {
+                        if (gettype($item) !== $type['array_type'] && !$item instanceof $type['array_type']) {
+                            throw AnnotationException::typeError($property, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item);
                         }
                     }
-                } elseif (gettype($values[$property]) !== $type['type'] && !$values[$property] instanceof $type['type']) {
-                    throw AnnotationException::typeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property]);
                 }
+            } elseif (gettype($values[$property]) !== $type['type'] && !$values[$property] instanceof $type['type']) {
+                throw AnnotationException::typeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property]);
             }
         }
         
