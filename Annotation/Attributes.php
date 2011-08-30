@@ -30,10 +30,8 @@ namespace Doctrine\Common\Annotations\Annotation;
  */
 final class Attributes
 {
-  
     /**
-     * @var array<Doctrine\Common\Annotations\Annotation\AttributeType>
+     * @var array<Doctrine\Common\Annotations\Annotation\Attribute>
      */
     public $value;
-
 }

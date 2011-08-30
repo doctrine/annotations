@@ -30,7 +30,6 @@ namespace Doctrine\Common\Annotations\Annotation;
  */
 final class Attribute
 {
-  
     /**
      * @var string
      */
@@ -40,10 +39,9 @@ final class Attribute
      * @var string
      */
     public $type;
-    
+
     /**
      * @var boolean
      */
     public $required = false;
-
 }

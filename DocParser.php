@@ -409,12 +409,12 @@ final class DocParser
                 if ($annotation instanceof Target) {
                     $metadata['targets']         = $annotation->targets;
                     $metadata['targets_literal'] = $annotation->literal;
-                    
+
                 } elseif ($annotation instanceof Attributes) {
                     foreach ($annotation->value as $attrib) {
                         // handle internal type declaration
                         $type = isset(self::$typeMap[$attrib->type]) ? self::$typeMap[$attrib->type] : $attrib->type;
-                        
+
                         // handle the case if the property type is mixed
                         if ('mixed' !== $type) {
                             // Checks if the property has array<type>
@@ -632,7 +632,7 @@ final class DocParser
 
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
-        
+
         // checks all declared attributes
         foreach (self::$annotationMetadata[$name]['attribute_types'] as $property => $type) {
             //handle a not given attribute or null value
@@ -640,11 +640,11 @@ final class DocParser
                 if ($type['required']) {
                     throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
                 }
-                
+
                 $values[$property] = null;
                 continue;
             }
-            
+
             if ($type['type'] === 'array') {
                 // handle the case of a single value
                 if (!is_array($values[$property])) {
@@ -663,7 +663,7 @@ final class DocParser
                 throw AnnotationException::typeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property]);
             }
         }
-        
+
         // check if the annotation expects values via the constructor,
         // or directly injected into public properties
         if (self::$annotationMetadata[$name]['has_constructor'] === true) {
