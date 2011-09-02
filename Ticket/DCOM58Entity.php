@@ -1,0 +1,9 @@
+<?php
+
+/**
+ * @Annotation
+ */
+class Entity
+{
+    
+}
