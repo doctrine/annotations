@@ -1001,7 +1001,6 @@ DOCBLOCK;
 DOCBLOCK;
 
         $this->createTestParser()->parse($docblock, 'some class');
-        $this->assertEquals(count($result), 1);
     }
 
     /**
