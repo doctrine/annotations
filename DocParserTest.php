@@ -357,7 +357,7 @@ DOCBLOCK;
         }
 
     }
-    
+
     public function getAnnotationVarTypeProviderValid()
     {
         //({attribute name}, {attribute value})
@@ -538,7 +538,7 @@ DOCBLOCK;
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
         }
     }
-    
+
     /**
      * @dataProvider getAnnotationVarTypeProviderValid
      */
@@ -556,7 +556,7 @@ DOCBLOCK;
         $getter = "get".ucfirst($attribute);
         $this->assertNotNull($result[0]->$getter());
     }
-    
+
    /**
      * @dataProvider getAnnotationVarTypeProviderInvalid
      */
@@ -574,8 +574,8 @@ DOCBLOCK;
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
         }
     }
-    
-     
+
+
    /**
      * @dataProvider getAnnotationVarTypeArrayProviderInvalid
      */
@@ -593,23 +593,23 @@ DOCBLOCK;
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
         }
     }
-    
+
     public function testAnnotationWithRequiredAttributes()
     {
         $parser     = $this->createTestParser();
         $context    = 'property SomeClassName::invalidProperty.';
         $parser->setTarget(Target::TARGET_PROPERTY);
-        
-        
+
+
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         $result     = $parser->parse($docblock);
-        
+
         $this->assertTrue(sizeof($result) === 1);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes', $result[0]);
         $this->assertEquals("Some Value",$result[0]->getValue());
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->getAnnot());
-        
-        
+
+
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes("Some Value")';
         try {
             $result = $parser->parse($docblock,$context);
@@ -617,7 +617,7 @@ DOCBLOCK;
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
             $this->assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
         }
-        
+
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes(annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         try {
             $result = $parser->parse($docblock,$context);
@@ -625,25 +625,25 @@ DOCBLOCK;
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
             $this->assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
         }
-        
+
     }
-    
+
     public function testAnnotationWithRequiredAttributesWithoutContructor()
     {
         $parser     = $this->createTestParser();
         $context    = 'property SomeClassName::invalidProperty.';
         $parser->setTarget(Target::TARGET_PROPERTY);
-        
-        
+
+
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         $result     = $parser->parse($docblock);
-        
+
         $this->assertTrue(sizeof($result) === 1);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor', $result[0]);
         $this->assertEquals("Some Value", $result[0]->value);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->annot);
-        
-        
+
+
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor("Some Value")';
         try {
             $result = $parser->parse($docblock,$context);
@@ -651,7 +651,7 @@ DOCBLOCK;
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
             $this->assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
         }
-        
+
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor(annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         try {
             $result = $parser->parse($docblock,$context);
@@ -659,10 +659,10 @@ DOCBLOCK;
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
             $this->assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
         }
-        
+
     }
-    
-    
+
+
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on  does not accept any values, but got {"value":"Foo"}.
@@ -1024,6 +1024,15 @@ DOCBLOCK;
         })');
         $this->assertEquals(1, count($annots));
         $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
+    }
+
+    public function testDefaultAnnotationValueIsNotOverwritten()
+    {
+        $parser = $this->createTestParser();
+
+        $annots = $parser->parse('@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotWithDefaultValue');
+        $this->assertEquals(1, count($annots));
+        $this->assertEquals('bar', $annots[0]->foo);
     }
 }
 
