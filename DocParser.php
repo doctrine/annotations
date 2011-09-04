@@ -641,7 +641,6 @@ final class DocParser
                     throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
                 }
 
-                $values[$property] = null;
                 continue;
             }
 
