@@ -232,16 +232,20 @@ final class DocParser
      */
     public function addNamespace($namespace)
     {
-        if ($this->imports) {
-            throw new \RuntimeException('You must either use addNamespace(), or setImports(), but not both.');
-        }
-        $this->namespaces[] = $namespace;
+        $this->namespaces[$namespace] = $namespace;
     }
-
+    
+    /**
+     * Sets class imports.
+     * 
+     * @param array $imports 
+     */
     public function setImports(array $imports)
     {
-        if ($this->namespaces) {
-            throw new \RuntimeException('You must either use addNamespace(), or setImports(), but not both.');
+        // Compatibility with common < 2.2.x
+        if(isset ($imports['__NAMESPACE__'])){
+            $this->addNamespace($imports['__NAMESPACE__']);
+            unset ($imports['__NAMESPACE__']);
         }
         $this->imports = $imports;
     }
@@ -552,35 +556,30 @@ final class DocParser
 
         // only process names which are not fully qualified, yet
         $originalName = $name;
-        if ('\\' !== $name[0] && !$this->classExists($name)) {
+        if ('\\' !== $name[0]) {
             $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
-
             $found = false;
-            if ($this->namespaces) {
-                foreach ($this->namespaces as $namespace) {
-                    if ($this->classExists($namespace.'\\'.$name)) {
-                        $name = $namespace.'\\'.$name;
-                        $found = true;
-                        break;
-                    }
-                }
-            } elseif (isset($this->imports[$loweredAlias = strtolower($alias)])) {
+            if (isset($this->imports[$loweredAlias = strtolower($alias)])) {
                 if (false !== $pos) {
                     $name = $this->imports[$loweredAlias].substr($name, $pos);
                 } else {
                     $name = $this->imports[$loweredAlias];
                 }
                 $found = true;
-            } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
-                 $name = $this->imports['__NAMESPACE__'].'\\'.$name;
-                 $found = true;
-            }
+            } else {
+                foreach ($this->namespaces as $namespace) {
+                    if ($this->classExists($namespace.'\\'.$name)) {
+                        $name  = $namespace.'\\'.$name;
+                        $found = true;
+                        break;
+                    }
+                }
+            } 
 
-            if (!$found) {
+            if (!$found && !$this->classExists($name)) {
                 if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
                     return false;
                 }
-
                 throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported.', $name, $this->context));
             }
         }

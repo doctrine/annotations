@@ -142,6 +142,7 @@ final class AnnotationReader implements Reader
     {
         $this->parser->setTarget(Target::TARGET_CLASS);
         $this->parser->setImports($this->getImports($class));
+        $this->parser->addNamespace($class->getNamespaceName());
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
         return $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
@@ -181,6 +182,7 @@ final class AnnotationReader implements Reader
         $context = 'property ' . $class->getName() . "::\$" . $property->getName();
         $this->parser->setTarget(Target::TARGET_PROPERTY);
         $this->parser->setImports($this->getImports($class));
+        $this->parser->addNamespace($class->getNamespaceName());
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
         return $this->parser->parse($property->getDocComment(), $context);
@@ -219,6 +221,7 @@ final class AnnotationReader implements Reader
         $context = 'method ' . $class->getName() . '::' . $method->getName() . '()';
         $this->parser->setTarget(Target::TARGET_METHOD);
         $this->parser->setImports($this->getImports($class));
+        $this->parser->addNamespace($class->getNamespaceName());
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
         return $this->parser->parse($method->getDocComment(), $context);
@@ -277,7 +280,6 @@ final class AnnotationReader implements Reader
      */
     private function collectParsingMetadata(ReflectionClass $class)
     {
-        $imports = self::$globalImports;
         $ignoredAnnotationNames = self::$globalIgnoredNames;
 
         $annotations = $this->preParser->parse($class->getDocComment(), 'class '.$class->name);
@@ -292,8 +294,7 @@ final class AnnotationReader implements Reader
         $name = $class->getName();
         $this->imports[$name] = array_merge(
             self::$globalImports,
-            $this->phpParser->parseClass($class),
-            array('__NAMESPACE__' => $class->getNamespaceName())
+            $this->phpParser->parseClass($class)
         );
         $this->ignoredAnnotationNames[$name] = $ignoredAnnotationNames;
     }
