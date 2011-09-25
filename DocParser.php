@@ -584,7 +584,7 @@ final class DocParser
                     return false;
                 }
 
-                throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported.', $name, $this->context));
+                throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported. Did you maybe forget to add a "use" statement for this annotation?', $name, $this->context));
             }
         }
 
