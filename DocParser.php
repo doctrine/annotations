@@ -197,6 +197,7 @@ final class DocParser
     private static $typeMap = array(
         'float'     => 'double',
         'bool'      => 'boolean',
+        'Boolean'   => 'boolean',
         'int'       => 'integer',
     );
 
