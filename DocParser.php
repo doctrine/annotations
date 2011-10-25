@@ -197,6 +197,7 @@ final class DocParser
     private static $typeMap = array(
         'float'     => 'double',
         'bool'      => 'boolean',
+        // allow uppercase Boolean in honor of George Boole
         'Boolean'   => 'boolean',
         'int'       => 'integer',
     );
