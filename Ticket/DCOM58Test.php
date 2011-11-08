@@ -9,11 +9,6 @@ include __DIR__ .'/DCOM58Entity.php';
  */
 class DCOM58Test extends \PHPUnit_Framework_TestCase
 {
-
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Class "xxx" is not a valid entity or mapped super class.
-     */
     public function testIssue()
     {
         $reader     = new \Doctrine\Common\Annotations\AnnotationReader();
@@ -22,10 +17,8 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         foreach ($result as $annot) {
             $classAnnotations[get_class($annot)] = $annot;
         }
-        // Evaluate Entity annotation
-        if (!isset($classAnnotations['Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity'])) {
-            throw new \Exception('Class "xxx" is not a valid entity or mapped super class.');
-        }
+
+        $this->assertTrue(!isset($classAnnotations['']), 'Class "xxx" is not a valid entity or mapped super class.');
     }
 
     public function testIssueGlobalNamespace()
