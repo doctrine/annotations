@@ -867,7 +867,7 @@ final class DocParser
 
     /**
      * ArrayEntry ::= Value | KeyValuePair
-     * KeyValuePair ::= Key "=" PlainValue
+     * KeyValuePair ::= Key ("=" | ":") PlainValue
      * Key ::= string | integer
      *
      * @return array
@@ -876,13 +876,12 @@ final class DocParser
     {
         $peek = $this->lexer->glimpse();
 
-        if (DocLexer::T_EQUALS === $peek['type']) {
-            $this->match(
-                $this->lexer->isNextToken(DocLexer::T_INTEGER) ? DocLexer::T_INTEGER : DocLexer::T_STRING
-            );
+        if (DocLexer::T_EQUALS === $peek['type']
+                || DocLexer::T_COLON === $peek['type']) {
+            $this->matchAny(array(DocLexer::T_INTEGER, DocLexer::T_STRING));
 
             $key = $this->lexer->token['value'];
-            $this->match(DocLexer::T_EQUALS);
+            $this->matchAny(array(DocLexer::T_EQUALS, DocLexer::T_COLON));
 
             return array($key, $this->PlainValue());
         }
