@@ -1042,6 +1042,16 @@ DOCBLOCK;
         $this->assertEquals(1, count($annots));
         $this->assertEquals(array('foo' => 'bar'), $annots[0]->value);
     }
+
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage [Syntax Error] Expected PlainValue, got 'foo:' at position 6.
+     */
+    public function testColonNotAllowedOnTopLevel()
+    {
+        $parser = $this->createTestParser();
+        $parser->parse('@Name(foo: "bar")');
+    }
 }
 
 /** @Annotation */
