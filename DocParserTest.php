@@ -1033,6 +1033,15 @@ DOCBLOCK;
         $this->assertEquals(1, count($annots));
         $this->assertEquals('bar', $annots[0]->foo);
     }
+
+    public function testArrayWithColon()
+    {
+        $parser = $this->createTestParser();
+
+        $annots = $parser->parse('@Name({"foo": "bar"})');
+        $this->assertEquals(1, count($annots));
+        $this->assertEquals(array('foo' => 'bar'), $annots[0]->value);
+    }
 }
 
 /** @Annotation */
