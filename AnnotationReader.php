@@ -67,7 +67,7 @@ final class AnnotationReader implements Reader
         'usedby'=> true, 'private' => true, 'Annotation' => true, 'override' => true,
         'codeCoverageIgnoreStart' => true, 'codeCoverageIgnoreEnd' => true,
         'Required' => true, 'Attribute' => true, 'Attributes' => true,
-        'Target' => true,
+        'Target' => true, 'SuppressWarnings' => true,
     );
 
     /**
