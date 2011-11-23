@@ -40,7 +40,7 @@ class FileCacheReader implements Reader
     {
         $this->reader = $reader;
         if (!is_dir($cacheDir) && !mkdir($cacheDir, 0777, true)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist or could not be created.', $cacheDir));
+            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist and could not be created.', $cacheDir));
         }
         if (!is_writable($cacheDir)) {
             throw new \InvalidArgumentException(sprintf('The directory "%s" is not writable.', $cacheDir));
