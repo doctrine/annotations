@@ -39,7 +39,7 @@ class FileCacheReader implements Reader
     public function __construct(Reader $reader, $cacheDir, $debug = false)
     {
         $this->reader = $reader;
-        if (!is_dir($cacheDir) && !mkdir($cacheDir, 0777, true)) {
+        if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true)) {
             throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist and could not be created.', $cacheDir));
         }
         if (!is_writable($cacheDir)) {
