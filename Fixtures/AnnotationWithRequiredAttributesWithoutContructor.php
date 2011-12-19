@@ -11,13 +11,13 @@ final class AnnotationWithRequiredAttributesWithoutContructor
 
     /**
      * @Required
-     * @var string 
+     * @var string
      */
     public $value;
 
     /**
      * @Required
-     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation 
+     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
      */
     public $annot;
 

@@ -10,13 +10,13 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation;
  */
 class ClassWithInvalidAnnotationTargetAtProperty
 {
-    
+
     /**
      * @AnnotationTargetClass("Bar")
      */
     public $foo;
-    
-    
+
+
     /**
      * @AnnotationTargetAnnotation("Foo")
      */

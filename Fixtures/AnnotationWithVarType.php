@@ -48,12 +48,12 @@ final class AnnotationWithVarType
      * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
      */
     public $annotation;
-    
+
     /**
      * @var array<integer>
      */
     public $arrayOfIntegers;
-    
+
     /**
      * @var array<Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll>
      */

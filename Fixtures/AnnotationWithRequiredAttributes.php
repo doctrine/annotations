@@ -19,20 +19,20 @@ final class AnnotationWithRequiredAttributes
             $this->$key = $value;
         }
     }
-    
+
     /**
-     * @var string 
+     * @var string
      */
     private $value;
-    
+
     /**
      *
-     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation 
+     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
      */
     private $annot;
-    
+
     /**
-     * @return string 
+     * @return string
      */
     public function getValue()
     {

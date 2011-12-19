@@ -2,7 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use 
+use
     \Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure,
     \Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route
 ;

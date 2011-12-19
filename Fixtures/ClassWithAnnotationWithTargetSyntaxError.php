@@ -13,9 +13,9 @@ class ClassWithAnnotationWithTargetSyntaxError
      * @AnnotationWithTargetSyntaxError()
      */
     public $foo;
-    
+
     /**
      * @AnnotationWithTargetSyntaxError()
      */
-    public function bar(){}   
+    public function bar(){}
 }

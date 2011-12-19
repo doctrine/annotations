@@ -38,23 +38,23 @@ final class AnnotationWithAttributes
     private $annotation;
     private $arrayOfIntegers;
     private $arrayOfAnnotations;
-    
+
     /**
-     * @return mixed 
+     * @return mixed
      */
     public function getMixed()
     {
         return $this->mixed;
     }
-    
+
     /**
-     * @return boolean 
+     * @return boolean
      */
     public function getBoolean()
     {
         return $this->boolean;
     }
-    
+
     /**
      * @return bool
      */
@@ -62,7 +62,7 @@ final class AnnotationWithAttributes
     {
         return $this->bool;
     }
-    
+
     /**
      * @return float
      */
@@ -83,7 +83,7 @@ final class AnnotationWithAttributes
     {
         return $this->integer;
     }
-    
+
     /**
      * @return array
      */
@@ -91,23 +91,23 @@ final class AnnotationWithAttributes
     {
         return $this->array;
     }
-    
+
     /**
-     * @return Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll 
+     * @return Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
      */
     public function getAnnotation()
     {
         return $this->annotation;
     }
-    
+
     /**
-     * @return array<integer> 
+     * @return array<integer>
      */
     public function getArrayOfIntegers()
     {
         return $this->arrayOfIntegers;
     }
-    
+
     /**
      * @return array<Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll>
      */
