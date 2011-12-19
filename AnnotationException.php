@@ -87,7 +87,7 @@ class AnnotationException extends \Exception
             is_object($actual) ? 'an instance of '.get_class($actual) : gettype($actual)
         ));
     }
-    
+
     /**
      * Creates a new AnnotationException describing an required error of an attribute.
      *

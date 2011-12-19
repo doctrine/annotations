@@ -79,13 +79,13 @@ class IndexedReader implements Reader
     {
         return $this->delegate->getPropertyAnnotation($property, $annotation);
     }
-    
+
     /**
      * Proxy all methods to the delegate.
-     * 
+     *
      * @param type $method
      * @param type $args
-     * @return type 
+     * @return type
      */
     public function __call($method, $args)
     {

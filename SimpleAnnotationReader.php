@@ -37,7 +37,7 @@ class SimpleAnnotationReader implements Reader
      * @var DocParser
      */
     private $parser;
-    
+
     /**
      * Constructor.
      *

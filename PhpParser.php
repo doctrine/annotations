@@ -31,21 +31,21 @@ final class PhpParser
 {
     /**
      * The token list.
-     * 
+     *
      * @var array
      */
     private $tokens;
 
     /**
      * The number of tokens.
-     * 
+     *
      * @var int
      */
     private $numTokens = 0;
 
     /**
      * The current array pointer.
-     * 
+     *
      * @var int
      */
     private $pointer = 0;
@@ -53,7 +53,7 @@ final class PhpParser
     /**
      * Parses a class.
      *
-     * @param \ReflectionClass $class A <code>ReflectionClass</code> object. 
+     * @param \ReflectionClass $class A <code>ReflectionClass</code> object.
      * @return array A list with use statements in the form (Alias => FQN).
      */
     public function parseClass(\ReflectionClass $class)
@@ -76,7 +76,7 @@ final class PhpParser
 
     /**
      * Get the content of the file right up to the given line number.
-     * 
+     *
      * @param string $filename The name of the file to load.
      * @param int $lineNumber The number of lines to read from file.
      * @return string The content of the file.
@@ -99,7 +99,7 @@ final class PhpParser
 
     /**
      * Gets the next non whitespace and non comment token.
-     * 
+     *
      * @return array The token if exists, null otherwise.
      */
     private function next()
@@ -121,7 +121,7 @@ final class PhpParser
 
     /**
      * Get all use statements.
-     * 
+     *
      * @param string $namespaceName The namespace name of the reflected class.
      * @return array A list with all found use statements.
      */
@@ -166,7 +166,7 @@ final class PhpParser
 
     /**
      * Parse a single use statement.
-     * 
+     *
      * @return array A list with all found class names for a use statement.
      */
     private function parseUseStatement()
