@@ -24,7 +24,7 @@ final class AnnotationRegistry
     /**
      * A map of namespaces to use for autoloading purposes based on a PSR-0 convention.
      *
-     * Contains the namespace as key and an array of direectories as value. If the value is NULL
+     * Contains the namespace as key and an array of directories as value. If the value is NULL
      * the include path is used for checking for the corresponding file.
      *
      * This autoloading mechanism does not utilize the PHP autoloading but implements autoloading on its own.
