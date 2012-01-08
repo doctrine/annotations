@@ -70,12 +70,10 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        if (($data = $this->fetchFromCache($cacheKey, $class)) !== false) {
-            return $data;
+        if (false === ($annots = $this->fetchFromCache($cacheKey, $class))) {
+            $annots = $this->delegate->getClassAnnotations($class);
+            $this->saveToCache($cacheKey, $annots);
         }
-
-        $annots = $this->delegate->getClassAnnotations($class);
-        $this->saveToCache($cacheKey, $annots);
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -100,12 +98,10 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        if (($data = $this->fetchFromCache($cacheKey, $class)) !== false) {
-            return $data;
+        if (false === ($annots = $this->fetchFromCache($cacheKey, $class))) {
+            $annots = $this->delegate->getPropertyAnnotations($property);
+            $this->saveToCache($cacheKey, $annots);
         }
-
-        $annots = $this->delegate->getPropertyAnnotations($property);
-        $this->saveToCache($cacheKey, $annots);
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -130,12 +126,10 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        if (($data = $this->fetchFromCache($cacheKey, $class)) !== false) {
-            return $data;
+        if (false === ($annots = $this->fetchFromCache($cacheKey, $class))) {
+            $annots = $this->delegate->getMethodAnnotations($method);
+            $this->saveToCache($cacheKey, $annots);
         }
-
-        $annots = $this->delegate->getMethodAnnotations($method);
-        $this->saveToCache($cacheKey, $annots);
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
