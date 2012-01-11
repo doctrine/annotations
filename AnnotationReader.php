@@ -279,7 +279,6 @@ final class AnnotationReader implements Reader
      */
     private function collectParsingMetadata(ReflectionClass $class)
     {
-        $imports = self::$globalImports;
         $ignoredAnnotationNames = self::$globalIgnoredNames;
 
         $annotations = $this->preParser->parse($class->getDocComment(), 'class '.$class->name);
