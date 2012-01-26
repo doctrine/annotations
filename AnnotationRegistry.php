@@ -77,19 +77,19 @@ final class AnnotationRegistry
     }
 
     /**
-     * Register an autoloading callabale for annotations, much like spl_autoload_register().
+     * Register an autoloading callable for annotations, much like spl_autoload_register().
      *
      * NOTE: These class loaders HAVE to be silent when a class was not found!
      * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      *
-     * @param callabale $callabale
+     * @param callable $callable
      */
-    static public function registerLoader($callabale)
+    static public function registerLoader($callable)
     {
-        if (!is_callable($callabale)) {
+        if (!is_callable($callable)) {
             throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
         }
-        self::$loaders[] = $callabale;
+        self::$loaders[] = $callable;
     }
 
     /**
