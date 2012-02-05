@@ -53,6 +53,22 @@ class AnnotationException extends \Exception
     }
 
     /**
+     * Creates a new AnnotationException describing a constant semantical error.
+     *
+     * @since 2.3
+     * @param string $identifier
+     * @param string $context
+     * @return AnnotationException
+     */
+    public static function semanticalErrorConstants($identifier, $context = null)
+    {
+        return self::semanticalError(sprintf(
+            "Couldn't find constant %s%s", $identifier,
+            $context ? ", $context." : "."
+        ));
+    }
+
+    /**
      * Creates a new AnnotationException describing an error which occurred during
      * the creation of the annotation.
      *
