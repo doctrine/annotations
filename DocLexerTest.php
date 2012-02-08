@@ -92,4 +92,46 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($lexer->moveNext());
     }
 
+
+    public function testScannerTokenizesDocBlockWhitInvalidIdentifier()
+    {
+        $lexer      = new DocLexer();
+        $docblock   = '@Foo\3.42';
+
+        $tokens = array (
+            array(
+                'value'     => '@',
+                'position'  => 0,
+                'type'      => DocLexer::T_AT,
+            ),
+            array(
+                'value'     => 'Foo',
+                'position'  => 1,
+                'type'      => DocLexer::T_IDENTIFIER,
+            ),
+            array(
+                'value'     => '\\',
+                'position'  => 4,
+                'type'      => DocLexer::T_NAMESPACE_SEPARATOR,
+            ),
+            array(
+                'value'     => 3.42,
+                'position'  => 5,
+                'type'      => DocLexer::T_FLOAT,
+            )
+        );
+
+        $lexer->setInput($docblock);
+
+        foreach ($tokens as $expected) {
+            $lexer->moveNext();
+            $lookahead = $lexer->lookahead;
+            $this->assertEquals($expected['value'],     $lookahead['value']);
+            $this->assertEquals($expected['type'],      $lookahead['type']);
+            $this->assertEquals($expected['position'],  $lookahead['position']);
+        }
+
+        $this->assertFalse($lexer->moveNext());
+    }
+
 }

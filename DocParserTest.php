@@ -1099,7 +1099,6 @@ DOCBLOCK;
      */
     public function testInvalidIdentifierInAnnotation()
     {
-        $this->markTestIncomplete();
         $parser = $this->createTestParser();
         $parser->parse('@Foo\3.42');
     }
