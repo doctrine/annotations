@@ -58,7 +58,7 @@ final class DocLexer extends Lexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-z_\\\][a-z0-9_\:\\\]*[a-z0-9_]{1}',
+            '[a-z_\\\][a-z0-9_\:\\\]*[a-z]{1}',
             '(?:[+-]?[0-9]+(?:[\.][0-9]+)*)(?:[eE][+-]?[0-9]+)?',
             '"(?:[^"]|"")*"',
         );

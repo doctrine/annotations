@@ -806,6 +806,14 @@ final class DocParser
             $this->syntaxError('namespace separator or identifier');
         }
 
+        while ($this->lexer->lookahead['position'] === ($this->lexer->token['position'] + strlen($this->lexer->token['value']))
+                && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
+
+            $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
+            $this->matchAny(self::$classIdentifiers);
+            $className .= '\\' . $this->lexer->token['value'];
+        }
+
         return $className;
     }
 
