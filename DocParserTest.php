@@ -1137,7 +1137,7 @@ DOCBLOCK;
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Couldn't find constant foo.
      */
-    public function testColonNotAllowedOnTopLevel()
+    public function testInvalidContantName()
     {
         $parser = $this->createTestParser();
         $parser->parse('@Name(foo: "bar")');
