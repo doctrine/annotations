@@ -313,13 +313,16 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @group DDC-1660
+     * @group regression
      */
-    public function testInvalidLowerAnnotationButIgnored()
+    public function testInvalidAnnotationButIgnored()
     {
         $reader = $this->getReader();
         $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassDDC1660');
-        $annots = $reader->getClassAnnotations($class);
-        $this->assertEquals(0, count($annots));
+
+        $this->assertCount(0, $reader->getClassAnnotations($class));
+        $this->assertCount(0, $reader->getMethodAnnotations($class->getMethod('bar')));
+        $this->assertCount(0, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
     abstract protected function getReader();

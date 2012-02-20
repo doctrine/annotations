@@ -68,6 +68,20 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         parent::testInvalidAnnotationUsageButIgnoredClass();
     }
 
+    /**
+     * @group DDC-1660
+     * @group regression
+     */
+    public function testInvalidAnnotationButIgnored()
+    {
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassDDC1660');
+
+        $this->assertCount(0, $reader->getClassAnnotations($class));
+        $this->assertCount(0, $reader->getMethodAnnotations($class->getMethod('bar')));
+        $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
+    }
+    
     protected function getReader()
     {
         $reader = new SimpleAnnotationReader();
