@@ -555,7 +555,7 @@ final class DocParser
         // only process names which are not fully qualified, yet
         // fully qualified names must start with a \
         $originalName = $name;
-        if ('\\' !== $name[0]) {
+        if ('\\' !== $name[0] && $name[0] === strtoupper($name[0])) {
             $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
 
             $found = false;
@@ -591,6 +591,9 @@ final class DocParser
         }
 
         if (!$this->classExists($name)) {
+            if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
+                return false;
+            }
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
 
