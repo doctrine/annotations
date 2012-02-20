@@ -311,6 +311,17 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, count($annots));
     }
 
+    /**
+     * @group DDC-1660
+     */
+    public function testInvalidLowerAnnotationButIgnored()
+    {
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassDDC1660');
+        $annots = $reader->getClassAnnotations($class);
+        $this->assertEquals(0, count($annots));
+    }
+
     abstract protected function getReader();
 }
 
