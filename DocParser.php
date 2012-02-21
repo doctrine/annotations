@@ -621,10 +621,6 @@ final class DocParser
 
         //if annotation does not support current target
         if (0 === (self::$annotationMetadata[$name]['targets'] & $target) && $target) {
-            if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$originalName])) {
-                return false;
-            }
-
             throw AnnotationException::semanticalError(
                 sprintf('Annotation @%s is not allowed to be declared on %s. You may only use this annotation on these code elements: %s.',
                      $originalName, $this->context, self::$annotationMetadata[$name]['targets_literal'])
