@@ -71,6 +71,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * @group DDC-1660
      * @group regression
+     *
+     * Contrary to the behavior of the default annotation reader, @version is not ignored
      */
     public function testInvalidAnnotationButIgnored()
     {
@@ -78,8 +80,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassDDC1660');
 
         $this->assertTrue(class_exists('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Version'));
-        $this->assertCount(0, $reader->getClassAnnotations($class));
-        $this->assertCount(0, $reader->getMethodAnnotations($class->getMethod('bar')));
+        $this->assertCount(1, $reader->getClassAnnotations($class));
+        $this->assertCount(1, $reader->getMethodAnnotations($class->getMethod('bar')));
         $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
     
