@@ -537,20 +537,7 @@ final class DocParser
         $this->match(DocLexer::T_AT);
 
         // check if we have an annotation
-        if ($this->lexer->isNextTokenAny(self::$classIdentifiers)) {
-            $this->lexer->moveNext();
-            $name = $this->lexer->token['value'];
-        } else if ($this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
-            $name = '';
-        } else {
-            $this->syntaxError('namespace separator or identifier');
-        }
-
-        while ($this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen($this->lexer->token['value']) && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
-            $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
-            $this->matchAny(self::$classIdentifiers);
-            $name .= '\\'.$this->lexer->token['value'];
-        }
+        $name = $this->Identifier();
 
         // only process names which are not fully qualified, yet
         // fully qualified names must start with a \
@@ -747,6 +734,90 @@ final class DocParser
     }
 
     /**
+     * Constant ::= integer | string | float | boolean
+     *
+     * @return mixed
+     */
+    private function Constant()
+    {
+        $identifier = $this->Identifier();
+
+        if (!defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
+
+            list($className, $const) = explode('::', $identifier);
+            $alias = (false === $pos = strpos($className, '\\'))? $className : substr($className, 0, $pos);
+
+            $found = false;
+            switch (true) {
+                case !empty ($this->namespace):
+                    foreach ($this->namespaces as $ns) {
+                        if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
+                             $className = $ns.'\\'.$className;
+                             $found = true;
+                             break;
+                        }
+                    }
+                    break;
+
+                case isset($this->imports[$loweredAlias = strtolower($alias)]):
+                    $found = true;
+                    if (false !== $pos) {
+                        $className = $this->imports[$loweredAlias].substr($className, $pos);
+                    } else {
+                        $className = $this->imports[$loweredAlias];
+                    }
+                    break;
+
+                default:
+                    if(isset($this->imports['__NAMESPACE__'])) {
+                        $ns = $this->imports['__NAMESPACE__'];
+                        if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
+                             $className = $ns.'\\'.$className;
+                             $found = true;
+                        }
+                    }
+                    break;
+            }
+
+            if ($found) {
+                 $identifier = $className . '::' . $const;
+            }
+        }
+
+        if (!defined($identifier)) {
+            throw AnnotationException::semanticalErrorConstants($identifier, $this->context);
+        }
+
+        return constant($identifier);
+    }
+
+    /**
+     * Identifier ::= string
+     *
+     * @return string
+     */
+    private function Identifier()
+    {
+        // check if we have an annotation
+        if ($this->lexer->isNextTokenAny(self::$classIdentifiers)) {
+            $this->lexer->moveNext();
+            $className = $this->lexer->token['value'];
+        } else {
+            $this->syntaxError('namespace separator or identifier');
+        }
+
+        while ($this->lexer->lookahead['position'] === ($this->lexer->token['position'] + strlen($this->lexer->token['value']))
+                && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
+
+            $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
+            $this->matchAny(self::$classIdentifiers);
+            $className .= '\\' . $this->lexer->token['value'];
+        }
+
+        return $className;
+    }
+
+    /**
      * Value ::= PlainValue | FieldAssignment
      *
      * @return mixed
@@ -775,6 +846,10 @@ final class DocParser
 
         if ($this->lexer->isNextToken(DocLexer::T_AT)) {
             return $this->Annotation();
+        }
+
+        if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
+            return $this->Constant();
         }
 
         switch ($this->lexer->lookahead['type']) {
@@ -838,7 +913,7 @@ final class DocParser
 
         $this->match(DocLexer::T_OPEN_CURLY_BRACES);
         $values[] = $this->ArrayEntry();
-
+        
         while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
             $this->match(DocLexer::T_COMMA);
 
@@ -867,8 +942,8 @@ final class DocParser
 
     /**
      * ArrayEntry ::= Value | KeyValuePair
-     * KeyValuePair ::= Key ("=" | ":") PlainValue
-     * Key ::= string | integer
+     * KeyValuePair ::= Key ("=" | ":") PlainValue | Constant
+     * Key ::= string | integer | Constant
      *
      * @return array
      */
@@ -878,9 +953,14 @@ final class DocParser
 
         if (DocLexer::T_EQUALS === $peek['type']
                 || DocLexer::T_COLON === $peek['type']) {
-            $this->matchAny(array(DocLexer::T_INTEGER, DocLexer::T_STRING));
 
-            $key = $this->lexer->token['value'];
+            if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
+                $key = $this->Constant();
+            } else {
+                $this->matchAny(array(DocLexer::T_INTEGER, DocLexer::T_STRING));
+                $key = $this->lexer->token['value'];
+            }
+
             $this->matchAny(array(DocLexer::T_EQUALS, DocLexer::T_COLON));
 
             return array($key, $this->PlainValue());
