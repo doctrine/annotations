@@ -7,6 +7,9 @@ use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
+use Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants;
 
 class DocParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -662,6 +665,93 @@ DOCBLOCK;
 
     }
 
+    public function getConstantsProvider()
+    {
+        $provider[] = array(
+            '@AnnotationWithConstants(PHP_EOL)',
+            PHP_EOL
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(AnnotationWithConstants::INTEGER)',
+            AnnotationWithConstants::INTEGER
+        );
+        $provider[] = array(
+            '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants(AnnotationWithConstants::STRING)',
+            AnnotationWithConstants::STRING
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::FLOAT)',
+            AnnotationWithConstants::FLOAT
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(ClassWithConstants::SOME_VALUE)',
+            ClassWithConstants::SOME_VALUE
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_VALUE)',
+            ClassWithConstants::SOME_VALUE
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(IntefaceWithConstants::SOME_VALUE)',
+            IntefaceWithConstants::SOME_VALUE
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(\Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_VALUE)',
+            IntefaceWithConstants::SOME_VALUE
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants({AnnotationWithConstants::STRING, AnnotationWithConstants::INTEGER, AnnotationWithConstants::FLOAT})',
+            array(AnnotationWithConstants::STRING, AnnotationWithConstants::INTEGER, AnnotationWithConstants::FLOAT)
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants({
+                AnnotationWithConstants::STRING = AnnotationWithConstants::INTEGER
+             })',
+            array(AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER)
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants({
+                Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
+             })',
+            array(IntefaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants({
+                \Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
+             })',
+            array(IntefaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants({
+                AnnotationWithConstants::STRING = AnnotationWithConstants::INTEGER,
+                ClassWithConstants::SOME_KEY = ClassWithConstants::SOME_VALUE,
+                Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_KEY = IntefaceWithConstants::SOME_VALUE
+             })',
+            array(
+                AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER,
+                ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
+                ClassWithConstants::SOME_KEY    => IntefaceWithConstants::SOME_VALUE
+            )
+        );
+        return $provider;
+    }
+
+    /**
+     * @dataProvider getConstantsProvider
+     */
+    public function testSupportClassConstants($docblock, $expected)
+    {
+        $parser = $this->createTestParser();
+        $parser->setImports(array(
+            'classwithconstants'        => 'Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants',
+            'intefacewithconstants'     => 'Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants',
+            'annotationwithconstants'   => 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+        ));
+        
+        $result = $parser->parse($docblock);
+        $this->assertInstanceOf('\Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants', $annotation = $result[0]);
+        $this->assertEquals($expected, $annotation->value);
+    }
 
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
@@ -1045,9 +1135,9 @@ DOCBLOCK;
 
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
-     * @expectedExceptionMessage [Syntax Error] Expected PlainValue, got 'foo:' at position 6.
+     * @expectedExceptionMessage [Semantical Error] Couldn't find constant foo.
      */
-    public function testColonNotAllowedOnTopLevel()
+    public function testInvalidContantName()
     {
         $parser = $this->createTestParser();
         $parser->parse('@Name(foo: "bar")');
