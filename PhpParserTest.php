@@ -176,4 +176,19 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
             'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
+
+    /**
+     * @group DCOM-97
+     * @group regression
+     */
+    public function testClassWithClosure()
+    {
+        $parser = new PhpParser();
+        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassWithClosure');
+
+        $this->assertEquals(array(
+          'annotationtargetall'         => __NAMESPACE__ . '\Fixtures\AnnotationTargetAll',
+          'annotationtargetannotation'  => __NAMESPACE__ . '\Fixtures\AnnotationTargetAnnotation',
+        ), $parser->parseClass($class));
+    }
 }
