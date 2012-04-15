@@ -60,8 +60,8 @@ final class AnnotationReader implements Reader
         'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
         'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
         'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true,
-        'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'deprecated'=> true,
-        'deprec'=> true, 'author'=> true, 'property' => true, 'method' => true,
+        'inheritDoc'=> true, 'license'=> true, 'todo'=> true,
+        'deprec'=> true, 'property' => true, 'method' => true,
         'abstract'=> true, 'exception'=> true, 'magic' => true, 'api' => true,
         'final'=> true, 'filesource'=> true, 'throw' => true, 'uses' => true,
         'usedby'=> true, 'private' => true, 'Annotation' => true, 'override' => true,
@@ -83,21 +83,21 @@ final class AnnotationReader implements Reader
     /**
      * Annotations Parser
      *
-     * @var Doctrine\Common\Annotations\DocParser
+     * @var \Doctrine\Common\Annotations\DocParser
      */
     private $parser;
 
     /**
      * Annotations Parser used to collect parsing metadata
      *
-     * @var Doctrine\Common\Annotations\DocParser
+     * @var \Doctrine\Common\Annotations\DocParser
      */
     private $preParser;
 
     /**
      * PHP Parser used to collect imports.
      *
-     * @var Doctrine\Common\Annotations\PhpParser
+     * @var \Doctrine\Common\Annotations\PhpParser
      */
     private $phpParser;
 
@@ -155,7 +155,7 @@ final class AnnotationReader implements Reader
      * @param ReflectionClass $class The ReflectionClass of the class from which
      *                               the class annotations should be read.
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getClassAnnotation(ReflectionClass $class, $annotationName)
     {
@@ -175,7 +175,7 @@ final class AnnotationReader implements Reader
      *
      * @param ReflectionProperty $property The ReflectionProperty of the property
      *                                     from which the annotations should be read.
-     * @return array An array of Annotations.
+     * @return Annotation[] An array of Annotations.
      */
     public function getPropertyAnnotations(ReflectionProperty $property)
     {
@@ -193,7 +193,7 @@ final class AnnotationReader implements Reader
      *
      * @param ReflectionProperty $property
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
     {
@@ -211,9 +211,10 @@ final class AnnotationReader implements Reader
     /**
      * Gets the annotations applied to a method.
      *
-     * @param ReflectionMethod $property The ReflectionMethod of the method from which
+     * @param \ReflectionMethod $method The ReflectionMethod of the method from which
      *                                   the annotations should be read.
-     * @return array An array of Annotations.
+     *
+     * @return Annotation[] An array of Annotations.
      */
     public function getMethodAnnotations(ReflectionMethod $method)
     {
@@ -231,7 +232,7 @@ final class AnnotationReader implements Reader
      *
      * @param ReflectionMethod $method
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
     {
@@ -262,6 +263,12 @@ final class AnnotationReader implements Reader
         return $this->ignoredAnnotationNames[$name];
     }
 
+    /**
+     * Retrieve imports
+     *
+     * @param \ReflectionClass $class
+     * @return mixed
+     */
     private function getImports(ReflectionClass $class)
     {
         if (isset($this->imports[$name = $class->getName()])) {

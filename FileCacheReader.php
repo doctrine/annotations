@@ -32,10 +32,31 @@ class FileCacheReader implements Reader
      * @var Reader
      */
     private $reader;
+
+    /**
+     * @var string
+     */
     private $dir;
+
+    /**
+     * @var bool
+     */
     private $debug;
+
+    /**
+     * @var Annotation[]
+     */
     private $loadedAnnotations = array();
 
+    /**
+     * Constructor
+     *
+     * @param Reader $reader
+     * @param string $cacheDir
+     * @param bool $debug
+     *
+     * @throws \InvalidArgumentException
+     */
     public function __construct(Reader $reader, $cacheDir, $debug = false)
     {
         $this->reader = $reader;
@@ -50,6 +71,12 @@ class FileCacheReader implements Reader
         $this->debug = $debug;
     }
 
+    /**
+     * Retrieve annotations for class
+     *
+     * @param \ReflectionClass $class
+     * @return Annotation[]
+     */
     public function getClassAnnotations(\ReflectionClass $class)
     {
         $key = $class->getName();
@@ -78,6 +105,12 @@ class FileCacheReader implements Reader
         return $this->loadedAnnotations[$key] = include $path;
     }
 
+    /**
+     * Get annotations for property
+     *
+     * @param \ReflectionProperty $property
+     * @return Annotation[]
+     */
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
         $class = $property->getDeclaringClass();
@@ -107,6 +140,12 @@ class FileCacheReader implements Reader
         return $this->loadedAnnotations[$key] = include $path;
     }
 
+    /**
+     * Retrieve annotations for method
+     *
+     * @param \ReflectionMethod $method
+     * @return Annotation[]
+     */
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
@@ -136,6 +175,12 @@ class FileCacheReader implements Reader
         return $this->loadedAnnotations[$key] = include $path;
     }
 
+    /**
+     * Save cache file
+     *
+     * @param string $path
+     * @param mixed $data
+     */
     private function saveCacheFile($path, $data)
     {
         file_put_contents($path, '<?php return unserialize('.var_export(serialize($data), true).');');
@@ -144,10 +189,11 @@ class FileCacheReader implements Reader
     /**
      * Gets a class annotation.
      *
-     * @param ReflectionClass $class The ReflectionClass of the class from which
+     * @param \ReflectionClass $class The ReflectionClass of the class from which
      *                               the class annotations should be read.
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
@@ -165,9 +211,9 @@ class FileCacheReader implements Reader
     /**
      * Gets a method annotation.
      *
-     * @param ReflectionMethod $method
+     * @param \ReflectionMethod $method
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
@@ -185,9 +231,9 @@ class FileCacheReader implements Reader
     /**
      * Gets a property annotation.
      *
-     * @param ReflectionProperty $property
+     * @param \ReflectionProperty $property
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {
@@ -202,6 +248,9 @@ class FileCacheReader implements Reader
         return null;
     }
 
+    /**
+     * Clear stores annotations
+     */
     public function clearLoadedAnnotations()
     {
         $this->loadedAnnotations = array();

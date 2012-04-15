@@ -52,6 +52,8 @@ class Annotation
      * Error handler for unknown property accessor in Annotation class.
      *
      * @param string $name Unknown property name
+     *
+     * @throws \BadMethodCallException
      */
     public function __get($name)
     {
@@ -65,6 +67,8 @@ class Annotation
      *
      * @param string $name Unkown property name
      * @param mixed $value Property value
+     *
+     * @throws \BadMethodCallException
      */
     public function __set($name, $value)
     {

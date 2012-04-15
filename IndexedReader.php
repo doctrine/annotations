@@ -28,13 +28,27 @@ use Doctrine\Common\Annotations\Reader;
  */
 class IndexedReader implements Reader
 {
+    /**
+     * @var Reader
+     */
     private $delegate;
 
+    /**
+     * Constructor
+     *
+     * @param Reader $reader
+     */
     public function __construct(Reader $reader)
     {
         $this->delegate = $reader;
     }
 
+    /**
+     * Get Annotations for class
+     *
+     * @param \ReflectionClass $class
+     * @return array
+     */
     public function getClassAnnotations(\ReflectionClass $class)
     {
         $annotations = array();
@@ -45,11 +59,24 @@ class IndexedReader implements Reader
         return $annotations;
     }
 
+    /**
+     * Get selected annotation for class
+     *
+     * @param \ReflectionClass $class
+     * @param $annotation
+     * @return mixed
+     */
     public function getClassAnnotation(\ReflectionClass $class, $annotation)
     {
         return $this->delegate->getClassAnnotation($class, $annotation);
     }
 
+    /**
+     * Get Annotations for method
+     *
+     * @param \ReflectionMethod $method
+     * @return array
+     */
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
         $annotations = array();
@@ -60,11 +87,24 @@ class IndexedReader implements Reader
         return $annotations;
     }
 
+    /**
+     * Get selected annotation for method
+     *
+     * @param \ReflectionMethod $method
+     * @param $annotation
+     * @return mixed
+     */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotation)
     {
         return $this->delegate->getMethodAnnotation($method, $annotation);
     }
 
+    /**
+     * Get annotations for property
+     *
+     * @param \ReflectionProperty $property
+     * @return array
+     */
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
         $annotations = array();
@@ -75,6 +115,13 @@ class IndexedReader implements Reader
         return $annotations;
     }
 
+    /**
+     * Get selected annotation for property
+     *
+     * @param \ReflectionProperty $property
+     * @param $annotation
+     * @return mixed
+     */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotation)
     {
         return $this->delegate->getPropertyAnnotation($property, $annotation);
@@ -83,9 +130,9 @@ class IndexedReader implements Reader
     /**
      * Proxy all methods to the delegate.
      *
-     * @param type $method
-     * @param type $args
-     * @return type
+     * @param string $method
+     * @param array $args
+     * @return mixed
      */
     public function __call($method, $args)
     {

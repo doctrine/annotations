@@ -28,8 +28,18 @@ namespace Doctrine\Common\Annotations\Annotation;
  */
 final class IgnoreAnnotation
 {
+    /**
+     * @var array
+     */
     public $names;
 
+    /**
+     * Constructor
+     *
+     * @param array $values
+     *
+     * @throws \RuntimeException
+     */
     public function __construct(array $values)
     {
         if (is_string($values['value'])) {

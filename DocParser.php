@@ -49,7 +49,7 @@ final class DocParser
     /**
      * The lexer.
      *
-     * @var Doctrine\Common\Annotations\DocLexer
+     * @var \Doctrine\Common\Annotations\DocLexer
      */
     private $lexer;
 
@@ -63,7 +63,7 @@ final class DocParser
     /**
      * Doc Parser used to collect annotation target
      *
-     * @var Doctrine\Common\Annotations\DocParser
+     * @var \Doctrine\Common\Annotations\DocParser
      */
     private static $metadataParser;
 
@@ -223,6 +223,11 @@ final class DocParser
         $this->ignoredAnnotationNames = $names;
     }
 
+    /**
+     * Sets ignore on not-imported annotations
+     *
+     * @param $bool
+     */
     public function setIgnoreNotImportedAnnotations($bool)
     {
         $this->ignoreNotImportedAnnotations = (Boolean) $bool;
@@ -230,7 +235,10 @@ final class DocParser
 
     /**
      * Sets the default namespaces.
-     * @param array $namespaces
+     *
+     * @param array $namespace
+     *
+     * @throws \RuntimeException
      */
     public function addNamespace($namespace)
     {
@@ -240,6 +248,12 @@ final class DocParser
         $this->namespaces[] = $namespace;
     }
 
+    /**
+     * Sets the imports
+     *
+     * @param array $imports
+     * @throws \RuntimeException
+     */
     public function setImports(array $imports)
     {
         if ($this->namespaces) {
@@ -287,7 +301,7 @@ final class DocParser
      * Attempts to match the given token with the current lookahead token.
      * If they match, updates the lookahead token; otherwise raises a syntax error.
      *
-     * @param int Token type.
+     * @param int $token type of Token.
      * @return bool True if tokens match; false otherwise.
      */
     private function match($token)
@@ -322,7 +336,8 @@ final class DocParser
      *
      * @param string $expected Expected string.
      * @param array $token Optional token.
-     * @throws SyntaxException
+     *
+     * @throws AnnotationException
      */
     private function syntaxError($expected, $token = null)
     {
@@ -372,7 +387,7 @@ final class DocParser
     /**
      * Collects parsing metadata for a given annotation class
      *
-     * @param   string $name        The annotation name
+     * @param string $name The annotation name
      */
     private function collectAnnotationMetadata($name)
     {
@@ -530,6 +545,7 @@ final class DocParser
      * NameSpacePart  ::= identifier | null | false | true
      * SimpleName     ::= identifier | null | false | true
      *
+     * @throws AnnotationException
      * @return mixed False if it is not a valid annotation.
      */
     private function Annotation()
@@ -736,6 +752,7 @@ final class DocParser
     /**
      * Constant ::= integer | string | float | boolean
      *
+     * @throws AnnotationException
      * @return mixed
      */
     private function Constant()
@@ -749,7 +766,7 @@ final class DocParser
 
             $found = false;
             switch (true) {
-                case !empty ($this->namespace):
+                case !empty ($this->namespaces):
                     foreach ($this->namespaces as $ns) {
                         if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
                              $className = $ns.'\\'.$className;
@@ -913,7 +930,7 @@ final class DocParser
 
         $this->match(DocLexer::T_OPEN_CURLY_BRACES);
         $values[] = $this->ArrayEntry();
-        
+
         while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
             $this->match(DocLexer::T_COMMA);
 

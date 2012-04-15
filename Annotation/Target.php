@@ -70,6 +70,8 @@ final class Target
      * Annotation construct
      *
      * @param array $values
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct(array $values)
     {

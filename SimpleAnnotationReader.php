@@ -62,8 +62,9 @@ class SimpleAnnotationReader implements Reader
     /**
      * Gets the annotations applied to a class.
      *
-     * @param ReflectionClass $class The ReflectionClass of the class from which
+     * @param \ReflectionClass $class The ReflectionClass of the class from which
      *                               the class annotations should be read.
+     *
      * @return array An array of Annotations.
      */
     public function getClassAnnotations(\ReflectionClass $class)
@@ -71,10 +72,12 @@ class SimpleAnnotationReader implements Reader
         return $this->parser->parse($class->getDocComment(), 'class '.$class->getName());
     }
 
-     /**
+    /**
      * Gets the annotations applied to a method.
      *
-     * @param ReflectionMethod $property The ReflectionMethod of the method from which
+     * @param \ReflectionMethod $method
+     *
+     * @internal param \Doctrine\Common\Annotations\ReflectionMethod $property The ReflectionMethod of the method from which
      *                                   the annotations should be read.
      * @return array An array of Annotations.
      */
@@ -86,8 +89,9 @@ class SimpleAnnotationReader implements Reader
     /**
      * Gets the annotations applied to a property.
      *
-     * @param ReflectionProperty $property The ReflectionProperty of the property
+     * @param \ReflectionProperty $property The ReflectionProperty of the property
      *                                     from which the annotations should be read.
+     *
      * @return array An array of Annotations.
      */
     public function getPropertyAnnotations(\ReflectionProperty $property)
@@ -98,10 +102,11 @@ class SimpleAnnotationReader implements Reader
     /**
      * Gets a class annotation.
      *
-     * @param ReflectionClass $class The ReflectionClass of the class from which
+     * @param \ReflectionClass $class The ReflectionClass of the class from which
      *                               the class annotations should be read.
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
@@ -117,9 +122,10 @@ class SimpleAnnotationReader implements Reader
     /**
      * Gets a method annotation.
      *
-     * @param ReflectionMethod $method
+     * @param \ReflectionMethod $method
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @return null|Annotation The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
@@ -135,9 +141,9 @@ class SimpleAnnotationReader implements Reader
     /**
      * Gets a property annotation.
      *
-     * @param ReflectionProperty $property
+     * @param \ReflectionProperty $property
      * @param string $annotationName The name of the annotation.
-     * @return The Annotation or NULL, if the requested annotation does not exist.
+     * @return null|Annotation The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {

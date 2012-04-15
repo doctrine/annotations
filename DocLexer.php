@@ -53,7 +53,7 @@ final class DocLexer extends Lexer
     const T_COLON               = 112;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getCatchablePatterns()
     {
@@ -65,7 +65,7 @@ final class DocLexer extends Lexer
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function getNonCatchablePatterns()
     {
@@ -73,7 +73,11 @@ final class DocLexer extends Lexer
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
+     * @param string $value
+     *
+     * @return int
      */
     protected function getType(&$value)
     {

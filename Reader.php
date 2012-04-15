@@ -26,10 +26,48 @@ namespace Doctrine\Common\Annotations;
  */
 interface Reader
 {
+    /**
+     * @abstract
+     * @param \ReflectionClass $class
+     * @return mixed
+     */
     function getClassAnnotations(\ReflectionClass $class);
+
+    /**
+     * @abstract
+     * @param \ReflectionClass $class
+     * @param $annotationName
+     * @return mixed
+     */
     function getClassAnnotation(\ReflectionClass $class, $annotationName);
+
+    /**
+     * @abstract
+     * @param \ReflectionMethod $method
+     * @return mixed
+     */
     function getMethodAnnotations(\ReflectionMethod $method);
+
+    /**
+     * @abstract
+     * @param \ReflectionMethod $method
+     * @param $annotationName
+     * @return mixed
+     */
     function getMethodAnnotation(\ReflectionMethod $method, $annotationName);
+
+    /**
+     * @abstract
+     * @param \ReflectionProperty $property
+     * @return mixed
+     */
     function getPropertyAnnotations(\ReflectionProperty $property);
+
+    /**
+     * @abstract
+     * @param \ReflectionProperty $property
+     * @param $annotationName
+     * @return mixed
+     */
     function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
 }
