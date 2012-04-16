@@ -52,8 +52,7 @@ final class AnnotationRegistry
     /**
      * Register file
      *
-     * @static
-     * @param $file
+     * @param string $file
      */
     static public function registerFile($file)
     {

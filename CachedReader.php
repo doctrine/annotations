@@ -94,7 +94,7 @@ final class CachedReader implements Reader
      * Get selected annotation for class
      *
      * @param \ReflectionClass $class
-     * @param $annotationName
+     * @param string $annotationName
      * @return null
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
@@ -135,7 +135,7 @@ final class CachedReader implements Reader
      * Get selected annotation for property
      *
      * @param \ReflectionProperty $property
-     * @param $annotationName
+     * @param string $annotationName
      * @return null
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
@@ -176,7 +176,7 @@ final class CachedReader implements Reader
      * Get selected method annotation
      *
      * @param \ReflectionMethod $method
-     * @param $annotationName
+     * @param string $annotationName
      * @return null
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
@@ -203,7 +203,7 @@ final class CachedReader implements Reader
      *
      * @param string           $rawCacheKey The cache key.
      * @param \ReflectionClass $class       The related class.
-     * @return mixed|false The cached value or false when the value is not in cache.
+     * @return mixed|boolean The cached value or false when the value is not in cache.
      */
     private function fetchFromCache($rawCacheKey, \ReflectionClass $class)
     {
@@ -235,7 +235,7 @@ final class CachedReader implements Reader
     /**
      * Check if cache is fresh
      *
-     * @param $cacheKey
+     * @param string $cacheKey
      * @param \ReflectionClass $class
      * @return bool
      */

@@ -75,10 +75,9 @@ class SimpleAnnotationReader implements Reader
     /**
      * Gets the annotations applied to a method.
      *
-     * @param \ReflectionMethod $method
-     *
-     * @internal param \Doctrine\Common\Annotations\ReflectionMethod $property The ReflectionMethod of the method from which
+     * @param \ReflectionMethod $method The ReflectionMethod of the method from which
      *                                   the annotations should be read.
+     *
      * @return array An array of Annotations.
      */
     public function getMethodAnnotations(\ReflectionMethod $method)
@@ -106,7 +105,7 @@ class SimpleAnnotationReader implements Reader
      *                               the class annotations should be read.
      * @param string $annotationName The name of the annotation.
      *
-     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
@@ -125,7 +124,7 @@ class SimpleAnnotationReader implements Reader
      * @param \ReflectionMethod $method
      * @param string $annotationName The name of the annotation.
      *
-     * @return null|Annotation The Annotation or NULL, if the requested annotation does not exist.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
@@ -143,7 +142,7 @@ class SimpleAnnotationReader implements Reader
      *
      * @param \ReflectionProperty $property
      * @param string $annotationName The name of the annotation.
-     * @return null|Annotation The Annotation or NULL, if the requested annotation does not exist.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {

@@ -193,7 +193,7 @@ class FileCacheReader implements Reader
      *                               the class annotations should be read.
      * @param string $annotationName The name of the annotation.
      *
-     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotationName)
     {
@@ -213,7 +213,7 @@ class FileCacheReader implements Reader
      *
      * @param \ReflectionMethod $method
      * @param string $annotationName The name of the annotation.
-     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
     {
@@ -233,7 +233,7 @@ class FileCacheReader implements Reader
      *
      * @param \ReflectionProperty $property
      * @param string $annotationName The name of the annotation.
-     * @return Annotation|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return mixed The Annotation or NULL, if the requested annotation does not exist.
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
     {

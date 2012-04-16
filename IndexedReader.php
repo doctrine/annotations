@@ -63,7 +63,7 @@ class IndexedReader implements Reader
      * Get selected annotation for class
      *
      * @param \ReflectionClass $class
-     * @param $annotation
+     * @param string $annotation
      * @return mixed
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotation)
@@ -91,7 +91,7 @@ class IndexedReader implements Reader
      * Get selected annotation for method
      *
      * @param \ReflectionMethod $method
-     * @param $annotation
+     * @param string $annotation
      * @return mixed
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotation)
@@ -119,7 +119,7 @@ class IndexedReader implements Reader
      * Get selected annotation for property
      *
      * @param \ReflectionProperty $property
-     * @param $annotation
+     * @param string $annotation
      * @return mixed
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotation)
