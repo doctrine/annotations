@@ -175,7 +175,7 @@ final class AnnotationReader implements Reader
      *
      * @param ReflectionProperty $property The ReflectionProperty of the property
      *                                     from which the annotations should be read.
-     * @return Annotation[] An array of Annotations.
+     * @return array An array of Annotations.
      */
     public function getPropertyAnnotations(ReflectionProperty $property)
     {
@@ -214,7 +214,7 @@ final class AnnotationReader implements Reader
      * @param \ReflectionMethod $method The ReflectionMethod of the method from which
      *                                   the annotations should be read.
      *
-     * @return Annotation[] An array of Annotations.
+     * @return array An array of Annotations.
      */
     public function getMethodAnnotations(ReflectionMethod $method)
     {

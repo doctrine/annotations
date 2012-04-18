@@ -44,7 +44,7 @@ class FileCacheReader implements Reader
     private $debug;
 
     /**
-     * @var Annotation[]
+     * @var array
      */
     private $loadedAnnotations = array();
 
@@ -75,7 +75,7 @@ class FileCacheReader implements Reader
      * Retrieve annotations for class
      *
      * @param \ReflectionClass $class
-     * @return Annotation[]
+     * @return array
      */
     public function getClassAnnotations(\ReflectionClass $class)
     {
@@ -109,7 +109,7 @@ class FileCacheReader implements Reader
      * Get annotations for property
      *
      * @param \ReflectionProperty $property
-     * @return Annotation[]
+     * @return array
      */
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
@@ -144,7 +144,7 @@ class FileCacheReader implements Reader
      * Retrieve annotations for method
      *
      * @param \ReflectionMethod $method
-     * @return Annotation[]
+     * @return array
      */
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
