@@ -27,28 +27,28 @@ use SplFileObject;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Christian Kaps <christian.kaps@mohiva.com>
  */
-final class PhpParser
+class PhpParser
 {
     /**
      * The token list.
      *
      * @var array
      */
-    private $tokens;
+    protected $tokens;
 
     /**
      * The number of tokens.
      *
      * @var int
      */
-    private $numTokens = 0;
+    protected $numTokens = 0;
 
     /**
      * The current array pointer.
      *
      * @var int
      */
-    private $pointer = 0;
+    protected $pointer = 0;
 
     /**
      * Parses a class.
@@ -58,6 +58,10 @@ final class PhpParser
      */
     public function parseClass(\ReflectionClass $class)
     {
+        if (method_exists($class, 'getUseStatements')) {
+          return $class->getUseStatements();
+        }
+
         if (false === $filename = $class->getFilename()) {
             return array();
         }
@@ -81,7 +85,7 @@ final class PhpParser
      * @param int $lineNumber The number of lines to read from file.
      * @return string The content of the file.
      */
-    private function getFileContent($filename, $lineNumber)
+    protected function getFileContent($filename, $lineNumber)
     {
         $content = '';
         $lineCnt = 0;
@@ -102,7 +106,7 @@ final class PhpParser
      *
      * @return array The token if exists, null otherwise.
      */
-    private function next()
+    protected function next()
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
@@ -125,7 +129,7 @@ final class PhpParser
      * @param string $namespaceName The namespace name of the reflected class.
      * @return array A list with all found use statements.
      */
-    private function parseUseStatements($namespaceName)
+    protected function parseUseStatements($namespaceName)
     {
         $statements = array();
         while (($token = $this->next())) {
@@ -150,7 +154,7 @@ final class PhpParser
      *
      * @return string The found namespace name.
      */
-    private function parseNamespace()
+    protected function parseNamespace()
     {
         $namespace = '';
         while (($token = $this->next())){
@@ -169,7 +173,7 @@ final class PhpParser
      *
      * @return array A list with all found class names for a use statement.
      */
-    private function parseUseStatement()
+    protected function parseUseStatement()
     {
         $class = '';
         $alias = '';
