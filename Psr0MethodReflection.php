@@ -2,7 +2,11 @@
 
 namespace Doctrine\Common\Annotations;
 
-class Psr0MethodReflector extends ReflectionClass {
+use ReflectionMethod;
+use ReflectionException;
+
+
+class Psr0MethodReflection extends ReflectionMethod {
   function __construct($psr0Parser, $methodName) {
     $this->psr0Parser = $psr0Parser;
     $this->methodName = $methodName;

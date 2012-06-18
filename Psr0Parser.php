@@ -34,14 +34,7 @@ class Psr0Parser extends PhpParser {
     protected $className;
 
     /**
-     * Base include path for class files.
-     *
-     * @var string
-     */
-    protected $includePath;
-
-    /**
-     * The PHP namespace this class is in.
+     * The namespace of the class
      *
      * @var string
      */
@@ -52,7 +45,7 @@ class Psr0Parser extends PhpParser {
      *
      * @var array
      */
-    protected $useStatements;
+    protected $useStatements = array();
 
     /**
      * The doxygen of the class.
@@ -90,7 +83,7 @@ class Psr0Parser extends PhpParser {
     protected $parentPsr0Parser;
 
     /**
-     * Parses a class.
+     * Parses a class residing in a PSR-0 hierarchy.
      *
      * @param string $includePath Base include path for class files.
      * @param string $class The full class name.
@@ -99,21 +92,19 @@ class Psr0Parser extends PhpParser {
     public function __construct($includePath, $className, $classAnnotationOptimize = FALSE)
     {
         $className = ltrim($className, '\\');
-        $this->includePath = $includePath;
-        $this->fileName  = $includePath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-        if (!file_exists($this->fileName)) {
+        $fileName  = $includePath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
+        if (!file_exists($fileName)) {
             return array();
         }
-        $lastNsPos = strripos($className, '\\');
-        $this->ns = substr($className, 0, $lastNsPos);
-        $this->className = substr($className, $lastNsPos + 1);
         $contents = file_get_contents($fileName);
         if ($classAnnotationOptimize) {
-          $identifier = 'a-zA-Z0-9_\x7f-\xff';
-          if (preg_match("/(\A.*^[$identifier ]*class\s+[\\$identifier]+)\s+{/sm", $contents, $matches)) {
+          if (preg_match("/(\A.*)^\s+(abstract|final)?\s+class\s+$className\s+{/sm", $contents, $matches)) {
             $contents = $matches[1];
           }
         }
+        $this->className = $className;
+        $lastNsPos = strripos($className, '\\');
+        $ns = substr($className, 0, $lastNsPos);
         $this->tokens = token_get_all($contents);
         $this->numTokens = count($this->tokens);
         $this->pointer = 0;
@@ -132,10 +123,21 @@ class Psr0Parser extends PhpParser {
                         $this->classDoxygen = $doxygen;
                         $doxygen = '';
                         break;
-                    case T_VARIABLE
-                        $propertyName = substr($token[1], 1);
-                        $this->propertyDoxygen[$propertyName] = $doxygen;
-                        break;
+                    case T_VAR:
+                    case T_PRIVATE:
+                    case T_PROTECTED:
+                    case T_PUBLIC:
+                        $token = $this->next();
+                        if ($token[0] === T_VARIABLE) {
+                          $propertyName = substr($token[1], 1);
+                          $this->propertyDoxygen[$propertyName] = $doxygen;
+                          continue 2;
+                        }
+                        if ($token[0] !== T_FUNCTION) {
+                          // For example, it can be T_FINAL.
+                          continue 2;
+                        }
+                        // No break.
                     case T_FUNCTION:
                         // The next string after function is the name, but
                         // there can be & before the function name so find the
@@ -167,16 +169,16 @@ class Psr0Parser extends PhpParser {
         return $this->parentPsr0Parser;
     }
 
-    public function getClassReflector() {
-        return new Psr0ClassReflector($this);
+    public function getClassReflection() {
+        return new Psr0ClassReflection($this);
     }
 
-    public function getMethodReflector($methodName) {
-        return new Psr0CMethodReflector($this, $methodName);
+    public function getMethodReflection($methodName) {
+        return new Psr0MethodReflection($this, $methodName);
     }
 
-    public function getPropertyReflector() {
-        return new Psr0PropertyReflector($this);
+    public function getPropertyReflection($propertyName) {
+        return new Psr0PropertyReflection($this, $propertyName);
     }
 
     public function getUseStatements() {
@@ -197,7 +199,7 @@ class Psr0Parser extends PhpParser {
 
     public function getDeclaringMethodClass($methodName) {
         if (isset($this->methodDoxygen[$methodName])) {
-            return $this->className;
+            return $this->getClassReflection($this);
         }
         if (!empty($this->parentClassName)) {
             return $this->getParentPsr0Parser()->getDeclaringMethodClass($methodName);
@@ -215,7 +217,7 @@ class Psr0Parser extends PhpParser {
 
     public function getDeclaringPropertyClass($propertyName) {
         if (isset($this->propertyDoxygen[$propertyName])) {
-            return $this->className;
+            return $this->getClassReflection($this);
         }
         if (!empty($this->parentClassName)) {
             return $this->getParentPsr0Parser()->getDeclaringPropertyClass($propertyName);

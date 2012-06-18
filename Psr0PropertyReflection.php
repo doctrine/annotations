@@ -2,7 +2,10 @@
 
 namespace Doctrine\Common\Annotations;
 
-class Psr0PropertyReflector extends ReflectionClass {
+use ReflectionProperty;
+use ReflectionException;
+
+class Psr0PropertyReflection extends ReflectionProperty {
   function __construct($psr0Parser, $propertyName) {
     $this->psr0Parser = $psr0Parser;
     $this->propertyName = $propertyName;

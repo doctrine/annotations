@@ -106,13 +106,13 @@ class PhpParser
      *
      * @return array The token if exists, null otherwise.
      */
-    protected function next()
+    protected function next($skipDoxygen = TRUE)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
             if ($this->tokens[$i][0] === T_WHITESPACE ||
                 $this->tokens[$i][0] === T_COMMENT ||
-                $this->tokens[$i][0] === T_DOC_COMMENT) {
+                ($skipDoxygen && $this->tokens[$i][0] === T_DOC_COMMENT)) {
 
                 continue;
             }
