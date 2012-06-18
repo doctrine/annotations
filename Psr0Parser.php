@@ -24,7 +24,8 @@ namespace Doctrine\Common\Annotations;
  *
  * @author Karoly Negyesi <karoly@negyesi.net>
  */
-class Psr0Parser extends PhpParser {
+class Psr0Parser extends TokenParser
+{
 
     /**
      * The name of the class.

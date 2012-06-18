@@ -27,29 +27,8 @@ use SplFileObject;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Christian Kaps <christian.kaps@mohiva.com>
  */
-class PhpParser
+final class PhpParser extends TokenParser
 {
-    /**
-     * The token list.
-     *
-     * @var array
-     */
-    protected $tokens;
-
-    /**
-     * The number of tokens.
-     *
-     * @var int
-     */
-    protected $numTokens = 0;
-
-    /**
-     * The current array pointer.
-     *
-     * @var int
-     */
-    protected $pointer = 0;
-
     /**
      * Parses a class.
      *
@@ -85,7 +64,7 @@ class PhpParser
      * @param int $lineNumber The number of lines to read from file.
      * @return string The content of the file.
      */
-    protected function getFileContent($filename, $lineNumber)
+    private function getFileContent($filename, $lineNumber)
     {
         $content = '';
         $lineCnt = 0;
@@ -99,109 +78,5 @@ class PhpParser
         }
 
         return $content;
-    }
-
-    /**
-     * Gets the next non whitespace and non comment token.
-     *
-     * @return array The token if exists, null otherwise.
-     */
-    protected function next($skipDoxygen = TRUE)
-    {
-        for ($i = $this->pointer; $i < $this->numTokens; $i++) {
-            $this->pointer++;
-            if ($this->tokens[$i][0] === T_WHITESPACE ||
-                $this->tokens[$i][0] === T_COMMENT ||
-                ($skipDoxygen && $this->tokens[$i][0] === T_DOC_COMMENT)) {
-
-                continue;
-            }
-
-            return $this->tokens[$i];
-        }
-
-        return null;
-    }
-
-    /**
-     * Get all use statements.
-     *
-     * @param string $namespaceName The namespace name of the reflected class.
-     * @return array A list with all found use statements.
-     */
-    protected function parseUseStatements($namespaceName)
-    {
-        $statements = array();
-        while (($token = $this->next())) {
-            if ($token[0] === T_USE) {
-                $statements = array_merge($statements, $this->parseUseStatement());
-                continue;
-            } else if ($token[0] !== T_NAMESPACE || $this->parseNamespace() != $namespaceName) {
-                continue;
-            }
-
-            // Get fresh array for new namespace. This is to prevent the parser to collect the use statements
-            // for a previous namespace with the same name. This is the case if a namespace is defined twice
-            // or if a namespace with the same name is commented out.
-            $statements = array();
-        }
-
-        return $statements;
-    }
-
-    /**
-     * Get the namespace name.
-     *
-     * @return string The found namespace name.
-     */
-    protected function parseNamespace()
-    {
-        $namespace = '';
-        while (($token = $this->next())){
-            if ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR) {
-                $namespace .= $token[1];
-            } else {
-                break;
-            }
-        }
-
-        return $namespace;
-    }
-
-    /**
-     * Parse a single use statement.
-     *
-     * @return array A list with all found class names for a use statement.
-     */
-    protected function parseUseStatement()
-    {
-        $class = '';
-        $alias = '';
-        $statements = array();
-        $explicitAlias = false;
-        while (($token = $this->next())) {
-            $isNameToken = $token[0] === T_STRING || $token[0] === T_NS_SEPARATOR;
-            if (!$explicitAlias && $isNameToken) {
-                $class .= $token[1];
-                $alias = $token[1];
-            } else if ($explicitAlias && $isNameToken) {
-                $alias .= $token[1];
-            } else if ($token[0] === T_AS) {
-                $explicitAlias = true;
-                $alias = '';
-            } else if ($token === ',') {
-                $statements[strtolower($alias)] = $class;
-                $class = '';
-                $alias = '';
-                $explicitAlias = false;
-            } else if ($token === ';') {
-                $statements[strtolower($alias)] = $class;
-                break;
-            } else {
-                break;
-            }
-        }
-
-        return $statements;
     }
 }
