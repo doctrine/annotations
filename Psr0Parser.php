@@ -34,6 +34,27 @@ class Psr0Parser extends PhpParser {
     protected $className;
 
     /**
+     * The filename of the class.
+     *
+     * @var string
+     */
+    protected $fileName;
+
+    /**
+     * TRUE if the caller only wants class annotations.
+     *
+     * @var boolean.
+     */
+    protected $classAnnotationOptimize;
+
+    /**
+     * TRUE when the parser has ran.
+     *
+     * @var boolean
+     */
+    protected $parsed;
+
+    /**
      * The namespace of the class
      *
      * @var string
@@ -91,20 +112,25 @@ class Psr0Parser extends PhpParser {
      */
     public function __construct($includePath, $className, $classAnnotationOptimize = FALSE)
     {
-        $className = ltrim($className, '\\');
-        $fileName  = $includePath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-        if (!file_exists($fileName)) {
-            return array();
+        $this->className = ltrim($className, '\\');
+        $this->fileName  = $includePath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
+        $lastNsPos = strrpos($className, '\\');
+        $this->ns = substr($className, 0, $lastNsPos);
+        $this->classAnnotationOptimize = $classAnnotationOptimize;
+    }
+
+    protected function parse()
+    {
+        if ($this->parsed || !file_exists($this->fileName)) {
+            return;
         }
-        $contents = file_get_contents($fileName);
-        if ($classAnnotationOptimize) {
-          if (preg_match("/(\A.*)^\s+(abstract|final)?\s+class\s+$className\s+{/sm", $contents, $matches)) {
-            $contents = $matches[1];
-          }
+        $this->parsed = TRUE;
+        $contents = file_get_contents($this->fileName);
+        if ($this->classAnnotationOptimize) {
+            if (preg_match("/(\A.*)^\s+(abstract|final)?\s+class\s+$className\s+{/sm", $contents, $matches)) {
+                $contents = $matches[1];
+            }
         }
-        $this->className = $className;
-        $lastNsPos = strripos($className, '\\');
-        $ns = substr($className, 0, $lastNsPos);
         $this->tokens = token_get_all($contents);
         $this->numTokens = count($this->tokens);
         $this->pointer = 0;
@@ -182,10 +208,12 @@ class Psr0Parser extends PhpParser {
     }
 
     public function getUseStatements() {
+        $this->parse();
         return $this->useStatements;
     }
 
     public function getClassDoxygen() {
+        $this->parse();
         return $this->classDoxygen;
     }
 
@@ -198,6 +226,7 @@ class Psr0Parser extends PhpParser {
     }
 
     public function getDeclaringMethodClass($methodName) {
+        $this->parse();
         if (isset($this->methodDoxygen[$methodName])) {
             return $this->getClassReflection($this);
         }
@@ -207,6 +236,7 @@ class Psr0Parser extends PhpParser {
     }
 
     public function getMethodDoxygen($methodName) {
+        $this->parse();
         if (isset($this->methodDoxygen[$methodName])) {
             return $this->methodDoxygen[$methodName];
         }
@@ -216,6 +246,7 @@ class Psr0Parser extends PhpParser {
     }
 
     public function getDeclaringPropertyClass($propertyName) {
+        $this->parse();
         if (isset($this->propertyDoxygen[$propertyName])) {
             return $this->getClassReflection($this);
         }
@@ -225,6 +256,7 @@ class Psr0Parser extends PhpParser {
     }
 
     public function getPropertyDoxygen($propertyName) {
+        $this->parse();
         if (isset($this->propertyDoxygen[$propertyName])) {
             return $this->propertyDoxygen[$propertyName];
         }
