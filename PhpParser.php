@@ -38,7 +38,7 @@ final class PhpParser extends TokenParser
     public function parseClass(\ReflectionClass $class)
     {
         if (method_exists($class, 'getUseStatements')) {
-          return $class->getUseStatements();
+            return $class->getUseStatements();
         }
 
         if (false === $filename = $class->getFilename()) {
