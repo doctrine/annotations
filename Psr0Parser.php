@@ -156,13 +156,13 @@ class Psr0Parser extends TokenParser
                     case T_PUBLIC:
                         $token = $this->next();
                         if ($token[0] === T_VARIABLE) {
-                          $propertyName = substr($token[1], 1);
-                          $this->propertyDoxygen[$propertyName] = $doxygen;
-                          continue 2;
+                            $propertyName = substr($token[1], 1);
+                            $this->propertyDoxygen[$propertyName] = $doxygen;
+                            continue 2;
                         }
                         if ($token[0] !== T_FUNCTION) {
-                          // For example, it can be T_FINAL.
-                          continue 2;
+                            // For example, it can be T_FINAL.
+                            continue 2;
                         }
                         // No break.
                     case T_FUNCTION:
@@ -178,7 +178,7 @@ class Psr0Parser extends TokenParser
                         $token = $this->next();
                         $this->parentClassName = $token[1];
                         if ($this->parentClassName[0] !== '\\') {
-                          $this->parentClassName = $this->ns . '\\' . $this->parentClass;
+                            $this->parentClassName = $this->ns . '\\' . $this->parentClass;
                         }
                         break;
                 }
