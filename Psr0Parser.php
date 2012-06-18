@@ -189,8 +189,8 @@ class Psr0Parser extends PhpParser {
 
     protected function getParentPsr0Parser() {
         if (empty($this->parentPsr0Parser)) {
-          $class = get_class($this);
-          $this->parentPsr0Parser = new $class($this->parentClassName);
+            $class = get_class($this);
+            $this->parentPsr0Parser = new $class($this->parentClassName);
         }
         return $this->parentPsr0Parser;
     }
