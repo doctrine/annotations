@@ -32,8 +32,8 @@ final class PhpParser extends TokenParser
     /**
      * Parses a class.
      *
-     * @param \ReflectionClass $class A <code>ReflectionClass</code> object.
-     * @return array A list with use statements in the form (Alias => FQN).
+     * @param  \ReflectionClass $class A <code>ReflectionClass</code> object.
+     * @return array            A list with use statements in the form (Alias => FQN).
      */
     public function parseClass(\ReflectionClass $class)
     {
@@ -60,8 +60,8 @@ final class PhpParser extends TokenParser
     /**
      * Get the content of the file right up to the given line number.
      *
-     * @param string $filename The name of the file to load.
-     * @param int $lineNumber The number of lines to read from file.
+     * @param  string $filename   The name of the file to load.
+     * @param  int    $lineNumber The number of lines to read from file.
      * @return string The content of the file.
      */
     private function getFileContent($filename, $lineNumber)
@@ -69,7 +69,7 @@ final class PhpParser extends TokenParser
         $content = '';
         $lineCnt = 0;
         $file = new SplFileObject($filename);
-        while(!$file->eof()) {
+        while (!$file->eof()) {
             if ($lineCnt++ == $lineNumber) {
                 break;
             }

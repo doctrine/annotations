@@ -3,24 +3,27 @@
 namespace Doctrine\Common\Annotations;
 
 use ReflectionMethod;
-use ReflectionException;
 
-
-class Psr0MethodReflection extends ReflectionMethod {
-    function __construct($psr0Parser, $methodName) {
+class Psr0MethodReflection extends ReflectionMethod
+{
+    public function __construct($psr0Parser, $methodName)
+    {
         $this->psr0Parser = $psr0Parser;
         $this->methodName = $methodName;
     }
 
-    function getName() {
+    public function getName()
+    {
         return $this->methodName;
     }
 
-    function getDeclaringClass() {
+    public function getDeclaringClass()
+    {
         return $this->psr0Parser->getDeclaringMethodClass($this->methodName);
     }
 
-    function getDocComment() {
+    public function getDocComment()
+    {
         return $this->psr0Parser->getMethodDoxygen($this->methodName);
     }
 }

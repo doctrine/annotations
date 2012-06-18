@@ -107,8 +107,8 @@ class Psr0Parser extends TokenParser
     /**
      * Parses a class residing in a PSR-0 hierarchy.
      *
-     * @param string $includePath Base include path for class files.
-     * @param string $class The full class name.
+     * @param string  $includePath             Base include path for class files.
+     * @param string  $class                   The full class name.
      * @param boolean $classAnnotationOptimize Only retrieve the class doxygen. Presumes there is only one statement per line.
      */
     public function __construct($includePath, $className, $classAnnotationOptimize = FALSE)
@@ -188,45 +188,57 @@ class Psr0Parser extends TokenParser
         $this->tokens = array();
     }
 
-    protected function getParentPsr0Parser() {
+    protected function getParentPsr0Parser()
+    {
         if (empty($this->parentPsr0Parser)) {
             $class = get_class($this);
             $this->parentPsr0Parser = new $class($this->parentClassName);
         }
+
         return $this->parentPsr0Parser;
     }
 
-    public function getClassReflection() {
+    public function getClassReflection()
+    {
         return new Psr0ClassReflection($this);
     }
 
-    public function getMethodReflection($methodName) {
+    public function getMethodReflection($methodName)
+    {
         return new Psr0MethodReflection($this, $methodName);
     }
 
-    public function getPropertyReflection($propertyName) {
+    public function getPropertyReflection($propertyName)
+    {
         return new Psr0PropertyReflection($this, $propertyName);
     }
 
-    public function getUseStatements() {
+    public function getUseStatements()
+    {
         $this->parse();
+
         return $this->useStatements;
     }
 
-    public function getClassDoxygen() {
+    public function getClassDoxygen()
+    {
         $this->parse();
+
         return $this->classDoxygen;
     }
 
-    public function getClassName() {
+    public function getClassName()
+    {
         return $this->className;
     }
 
-    public function getNamespaceName() {
+    public function getNamespaceName()
+    {
         return $this->ns;
     }
 
-    public function getDeclaringMethodClass($methodName) {
+    public function getDeclaringMethodClass($methodName)
+    {
         $this->parse();
         if (isset($this->methodDoxygen[$methodName])) {
             return $this->getClassReflection($this);
@@ -236,7 +248,8 @@ class Psr0Parser extends TokenParser
         }
     }
 
-    public function getMethodDoxygen($methodName) {
+    public function getMethodDoxygen($methodName)
+    {
         $this->parse();
         if (isset($this->methodDoxygen[$methodName])) {
             return $this->methodDoxygen[$methodName];
@@ -246,7 +259,8 @@ class Psr0Parser extends TokenParser
         }
     }
 
-    public function getDeclaringPropertyClass($propertyName) {
+    public function getDeclaringPropertyClass($propertyName)
+    {
         $this->parse();
         if (isset($this->propertyDoxygen[$propertyName])) {
             return $this->getClassReflection($this);
@@ -256,7 +270,8 @@ class Psr0Parser extends TokenParser
         }
     }
 
-    public function getPropertyDoxygen($propertyName) {
+    public function getPropertyDoxygen($propertyName)
+    {
         $this->parse();
         if (isset($this->propertyDoxygen[$propertyName])) {
             return $this->propertyDoxygen[$propertyName];
