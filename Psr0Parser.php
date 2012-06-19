@@ -35,11 +35,18 @@ class Psr0Parser extends TokenParser
     protected $className;
 
     /**
+     * The short name of the class (the part after the namespace).
+     *
+     * @var string
+     */
+    protected $classShortName = '';
+
+    /**
      * The filename of the class.
      *
      * @var string
      */
-    protected $fileName;
+    protected $fileName = '';
 
     /**
      * TRUE if the caller only wants class annotations.
@@ -53,14 +60,14 @@ class Psr0Parser extends TokenParser
      *
      * @var boolean
      */
-    protected $parsed;
+    protected $parsed = FALSE;
 
     /**
      * The namespace of the class
      *
      * @var string
      */
-    protected $ns;
+    protected $ns = '';
 
     /**
      * The use statements of this class.
@@ -107,22 +114,29 @@ class Psr0Parser extends TokenParser
     /**
      * Parses a class residing in a PSR-0 hierarchy.
      *
-     * @param string  $includePath             Base include path for class files.
-     * @param string  $class                   The full class name.
-     * @param boolean $classAnnotationOptimize Only retrieve the class doxygen. Presumes there is only one statement per line.
+     * @param string $includePaths
+     *     An array of base include paths. Each key is a PHP namespace and
+     *     each value is a list of directories.
+     * @param string $class
+     *     The full class name.
+     * @param boolean $classAnnotationOptimize
+     *     Only retrieve the class doxygen. Presumes there is only one
+     *     statement per line.
      */
-    public function __construct($includePath, $className, $classAnnotationOptimize = FALSE)
+    public function __construct($includePaths, $className, $classAnnotationOptimize = FALSE)
     {
         $this->className = ltrim($className, '\\');
-        $this->fileName  = $includePath . DIRECTORY_SEPARATOR . str_replace('\\', DIRECTORY_SEPARATOR, $className) . '.php';
-        $lastNsPos = strrpos($className, '\\');
-        $this->ns = substr($className, 0, $lastNsPos);
+        $this->includePaths  = $includePaths;
+        if ($lastNsPos = strrpos($className, '\\')) {
+            $this->classShortName = substr($className, $lastNsPos + 1);
+            $this->ns = substr($className, 0, $lastNsPos);
+        }
         $this->classAnnotationOptimize = $classAnnotationOptimize;
     }
 
     protected function parse()
     {
-        if ($this->parsed || !file_exists($this->fileName)) {
+        if ($this->parsed || !$this->fileName = $this->findClassFile($this->includePaths, $this->className, $this->classShortName, $this->ns)) {
             return;
         }
         $this->parsed = TRUE;
@@ -186,6 +200,29 @@ class Psr0Parser extends TokenParser
         }
         // Drop the tokens to save memory.
         $this->tokens = array();
+    }
+
+    protected function findClassFile($includePaths, $class, $className = NULL, $namespace = NULL)
+    {
+        if (!isset($namespace) && false !== $pos = strrpos($class, '\\')) {
+            $namespace = substr($class, 0, $pos);
+            $className = substr($class, $pos + 1);
+        }
+        if ($namespace) {
+            $normalizedClass = str_replace('\\', DIRECTORY_SEPARATOR, $namespace).DIRECTORY_SEPARATOR.str_replace('_', DIRECTORY_SEPARATOR, $className).'.php';
+            foreach ($includePaths as $ns => $dirs) {
+                if (0 !== strpos($namespace, $ns)) {
+                    continue;
+                }
+
+                foreach ($dirs as $dir) {
+                    $file = $dir.DIRECTORY_SEPARATOR.$normalizedClass;
+                    if (is_file($file)) {
+                        return $file;
+                    }
+                }
+            }
+        }
     }
 
     protected function getParentPsr0Parser()
