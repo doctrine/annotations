@@ -37,10 +37,6 @@ class Psr0PropertyReflection extends ReflectionProperty
     {
         return $this->getPsr0Parser()->getClassReflection();
     }
-    public function getNamespaceName()
-    {
-        return $this->getPsr0Parser()->getNamespaceName();
-    }
     public function getDocComment()
     {
         return $this->getPsr0Parser()->getDoxygen('property', $this->propertyName);
@@ -49,4 +45,15 @@ class Psr0PropertyReflection extends ReflectionProperty
     {
         return $this->getPsr0Parser()->getUseStatements();
     }
+    public static function export ($class, $name, $return = FALSE) { throw new ReflectionException('Method not implemented'); }
+    public function getModifiers() { throw new ReflectionException('Method not implemented'); }
+    public function getValue($object = NULL) { throw new ReflectionException('Method not implemented'); }
+    public function isDefault() { throw new ReflectionException('Method not implemented'); }
+    public function isPrivate() { throw new ReflectionException('Method not implemented'); }
+    public function isProtected() { throw new ReflectionException('Method not implemented'); }
+    public function isPublic() { throw new ReflectionException('Method not implemented'); }
+    public function isStatic() { throw new ReflectionException('Method not implemented'); }
+    public function setAccessible ($accessible) { throw new ReflectionException('Method not implemented'); }
+    public function setValue ($object, $value = NULL) { throw new ReflectionException('Method not implemented'); }
+    public function __toString() { throw new ReflectionException('Method not implemented'); }
 }
