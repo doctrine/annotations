@@ -258,21 +258,33 @@ class Psr0Parser extends TokenParser
         return $this->ns;
     }
 
+    /**
+     * Get the ReflectionClass equivalent for this file / class.
+     */
     public function getClassReflection()
     {
         return new Psr0ClassReflection($this);
     }
 
+    /**
+     * Get the ReflectionMethod equivalent for the method of this file / class.
+     */
     public function getMethodReflection($methodName)
     {
         return new Psr0MethodReflection($this, $methodName);
     }
 
+    /**
+     * Get the ReflectionProperty equivalent for the method of this file / class.
+     */
     public function getPropertyReflection($propertyName)
     {
         return new Psr0PropertyReflection($this, $propertyName);
     }
 
+    /**
+     * Get the use statements from this file.
+     */
     public function getUseStatements()
     {
         $this->parse();
@@ -280,6 +292,14 @@ class Psr0Parser extends TokenParser
         return $this->useStatements;
     }
 
+    /**
+     * Get doxygen.
+     *
+     * @param string $type class, property or method.
+     * @param string $name Name of the property or method, not needed for class.
+     *
+     * @return string the doxygen or empty string if none.
+     */
     public function getDoxygen($type = 'class', $name = '')
     {
         $this->parse();
@@ -287,14 +307,22 @@ class Psr0Parser extends TokenParser
         return $name ? $this->doxygen[$type][$name] : $this->doxygen[$type];
     }
 
-    public function getPsr0ParserFor($type, $name)
+    /**
+     * Get the PSR-0 parser for the declaring class.
+     *
+     * @param string $type property or method.
+     * @param string $name Name of the property or method.
+     *
+     * @return Psr0Parser A PSR-0 for the declaring class.
+     */
+    public function getPsr0ParserForDeclaringClass($type, $name)
     {
         $this->parse();
         if (isset($this->doxygen[$type][$name])) {
             return $this;
         }
         if (!empty($this->parentClassName)) {
-            return $this->getParentPsr0Parser()->getPsr0ParserFor($type, $name);
+            return $this->getParentPsr0Parser()->getPsr0ParserForDeclaringClass($type, $name);
         }
         throw new ReflectionException('Invalid ' . $type . ' "' . $name . '"');
     }

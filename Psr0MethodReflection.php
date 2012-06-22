@@ -32,7 +32,7 @@ class Psr0MethodReflection extends ReflectionMethod
     }
     protected function getPsr0Parser()
     {
-        return $this->psr0Parser->getPsr0ParserFor('method', $this->methodName);
+        return $this->psr0Parser->getPsr0ParserForDeclaringClass('method', $this->methodName);
     }
     public function getDeclaringClass()
     {

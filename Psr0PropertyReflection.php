@@ -31,7 +31,7 @@ class Psr0PropertyReflection extends ReflectionProperty
     }
     protected function getPsr0Parser()
     {
-        return $this->psr0Parser->getPsr0ParserFor('property', $this->propertyName);
+        return $this->psr0Parser->getPsr0ParserForDeclaringClass('property', $this->propertyName);
     }
     public function getDeclaringClass()
     {
