@@ -40,7 +40,7 @@ class Psr0ClassReflection extends ReflectionClass
         return $this->psr0Parser->getPropertyReflection($name);
     }
 
-    public static function export($argument, $return = FALSE) { throw new ReflectionException('Method not implemented'); }
+    public static function export($argument, $return = false) { throw new ReflectionException('Method not implemented'); }
     public function getConstant($name) { throw new ReflectionException('Method not implemented'); }
     public function getConstants() { throw new ReflectionException('Method not implemented'); }
     public function getConstructor() { throw new ReflectionException('Method not implemented'); }

@@ -45,7 +45,7 @@ class Psr0PropertyReflection extends ReflectionProperty
     {
         return $this->getPsr0Parser()->getUseStatements();
     }
-    public static function export ($class, $name, $return = FALSE) { throw new ReflectionException('Method not implemented'); }
+    public static function export ($class, $name, $return = false) { throw new ReflectionException('Method not implemented'); }
     public function getModifiers() { throw new ReflectionException('Method not implemented'); }
     public function getValue($object = NULL) { throw new ReflectionException('Method not implemented'); }
     public function isDefault() { throw new ReflectionException('Method not implemented'); }

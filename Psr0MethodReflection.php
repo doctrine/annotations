@@ -50,7 +50,7 @@ class Psr0MethodReflection extends ReflectionMethod
     {
         return $this->getPsr0Parser()->getUseStatements();
     }
-    public static function export($class, $name, $return = FALSE) { throw new ReflectionException('Method not implemented'); }
+    public static function export($class, $name, $return = false) { throw new ReflectionException('Method not implemented'); }
     public function getClosure($object) { throw new ReflectionException('Method not implemented'); }
     public function getModifiers() { throw new ReflectionException('Method not implemented'); }
     public function getPrototype() { throw new ReflectionException('Method not implemented'); }

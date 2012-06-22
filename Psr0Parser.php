@@ -69,7 +69,7 @@ class Psr0Parser extends TokenParser
      *
      * @var boolean
      */
-    protected $parsed = FALSE;
+    protected $parsed = false;
 
     /**
      * The namespace of the class
@@ -122,7 +122,7 @@ class Psr0Parser extends TokenParser
      *     Only retrieve the class doxygen. Presumes there is only one
      *     statement per line.
      */
-    public function __construct($className, $includePaths, $classAnnotationOptimize = FALSE)
+    public function __construct($className, $includePaths, $classAnnotationOptimize = false)
     {
         $this->className = ltrim($className, '\\');
         $this->includePaths  = $includePaths;
@@ -138,7 +138,7 @@ class Psr0Parser extends TokenParser
         if ($this->parsed || !$this->fileName = $this->findClassFile($this->includePaths, $this->ns, $this->classShortName)) {
             return;
         }
-        $this->parsed = TRUE;
+        $this->parsed = true;
         $contents = file_get_contents($this->fileName);
         if ($this->classAnnotationOptimize) {
             if (preg_match("/(\A.*)^\s+(abstract|final)?\s+class\s+$className\s+{/sm", $contents, $matches)) {
@@ -151,7 +151,7 @@ class Psr0Parser extends TokenParser
         $annotations = array();
         $statements = array();
         $doxygen = '';
-        while ($token = $this->next(FALSE)) {
+        while ($token = $this->next(false)) {
             if (is_array($token)) {
                 switch ($token[0]) {
                     case T_USE:
@@ -194,9 +194,9 @@ class Psr0Parser extends TokenParser
                             $this->parentClassName .= $token[1];
                         }
                         $nsPos = strpos($this->parentClassName, '\\');
-                        $fullySpecified = FALSE;
+                        $fullySpecified = false;
                         if ($nsPos === 0) {
-                            $fullySpecified = TRUE;
+                            $fullySpecified = true;
                         } else {
                             if ($nsPos) {
                                 $prefix = strtolower(substr($this->parentClassName, 0, $nsPos));
@@ -208,7 +208,7 @@ class Psr0Parser extends TokenParser
                             foreach ($this->useStatements as $alias => $use) {
                                 if ($alias == $prefix) {
                                     $this->parentClassName = '\\' . $use . $postfix;
-                                    $fullySpecified = TRUE;
+                                    $fullySpecified = true;
                               }
                             }
                         }
