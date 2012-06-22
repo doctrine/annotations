@@ -28,10 +28,6 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
             'Doctrine\\Tests' => array($testsRoot),
         );
         $psr0Parser = new Psr0Parser($className, $paths);
-        $reflections = array(
-            new ReflectionClass($className),
-            $psr0Parser->getClassReflection(),
-        );
         return array(
             'native' => array(new ReflectionClass($className)),
             'parser' => array($psr0Parser->getClassReflection()),
