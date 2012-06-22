@@ -11,19 +11,28 @@ class Psr0MethodReflection extends ReflectionMethod
         $this->psr0Parser = $psr0Parser;
         $this->methodName = $methodName;
     }
-
     public function getName()
     {
         return $this->methodName;
     }
-
+    protected function getPsr0Parser()
+    {
+        return $this->psr0Parser->getPsr0ParserFor('method', $this->methodName);
+    }
     public function getDeclaringClass()
     {
-        return $this->psr0Parser->getDeclaringMethodClass($this->methodName);
+        return $this->getPsr0Parser()->getClassReflection();
     }
-
+    public function getNamespaceName()
+    {
+        return $this->getPsr0Parser()->getNamespaceName();
+    }
     public function getDocComment()
     {
-        return $this->psr0Parser->getMethodDoxygen($this->methodName);
+        return $this->getPsr0Parser()->getDoxygen('method', $this->methodName);
+    }
+    public function getUseStatements()
+    {
+        return $this->getPsr0Parser()->getUseStatements();
     }
 }

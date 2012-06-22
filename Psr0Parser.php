@@ -19,6 +19,8 @@
 
 namespace Doctrine\Common\Annotations;
 
+use ReflectionException;
+
 /**
  * Parses a file for namespaces/use/class declarations.
  *
@@ -47,6 +49,13 @@ class Psr0Parser extends TokenParser
      * @var string
      */
     protected $fileName = '';
+
+    /**
+     * The include paths.
+     *
+     * @var string
+     */
+    protected $includePaths;
 
     /**
      * TRUE if the caller only wants class annotations.
@@ -81,21 +90,11 @@ class Psr0Parser extends TokenParser
      *
      * @var string
      */
-    protected $classDoxygen = '';
-
-    /**
-     * The doxygen of the methods.
-     *
-     * @var array
-     */
-    protected $methodDoxygen = array();
-
-    /**
-     * The doxygen of properties.
-     *
-     * @var array
-     */
-    protected $propertyDoxygen = array();
+    protected $doxygen = array(
+        'class' => '',
+        'property' => array(),
+        'method' => array(),
+    );
 
     /**
      * The name of the class this class extends, if any.
@@ -114,29 +113,29 @@ class Psr0Parser extends TokenParser
     /**
      * Parses a class residing in a PSR-0 hierarchy.
      *
+     * @param string $class
+     *     The full, namespaced class name.
      * @param string $includePaths
      *     An array of base include paths. Each key is a PHP namespace and
      *     each value is a list of directories.
-     * @param string $class
-     *     The full class name.
      * @param boolean $classAnnotationOptimize
      *     Only retrieve the class doxygen. Presumes there is only one
      *     statement per line.
      */
-    public function __construct($includePaths, $className, $classAnnotationOptimize = FALSE)
+    public function __construct($className, $includePaths, $classAnnotationOptimize = FALSE)
     {
         $this->className = ltrim($className, '\\');
         $this->includePaths  = $includePaths;
-        if ($lastNsPos = strrpos($className, '\\')) {
-            $this->classShortName = substr($className, $lastNsPos + 1);
-            $this->ns = substr($className, 0, $lastNsPos);
+        if ($lastNsPos = strrpos($this->className, '\\')) {
+            $this->classShortName = substr($this->className, $lastNsPos + 1);
+            $this->ns = substr($this->className, 0, $lastNsPos);
         }
         $this->classAnnotationOptimize = $classAnnotationOptimize;
     }
 
     protected function parse()
     {
-        if ($this->parsed || !$this->fileName = $this->findClassFile($this->includePaths, $this->className, $this->classShortName, $this->ns)) {
+        if ($this->parsed || !$this->fileName = $this->findClassFile($this->includePaths, $this->ns, $this->classShortName)) {
             return;
         }
         $this->parsed = TRUE;
@@ -151,6 +150,7 @@ class Psr0Parser extends TokenParser
         $this->pointer = 0;
         $annotations = array();
         $statements = array();
+        $doxygen = '';
         while ($token = $this->next(FALSE)) {
             if (is_array($token)) {
                 switch ($token[0]) {
@@ -161,7 +161,7 @@ class Psr0Parser extends TokenParser
                         $doxygen = $token[1];
                         break;
                     case T_CLASS:
-                        $this->classDoxygen = $doxygen;
+                        $this->doxygen['class'] = $doxygen;
                         $doxygen = '';
                         break;
                     case T_VAR:
@@ -171,7 +171,7 @@ class Psr0Parser extends TokenParser
                         $token = $this->next();
                         if ($token[0] === T_VARIABLE) {
                             $propertyName = substr($token[1], 1);
-                            $this->propertyDoxygen[$propertyName] = $doxygen;
+                            $this->doxygen['property'][$propertyName] = $doxygen;
                             continue 2;
                         }
                         if ($token[0] !== T_FUNCTION) {
@@ -185,14 +185,35 @@ class Psr0Parser extends TokenParser
                         // string.
                         while (($token = $this->next()) && $token[0] !== T_STRING);
                         $methodName = $token[1];
-                        $this->methodDoxygen[$methodName] = $doxygen;
+                        $this->doxygen['method'][$methodName] = $doxygen;
                         $doxygen = '';
                         break;
                     case T_EXTENDS:
-                        $token = $this->next();
-                        $this->parentClassName = $token[1];
-                        if ($this->parentClassName[0] !== '\\') {
-                            $this->parentClassName = $this->ns . '\\' . $this->parentClass;
+                        $this->parentClassName = '';
+                        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR)) {
+                            $this->parentClassName .= $token[1];
+                        }
+                        $nsPos = strpos($this->parentClassName, '\\');
+                        $fullySpecified = FALSE;
+                        if ($nsPos === 0) {
+                            $fullySpecified = TRUE;
+                        } else {
+                            if ($nsPos) {
+                                $prefix = strtolower(substr($this->parentClassName, 0, $nsPos));
+                                $postfix = substr($this->parentClassName, $nsPos);
+                            } else {
+                                $prefix = strtolower($this->parentClassName);
+                                $postfix = '';
+                            }
+                            foreach ($this->useStatements as $alias => $use) {
+                                if ($alias == $prefix) {
+                                    $this->parentClassName = '\\' . $use . $postfix;
+                                    $fullySpecified = TRUE;
+                              }
+                            }
+                        }
+                        if (!$fullySpecified) {
+                            $this->parentClassName = '\\' . $this->ns . '\\' . $this->parentClassName;
                         }
                         break;
                 }
@@ -202,19 +223,11 @@ class Psr0Parser extends TokenParser
         $this->tokens = array();
     }
 
-    protected function findClassFile($includePaths, $class, $className = NULL, $namespace = NULL)
+    protected function findClassFile($includePaths, $namespace, $classShortName)
     {
-        if (!isset($namespace) && false !== $pos = strrpos($class, '\\')) {
-            $namespace = substr($class, 0, $pos);
-            $className = substr($class, $pos + 1);
-        }
-        if ($namespace) {
-            $normalizedClass = str_replace('\\', DIRECTORY_SEPARATOR, $namespace).DIRECTORY_SEPARATOR.str_replace('_', DIRECTORY_SEPARATOR, $className).'.php';
-            foreach ($includePaths as $ns => $dirs) {
-                if (0 !== strpos($namespace, $ns)) {
-                    continue;
-                }
-
+        $normalizedClass = str_replace('\\', DIRECTORY_SEPARATOR, $namespace).DIRECTORY_SEPARATOR.$classShortName.'.php';
+        foreach ($includePaths as $ns => $dirs) {
+            if (strpos($namespace, $ns) === 0) {
                 foreach ($dirs as $dir) {
                     $file = $dir.DIRECTORY_SEPARATOR.$normalizedClass;
                     if (is_file($file)) {
@@ -229,10 +242,20 @@ class Psr0Parser extends TokenParser
     {
         if (empty($this->parentPsr0Parser)) {
             $class = get_class($this);
-            $this->parentPsr0Parser = new $class($this->parentClassName);
+            $this->parentPsr0Parser = new $class($this->parentClassName, $this->includePaths);
         }
 
         return $this->parentPsr0Parser;
+    }
+
+    public function getClassName()
+    {
+        return $this->className;
+    }
+
+    public function getNamespaceName()
+    {
+        return $this->ns;
     }
 
     public function getClassReflection()
@@ -257,64 +280,22 @@ class Psr0Parser extends TokenParser
         return $this->useStatements;
     }
 
-    public function getClassDoxygen()
+    public function getDoxygen($type = 'class', $name = '')
     {
         $this->parse();
 
-        return $this->classDoxygen;
+        return $name ? $this->doxygen[$type][$name] : $this->doxygen[$type];
     }
 
-    public function getClassName()
-    {
-        return $this->className;
-    }
-
-    public function getNamespaceName()
-    {
-        return $this->ns;
-    }
-
-    public function getDeclaringMethodClass($methodName)
+    public function getPsr0ParserFor($type, $name)
     {
         $this->parse();
-        if (isset($this->methodDoxygen[$methodName])) {
-            return $this->getClassReflection($this);
+        if (isset($this->doxygen[$type][$name])) {
+            return $this;
         }
         if (!empty($this->parentClassName)) {
-            return $this->getParentPsr0Parser()->getDeclaringMethodClass($methodName);
+            return $this->getParentPsr0Parser()->getPsr0ParserFor($type, $name);
         }
-    }
-
-    public function getMethodDoxygen($methodName)
-    {
-        $this->parse();
-        if (isset($this->methodDoxygen[$methodName])) {
-            return $this->methodDoxygen[$methodName];
-        }
-        if (!empty($this->parentClassName)) {
-            return $this->getParentPsr0Parser()->getMethodDoxygen($methodName);
-        }
-    }
-
-    public function getDeclaringPropertyClass($propertyName)
-    {
-        $this->parse();
-        if (isset($this->propertyDoxygen[$propertyName])) {
-            return $this->getClassReflection($this);
-        }
-        if (!empty($this->parentClassName)) {
-            return $this->getParentPsr0Parser()->getDeclaringPropertyClass($propertyName);
-        }
-    }
-
-    public function getPropertyDoxygen($propertyName)
-    {
-        $this->parse();
-        if (isset($this->propertyDoxygen[$propertyName])) {
-            return $this->propertyDoxygen[$propertyName];
-        }
-        if (!empty($this->parentClassName)) {
-            return $this->getParentPsr0Parser()->getPropertyDoxygen($propertyName);
-        }
+        throw new ReflectionException('Invalid ' . $type . ' "' . $name . '"');
     }
 }

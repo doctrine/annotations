@@ -19,7 +19,7 @@ class Psr0ClassReflection extends ReflectionClass
 
     public function getDocComment()
     {
-        return $this->psr0Parser->getClassDoxygen();
+        return $this->psr0Parser->getDoxygen();
     }
 
     public function getNamespaceName()
