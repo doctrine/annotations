@@ -3,6 +3,7 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\DoctrineReader;
+use Doctrine\Common\Annotations\Psr0Parser;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
@@ -23,45 +24,57 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     {
         $reader = $this->getReader();
 
-        $class = new ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClass');
-        $this->assertEquals(1, count($reader->getClassAnnotations($class)));
-        $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyAnnotation', $annot = $reader->getClassAnnotation($class, $annotName));
-        $this->assertEquals("hello", $annot->dummyValue);
+        $className = 'Doctrine\Tests\Common\Annotations\DummyClass';
+        $testsRoot = substr(__DIR__, 0, -strlen(__NAMESPACE__) - 1);
+        $paths = array(
+            'Doctrine\\Tests' => array($testsRoot),
+            'Doctrine\\Common' => array(preg_replace('|tests/$|', 'lib', $testsRoot)),
+        );
+        $psr0Parser = new Psr0Parser($className, $paths);
+        $reflections = array(
+            new ReflectionClass($className),
+            $psr0Parser->getClassReflection(),
+        );
+        foreach ($reflections as $class) {
+            $this->assertEquals(1, count($reader->getClassAnnotations($class)));
+            $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyAnnotation', $annot = $reader->getClassAnnotation($class, $annotName));
+            $this->assertEquals("hello", $annot->dummyValue);
 
-        $field1Prop = $class->getProperty('field1');
-        $propAnnots = $reader->getPropertyAnnotations($field1Prop);
-        $this->assertEquals(1, count($propAnnots));
-        $this->assertInstanceOf($annotName, $annot = $reader->getPropertyAnnotation($field1Prop, $annotName));
-        $this->assertEquals("fieldHello", $annot->dummyValue);
+            $field1Prop = $class->getProperty('field1');
+            $propAnnots = $reader->getPropertyAnnotations($field1Prop);
+            $this->assertEquals(1, count($propAnnots));
+            $this->assertInstanceOf($annotName, $annot = $reader->getPropertyAnnotation($field1Prop, $annotName));
+            $this->assertEquals("fieldHello", $annot->dummyValue);
 
-        $getField1Method = $class->getMethod('getField1');
-        $methodAnnots = $reader->getMethodAnnotations($getField1Method);
-        $this->assertEquals(1, count($methodAnnots));
-        $this->assertInstanceOf($annotName, $annot = $reader->getMethodAnnotation($getField1Method, $annotName));
-        $this->assertEquals(array(1, 2, "three"), $annot->value);
+            $getField1Method = $class->getMethod('getField1');
+            $methodAnnots = $reader->getMethodAnnotations($getField1Method);
+            $this->assertEquals(1, count($methodAnnots));
+            $this->assertInstanceOf($annotName, $annot = $reader->getMethodAnnotation($getField1Method, $annotName));
+            $this->assertEquals(array(1, 2, "three"), $annot->value);
 
-        $field2Prop = $class->getProperty('field2');
-        $propAnnots = $reader->getPropertyAnnotations($field2Prop);
-        $this->assertEquals(1, count($propAnnots));
-        $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyJoinTable', $joinTableAnnot = $reader->getPropertyAnnotation($field2Prop, $annotName));
-        $this->assertEquals(1, count($joinTableAnnot->joinColumns));
-        $this->assertEquals(1, count($joinTableAnnot->inverseJoinColumns));
-        $this->assertTrue($joinTableAnnot->joinColumns[0] instanceof DummyJoinColumn);
-        $this->assertTrue($joinTableAnnot->inverseJoinColumns[0] instanceof DummyJoinColumn);
-        $this->assertEquals('col1', $joinTableAnnot->joinColumns[0]->name);
-        $this->assertEquals('col2', $joinTableAnnot->joinColumns[0]->referencedColumnName);
-        $this->assertEquals('col3', $joinTableAnnot->inverseJoinColumns[0]->name);
-        $this->assertEquals('col4', $joinTableAnnot->inverseJoinColumns[0]->referencedColumnName);
+            $field2Prop = $class->getProperty('field2');
+            $propAnnots = $reader->getPropertyAnnotations($field2Prop);
+            $this->assertEquals(1, count($propAnnots));
+            $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyJoinTable', $joinTableAnnot = $reader->getPropertyAnnotation($field2Prop, $annotName));
+            $this->assertEquals(1, count($joinTableAnnot->joinColumns));
+            $this->assertEquals(1, count($joinTableAnnot->inverseJoinColumns));
+            $this->assertTrue($joinTableAnnot->joinColumns[0] instanceof DummyJoinColumn);
+            $this->assertTrue($joinTableAnnot->inverseJoinColumns[0] instanceof DummyJoinColumn);
+            $this->assertEquals('col1', $joinTableAnnot->joinColumns[0]->name);
+            $this->assertEquals('col2', $joinTableAnnot->joinColumns[0]->referencedColumnName);
+            $this->assertEquals('col3', $joinTableAnnot->inverseJoinColumns[0]->name);
+            $this->assertEquals('col4', $joinTableAnnot->inverseJoinColumns[0]->referencedColumnName);
 
-        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
-        $this->assertEquals('', $dummyAnnot->dummyValue);
-        $this->assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
+            $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
+            $this->assertEquals('', $dummyAnnot->dummyValue);
+            $this->assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
 
-        $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
-        $this->assertEquals('fieldHello', $dummyAnnot->dummyValue);
+            $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
+            $this->assertEquals('fieldHello', $dummyAnnot->dummyValue);
 
-        $classAnnot = $reader->getClassAnnotation($class, 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
-        $this->assertEquals('hello', $classAnnot->dummyValue);
+            $classAnnot = $reader->getClassAnnotation($class, 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
+            $this->assertEquals('hello', $classAnnot->dummyValue);
+        }
     }
 
     public function testAnnotationsWithValidTargets()
@@ -396,44 +409,6 @@ class TestImportWithConcreteAnnotation
      * @DummyAnnotation(dummyValue = "bar")
      */
     private $field;
-}
-
-/**
- * A description of this class.
- *
- * Let's see if the parser recognizes that this @ is not really referring to an
- * annotation. Also make sure that @var \ is not concated to "@var\is".
- *
- * @author robo
- * @since 2.0
- * @DummyAnnotation(dummyValue="hello")
- */
-class DummyClass {
-    /**
-     * A nice property.
-     *
-     * @var mixed
-     * @DummyAnnotation(dummyValue="fieldHello")
-     */
-    private $field1;
-
-    /**
-     * @DummyJoinTable(name="join_table",
-     *      joinColumns={@DummyJoinColumn(name="col1", referencedColumnName="col2")},
-     *      inverseJoinColumns={
-     *          @DummyJoinColumn(name="col3", referencedColumnName="col4")
-     *      })
-     */
-    private $field2;
-
-    /**
-     * Gets the value of field1.
-     *
-     * @return mixed
-     * @DummyAnnotation({1,2,"three"})
-     */
-    public function getField1() {
-    }
 }
 
 /**
