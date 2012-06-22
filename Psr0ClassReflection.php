@@ -32,6 +32,14 @@ class Psr0ClassReflection extends ReflectionClass
         return $this->psr0Parser->getUseStatements();
     }
 
+    public function getMethod($name) {
+        return $this->psr0Parser->getMethodReflection($name);
+    }
+
+    public function getProperty($name) {
+        return $this->psr0Parser->getPropertyReflection($name);
+    }
+
     public static function export($argument, $return = FALSE) { throw new ReflectionException('Method not implemented'); }
     public function getConstant($name) { throw new ReflectionException('Method not implemented'); }
     public function getConstants() { throw new ReflectionException('Method not implemented'); }
@@ -43,12 +51,10 @@ class Psr0ClassReflection extends ReflectionClass
     public function getFileName() { throw new ReflectionException('Method not implemented'); }
     public function getInterfaceNames() { throw new ReflectionException('Method not implemented'); }
     public function getInterfaces() { throw new ReflectionException('Method not implemented'); }
-    public function getMethod($name) { throw new ReflectionException('Method not implemented'); }
     public function getMethods($filter = NULL) { throw new ReflectionException('Method not implemented'); }
     public function getModifiers() { throw new ReflectionException('Method not implemented'); }
     public function getParentClass() { throw new ReflectionException('Method not implemented'); }
     public function getProperties($filter = NULL) { throw new ReflectionException('Method not implemented'); }
-    public function getProperty($name) { throw new ReflectionException('Method not implemented'); }
     public function getShortName() { throw new ReflectionException('Method not implemented'); }
     public function getStartLine() { throw new ReflectionException('Method not implemented'); }
     public function getStaticProperties() { throw new ReflectionException('Method not implemented'); }
