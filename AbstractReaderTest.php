@@ -28,7 +28,6 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $testsRoot = substr(__DIR__, 0, -strlen(__NAMESPACE__) - 1);
         $paths = array(
             'Doctrine\\Tests' => array($testsRoot),
-            'Doctrine\\Common' => array(preg_replace('|tests/$|', 'lib', $testsRoot)),
         );
         $psr0Parser = new Psr0Parser($className, $paths);
         $reflections = array(
