@@ -6,6 +6,20 @@ use ReflectionMethod;
 
 class Psr0MethodReflection extends ReflectionMethod
 {
+    /**
+     * The PSR-0 parser object.
+     *
+     * @var Psr0Parser
+     */
+    protected $psr0Parser;
+
+    /**
+     * The name of the method.
+     *
+     * @var string
+     */
+    protected $methodName;
+
     public function __construct($psr0Parser, $methodName)
     {
         $this->psr0Parser = $psr0Parser;

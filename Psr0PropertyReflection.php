@@ -6,6 +6,20 @@ use ReflectionProperty;
 
 class Psr0PropertyReflection extends ReflectionProperty
 {
+    /**
+     * The PSR-0 parser object.
+     *
+     * @var Psr0Parser
+     */
+    protected $psr0Parser;
+
+    /**
+     * The name of the property.
+     *
+     * @var string
+     */
+    protected $propertyName;
+
     public function __construct($psr0Parser, $propertyName)
     {
         $this->psr0Parser = $psr0Parser;
