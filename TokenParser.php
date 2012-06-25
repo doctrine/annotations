@@ -48,18 +48,28 @@ class TokenParser
      */
     protected $pointer = 0;
 
+    public function __construct($contents) {
+        $this->tokens = token_get_all($contents);
+        $this->numTokens = count($this->tokens);
+        $this->pointer = 0;
+    }
+
     /**
      * Gets the next non whitespace and non comment token.
      *
+     * @param $skipDoxygen
+     *     If TRUE then doxygen is considered a comment and skipped.
+     *     If FALSE then only whitespace and normal comment is skipped.
+     *
      * @return array The token if exists, null otherwise.
      */
-    protected function next($skipDoxygen = TRUE)
+    public function next($doxygenIsComment = TRUE)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
             if ($this->tokens[$i][0] === T_WHITESPACE ||
                 $this->tokens[$i][0] === T_COMMENT ||
-                ($skipDoxygen && $this->tokens[$i][0] === T_DOC_COMMENT)) {
+                ($doxygenIsComment && $this->tokens[$i][0] === T_DOC_COMMENT)) {
 
                 continue;
             }
@@ -75,7 +85,7 @@ class TokenParser
      *
      * @return array A list with all found class names for a use statement.
      */
-    protected function parseUseStatement()
+    public function parseUseStatement()
     {
         $class = '';
         $alias = '';
@@ -113,7 +123,7 @@ class TokenParser
      * @param string $namespaceName The namespace name of the reflected class.
      * @return array A list with all found use statements.
      */
-    protected function parseUseStatements($namespaceName)
+    public function parseUseStatements($namespaceName)
     {
         $statements = array();
         while (($token = $this->next())) {
@@ -134,22 +144,29 @@ class TokenParser
     }
 
     /**
-     * Get the namespace name.
+     * Get the namespace.
      *
-     * @return string The found namespace name.
+     * @return string The found namespace.
      */
-    protected function parseNamespace()
+    public function parseNamespace()
     {
-        $namespace = '';
-        while (($token = $this->next())){
-            if ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR) {
-                $namespace .= $token[1];
-            } else {
-                break;
-            }
+        $name = '';
+        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR)) {
+            $name .= $token[1];
         }
 
-        return $namespace;
+        return $name;
     }
 
+    /**
+     * Get the class name.
+     *
+     * @return string The foundclass name.
+     */
+    public function parseClass() {
+        // Namespaces and class names are tokenized the same: T_STRINGs
+        // separated by T_NS_SEPARATOR so we can use one function to provide
+        // both.
+        return $this->parseNamespace();
+    }
 }

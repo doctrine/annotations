@@ -27,7 +27,7 @@ use SplFileObject;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Christian Kaps <christian.kaps@mohiva.com>
  */
-final class PhpParser extends TokenParser
+final class PhpParser
 {
     /**
      * Parses a class.
@@ -48,11 +48,9 @@ final class PhpParser extends TokenParser
         $content = $this->getFileContent($filename, $class->getStartLine());
         $namespace = str_replace('\\', '\\\\', $class->getNamespaceName());
         $content = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
-        $this->tokens = token_get_all('<?php ' . $content);
-        $this->numTokens = count($this->tokens);
-        $this->pointer = 0;
+        $tokenizer = new TokenParser('<?php ' . $content);
 
-        $statements = $this->parseUseStatements($class->getNamespaceName());
+        $statements = $tokenizer->parseUseStatements($class->getNamespaceName());
 
         return $statements;
     }
