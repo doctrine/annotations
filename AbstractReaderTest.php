@@ -3,7 +3,7 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\DoctrineReader;
-use Doctrine\Common\Annotations\Psr0Parser;
+use Doctrine\Common\Reflection\StaticReflectionParser;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
@@ -27,10 +27,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $paths = array(
             'Doctrine\\Tests' => array($testsRoot),
         );
-        $psr0Parser = new Psr0Parser($className, $paths);
+        $staticReflectionParser = new StaticReflectionParser($className, $paths);
         return array(
             'native' => array(new ReflectionClass($className)),
-            'parser' => array($psr0Parser->getClassReflection()),
+            'parser' => array($staticReflectionParser->getReflectionClass()),
         );
     }
 
