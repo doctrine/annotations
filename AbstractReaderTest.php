@@ -30,7 +30,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $staticReflectionParser = new StaticReflectionParser($className, $paths);
         return array(
             'native' => array(new ReflectionClass($className)),
-            'parser' => array($staticReflectionParser->getReflectionClass()),
+            'static' => array($staticReflectionParser->getReflectionClass()),
         );
     }
 
