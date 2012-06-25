@@ -32,23 +32,24 @@ class TokenParser
      *
      * @var array
      */
-    protected $tokens;
+    private $tokens;
 
     /**
      * The number of tokens.
      *
      * @var int
      */
-    protected $numTokens = 0;
+    private $numTokens = 0;
 
     /**
      * The current array pointer.
      *
      * @var int
      */
-    protected $pointer = 0;
+    private $pointer = 0;
 
-    public function __construct($contents) {
+    public function __construct($contents)
+    {
         $this->tokens = token_get_all($contents);
         $this->numTokens = count($this->tokens);
         $this->pointer = 0;
@@ -57,19 +58,19 @@ class TokenParser
     /**
      * Gets the next non whitespace and non comment token.
      *
-     * @param $skipDoxygen
-     *     If TRUE then doxygen is considered a comment and skipped.
-     *     If FALSE then only whitespace and normal comment is skipped.
+     * @param $docCommentIsComment
+     *     If TRUE then a doc comment is considered a comment and skipped.
+     *     If FALSE then only whitespace and normal comments are skipped.
      *
      * @return array The token if exists, null otherwise.
      */
-    public function next($doxygenIsComment = TRUE)
+    public function next($docCommentIsComment = TRUE)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
             if ($this->tokens[$i][0] === T_WHITESPACE ||
                 $this->tokens[$i][0] === T_COMMENT ||
-                ($doxygenIsComment && $this->tokens[$i][0] === T_DOC_COMMENT)) {
+                ($docCommentIsComment && $this->tokens[$i][0] === T_DOC_COMMENT)) {
 
                 continue;
             }
@@ -130,7 +131,8 @@ class TokenParser
             if ($token[0] === T_USE) {
                 $statements = array_merge($statements, $this->parseUseStatement());
                 continue;
-            } else if ($token[0] !== T_NAMESPACE || $this->parseNamespace() != $namespaceName) {
+            }
+            if ($token[0] !== T_NAMESPACE || $this->parseNamespace() != $namespaceName) {
                 continue;
             }
 
@@ -163,7 +165,8 @@ class TokenParser
      *
      * @return string The foundclass name.
      */
-    public function parseClass() {
+    public function parseClass()
+    {
         // Namespaces and class names are tokenized the same: T_STRINGs
         // separated by T_NS_SEPARATOR so we can use one function to provide
         // both.
