@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\DoctrineReader;
 use Doctrine\Common\Reflection\StaticReflectionParser;
+use Doctrine\Common\Reflection\Psr0FindFile;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
@@ -27,7 +28,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $paths = array(
             'Doctrine\\Tests' => array($testsRoot),
         );
-        $staticReflectionParser = new StaticReflectionParser($className, $paths);
+        $staticReflectionParser = new StaticReflectionParser($className, new Psr0FindFile($paths));
         return array(
             'native' => array(new ReflectionClass($className)),
             'static' => array($staticReflectionParser->getReflectionClass()),
