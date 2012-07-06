@@ -343,6 +343,13 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(0, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
+    public function testIssue159()
+    {
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Issue159\ParseMe');
+        $reader->getClassAnnotations($class);
+    }
+
     abstract protected function getReader();
 }
 
@@ -515,3 +522,23 @@ class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
 }
+
+
+namespace Doctrine\Tests\Common\Annotations\Issue159;
+
+use Doctrine\Tests\Common\Annotations\Issue159\Other\ArrayObject;
+
+/**
+ * @ArrayObject
+ */
+class ParseMe {
+}
+
+namespace Doctrine\Tests\Common\Annotations\Issue159\Other;
+
+/**
+ * @Annotation
+ */ 
+class ArrayObject {
+}
+
