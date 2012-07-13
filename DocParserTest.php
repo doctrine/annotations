@@ -665,6 +665,23 @@ DOCBLOCK;
 
     }
 
+    /**
+     * @TODO - change to data provider
+     *
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnum declared on property SomeClassName::invalidProperty. accept only [ONE, TWO, THREE], but got FOUR.
+     */
+    public function testAnnotationWithInvalidEnumValue()
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::invalidProperty.';
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnum("FOUR")';
+
+        $parser->setIgnoreNotImportedAnnotations(false);
+        $parser->setTarget(Target::TARGET_PROPERTY);
+        $parser->parse($docblock, $context);
+    }
+    
     public function getConstantsProvider()
     {
         $provider[] = array(
