@@ -21,6 +21,7 @@ namespace Doctrine\Common\Annotations;
 
 use Closure;
 use ReflectionClass;
+use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
@@ -184,6 +185,22 @@ final class DocParser
                     'required'  =>true,
                     'array_type'=>'Doctrine\Common\Annotations\Annotation\Attribute',
                     'value'     =>'array<Doctrine\Common\Annotations\Annotation\Attribute>'
+                )
+             ),
+        ),
+        'Doctrine\Common\Annotations\Annotation\Enum' => array(
+            'is_annotation'    => true,
+            'has_constructor'  => false,
+            'targets_literal'  => 'ANNOTATION_PROPERTY',
+            'targets'          => Target::TARGET_PROPERTY,
+            'default_property' => 'value',
+            'properties'       => array(
+                'value' => 'value'
+            ),
+            'attribute_types'  => array(
+                'value' => array(
+                    'type'      => 'array',
+                    'required'  => true,
                 )
              ),
         ),
@@ -393,14 +410,15 @@ final class DocParser
     {
         if (self::$metadataParser == null){
             self::$metadataParser = new self();
-            self::$metadataParser->setTarget(Target::TARGET_CLASS);
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
             self::$metadataParser->setIgnoredAnnotationNames($this->ignoredAnnotationNames);
             self::$metadataParser->setImports(array(
+                'enum'          => 'Doctrine\Common\Annotations\Annotation\Enum',
                 'target'        => 'Doctrine\Common\Annotations\Annotation\Target',
                 'attribute'     => 'Doctrine\Common\Annotations\Annotation\Attribute',
                 'attributes'    => 'Doctrine\Common\Annotations\Annotation\Attributes'
             ));
+            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Enum.php');
             AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Target.php');
             AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Attribute.php');
             AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Attributes.php');
@@ -423,6 +441,9 @@ final class DocParser
 
         // verify that the class is really meant to be an annotation
         if ($metadata['is_annotation']) {
+
+            self::$metadataParser->setTarget(Target::TARGET_CLASS);
+
             foreach (self::$metadataParser->parse($docComment, 'class @' . $name) as $annotation) {
                 if ($annotation instanceof Target) {
                     $metadata['targets']         = $annotation->targets;
@@ -460,10 +481,13 @@ final class DocParser
                 // collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
+                    
+                    if(false === ($propertyComment = $property->getDocComment())) {
+                        continue;
+                    }
 
                     // checks if the property has @var annotation
-                    if ((false !== $propertyComment = $property->getDocComment())
-                        && false !== strpos($propertyComment, '@var')
+                    if (false !== strpos($propertyComment, '@var')
                         && preg_match('/@var\s+([^\s]+)/',$propertyComment, $matches)) {
                         // literal type declaration
                         $value = $matches[1];
@@ -488,6 +512,19 @@ final class DocParser
                             $metadata['attribute_types'][$property->name]['type']       = $type;
                             $metadata['attribute_types'][$property->name]['value']      = $value;
                             $metadata['attribute_types'][$property->name]['required']   = false !== strpos($propertyComment, '@Required');
+                        }
+                    }
+
+                    // checks if the property has @Enum
+                    if (false !== strpos($propertyComment, '@Enum')){
+
+                        $context = 'property ' . $class->name . "::\$" . $property->name;
+                        self::$metadataParser->setTarget(Target::TARGET_PROPERTY);
+
+                        foreach (self::$metadataParser->parse($propertyComment, $context) as $annotation) {
+                            if($annotation instanceof Enum) {
+                                $metadata['enum'][$property->name] = $annotation->value;
+                            }
                         }
                     }
                 }
@@ -642,6 +679,17 @@ final class DocParser
             $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
 
+        if (isset(self::$annotationMetadata[$name]['enum'])) {
+            foreach (self::$annotationMetadata[$name]['enum'] as $property => $enum) {
+                if(isset($values[$property]) && ! in_array($values[$property], $enum)) {
+                    throw new AnnotationException(sprintf(
+                        '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
+                        $property, $name, $this->context, implode(', ', $enum), $values[$property]
+                    ));
+                }
+            }
+        }
+
         // checks all declared attributes
         foreach (self::$annotationMetadata[$name]['attribute_types'] as $property => $type) {
             if ($property === self::$annotationMetadata[$name]['default_property']
@@ -660,7 +708,7 @@ final class DocParser
 
             if ($type['type'] === 'array') {
                 // handle the case of a single value
-                if (!is_array($values[$property])) {
+                if ( ! is_array($values[$property])) {
                     $values[$property] = array($values[$property]);
                 }
 
