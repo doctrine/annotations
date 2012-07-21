@@ -666,12 +666,10 @@ DOCBLOCK;
     }
 
     /**
-     * @TODO - change to data provider
-     *
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnum declared on property SomeClassName::invalidProperty. accept only [ONE, TWO, THREE], but got FOUR.
      */
-    public function testAnnotationWithInvalidEnumValue()
+    public function testAnnotationEnumeratorException()
     {
         $parser     = $this->createTestParser();
         $context    = 'property SomeClassName::invalidProperty.';
@@ -680,6 +678,47 @@ DOCBLOCK;
         $parser->setIgnoreNotImportedAnnotations(false);
         $parser->setTarget(Target::TARGET_PROPERTY);
         $parser->parse($docblock, $context);
+    }
+
+    /**
+     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumLiteral declared on property SomeClassName::invalidProperty. accept only [AnnotationEnumLiteral::ONE, AnnotationEnumLiteral::TWO, AnnotationEnumLiteral::THREE], but got 4.
+     */
+    public function testAnnotationEnumeratorLiteralException()
+    {
+        $parser     = $this->createTestParser();
+        $context    = 'property SomeClassName::invalidProperty.';
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumLiteral(4)';
+
+        $parser->setIgnoreNotImportedAnnotations(false);
+        $parser->setTarget(Target::TARGET_PROPERTY);
+        $parser->parse($docblock, $context);
+    }
+   
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage @Enum supports only scalar values "array" given.
+     */
+    public function testAnnotationEnumInvalidTypeDeclarationException()
+    {
+        $parser     = $this->createTestParser();
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumInvalid("foo")';
+
+        $parser->setIgnoreNotImportedAnnotations(false);
+        $parser->parse($docblock);
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Undefined enumerator value "3" for literal "AnnotationEnumLiteral::THREE".
+     */
+    public function testAnnotationEnumInvalidLiteralDeclarationException()
+    {
+        $parser     = $this->createTestParser();
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumLiteralInvalid("foo")';
+
+        $parser->setIgnoreNotImportedAnnotations(false);
+        $parser->parse($docblock);
     }
     
     public function getConstantsProvider()
