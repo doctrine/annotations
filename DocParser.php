@@ -190,7 +190,7 @@ final class DocParser
         ),
         'Doctrine\Common\Annotations\Annotation\Enum' => array(
             'is_annotation'    => true,
-            'has_constructor'  => false,
+            'has_constructor'  => true,
             'targets_literal'  => 'ANNOTATION_PROPERTY',
             'targets'          => Target::TARGET_PROPERTY,
             'default_property' => 'value',
@@ -201,7 +201,11 @@ final class DocParser
                 'value' => array(
                     'type'      => 'array',
                     'required'  => true,
-                )
+                ),
+                'literal' => array(
+                    'type'      => 'array',
+                    'required'  => false,
+                ),
              ),
         ),
     );
@@ -523,7 +527,8 @@ final class DocParser
 
                         foreach (self::$metadataParser->parse($propertyComment, $context) as $annotation) {
                             if($annotation instanceof Enum) {
-                                $metadata['enum'][$property->name] = $annotation->value;
+                                $metadata['enum'][$property->name]['value']   = $annotation->value;
+                                $metadata['enum'][$property->name]['literal'] = ! empty($annotation->literal) ? $annotation->literal : $annotation->value;
                             }
                         }
                     }
@@ -680,12 +685,11 @@ final class DocParser
         }
 
         if (isset(self::$annotationMetadata[$name]['enum'])) {
+            // checks all declared attributes
             foreach (self::$annotationMetadata[$name]['enum'] as $property => $enum) {
-                if(isset($values[$property]) && ! in_array($values[$property], $enum)) {
-                    throw new AnnotationException(sprintf(
-                        '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
-                        $property, $name, $this->context, implode(', ', $enum), $values[$property]
-                    ));
+                // checks if the attribute is a valid enumerator
+                if (isset($values[$property]) && ! in_array($values[$property], $enum['value'])) {
+                    throw AnnotationException::enumeratorError($property, $name, $this->context, $enum['literal'], $values[$property]);
                 }
             }
         }

@@ -124,4 +124,27 @@ class AnnotationException extends \Exception
             $expected
         ));
     }
+
+    /**
+     * Creates a new AnnotationException describing a invalid enummerator.
+     *
+     * @since 2.4
+     * @param string $attributeName
+     * @param string $annotationName
+     * @param string $context
+     * @param array  $available
+     * @param mixed  $given
+     * @return AnnotationException
+     */
+    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given)
+    {
+        throw new self(sprintf(
+            '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
+            $attributeName, 
+            $annotationName,
+            $context,
+            implode(', ', $available),
+            is_object($given) ? get_class($given) : $given
+        ));
+    }
 }
