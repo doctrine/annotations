@@ -30,7 +30,7 @@ namespace Doctrine\Common\Annotations\Annotation;
  * @Annotation
  * @Attributes({
  *    @Attribute("value",   required = true,  type = "array"),
- *    @Attribute("literal", required = false, type = "array"),
+ *    @Attribute("literal", required = false, type = "array")
  * })
  */
 final class Enum
