@@ -28,6 +28,7 @@ namespace Doctrine\Common\Annotations\Annotation;
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  *
  * @Annotation
+ * @Attributes({
  *    @Attribute("value",   required = true,  type = "array"),
  *    @Attribute("literal", required = false, type = "array"),
  * })
