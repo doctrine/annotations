@@ -48,6 +48,8 @@ class FileCacheReader implements Reader
      */
     private $loadedAnnotations = array();
 
+    private $classNameHashes = array();
+
     /**
      * Constructor
      *
@@ -79,7 +81,11 @@ class FileCacheReader implements Reader
      */
     public function getClassAnnotations(\ReflectionClass $class)
     {
-        $key = $class->getName();
+        if (!isset($this->classNameHashes[$class->name])) {
+            $key = $this->classNameHashes[$class->name] = sha1($class->name);
+        } else {
+            $key = $this->classNameHashes[$class->name];
+        }
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];
@@ -114,7 +120,12 @@ class FileCacheReader implements Reader
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
         $class = $property->getDeclaringClass();
-        $key = $class->getName().'$'.$property->getName();
+        if (!isset($this->classNameHashes[$class->name])) {
+            $classHash = $this->classNameHashes[$class->name] = sha1($class->name);
+        } else {
+            $classHash = $this->classNameHashes[$class->name];
+        }
+        $key = $classHash.'$'.$property->getName();
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];
@@ -149,7 +160,12 @@ class FileCacheReader implements Reader
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
-        $key = $class->getName().'#'.$method->getName();
+        if (!isset($this->classNameHashes[$class->name])) {
+            $classHash = $this->classNameHashes[$class->name] = sha1($class->name);
+        } else {
+            $classHash = $this->classNameHashes[$class->name];
+        }
+        $key = $classHash.'#'.$method->getName();
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];
