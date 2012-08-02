@@ -81,11 +81,10 @@ class FileCacheReader implements Reader
      */
     public function getClassAnnotations(\ReflectionClass $class)
     {
-        if (!isset($this->classNameHashes[$class->name])) {
-            $key = $this->classNameHashes[$class->name] = sha1($class->name);
-        } else {
-            $key = $this->classNameHashes[$class->name];
+        if ( ! isset($this->classNameHashes[$class->name])) {
+            $this->classNameHashes[$class->name] = sha1($class->name);
         }
+        $key = $this->classNameHashes[$class->name];
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];
@@ -120,12 +119,10 @@ class FileCacheReader implements Reader
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
         $class = $property->getDeclaringClass();
-        if (!isset($this->classNameHashes[$class->name])) {
-            $classHash = $this->classNameHashes[$class->name] = sha1($class->name);
-        } else {
-            $classHash = $this->classNameHashes[$class->name];
+        if ( ! isset($this->classNameHashes[$class->name])) {
+            $this->classNameHashes[$class->name] = sha1($class->name);
         }
-        $key = $classHash.'$'.$property->getName();
+        $key = $this->classNameHashes[$class->name].'$'.$property->getName();
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];
@@ -160,12 +157,10 @@ class FileCacheReader implements Reader
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
-        if (!isset($this->classNameHashes[$class->name])) {
-            $classHash = $this->classNameHashes[$class->name] = sha1($class->name);
-        } else {
-            $classHash = $this->classNameHashes[$class->name];
+        if ( ! isset($this->classNameHashes[$class->name])) {
+            $this->classNameHashes[$class->name] = sha1($class->name);
         }
-        $key = $classHash.'#'.$method->getName();
+        $key = $this->classNameHashes[$class->name].'#'.$method->getName();
 
         if (isset($this->loadedAnnotations[$key])) {
             return $this->loadedAnnotations[$key];
