@@ -114,6 +114,14 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass'));
     }
 
+    public function testClassWithWithAlias()
+    {
+        $reader  = $this->getReader();
+        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAlias'));
+
+		$this->assertEquals(1, count($annots));
+    }
+
      /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on property Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo. You may only use this annotation on these code elements: CLASS
