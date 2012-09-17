@@ -395,6 +395,7 @@ final class DocParser
             self::$metadataParser = new self();
             self::$metadataParser->setTarget(Target::TARGET_CLASS);
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
+            self::$metadataParser->setIgnoredAnnotationNames($this->ignoredAnnotationNames);
             self::$metadataParser->setImports(array(
                 'target'        => 'Doctrine\Common\Annotations\Annotation\Target',
                 'attribute'     => 'Doctrine\Common\Annotations\Annotation\Attribute',
