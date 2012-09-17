@@ -116,8 +116,8 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testClassWithWithInclude()
     {
-        $reader  = $this->getReader();
-        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInclude'));
+        $reader = $this->getReader();
+        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithRequire'));
         $this->assertCount(1, $annots);
     }
 
@@ -450,7 +450,7 @@ class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
  * @api
  * @Annotation
  */
-class DummyAnnotationWithImportedClass extends \Doctrine\Common\Annotations\Annotation {
+class DummyAnnotationWithIgnoredAnnotation extends \Doctrine\Common\Annotations\Annotation {
     public $dummyValue;
 }
 
