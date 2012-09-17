@@ -8,12 +8,8 @@ use Doctrine\Tests\Common\Annotations\DummyAnnotation;
  * @api
  * @DummyAnnotation(dummyValue="hello")
  */
-class ClassWithAlias
+class ClassWithInclude
 {
 }
 
-class ApiTestAlias
-{	
-}
-
-class_alias('ApiTestAlias', 'API');
+include(__DIR__ . '/ApiClass.php');

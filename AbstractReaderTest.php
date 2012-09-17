@@ -114,10 +114,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass'));
     }
 
-    public function testClassWithWithAlias()
+    public function testClassWithWithInclude()
     {
         $reader  = $this->getReader();
-        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAlias'));
+        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInclude'));
 
 		$this->assertEquals(1, count($annots));
     }
