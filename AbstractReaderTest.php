@@ -118,8 +118,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     {
         $reader  = $this->getReader();
         $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInclude'));
-
-		$this->assertCount(1, $annots);
+        $this->assertCount(1, $annots);
     }
 
      /**
