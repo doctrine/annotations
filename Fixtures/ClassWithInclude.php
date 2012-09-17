@@ -2,11 +2,10 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\DummyAnnotation;
+use Doctrine\Tests\Common\Annotations\DummyAnnotationWithImportedClass;
 
 /**
- * @api
- * @DummyAnnotation(dummyValue="hello")
+ * @DummyAnnotationWithImportedClass(dummyValue="hello")
  */
 class ClassWithInclude
 {

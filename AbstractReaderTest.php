@@ -446,6 +446,15 @@ class DummyGeneratedValue extends \Doctrine\Common\Annotations\Annotation {}
 class DummyAnnotation extends \Doctrine\Common\Annotations\Annotation {
     public $dummyValue;
 }
+
+/**
+ * @api
+ * @Annotation
+ */
+class DummyAnnotationWithImportedClass extends \Doctrine\Common\Annotations\Annotation {
+    public $dummyValue;
+}
+
 /** @Annotation */
 class DummyJoinColumn extends \Doctrine\Common\Annotations\Annotation {
     public $name;
