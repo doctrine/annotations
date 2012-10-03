@@ -46,6 +46,7 @@ final class PhpParser
         }
 
         $content = $this->getFileContent($filename, $class->getStartLine());
+        
         if (null === $content) {
             return array();
         }
@@ -68,7 +69,7 @@ final class PhpParser
      */
     private function getFileContent($filename, $lineNumber)
     {
-        if (!file_exists($filename)) {
+        if ( ! file_exists($filename)) {
             return null;
         }
 
