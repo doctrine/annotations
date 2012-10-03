@@ -39,6 +39,19 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array(), $parser->parseClass(new \ReflectionClass('\stdClass')));
     }
 
+    public function testClassFileDoesNotExist()
+    {
+        $class = $this->getMockBuilder('\ReflectionClass')
+                ->disableOriginalConstructor()
+                          ->getMock();
+        $class->expects($this->once())
+             ->method('getFilename')
+             ->will($this->returnValue('/valid/class/Fake.php(35) : eval()d code'));
+
+        $parser = new PhpParser();
+        $this->assertEquals(array(), $parser->parseClass($class));
+    }
+
     public function testParseClassWhenClassIsNotNamespaced()
     {
         $parser = new PhpParser();
