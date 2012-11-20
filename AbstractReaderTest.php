@@ -377,6 +377,16 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @group DCOM-106
+     */
+    public function testIgnoreFixMeAndUpperCaseToDo()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DCOM106');
+        $reader->getClassAnnotations($ref);
+    }
+    
+    /**
      * @return AnnotationReader
      */
     abstract protected function getReader();
@@ -545,6 +555,16 @@ class DummyClassWithEmail
 
 }
 
+
+/**
+ * @fixme public
+ * @TODO
+ */
+class DCOM106
+{
+    
+}
+
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
 /** @Annotation */
@@ -560,4 +580,3 @@ class Name extends \Doctrine\Common\Annotations\Annotation
 {
     public $name;
 }
-
