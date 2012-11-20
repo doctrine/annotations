@@ -60,7 +60,7 @@ class AnnotationReader implements Reader
         'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
         'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
         'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true,
-        'inheritDoc'=> true, 'license'=> true, 'todo'=> true,
+        'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'TODO'=> true,
         'deprec'=> true, 'property' => true, 'method' => true,
         'abstract'=> true, 'exception'=> true, 'magic' => true, 'api' => true,
         'final'=> true, 'filesource'=> true, 'throw' => true, 'uses' => true,
@@ -69,7 +69,7 @@ class AnnotationReader implements Reader
         'Required' => true, 'Attribute' => true, 'Attributes' => true,
         'Target' => true, 'SuppressWarnings' => true,
         'ingroup' => true, 'code' => true, 'endcode' => true,
-        'package_version' => true,
+        'package_version' => true, 'fixme' => true
     );
 
     /**
