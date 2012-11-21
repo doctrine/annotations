@@ -51,7 +51,7 @@ final class PhpParser
             return array();
         }
 
-        $namespace = str_replace('\\', '\\\\', $class->getNamespaceName());
+        $namespace = preg_quote($class->getNamespaceName());
         $content = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
         $tokenizer = new TokenParser('<?php ' . $content);
 
