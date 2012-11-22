@@ -138,7 +138,7 @@ class FileCacheReader implements Reader
         if ($this->debug
             && (false !== $filename = $class->getFilename())
             && filemtime($path) < filemtime($filename)) {
-            unlink($path);
+            @unlink($path);
 
             $annot = $this->reader->getPropertyAnnotations($property);
             $this->saveCacheFile($path, $annot);
@@ -176,7 +176,7 @@ class FileCacheReader implements Reader
         if ($this->debug
             && (false !== $filename = $class->getFilename())
             && filemtime($path) < filemtime($filename)) {
-            unlink($path);
+            @unlink($path);
 
             $annot = $this->reader->getMethodAnnotations($method);
             $this->saveCacheFile($path, $annot);
