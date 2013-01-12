@@ -3,8 +3,6 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\DoctrineReader;
-use Doctrine\Common\Reflection\StaticReflectionParser;
-use Doctrine\Common\Reflection\Psr0FindFile;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
@@ -24,23 +22,14 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     public function getReflectionClass()
     {
         $className = 'Doctrine\Tests\Common\Annotations\DummyClass';
-        $testsRoot = substr(__DIR__, 0, -strlen(__NAMESPACE__) - 1);
-        $paths = array(
-            'Doctrine\\Tests' => array($testsRoot),
-        );
-        $staticReflectionParser = new StaticReflectionParser($className, new Psr0FindFile($paths));
-        return array(
-            'native' => array(new ReflectionClass($className)),
-            'static' => array($staticReflectionParser->getReflectionClass()),
-        );
+        return new ReflectionClass($className);
     }
 
-    /**
-     * @dataProvider getReflectionClass
-     */
-    public function testAnnotations($class)
+    public function testAnnotations()
     {
+        $class = $this->getReflectionClass();
         $reader = $this->getReader();
+
         $this->assertEquals(1, count($reader->getClassAnnotations($class)));
         $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyAnnotation', $annot = $reader->getClassAnnotation($class, $annotName));
         $this->assertEquals("hello", $annot->dummyValue);
