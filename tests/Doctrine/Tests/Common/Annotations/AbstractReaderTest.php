@@ -374,6 +374,16 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DCOM106');
         $reader->getClassAnnotations($ref);
     }
+
+    /**
+     * @group DCOM-164
+     */
+    public function testTypeAnnotation()
+    {
+        $reader = $this->getReader();
+        $class = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassWithTypeAnnotation');
+        $this->assertCount(0, $reader->getPropertyAnnotations($class->getProperty('foo')));
+    }
     
     /**
      * @return AnnotationReader
@@ -552,6 +562,14 @@ class DummyClassWithEmail
 class DCOM106
 {
     
+}
+
+class DummyClassWithTypeAnnotation
+{
+    /**
+     * @type string
+     */
+    public $foo;
 }
 
 namespace Doctrine\Tests\Common\Annotations\Foo;
