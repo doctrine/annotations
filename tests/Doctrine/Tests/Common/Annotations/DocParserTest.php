@@ -1198,6 +1198,23 @@ DOCBLOCK;
         $parser = $this->createTestParser();
         $parser->parse('@Name(foo: "bar")');
     }
+    
+    public function testKeyHasNumber()
+    {
+        $parser = $this->createTestParser(); 
+        $parser->parse('@SettingsAnnotaion(foo="test", bar2="test")');   
+    }
+}
+
+/** @Annotation */
+class SettingsAnnotaion
+{
+    public $settings;    
+    
+    public function __construct($settings)
+    {
+        $this->settings = $settings;
+    }
 }
 
 /** @Annotation */
