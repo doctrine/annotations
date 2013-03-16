@@ -124,6 +124,14 @@ class AnnotationReader implements Reader
      */
     public function __construct()
     {
+        if (extension_loaded('Zend Optimizer+') && ini_get('zend_optimizerplus.save_comments') == 0) {
+            throw AnnotationException::optimizerPlusSaveComments();
+        }
+
+        if (extension_loaded('opcache') && ini_get('opcache.save_comments') == 0) {
+            throw AnnotationException::optimizerPlusSaveComments();
+        }
+
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
 
         $this->parser = new DocParser;

@@ -147,4 +147,12 @@ class AnnotationException extends \Exception
             is_object($given) ? get_class($given) : $given
         ));
     }
+
+    /**
+     * @return AnnotationException
+     */
+    public static function optimizerPlusSaveComments()
+    {
+        throw new self("You have to enable opcache.save_comments=1 or zend_optimizerplus.save_comments=1.");
+    }
 }
