@@ -982,6 +982,10 @@ final class DocParser
         $array = $values = array();
 
         $this->match(DocLexer::T_OPEN_CURLY_BRACES);
+        if ($this->lexer->isNextToken(DocLexer::T_CLOSE_CURLY_BRACES)) {
+            $this->match(DocLexer::T_CLOSE_CURLY_BRACES);
+            return $array;
+        }
         $values[] = $this->ArrayEntry();
 
         while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
