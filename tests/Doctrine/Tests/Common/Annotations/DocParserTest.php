@@ -1198,6 +1198,18 @@ DOCBLOCK;
         $parser = $this->createTestParser();
         $parser->parse('@Name(foo: "bar")');
     }
+
+    /**
+     * Tests parsing empty arrays.
+     */
+    public function testEmptyArray()
+    {
+        $parser = $this->createTestParser();
+
+        $annots = $parser->parse('@Name({"foo": {}})');
+        $this->assertEquals(1, count($annots));
+        $this->assertEquals(array('foo' => array()), $annots[0]->value);
+    }
 }
 
 /** @Annotation */
