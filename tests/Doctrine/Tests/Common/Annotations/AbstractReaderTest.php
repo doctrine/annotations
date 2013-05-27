@@ -305,6 +305,46 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * When getUseStatements isn't available on ReflectionClass the PhpParser has to use token_get_all(). If that
+     * happens various PHP compiler globals get set, and these can have seriously bad effects on the next file to be
+     * parsed.
+     * Notably the doc_comment compiler global can end up containing a docblock comment. The next file to be parsed
+     * on an include() will have this docblock comment attached to the first thing in the file that the compiler
+     * considers to own comments. If this is a class then any later calls to getDocComment() for that class will have
+     * undesirable effects. *sigh*
+     */
+    public function testResetsPhpParserAfterUse()
+    {
+        $reader = $this->getReader();
+
+        // First make sure the annotation cache knows about the annotations we want to use.
+        // If we don't do this then loading of annotations into the cache will cause the parser to get out of the bad
+        // state we want to test.
+        $class  = new ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithValidAnnotationTarget');
+        $reader->getClassAnnotations($class);
+
+        // Now import an incredibly dull class which makes use of the same class level annotation that the previous class does.
+        $class  = new ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithClassAnnotationOnly');
+        $annotations = $reader->getClassAnnotations($class);
+
+        // This include needs to be here since we need the PHP compiler to run over it as the next thing the PHP
+        // parser sees since PhpParser called token_get_all() on the intro to ClassWithClassAnnotationOnly.
+        // Our test class cannot be in a namespace (some versions of PHP reset the doc_comment compiler global when
+        // you hit a namespace declaration), so cannot be autoloaded.
+        require(__DIR__ . '/Fixtures/ClassNoNamespaceNoComment.php');
+
+        // So, hopefully, if all has gone OK, our class with class annotations should actually have them.
+        // If this fails then something is quite badly wrong elsewhere.
+        // Note that if this happens before the require it can cause other PHP files to be included, resetting the
+        // compiler global state, and invalidating this test case.
+        $this->assertNotEmpty($annotations);
+
+        $annotations = $reader->getClassAnnotations(new \ReflectionClass(new \Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment()));
+        // And if our workaround for this bug is OK, our class with no doc comment should not have any class annotations.
+        $this->assertEmpty($annotations);
+    }
+
+    /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The class "Doctrine\Tests\Common\Annotations\Fixtures\NoAnnotation" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\Tests\Common\Annotations\Fixtures\NoAnnotation". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageClass.
      */
