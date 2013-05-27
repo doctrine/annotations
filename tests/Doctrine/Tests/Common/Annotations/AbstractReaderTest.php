@@ -315,6 +315,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testResetsPhpParserAfterUse()
     {
+        // If someone has already included our main test fixture this test is invalid. It's important that our require
+        // causes this file to be parsed and compiled at a certain point.
+        $this->assertFalse(class_exists('Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment'), 'Test invalid if class has already been compiled');
+
         $reader = $this->getReader();
 
         // First make sure the annotation cache knows about the annotations we want to use.
@@ -331,7 +335,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         // parser sees since PhpParser called token_get_all() on the intro to ClassWithClassAnnotationOnly.
         // Our test class cannot be in a namespace (some versions of PHP reset the doc_comment compiler global when
         // you hit a namespace declaration), so cannot be autoloaded.
-        require(__DIR__ . '/Fixtures/ClassNoNamespaceNoComment.php');
+        require_once __DIR__ . '/Fixtures/ClassNoNamespaceNoComment.php';
 
         // So, hopefully, if all has gone OK, our class with class annotations should actually have them.
         // If this fails then something is quite badly wrong elsewhere.
