@@ -304,6 +304,8 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Name', $annotation);
     }
 
+    private static $testResetsPhpParserAfterUseRun = false;
+
     /**
      * When getUseStatements isn't available on ReflectionClass the PhpParser has to use token_get_all(). If that
      * happens various PHP compiler globals get set, and these can have seriously bad effects on the next file to be
@@ -317,7 +319,8 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     {
         // If someone has already included our main test fixture this test is invalid. It's important that our require
         // causes this file to be parsed and compiled at a certain point.
-        $this->assertFalse(class_exists('Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment'), 'Test invalid if class has already been compiled');
+        $this->assertFalse(!self::$testResetsPhpParserAfterUseRun && class_exists('Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment'), 'Test invalid if class has already been compiled');
+        self::$testResetsPhpParserAfterUseRun = true;
 
         $reader = $this->getReader();
 
