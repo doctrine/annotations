@@ -25,6 +25,7 @@ namespace Doctrine\Common\Annotations;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @author Gabor Toth <tgabi333@gmail.com>
  */
 class FileCacheReader implements Reader
 {
@@ -86,28 +87,25 @@ class FileCacheReader implements Reader
         }
         $key = $this->classNameHashes[$class->name];
 
-        if (isset($this->loadedAnnotations[$key])) {
-            return $this->loadedAnnotations[$key];
+        if (isset($this->loadedAnnotations[$key]['class'])) {
+            return $this->loadedAnnotations[$key]['class'];
         }
 
-        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
-        if (!is_file($path)) {
-            $annot = $this->reader->getClassAnnotations($class);
-            $this->saveCacheFile($path, $annot);
-            return $this->loadedAnnotations[$key] = $annot;
+        if ($this->isCached($class)) {
+            $this->loadedAnnotations[$key] = $this->loadCache($class);
+        } else {
+            $this->loadedAnnotations[$key] = $this->buildCache($class);
         }
 
-        if ($this->debug
-            && (false !== $filename = $class->getFilename())
-            && filemtime($path) < filemtime($filename)) {
-            @unlink($path);
-
-            $annot = $this->reader->getClassAnnotations($class);
-            $this->saveCacheFile($path, $annot);
-            return $this->loadedAnnotations[$key] = $annot;
+        if ($this->debug) {
+            $this->refreshCache($class);
         }
 
-        return $this->loadedAnnotations[$key] = include $path;
+        if (isset($this->loadedAnnotations[$key]['class'])) {
+            return $this->loadedAnnotations[$key]['class'];
+        }
+
+        return $this->reader->getClassAnnotations($class);
     }
 
     /**
@@ -122,30 +120,27 @@ class FileCacheReader implements Reader
         if ( ! isset($this->classNameHashes[$class->name])) {
             $this->classNameHashes[$class->name] = sha1($class->name);
         }
-        $key = $this->classNameHashes[$class->name].'$'.$property->getName();
+        $key = $this->classNameHashes[$class->name];
 
-        if (isset($this->loadedAnnotations[$key])) {
-            return $this->loadedAnnotations[$key];
+        if (isset($this->loadedAnnotations[$key]['property'][$property->getName()])) {
+            return $this->loadedAnnotations[$key]['property'][$property->getName()];
         }
 
-        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
-        if (!is_file($path)) {
-            $annot = $this->reader->getPropertyAnnotations($property);
-            $this->saveCacheFile($path, $annot);
-            return $this->loadedAnnotations[$key] = $annot;
+        if ($this->isCached($class)) {
+            $this->loadedAnnotations[$key] = $this->loadCache($class);
+        } else {
+            $this->loadedAnnotations[$key] = $this->buildCache($class);
         }
 
-        if ($this->debug
-            && (false !== $filename = $class->getFilename())
-            && filemtime($path) < filemtime($filename)) {
-            @unlink($path);
-
-            $annot = $this->reader->getPropertyAnnotations($property);
-            $this->saveCacheFile($path, $annot);
-            return $this->loadedAnnotations[$key] = $annot;
+        if ($this->debug) {
+            $this->refreshCache($class);
         }
 
-        return $this->loadedAnnotations[$key] = include $path;
+        if (isset($this->loadedAnnotations[$key]['property'][$property->getName()])) {
+            return $this->loadedAnnotations[$key]['property'][$property->getName()];
+        }
+
+        return $this->reader->getPropertyAnnotations($property);
     }
 
     /**
@@ -160,41 +155,27 @@ class FileCacheReader implements Reader
         if ( ! isset($this->classNameHashes[$class->name])) {
             $this->classNameHashes[$class->name] = sha1($class->name);
         }
-        $key = $this->classNameHashes[$class->name].'#'.$method->getName();
+        $key = $this->classNameHashes[$class->name];
 
-        if (isset($this->loadedAnnotations[$key])) {
-            return $this->loadedAnnotations[$key];
+        if (isset($this->loadedAnnotations[$key]['method'][$method->getName()])) {
+            return $this->loadedAnnotations[$key]['method'][$method->getName()];
         }
 
-        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
-        if (!is_file($path)) {
-            $annot = $this->reader->getMethodAnnotations($method);
-            $this->saveCacheFile($path, $annot);
-            return $this->loadedAnnotations[$key] = $annot;
+        if ($this->isCached($class)) {
+            $this->loadedAnnotations[$key] = $this->loadCache($class);
+        } else {
+            $this->loadedAnnotations[$key] = $this->buildCache($class);
         }
 
-        if ($this->debug
-            && (false !== $filename = $class->getFilename())
-            && filemtime($path) < filemtime($filename)) {
-            @unlink($path);
-
-            $annot = $this->reader->getMethodAnnotations($method);
-            $this->saveCacheFile($path, $annot);
-            return $this->loadedAnnotations[$key] = $annot;
+        if ($this->debug) {
+            $this->refreshCache($class);
         }
 
-        return $this->loadedAnnotations[$key] = include $path;
-    }
+        if (isset($this->loadedAnnotations[$key]['method'][$method->getName()])) {
+            return $this->loadedAnnotations[$key]['method'][$method->getName()];
+        }
 
-    /**
-     * Save cache file
-     *
-     * @param string $path
-     * @param mixed $data
-     */
-    private function saveCacheFile($path, $data)
-    {
-        file_put_contents($path, '<?php return unserialize('.var_export(serialize($data), true).');');
+        return $this->reader->getMethodAnnotations($method);
     }
 
     /**
@@ -265,5 +246,94 @@ class FileCacheReader implements Reader
     public function clearLoadedAnnotations()
     {
         $this->loadedAnnotations = array();
+    }
+
+    /**
+     * Builds cache file for a class
+     *
+     * @param \ReflectionClass $class
+     *
+     * @return array
+     */
+    private function buildCache(\ReflectionClass $class)
+    {
+        $path = $this->getCachePath($class);
+
+        $data = array();
+        try {
+            $data['class'] = $this->reader->getClassAnnotations($class);
+        } catch (AnnotationException $e) {
+        }
+
+        foreach ($class->getMethods() as $method) {
+            try {
+                $data['method'][$method->getName()] = $this->reader->getMethodAnnotations($method);
+            } catch (AnnotationException $e) {
+            }
+        }
+
+        foreach ($class->getProperties() as $property) {
+            try {
+                $data['property'][$property->getName()] = $this->reader->getPropertyAnnotations($property);
+            } catch (AnnotationException $e) {
+            }
+        }
+
+        file_put_contents($path, '<?php return unserialize('.var_export(serialize($data), true).');');
+
+        return $data;
+    }
+
+    /**
+     * Loads cached info for a class
+     *
+     * @param \ReflectionClass $class
+     *
+     * @return array
+     */
+    private function loadCache(\ReflectionClass $class)
+    {
+        return include $this->getCachePath($class);
+    }
+
+    /**
+     * Returns whether a cache file exists.
+     *
+     * @param \ReflectionClass $class
+     *
+     * @return bool
+     */
+    private function isCached(\ReflectionClass $class)
+    {
+        return file_exists($this->getCachePath($class));
+    }
+
+    /**
+     * Refresh cache file if needed.
+     *
+     * @param \ReflectionClass $class
+     */
+    private function refreshCache(\ReflectionClass $class)
+    {
+        $filename = $class->getFilename();
+        if (!empty($filename)) {
+            $path = $this->getCachePath($class);
+
+            if (filemtime($path) < filemtime($filename)) {
+                @unlink($path);
+                $key = $class->getName();
+                $this->loadedAnnotations[$key] = $this->buildCache($class);
+            }
+        }
+    }
+
+    /**
+     * Gets the path of cache file for a class
+     *
+     * @param \ReflectionClass $class
+     */
+    private function getCachePath(\ReflectionClass $class)
+    {
+        return $this->dir.'/'.strtr($class->getName(), '\\', '_').'.cache.php';
     }
 }
