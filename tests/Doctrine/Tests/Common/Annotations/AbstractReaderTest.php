@@ -160,6 +160,13 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithTargetSyntaxError','foo'));
     }
 
+    public function testClassWithWithDanglingComma()
+    {
+        $reader = $this->getReader();
+        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassWithDanglingComma'));
+        $this->assertCount(1, $annots);
+    }
+
     /**
      * @expectedException Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
@@ -374,7 +381,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DCOM106');
         $reader->getClassAnnotations($ref);
     }
-    
+
     /**
      * @return AnnotationReader
      */
@@ -495,6 +502,14 @@ class DummyJoinTable extends \Doctrine\Common\Annotations\Annotation {
 }
 
 /**
+ * @DummyAnnotation(dummyValue = "bar",)
+ */
+class DummyClassWithDanglingComma
+{
+
+}
+
+/**
  * @DummyAnnotation(@)
  */
 class DummyClassSyntaxError
@@ -551,7 +566,7 @@ class DummyClassWithEmail
  */
 class DCOM106
 {
-    
+
 }
 
 namespace Doctrine\Tests\Common\Annotations\Foo;

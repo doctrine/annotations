@@ -755,7 +755,7 @@ final class DocParser
     }
 
     /**
-     * Values ::= Array | Value {"," Value}*
+     * Values ::= Array | Value {"," Value}* ,?
      *
      * @return array
      */
@@ -773,6 +773,9 @@ final class DocParser
 
         while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
             $this->match(DocLexer::T_COMMA);
+            if ($this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
+                break;
+            }
             $token = $this->lexer->lookahead;
             $value = $this->Value();
 
