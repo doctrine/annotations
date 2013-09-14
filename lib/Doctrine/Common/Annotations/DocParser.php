@@ -755,7 +755,7 @@ final class DocParser
     }
 
     /**
-     * Values ::= Array | Value {"," Value}* ,?
+     * Values ::= Array | Value {"," Value}* [","]
      *
      * @return array
      */
