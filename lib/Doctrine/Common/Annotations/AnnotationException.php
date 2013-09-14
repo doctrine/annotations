@@ -19,6 +19,8 @@
 
 namespace Doctrine\Common\Annotations;
 
+use Doctrine\Common\Lexer\AbstractLexer;
+
 /**
  * Description of AnnotationException
  *
@@ -30,6 +32,13 @@ namespace Doctrine\Common\Annotations;
  */
 class AnnotationException extends \Exception
 {
+
+    public function __construct($message = null, $code = 0, Exception $previous = null)
+    {
+        $message .= "\nAnnotation read so far:\n\n" . AbstractLexer::popLexer()->getOriginal();
+        parent::__construct($message, $code, $previous);
+    }
+
     /**
      * Creates a new AnnotationException describing a Syntax error.
      *
