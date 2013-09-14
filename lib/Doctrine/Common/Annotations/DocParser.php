@@ -485,7 +485,7 @@ final class DocParser
                 // collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
-                    
+
                     if(false === ($propertyComment = $property->getDocComment())) {
                         continue;
                     }
@@ -582,7 +582,7 @@ final class DocParser
     }
 
     /**
-     * Annotation     ::= "@" AnnotationName ["(" [Values] ")"]
+     * Annotation     ::= "@" AnnotationName [Values]
      * AnnotationName ::= QualifiedName | SimpleName
      * QualifiedName  ::= NameSpacePart "\" {NameSpacePart "\"}* SimpleName
      * NameSpacePart  ::= identifier | null | false | true
@@ -675,13 +675,8 @@ final class DocParser
 
         $values = array();
         if ($this->lexer->isNextToken(DocLexer::T_OPEN_PARENTHESIS)) {
-            $this->match(DocLexer::T_OPEN_PARENTHESIS);
+            $values = $this->Values();
 
-            if ( ! $this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
-                $values = $this->Values();
-            }
-
-            $this->match(DocLexer::T_CLOSE_PARENTHESIS);
         }
 
         if (isset(self::$annotationMetadata[$name]['enum'])) {
@@ -755,52 +750,54 @@ final class DocParser
     }
 
     /**
-     * Values ::= Array | Value {"," Value}* [","]
+     * Values ::= "(" [Array | Value {"," Value}* [","] ] ")"
      *
      * @return array
      */
     private function Values()
     {
         $values = array();
-
+        $this->match(DocLexer::T_OPEN_PARENTHESIS);
         // Handle the case of a single array as value, i.e. @Foo({....})
         if ($this->lexer->isNextToken(DocLexer::T_OPEN_CURLY_BRACES)) {
             $values['value'] = $this->Value();
-            return $values;
         }
+        // Handle the case of empty Values.
+        elseif (!$this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
+            $values[] = $this->Value();
 
-        $values[] = $this->Value();
+            while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
+                $this->match(DocLexer::T_COMMA);
+                if ($this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
+                    break;
+                }
+                $token = $this->lexer->lookahead;
+                $value = $this->Value();
 
-        while ($this->lexer->isNextToken(DocLexer::T_COMMA)) {
-            $this->match(DocLexer::T_COMMA);
-            if ($this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
-                break;
-            }
-            $token = $this->lexer->lookahead;
-            $value = $this->Value();
-
-            if ( ! is_object($value) && ! is_array($value)) {
-                $this->syntaxError('Value', $token);
-            }
-
-            $values[] = $value;
-        }
-
-        foreach ($values as $k => $value) {
-            if (is_object($value) && $value instanceof \stdClass) {
-                $values[$value->name] = $value->value;
-            } else if ( ! isset($values['value'])){
-                $values['value'] = $value;
-            } else {
-                if ( ! is_array($values['value'])) {
-                    $values['value'] = array($values['value']);
+                if ( ! is_object($value) && ! is_array($value)) {
+                    $this->syntaxError('Value', $token);
                 }
 
-                $values['value'][] = $value;
+                $values[] = $value;
             }
 
-            unset($values[$k]);
+            foreach ($values as $k => $value) {
+                if (is_object($value) && $value instanceof \stdClass) {
+                    $values[$value->name] = $value->value;
+                } else if ( ! isset($values['value'])){
+                    $values['value'] = $value;
+                } else {
+                    if ( ! is_array($values['value'])) {
+                        $values['value'] = array($values['value']);
+                    }
+
+                    $values['value'][] = $value;
+                }
+
+                unset($values[$k]);
+            }
         }
+        $this->match(DocLexer::T_CLOSE_PARENTHESIS);
 
         return $values;
     }
