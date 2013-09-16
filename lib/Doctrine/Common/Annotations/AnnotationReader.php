@@ -69,7 +69,7 @@ class AnnotationReader implements Reader
         'Required' => true, 'Attribute' => true, 'Attributes' => true,
         'Target' => true, 'SuppressWarnings' => true,
         'ingroup' => true, 'code' => true, 'endcode' => true,
-        'package_version' => true, 'fixme' => true
+        'package_version' => true, 'fixme' => true, 'noinspection' => true
     );
 
     /**
