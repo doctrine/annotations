@@ -35,7 +35,7 @@ class AnnotationException extends \Exception
     function __construct($message, $code = 0, \Exception $previous = null, AbstractLexer $lexer = null)
     {
         if ($lexer) {
-            $message .= "Annotation read so far\n" . $lexer->getOriginalUntilNow() . "\n";
+            $message .= "\nAnnotation read so far\n" . $lexer->getOriginalUntilNow() . "\n";
         }
         parent::__construct($message, $code, $previous);
     }
