@@ -32,13 +32,14 @@ use Doctrine\Common\Lexer\AbstractLexer;
  */
 class AnnotationException extends \Exception
 {
-    function __construct($message, AbstractLexer $lexer = NULL)
+    function __construct($message, $code = 0, \Exception $previous = null, AbstractLexer $lexer = null)
     {
         if ($lexer) {
             $message .= "Annotation read so far\n" . $lexer->getOriginalUntilNow() . "\n";
         }
-        parent::__construct($message);
+        parent::__construct($message, $code, $previous);
     }
+
     /**
      * Creates a new AnnotationException describing a Syntax error.
      *
@@ -46,9 +47,9 @@ class AnnotationException extends \Exception
      * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function syntaxError($message, AbstractLexer $lexer = NULL)
+    public static function syntaxError($message, AbstractLexer $lexer = null)
     {
-        return new self('[Syntax Error] ' . $message);
+        return new self('[Syntax Error] ' . $message, 0, null, $lexer);
     }
 
     /**
@@ -58,9 +59,9 @@ class AnnotationException extends \Exception
      * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function semanticalError($message, AbstractLexer $lexer = NULL)
+    public static function semanticalError($message, AbstractLexer $lexer = null)
     {
-        return new self('[Semantical Error] ' . $message);
+        return new self('[Semantical Error] ' . $message, 0, null, $lexer);
     }
 
     /**
@@ -71,12 +72,12 @@ class AnnotationException extends \Exception
      * @param string $context
      * @return AnnotationException
      */
-    public static function semanticalErrorConstants($identifier, $context = null, AbstractLexer $lexer = NULL)
+    public static function semanticalErrorConstants($identifier, $context = null, AbstractLexer $lexer = null)
     {
         return self::semanticalError(sprintf(
             "Couldn't find constant %s%s", $identifier,
             $context ? ", $context." : "."
-        ));
+        ), 0, null, $lexer);
     }
 
     /**
@@ -87,9 +88,9 @@ class AnnotationException extends \Exception
      * @param string $message
      * @return AnnotationException
      */
-    public static function creationError($message, AbstractLexer $lexer = NULL)
+    public static function creationError($message, AbstractLexer $lexer = null)
     {
-        return new self('[Creation Error] ' . $message);
+        return new self('[Creation Error] ' . $message, 0, null, $lexer);
     }
 
     /**
@@ -104,7 +105,7 @@ class AnnotationException extends \Exception
      * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function typeError($attributeName, $annotationName, $context, $expected, $actual, AbstractLexer $lexer = NULL)
+    public static function typeError($attributeName, $annotationName, $context, $expected, $actual, AbstractLexer $lexer = null)
     {
         return new self(sprintf(
             '[Type Error] Attribute "%s" of @%s declared on %s expects %s, but got %s.',
@@ -113,7 +114,7 @@ class AnnotationException extends \Exception
             $context,
             $expected,
             is_object($actual) ? 'an instance of '.get_class($actual) : gettype($actual)
-        ));
+        ), 0, null, $lexer);
     }
 
     /**
@@ -127,7 +128,7 @@ class AnnotationException extends \Exception
      * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function requiredError($attributeName, $annotationName, $context, $expected, AbstractLexer $lexer = NULL)
+    public static function requiredError($attributeName, $annotationName, $context, $expected, AbstractLexer $lexer = null)
     {
         return new self(sprintf(
             '[Type Error] Attribute "%s" of @%s declared on %s expects %s. This value should not be null.',
@@ -135,7 +136,7 @@ class AnnotationException extends \Exception
             $annotationName,
             $context,
             $expected
-        ));
+        ), 0, null, $lexer);
     }
 
     /**
@@ -150,7 +151,7 @@ class AnnotationException extends \Exception
      * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given, AbstractLexer $lexer = NULL)
+    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given, AbstractLexer $lexer = null)
     {
         throw new self(sprintf(
             '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
@@ -159,7 +160,7 @@ class AnnotationException extends \Exception
             $context,
             implode(', ', $available),
             is_object($given) ? get_class($given) : $given
-        ));
+        ), 0, null, $lexer);
     }
 
     /**
