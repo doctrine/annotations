@@ -19,6 +19,8 @@
 
 namespace Doctrine\Common\Annotations;
 
+use Doctrine\Common\Lexer\AbstractLexer;
+
 /**
  * Description of AnnotationException
  *
@@ -30,13 +32,21 @@ namespace Doctrine\Common\Annotations;
  */
 class AnnotationException extends \Exception
 {
+    function __construct($message, AbstractLexer $lexer = NULL)
+    {
+        if ($lexer) {
+            $message .= "Annotation read so far\n" . $lexer->getOriginalUntilNow() . "\n";
+        }
+        parent::__construct($message);
+    }
     /**
      * Creates a new AnnotationException describing a Syntax error.
      *
      * @param string $message Exception message
+     * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function syntaxError($message)
+    public static function syntaxError($message, AbstractLexer $lexer = NULL)
     {
         return new self('[Syntax Error] ' . $message);
     }
@@ -45,9 +55,10 @@ class AnnotationException extends \Exception
      * Creates a new AnnotationException describing a Semantical error.
      *
      * @param string $message Exception message
+     * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function semanticalError($message)
+    public static function semanticalError($message, AbstractLexer $lexer = NULL)
     {
         return new self('[Semantical Error] ' . $message);
     }
@@ -60,7 +71,7 @@ class AnnotationException extends \Exception
      * @param string $context
      * @return AnnotationException
      */
-    public static function semanticalErrorConstants($identifier, $context = null)
+    public static function semanticalErrorConstants($identifier, $context = null, AbstractLexer $lexer = NULL)
     {
         return self::semanticalError(sprintf(
             "Couldn't find constant %s%s", $identifier,
@@ -76,7 +87,7 @@ class AnnotationException extends \Exception
      * @param string $message
      * @return AnnotationException
      */
-    public static function creationError($message)
+    public static function creationError($message, AbstractLexer $lexer = NULL)
     {
         return new self('[Creation Error] ' . $message);
     }
@@ -90,9 +101,10 @@ class AnnotationException extends \Exception
      * @param string $context
      * @param string $expected
      * @param mixed $actual
+     * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function typeError($attributeName, $annotationName, $context, $expected, $actual)
+    public static function typeError($attributeName, $annotationName, $context, $expected, $actual, AbstractLexer $lexer = NULL)
     {
         return new self(sprintf(
             '[Type Error] Attribute "%s" of @%s declared on %s expects %s, but got %s.',
@@ -112,9 +124,10 @@ class AnnotationException extends \Exception
      * @param string $annotationName
      * @param string $context
      * @param string $expected
+     * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function requiredError($attributeName, $annotationName, $context, $expected)
+    public static function requiredError($attributeName, $annotationName, $context, $expected, AbstractLexer $lexer = NULL)
     {
         return new self(sprintf(
             '[Type Error] Attribute "%s" of @%s declared on %s expects %s. This value should not be null.',
@@ -134,13 +147,14 @@ class AnnotationException extends \Exception
      * @param string $context
      * @param array  $available
      * @param mixed  $given
+     * @param AbstractLexer $lexer The lexer being used.
      * @return AnnotationException
      */
-    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given)
+    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given, AbstractLexer $lexer = NULL)
     {
         throw new self(sprintf(
             '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
-            $attributeName, 
+            $attributeName,
             $annotationName,
             $context,
             implode(', ', $available),

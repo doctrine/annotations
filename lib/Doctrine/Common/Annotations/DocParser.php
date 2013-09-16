@@ -380,7 +380,7 @@ final class DocParser
 
         $message .= '.';
 
-        throw AnnotationException::syntaxError($message);
+        throw AnnotationException::syntaxError($message, $this->lexer);
     }
 
     /**
@@ -485,7 +485,7 @@ final class DocParser
                 // collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
-                    
+
                     if(false === ($propertyComment = $property->getDocComment())) {
                         continue;
                     }
@@ -632,12 +632,12 @@ final class DocParser
                     return false;
                 }
 
-                throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported. Did you maybe forget to add a "use" statement for this annotation?', $name, $this->context));
+                throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported. Did you maybe forget to add a "use" statement for this annotation?', $name, $this->context), $this->lexer);
             }
         }
 
         if (!$this->classExists($name)) {
-            throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
+            throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context), $this->lexer);
         }
 
         // at this point, $name contains the fully qualified class name of the
@@ -656,7 +656,7 @@ final class DocParser
                 return false;
             }
 
-            throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $originalName, $this->context));
+            throw AnnotationException::semanticalError(sprintf('The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("%s") to the _class_ doc comment of %s.', $name, $name, $originalName, $this->context), $this->lexer);
         }
 
         //if target is nested annotation
@@ -669,7 +669,8 @@ final class DocParser
         if (0 === (self::$annotationMetadata[$name]['targets'] & $target) && $target) {
             throw AnnotationException::semanticalError(
                 sprintf('Annotation @%s is not allowed to be declared on %s. You may only use this annotation on these code elements: %s.',
-                     $originalName, $this->context, self::$annotationMetadata[$name]['targets_literal'])
+                     $originalName, $this->context, self::$annotationMetadata[$name]['targets_literal']),
+                $this->lexer
             );
         }
 
@@ -689,7 +690,7 @@ final class DocParser
             foreach (self::$annotationMetadata[$name]['enum'] as $property => $enum) {
                 // checks if the attribute is a valid enumerator
                 if (isset($values[$property]) && ! in_array($values[$property], $enum['value'])) {
-                    throw AnnotationException::enumeratorError($property, $name, $this->context, $enum['literal'], $values[$property]);
+                    throw AnnotationException::enumeratorError($property, $name, $this->context, $enum['literal'], $values[$property], $this->lexer);
                 }
             }
         }
@@ -704,7 +705,7 @@ final class DocParser
             // handle a not given attribute or null value
             if (!isset($values[$property])) {
                 if ($type['required']) {
-                    throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
+                    throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value'], $this->lexer);
                 }
 
                 continue;
@@ -720,12 +721,12 @@ final class DocParser
                 if (isset($type['array_type'])) {
                     foreach ($values[$property] as $item) {
                         if (gettype($item) !== $type['array_type'] && !$item instanceof $type['array_type']) {
-                            throw AnnotationException::typeError($property, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item);
+                            throw AnnotationException::typeError($property, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item, $this->lexer);
                         }
                     }
                 }
             } elseif (gettype($values[$property]) !== $type['type'] && !$values[$property] instanceof $type['type']) {
-                throw AnnotationException::typeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property]);
+                throw AnnotationException::typeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property], $this->lexer);
             }
         }
 
@@ -739,12 +740,12 @@ final class DocParser
         foreach ($values as $property => $value) {
             if (!isset(self::$annotationMetadata[$name]['properties'][$property])) {
                 if ('value' !== $property) {
-                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not have a property named "%s". Available properties: %s', $originalName, $this->context, $property, implode(', ', self::$annotationMetadata[$name]['properties'])));
+                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not have a property named "%s". Available properties: %s', $originalName, $this->context, $property, implode(', ', self::$annotationMetadata[$name]['properties'])), $this->lexer);
                 }
 
                 // handle the case if the property has no annotations
                 if (!$property = self::$annotationMetadata[$name]['default_property']) {
-                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)));
+                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)), $this->lexer);
                 }
             }
 
@@ -855,7 +856,7 @@ final class DocParser
         }
 
         if (!defined($identifier)) {
-            throw AnnotationException::semanticalErrorConstants($identifier, $this->context);
+            throw AnnotationException::semanticalErrorConstants($identifier, $this->context, $this->lexer);
         }
 
         return constant($identifier);
