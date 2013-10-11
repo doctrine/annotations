@@ -2,7 +2,6 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\Annotation\IgnorePhpDoc;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
@@ -321,7 +320,7 @@ DOCBLOCK;
             $docComment = $class->getDocComment();
 
             $parser->setTarget(Target::TARGET_CLASS);
-            $parser->parse($class->getDocComment(),$context);
+            $parser->parse($docComment, $context);
 
             $this->fail();
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
@@ -337,7 +336,7 @@ DOCBLOCK;
             $context    = 'method ' . $class->getName() . '::' . $method->getName() . '()';
 
             $parser->setTarget(Target::TARGET_METHOD);
-            $parser->parse($docComment,$context);
+            $parser->parse($docComment, $context);
 
             $this->fail();
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
@@ -352,7 +351,7 @@ DOCBLOCK;
             $context    = 'property ' . $class->getName() . "::\$" . $property->getName();
 
             $parser->setTarget(Target::TARGET_PROPERTY);
-            $parser->parse($docComment,$context);
+            $parser->parse($docComment, $context);
 
             $this->fail();
         } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
@@ -666,7 +665,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnum declared on property SomeClassName::invalidProperty. accept only [ONE, TWO, THREE], but got FOUR.
      */
     public function testAnnotationEnumeratorException()
@@ -681,7 +680,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumLiteral declared on property SomeClassName::invalidProperty. accept only [AnnotationEnumLiteral::ONE, AnnotationEnumLiteral::TWO, AnnotationEnumLiteral::THREE], but got 4.
      */
     public function testAnnotationEnumeratorLiteralException()
@@ -810,7 +809,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on  does not accept any values, but got {"value":"Foo"}.
      */
     public function testWithoutConstructorWhenIsNotDefaultValue()
@@ -828,7 +827,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on  does not accept any values, but got {"value":"Foo"}.
      */
     public function testWithoutConstructorWhenHasNoProperties()
@@ -845,7 +844,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
     public function testAnnotationTargetSyntaxError()
@@ -944,7 +943,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected PlainValue, got ''' at position 10.
      */
     public function testAnnotationDontAcceptSingleQuotes()
@@ -966,12 +965,12 @@ DOCBLOCK;
 
     /**
      * @group DCOM-41
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      */
     public function testAnnotationThrowsExceptionWhenAtSignIsNotFollowedByIdentifierInNestedAnnotation()
     {
         $parser = new DocParser();
-        $result = $parser->parse("@Doctrine\Tests\Common\Annotations\Name(@')");
+        $parser->parse("@Doctrine\Tests\Common\Annotations\Name(@')");
     }
 
     /**
@@ -1008,7 +1007,7 @@ DOCBLOCK;
 
     /**
      * @group DDC-78
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected PlainValue, got ''' at position 10 in class \Doctrine\Tests\Common\Annotations\Name
      */
     public function testSyntaxErrorWithContextDescription()
@@ -1036,8 +1035,8 @@ DOCBLOCK;
 
         try {
             $parser = $this->createTestParser();
-            $result = $parser->parse($docblock);
-        } catch (Exception $e) {
+            $parser->parse($docblock);
+        } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
     }
@@ -1057,8 +1056,8 @@ DOCBLOCK;
 
         try {
             $parser = $this->createTestParser();
-            $result = $parser->parse($docblock);
-        } catch (Exception $e) {
+            $parser->parse($docblock);
+        } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
     }
@@ -1135,7 +1134,7 @@ DOCBLOCK;
     }
 
      /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Creation Error] The annotation @SomeAnnotationClassNameWithoutConstructor declared on some class does not have a property named "invalidaProperty". Available properties: data, name
      */
     public function testSetValuesExeption()
@@ -1150,7 +1149,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_IDENTIFIER or Doctrine\Common\Annotations\DocLexer::T_TRUE or Doctrine\Common\Annotations\DocLexer::T_FALSE or Doctrine\Common\Annotations\DocLexer::T_NULL, got '3.42' at position 5.
      */
     public function testInvalidIdentifierInAnnotation()
@@ -1190,7 +1189,7 @@ DOCBLOCK;
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Couldn't find constant foo.
      */
     public function testInvalidContantName()

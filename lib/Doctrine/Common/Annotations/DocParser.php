@@ -19,11 +19,9 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Closure;
 use ReflectionClass;
 use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Doctrine\Common\Annotations\Annotation\Attribute;
 use Doctrine\Common\Annotations\Annotation\Attributes;
 
 /**
