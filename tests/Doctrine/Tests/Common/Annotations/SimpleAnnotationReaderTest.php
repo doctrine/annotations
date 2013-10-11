@@ -61,7 +61,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     }
 
     /**
-     * @expectedException Doctrine\Common\Annotations\AnnotationException
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
      */
     public function testInvalidAnnotationUsageButIgnoredClass()
     {
