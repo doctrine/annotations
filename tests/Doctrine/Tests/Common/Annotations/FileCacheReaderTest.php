@@ -33,7 +33,7 @@ class FileCacheReaderTest extends AbstractReaderTest
 
         $this->assertFalse(is_dir($this->cacheDir));
 
-        $cache = new FileCacheReader(new AnnotationReader(), $this->cacheDir);
+        new FileCacheReader(new AnnotationReader(), $this->cacheDir);
 
         $this->assertTrue(is_dir($this->cacheDir));
     }
