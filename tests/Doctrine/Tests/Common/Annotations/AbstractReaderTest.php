@@ -84,6 +84,14 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', $barAnnot[0]->annotation);
     }
 
+    public function testClassWithWithDanglingComma()
+    {
+        $reader = $this->getReader();
+        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\Tests\Common\Annotations\DummyClassWithDanglingComma'));
+
+        $this->assertCount(1, $annots);
+    }
+
      /**
      * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetPropertyMethod is not allowed to be declared on class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass. You may only use this annotation on these code elements: METHOD, PROPERTY
@@ -483,6 +491,13 @@ class DummyJoinTable extends Annotation {
     public $name;
     public $joinColumns;
     public $inverseJoinColumns;
+}
+
+/**
+ * @DummyAnnotation(dummyValue = "bar",)
+ */
+class DummyClassWithDanglingComma
+{
 }
 
 /**
