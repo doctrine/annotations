@@ -68,6 +68,11 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         parent::testInvalidAnnotationUsageButIgnoredClass();
     }
 
+    public function testIncludeIgnoreAnnotation()
+    {
+        $this->markTestSkipped('The simplified annotation reader would always autoload annotations');
+    }
+
     /**
      * @group DDC-1660
      * @group regression
