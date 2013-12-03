@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Reader;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
@@ -248,6 +249,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithIgnoreAnnotation', 'foo'));
         $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixtures\IgnoreAnnotationClass', false));
     }
+
     public function testImportWithConcreteAnnotation()
     {
         $reader = $this->getReader();

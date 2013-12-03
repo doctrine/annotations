@@ -68,12 +68,9 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         parent::testInvalidAnnotationUsageButIgnoredClass();
     }
 
-    /**
-     * @expectedException \Doctrine\Common\Annotations\AnnotationException
-     */
     public function testIncludeIgnoreAnnotation()
     {
-        parent::testIncludeIgnoreAnnotation();
+        $this->markTestSkipped('The simplified annotation reader would always autoload annotations');
     }
 
     /**
