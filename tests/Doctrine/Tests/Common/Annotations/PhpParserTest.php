@@ -94,7 +94,7 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
             'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
             'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
-	}
+    }
 
     public function testEqualNamespacesPerFileWithClassAsFirst()
     {
@@ -203,5 +203,16 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
           'annotationtargetall'         => __NAMESPACE__ . '\Fixtures\AnnotationTargetAll',
           'annotationtargetannotation'  => __NAMESPACE__ . '\Fixtures\AnnotationTargetAnnotation',
         ), $parser->parseClass($class));
+    }
+
+    public function testClassWithTrait()
+    {
+        $parser = new PhpParser();
+        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTrait');
+
+        $this->assertEquals(array(
+            'autoload'         => __NAMESPACE__ . '\Fixtures\Annotation\Autoload'
+        ), $parser->parseClass($class));
+
     }
 }
