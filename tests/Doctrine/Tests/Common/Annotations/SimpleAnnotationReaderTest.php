@@ -69,6 +69,14 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     }
 
     /**
+     * @expectedException \Doctrine\Common\Annotations\AnnotationException
+     */
+    public function testIncludeIgnoreAnnotation()
+    {
+        parent::testIncludeIgnoreAnnotation();
+    }
+
+    /**
      * @group DDC-1660
      * @group regression
      *

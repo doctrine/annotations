@@ -241,6 +241,13 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf($name, $annot);
     }
 
+    public function testIncludeIgnoreAnnotation()
+    {
+        $reader = $this->getReader();
+
+        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithIgnoreAnnotation', 'foo'));
+        $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixtures\IgnoreAnnotationClass', false));
+    }
     public function testImportWithConcreteAnnotation()
     {
         $reader = $this->getReader();
