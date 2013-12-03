@@ -743,6 +743,10 @@ DOCBLOCK;
             ClassWithConstants::SOME_VALUE
         );
         $provider[] = array(
+            '@AnnotationWithConstants(ClassWithConstants::OTHER_KEY_)',
+            ClassWithConstants::OTHER_KEY_
+        );
+        $provider[] = array(
             '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_VALUE)',
             ClassWithConstants::SOME_VALUE
         );
