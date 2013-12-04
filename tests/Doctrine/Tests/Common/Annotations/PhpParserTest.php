@@ -205,25 +205,33 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         ), $parser->parseClass($class));
     }
 
-	public function testClassWithTraitIncludingAlias()
-	{
-		$parser = new PhpParser();
-		$class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTraitWithAlias');
+    public function testClassWithTraitIncludingAlias()
+    {
+        if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $this->markTestSkipped('Invalid PHP version, unable to run tests using traits');
+        }
 
-		$this->assertEquals(array(
-			'a'         => __NAMESPACE__ . '\Fixtures\Annotation'
-		), $parser->parseClass($class));
+        $parser = new PhpParser();
+        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTraitWithAlias');
 
-	}
+        $this->assertEquals(array(
+            'a'         => __NAMESPACE__ . '\Fixtures\Annotation'
+        ), $parser->parseClass($class));
 
-	public function testClassWithTrait()
-	{
-		$parser = new PhpParser();
-		$class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTrait');
+    }
 
-		$this->assertEquals(array(
-			'autoload'         => __NAMESPACE__ . '\Fixtures\Annotation\Autoload'
-		), $parser->parseClass($class));
+    public function testClassWithTrait()
+    {
+        if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
+            $this->markTestSkipped('Invalid PHP version, unable to run tests using traits');
+        }
 
-	}
+        $parser = new PhpParser();
+        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTrait');
+
+        $this->assertEquals(array(
+            'autoload'         => __NAMESPACE__ . '\Fixtures\Annotation\Autoload'
+        ), $parser->parseClass($class));
+
+    }
 }

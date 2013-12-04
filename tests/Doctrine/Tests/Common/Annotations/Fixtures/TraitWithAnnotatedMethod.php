@@ -8,6 +8,7 @@ trait TraitWithAnnotatedMethod {
     /**
      * @Autoload
      */
-    public function myMethod() {
+    public function myMethod()
+    {
     }
 }
