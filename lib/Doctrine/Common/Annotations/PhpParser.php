@@ -57,7 +57,7 @@ final class PhpParser
 
         $statements = $tokenizer->parseUseStatements($class->getNamespaceName());
 
-	    if ($traits = $class->getTraits()) {
+	    if (method_exists($class, 'getTraits') && $traits = $class->getTraits()) {
 		    foreach($traits as $trait) {
 			    $statements = array_merge($statements, $this->parseClass($trait));
 		    }
