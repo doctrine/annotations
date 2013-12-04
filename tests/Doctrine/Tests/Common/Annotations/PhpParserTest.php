@@ -205,14 +205,25 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         ), $parser->parseClass($class));
     }
 
-    public function testClassWithTrait()
-    {
-        $parser = new PhpParser();
-        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTrait');
+	public function testClassWithTraitIncludingAlias()
+	{
+		$parser = new PhpParser();
+		$class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTraitWithAlias');
 
-        $this->assertEquals(array(
-            'autoload'         => __NAMESPACE__ . '\Fixtures\Annotation\Autoload'
-        ), $parser->parseClass($class));
+		$this->assertEquals(array(
+			'a'         => __NAMESPACE__ . '\Fixtures\Annotation'
+		), $parser->parseClass($class));
 
-    }
+	}
+
+	public function testClassWithTrait()
+	{
+		$parser = new PhpParser();
+		$class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassUsesTrait');
+
+		$this->assertEquals(array(
+			'autoload'         => __NAMESPACE__ . '\Fixtures\Annotation\Autoload'
+		), $parser->parseClass($class));
+
+	}
 }

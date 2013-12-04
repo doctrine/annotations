@@ -1,15 +1,13 @@
 <?php
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation as A;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload;
 
 trait TraitWithAnnotatedMethod {
 
     /**
-     * @A\Autoload
-     * @param $injected
+     * @Autoload
      */
-    public function myMethod($injected) {
-
+    public function myMethod() {
     }
 }
