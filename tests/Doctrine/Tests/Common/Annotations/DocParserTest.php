@@ -470,20 +470,26 @@ DOCBLOCK;
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return array(
-            array('arrayOfIntegers','integer', 'true','boolean'),
-            array('arrayOfIntegers','integer', 'false','boolean'),
-            array('arrayOfIntegers','integer', '{true,true}','boolean'),
-            array('arrayOfIntegers','integer', '{1,true}','boolean'),
-            array('arrayOfIntegers','integer', '{1,2,1.2}','double'),
-            array('arrayOfIntegers','integer', '{1,2,"str"}','string'),
+            array('arrayOfIntegers', 'integer', 'true', 'boolean'),
+            array('arrayOfIntegers', 'integer', 'false', 'boolean'),
+            array('arrayOfIntegers', 'integer', '{true,true}', 'boolean'),
+            array('arrayOfIntegers', 'integer', '{1,true}', 'boolean'),
+            array('arrayOfIntegers', 'integer', '{1,2,1.2}', 'double'),
+            array('arrayOfIntegers', 'integer', '{1,2,"str"}', 'string'),
 
+            array('arrayOfStrings', 'string', 'true', 'boolean'),
+            array('arrayOfStrings', 'string', 'false', 'boolean'),
+            array('arrayOfStrings', 'string', '{true,true}', 'boolean'),
+            array('arrayOfStrings', 'string', '{"foo",true}', 'boolean'),
+            array('arrayOfStrings', 'string', '{"foo","bar",1.2}', 'double'),
+            array('arrayOfStrings', 'string', '1', 'integer'),
 
-            array('arrayOfAnnotations','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'true','boolean'),
-            array('arrayOfAnnotations','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'false','boolean'),
-            array('arrayOfAnnotations','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}','boolean'),
-            array('arrayOfAnnotations','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}','boolean'),
-            array('arrayOfAnnotations','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}','double'),
-            array('arrayOfAnnotations','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}','string'),
+            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'true', 'boolean'),
+            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'false', 'boolean'),
+            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
+            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
+            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}', 'double'),
+            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}', 'string'),
         );
     }
 
@@ -741,6 +747,14 @@ DOCBLOCK;
         $provider[] = array(
             '@AnnotationWithConstants(ClassWithConstants::SOME_VALUE)',
             ClassWithConstants::SOME_VALUE
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(ClassWithConstants::OTHER_KEY_)',
+            ClassWithConstants::OTHER_KEY_
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(ClassWithConstants::OTHER_KEY_2)',
+            ClassWithConstants::OTHER_KEY_2
         );
         $provider[] = array(
             '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_VALUE)',

@@ -76,7 +76,7 @@ final class DocLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return array(
-            '[a-z_\\\][a-z0-9_\:\\\]*[a-z]{1}',
+            '[a-z_\\\][a-z0-9_\:\\\]*[a-z_][a-z0-9_]*',
             '(?:[+-]?[0-9]+(?:[\.][0-9]+)*)(?:[eE][+-]?[0-9]+)?',
             '"(?:[^"]|"")*"',
         );

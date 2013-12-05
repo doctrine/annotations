@@ -14,6 +14,7 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
       @Attribute("integer",              type = "integer"),
       @Attribute("array",                type = "array"),
       @Attribute("arrayOfIntegers",      type = "array<integer>"),
+      @Attribute("arrayOfStrings",       type = "string[]"),
       @Attribute("annotation",           type = "Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll"),
       @Attribute("arrayOfAnnotations",   type = "array<Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll>"),
   })
@@ -37,6 +38,7 @@ final class AnnotationWithAttributes
     private $array;
     private $annotation;
     private $arrayOfIntegers;
+    private $arrayOfStrings;
     private $arrayOfAnnotations;
 
     /**
@@ -98,6 +100,14 @@ final class AnnotationWithAttributes
     public function getAnnotation()
     {
         return $this->annotation;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getArrayOfStrings()
+    {
+        return $this->arrayOfIntegers;
     }
 
     /**
