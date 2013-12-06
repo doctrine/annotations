@@ -207,8 +207,8 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
 
     public function testClassWithTraitIncludingAlias()
     {
-        if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $this->markTestSkipped('Invalid PHP version, unable to run tests using traits');
+        if (PHP_VERSION_ID < 50400) {
+            $this->markTestSkipped('This test requires PHP 5.4 or later.');
         }
 
         $parser = new PhpParser();
@@ -222,8 +222,8 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
 
     public function testClassWithTrait()
     {
-        if (!version_compare(PHP_VERSION, '5.4.0', '>=')) {
-            $this->markTestSkipped('Invalid PHP version, unable to run tests using traits');
+        if (PHP_VERSION_ID < 50400) {
+            $this->markTestSkipped('This test requires PHP 5.4 or later.');
         }
 
         $parser = new PhpParser();
