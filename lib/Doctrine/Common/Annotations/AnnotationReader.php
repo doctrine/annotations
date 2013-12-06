@@ -54,22 +54,51 @@ class AnnotationReader implements Reader
      * @var array
      */
     private static $globalIgnoredNames = array(
-        'access'=> true, 'author'=> true, 'copyright'=> true, 'deprecated'=> true,
-        'example'=> true, 'ignore'=> true, 'internal'=> true, 'link'=> true, 'see'=> true,
-        'since'=> true, 'tutorial'=> true, 'version'=> true, 'package'=> true,
-        'subpackage'=> true, 'name'=> true, 'global'=> true, 'param'=> true,
-        'return'=> true, 'staticvar'=> true, 'category'=> true, 'staticVar'=> true,
-        'static'=> true, 'var'=> true, 'throws'=> true, 'inheritdoc'=> true,
-        'inheritDoc'=> true, 'license'=> true, 'todo'=> true, 'TODO'=> true,
-        'deprec'=> true, 'property' => true, 'method' => true,
-        'abstract'=> true, 'exception'=> true, 'magic' => true, 'api' => true,
-        'final'=> true, 'filesource'=> true, 'throw' => true, 'uses' => true,
-        'usedby'=> true, 'private' => true, 'Annotation' => true, 'override' => true,
+        // Annotation tags
+        'Annotation' => true, 'Attribute' => true, 'Attributes' => true,
+        /* Can we enable this? 'Enum' => true, */
+        'Required' => true,
+        'Target' => true,
+        // Widely used tags (but not existent in phpdoc)
+        'fix' => true , 'fixme' => true,
+        'override' => true,
+        // PHPDocumentor 1 tags
+        'abstract'=> true, 'access'=> true,
+        'code' => true,
+        'deprec'=> true,
+        'endcode' => true, 'exception'=> true,
+        'final'=> true,
+        'ingroup' => true, 'inheritdoc'=> true, 'inheritDoc'=> true,
+        'magic' => true,
+        'name'=> true,
+        'toc' => true, 'tutorial'=> true,
+        'private' => true,
+        'static'=> true, 'staticvar'=> true, 'staticVar'=> true,
+        'throw' => true,
+        // PHPDocumentor 2 tags.
+        'api' => true, 'author'=> true,
+        'category'=> true, 'copyright'=> true,
+        'deprecated'=> true,
+        'example'=> true,
+        'filesource'=> true,
+        'global'=> true,
+        'ignore'=> true, /* Can we enable this? 'index' => true, */ 'internal'=> true,
+        'license'=> true, 'link'=> true,
+        'method' => true,
+        'package'=> true, 'param'=> true, 'property' => true, 'property-read' => true, 'property-write' => true,
+        'return'=> true,
+        'see'=> true, 'since'=> true, 'source' => true, 'subpackage'=> true,
+        'throws'=> true, 'todo'=> true, 'TODO'=> true,
+        'usedby'=> true, 'uses' => true,
+        'var'=> true, 'version'=> true,
+        // PHPUnit tags
         'codeCoverageIgnore' => true, 'codeCoverageIgnoreStart' => true, 'codeCoverageIgnoreEnd' => true,
-        'Required' => true, 'Attribute' => true, 'Attributes' => true,
-        'Target' => true, 'SuppressWarnings' => true,
-        'ingroup' => true, 'code' => true, 'endcode' => true,
-        'package_version' => true, 'fixme' => true, 'noinspection' => true
+        // PHPCheckStyle
+        'SuppressWarnings' => true,
+        // PHPStorm
+        'noinspection' => true,
+        // PEAR
+        'package_version' => true,
     );
 
     /**
