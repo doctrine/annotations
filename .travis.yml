@@ -4,7 +4,12 @@ php:
   - 5.3
   - 5.4
   - 5.5
+  - hhvm
 
 before_script:
     - composer --prefer-source --dev install
     - phpunit
+
+matrix:
+  allow_failures:
+    php: hhvm
