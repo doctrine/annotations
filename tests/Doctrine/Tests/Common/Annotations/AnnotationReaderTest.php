@@ -13,6 +13,10 @@ class AnnotationReaderTest extends AbstractReaderTest
 
     public function testAnnotationFromTrait()
     {
+        if (PHP_VERSION_ID < 50400) {
+            $this->markTestSkipped('This test requires PHP 5.4 or later.');
+        }
+
         $reader = $this->getReader();
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassUsesTrait');
 
