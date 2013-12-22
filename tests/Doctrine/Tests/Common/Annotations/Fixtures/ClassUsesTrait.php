@@ -10,6 +10,11 @@ class ClassUsesTrait {
     /**
      * @Autoload
      */
+    public $aProperty;
+
+    /**
+     * @Autoload
+     */
     public function someMethod()
     {
 

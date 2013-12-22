@@ -8,6 +8,11 @@ trait TraitWithAnnotatedMethod {
     /**
      * @Autoload
      */
+    public $traitProperty;
+
+    /**
+     * @Autoload
+     */
     public function traitMethod()
     {
     }
