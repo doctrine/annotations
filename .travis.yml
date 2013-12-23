@@ -7,8 +7,10 @@ php:
   - hhvm
 
 before_script:
-    - composer --prefer-source --dev install
-    - phpunit
+  - composer update --prefer-source
+
+script:
+  - ./vendor/bin/phpunit
 
 matrix:
   allow_failures:
