@@ -84,7 +84,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         $this->assertCount(1, $reader->getMethodAnnotations($class->getMethod('bar')));
         $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
-    
+
     protected function getReader()
     {
         $reader = new SimpleAnnotationReader();

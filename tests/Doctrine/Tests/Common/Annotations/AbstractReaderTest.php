@@ -373,7 +373,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DCOM106');
         $reader->getClassAnnotations($ref);
     }
-    
+
     /**
      * @return AnnotationReader
      */
