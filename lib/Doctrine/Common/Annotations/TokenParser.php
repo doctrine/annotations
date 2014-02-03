@@ -51,6 +51,16 @@ class TokenParser
     public function __construct($contents)
     {
         $this->tokens = token_get_all($contents);
+
+        // The PHP parser sets internal compiler globals for certain things. Annoyingly, the last docblock comment it
+        // saw gets stored in doc_comment. When it comes to compile the next thing to be include()d this stored
+        // doc_comment becomes owned by the first thing the compiler sees in the file that it considers might have a
+        // docblock. If the first thing in the file is a class without a doc block this would cause calls to
+        // getDocBlock() on said class to return our long lost doc_comment. Argh.
+        // To workaround, cause the parser to parse an empty docblock. Sure getDocBlock() will return this, but at least
+        // it's harmless to us.
+        token_get_all("<?php\n/**\n *\n */");
+
         $this->numTokens = count($this->tokens);
         $this->pointer = 0;
     }
