@@ -41,15 +41,13 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
 
     public function testClassFileDoesNotExist()
     {
-        $class = $this->getMockBuilder('\ReflectionClass')
-                ->disableOriginalConstructor()
-                          ->getMock();
-        $class->expects($this->once())
-             ->method('getFilename')
-             ->will($this->returnValue('/valid/class/Fake.php(35) : eval()d code'));
+        $fakeClass = uniqid('mockClass');
+
+        eval('class ' . $fakeClass . ' {}');
 
         $parser = new PhpParser();
-        $this->assertEquals(array(), $parser->parseClass($class));
+
+        $this->assertEquals(array(), $parser->parseClass(new ReflectionClass($fakeClass)));
     }
 
     public function testParseClassWhenClassIsNotNamespaced()
