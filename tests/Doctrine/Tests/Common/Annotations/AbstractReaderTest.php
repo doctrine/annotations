@@ -387,8 +387,11 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageButIgnoredClass');
         $annots = $reader->getClassAnnotations($ref);
-
-        $this->assertEquals(2, count($annots));
+        if ($annots[0] instanceof IgnoreAnnotation) {
+            $this->assertEquals(2, count($annots));
+        } else { // SimpleAnnotationReader doens't include the IgnoreAnnotation in the results.
+            $this->assertEquals(1, count($annots));
+        }
     }
 
     /**
