@@ -956,6 +956,15 @@ DOCBLOCK;
         $this->assertEquals(0, count($result));
     }
 
+    public function testNotAnAnnotationClassIsIgnoredWithoutWarning()
+    {
+        $parser = new DocParser();
+        $parser->setIgnoreNotImportedAnnotations(true);
+        $result = $parser->parse('@PHPUnit_Framework_TestCase');
+
+        $this->assertEquals(0, count($result));
+    }
+
     /**
      * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage Expected PlainValue, got ''' at position 10.
