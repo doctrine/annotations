@@ -43,4 +43,5 @@ class TargetTest extends \PHPUnit_Framework_TestCase
         $target = new Target(array("value" => array("PROPERTY", "METHOD")));
         $this->assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
     }
-} 
+}
+
