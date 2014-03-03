@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
@@ -420,6 +421,23 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\DCOM106');
         $reader->getClassAnnotations($ref);
     }
+
+
+    public function testAnnotationsWithValidMixedTargets()
+    {
+        $this->getReader();
+
+        $target = new Target(array("value" => array("ALL")));
+        $this->assertEquals(Target::TARGET_ALL, $target->targets);
+
+        $target = new Target(array("value" => array("METHOD", "METHOD")));
+        $this->assertEquals(Target::TARGET_METHOD, $target->targets);
+        $this->assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
+
+        $target = new Target(array("value" => array("PROPERTY", "METHOD")));
+        $this->assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
+    }
+
 
     /**
      * @return AnnotationReader
