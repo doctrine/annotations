@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
