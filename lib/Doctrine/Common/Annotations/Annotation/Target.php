@@ -97,7 +97,7 @@ final class Target
                             $literal,  implode(', ', array_keys(self::$map)))
                 );
             }
-            $bitmask += self::$map[$literal];
+            $bitmask |= self::$map[$literal];
         }
 
         $this->targets  = $bitmask;
