@@ -309,13 +309,22 @@ final class DocParser
      */
     public function parse($input, $context = '')
     {
-        if (false === $pos = strpos($input, '@')) {
-            return array();
+        $pos = 0;
+
+        // search for first valid annotation
+        while (($pos = strpos($input, '@', $pos)) !== false) {
+            // if the @ is preceded by a space or * it is a
+            // valid annotation and we stop the search
+            if ($pos === 0 || $input[$pos - 1] === ' ' || $input[$pos - 1] === '*') {
+                break;
+            }
+
+            $pos++;
         }
 
-        // also parse whatever character is before the @
-        if ($pos > 0) {
-            $pos -= 1;
+        // no match found
+        if ($pos === false) {
+            return array();
         }
 
         $this->context = $context;
@@ -474,7 +483,7 @@ final class DocParser
                 // collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
-                    
+
                     if (false === ($propertyComment = $property->getDocComment())) {
                         continue;
                     }
