@@ -309,21 +309,8 @@ final class DocParser
      */
     public function parse($input, $context = '')
     {
-        $pos = 0;
-
-        // search for first valid annotation
-        while (($pos = strpos($input, '@', $pos)) !== false) {
-            // if the @ is preceded by a space or * it is a
-            // valid annotation and we stop the search
-            if ($pos === 0 || $input[$pos - 1] === ' ' || $input[$pos - 1] === '*') {
-                break;
-            }
-
-            $pos++;
-        }
-
-        // no match found
-        if ($pos === false) {
+        $pos = $this->findInitialTokenPosition($input);
+        if ($pos === null) {
             return array();
         }
 
@@ -333,6 +320,28 @@ final class DocParser
         $this->lexer->moveNext();
 
         return $this->Annotations();
+    }
+
+    /**
+     * Finds the first valid annotation
+     *
+     * @param string $input The docblock string to parse
+     *
+     * @return int|null
+     */
+    private function findInitialTokenPosition($input)
+    {
+        $pos = 0;
+
+        // search for first valid annotation
+        while (($pos = strpos($input, '@', $pos)) !== false) {
+            // if the @ is preceded by a space or * it is valid
+            if ($pos === 0 || $input[$pos - 1] === ' ' || $input[$pos - 1] === '*') {
+                return $pos;
+            }
+
+            $pos++;
+        }
     }
 
     /**
