@@ -430,8 +430,8 @@ final class DocParser
     }
 
     /**
-     * Attempts to check if a class exists or not. This never goes through the PHP autoloading mechanism
-     * but uses the {@link AnnotationRegistry} to load classes.
+     * Attempts to check if a class exists or not. This either uses PHP autoloading mechanism
+     * or uses the {@link AnnotationRegistry} to load classes.
      *
      * @param string $fqcn
      *
@@ -443,13 +443,8 @@ final class DocParser
             return $this->classExists[$fqcn];
         }
 
-        // first check if the class already exists, maybe loaded through another AnnotationReader
-        if (class_exists($fqcn, false)) {
-            return $this->classExists[$fqcn] = true;
-        }
-
         // final check, does this class exist?
-        return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
+        return $this->classExists[$fqcn] = class_exists($fqcn) || AnnotationRegistry::loadAnnotationClass($fqcn);
     }
 
     /**
@@ -472,11 +467,6 @@ final class DocParser
                 'attribute'     => 'Doctrine\Annotations\Annotation\Attribute',
                 'attributes'    => 'Doctrine\Annotations\Annotation\Attributes'
             ]);
-
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Enum.php');
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Target.php');
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Attribute.php');
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Attributes.php');
         }
 
         $class      = new \ReflectionClass($name);
