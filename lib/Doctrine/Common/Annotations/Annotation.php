@@ -20,12 +20,12 @@
 namespace Doctrine\Common\Annotations;
 
 /**
- * Annotations class
+ * Annotations class.
  *
- * @author  Benjamin Eberlei <kontakt@beberlei.de>
- * @author  Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author  Jonathan Wage <jonwage@gmail.com>
- * @author  Roman Borschel <roman@code-factory.org>
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
+ * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
+ * @author Jonathan Wage <jonwage@gmail.com>
+ * @author Roman Borschel <roman@code-factory.org>
  */
 class Annotation
 {
@@ -37,9 +37,9 @@ class Annotation
     public $value;
 
     /**
-     * Constructor
+     * Constructor.
      *
-     * @param array $data Key-value for properties to be defined in this class
+     * @param array $data Key-value for properties to be defined in this class.
      */
     public final function __construct(array $data)
     {
@@ -51,7 +51,7 @@ class Annotation
     /**
      * Error handler for unknown property accessor in Annotation class.
      *
-     * @param string $name Unknown property name
+     * @param string $name Unknown property name.
      *
      * @throws \BadMethodCallException
      */
@@ -65,8 +65,8 @@ class Annotation
     /**
      * Error handler for unknown property mutator in Annotation class.
      *
-     * @param string $name Unkown property name
-     * @param mixed $value Property value
+     * @param string $name  Unknown property name.
+     * @param mixed  $value Property value.
      *
      * @throws \BadMethodCallException
      */

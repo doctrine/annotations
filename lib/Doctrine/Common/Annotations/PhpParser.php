@@ -32,8 +32,9 @@ final class PhpParser
     /**
      * Parses a class.
      *
-     * @param  \ReflectionClass $class A <code>ReflectionClass</code> object.
-     * @return array            A list with use statements in the form (Alias => FQN).
+     * @param \ReflectionClass $class A <code>ReflectionClass</code> object.
+     *
+     * @return array A list with use statements in the form (Alias => FQN).
      */
     public function parseClass(\ReflectionClass $class)
     {
@@ -61,10 +62,11 @@ final class PhpParser
     }
 
     /**
-     * Get the content of the file right up to the given line number.
+     * Gets the content of the file right up to the given line number.
      *
-     * @param  string $filename   The name of the file to load.
-     * @param  int    $lineNumber The number of lines to read from file.
+     * @param string  $filename   The name of the file to load.
+     * @param integer $lineNumber The number of lines to read from file.
+     *
      * @return string The content of the file.
      */
     private function getFileContent($filename, $lineNumber)

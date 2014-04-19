@@ -20,7 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 /**
- * AnnotationRegistry
+ * AnnotationRegistry.
  */
 final class AnnotationRegistry
 {
@@ -43,6 +43,9 @@ final class AnnotationRegistry
      */
     static private $loaders = array();
 
+    /**
+     * @return void
+     */
     static public function reset()
     {
         self::$autoloadNamespaces = array();
@@ -50,9 +53,11 @@ final class AnnotationRegistry
     }
 
     /**
-     * Register file
+     * Registers file.
      *
      * @param string $file
+     *
+     * @return void
      */
     static public function registerFile($file)
     {
@@ -60,12 +65,14 @@ final class AnnotationRegistry
     }
 
     /**
-     * Add a namespace with one or many directories to look for files or null for the include path.
+     * Adds a namespace with one or many directories to look for files or null for the include path.
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @param string $namespace
+     * @param string            $namespace
      * @param string|array|null $dirs
+     *
+     * @return void
      */
     static public function registerAutoloadNamespace($namespace, $dirs = null)
     {
@@ -73,11 +80,13 @@ final class AnnotationRegistry
     }
 
     /**
-     * Register multiple namespaces
+     * Registers multiple namespaces.
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
      * @param array $namespaces
+     *
+     * @return void
      */
     static public function registerAutoloadNamespaces(array $namespaces)
     {
@@ -85,12 +94,14 @@ final class AnnotationRegistry
     }
 
     /**
-     * Register an autoloading callable for annotations, much like spl_autoload_register().
+     * Registers an autoloading callable for annotations, much like spl_autoload_register().
      *
      * NOTE: These class loaders HAVE to be silent when a class was not found!
      * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      *
      * @param callable $callable
+     *
+     * @return void
      *
      * @throws \InvalidArgumentException
      */
@@ -103,9 +114,10 @@ final class AnnotationRegistry
     }
 
     /**
-     * Autoload an annotation class silently.
+     * Autoloads an annotation class silently.
      *
      * @param string $class
+     *
      * @return boolean
      */
     static public function loadAnnotationClass($class)
