@@ -419,13 +419,8 @@ final class DocParser
             return $this->classExists[$fqcn];
         }
 
-        // first check if the class already exists, maybe loaded through another AnnotationReader
-        if (class_exists($fqcn, false)) {
-            return $this->classExists[$fqcn] = true;
-        }
-
         // final check, does this class exist?
-        return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
+        return $this->classExists[$fqcn] = class_exists($fqcn) || AnnotationRegistry::loadAnnotationClass($fqcn);
     }
 
     /**
@@ -447,10 +442,10 @@ final class DocParser
                 'attributes'    => 'Doctrine\Common\Annotations\Annotation\Attributes'
             ));
 
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Enum.php');
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Target.php');
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Attribute.php');
-            AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Attributes.php');
+            require_once __DIR__ . '/Annotation/Enum.php';
+            require_once __DIR__ . '/Annotation/Target.php';
+            require_once __DIR__ . '/Annotation/Attribute.php';
+            require_once __DIR__ . '/Annotation/Attributes.php';
         }
 
         $class      = new \ReflectionClass($name);
