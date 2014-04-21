@@ -17,7 +17,8 @@
         "doctrine/lexer": "1.*"
     },
     "require-dev": {
-        "doctrine/cache": "1.*"
+        "doctrine/cache": "1.*",
+        "phpunit/phpunit": "4.*"
     },
     "autoload": {
         "psr-0": { "Doctrine\\Common\\Annotations\\": "lib/" }
