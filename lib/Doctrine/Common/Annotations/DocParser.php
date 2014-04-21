@@ -661,10 +661,13 @@ final class DocParser
                 $name  = (false !== $pos)
                     ? $this->imports[$loweredAlias] . substr($name, $pos)
                     : $this->imports[$loweredAlias];
-            } elseif (isset($this->imports['__NAMESPACE__']) && $this->classExists($this->imports['__NAMESPACE__'].'\\'.$name)) {
-                 $name  = $this->imports['__NAMESPACE__'].'\\'.$name;
-                 $found = true;
-            } elseif ($this->classExists($name)) {
+            } elseif ( ! isset($this->ignoredAnnotationNames[$name])
+                && isset($this->imports['__NAMESPACE__'])
+                && $this->classExists($this->imports['__NAMESPACE__'] . '\\' . $name)
+            ) {
+                $name  = $this->imports['__NAMESPACE__'].'\\'.$name;
+                $found = true;
+            } elseif (! isset($this->ignoredAnnotationNames[$name]) && $this->classExists($name)) {
                 $found = true;
             }
 
