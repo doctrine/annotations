@@ -309,13 +309,9 @@ final class DocParser
      */
     public function parse($input, $context = '')
     {
-        if (false === $pos = strpos($input, '@')) {
+        $pos = $this->findInitialTokenPosition($input);
+        if ($pos === null) {
             return array();
-        }
-
-        // also parse whatever character is before the @
-        if ($pos > 0) {
-            $pos -= 1;
         }
 
         $this->context = $context;
@@ -324,6 +320,28 @@ final class DocParser
         $this->lexer->moveNext();
 
         return $this->Annotations();
+    }
+
+    /**
+     * Finds the first valid annotation
+     *
+     * @param string $input The docblock string to parse
+     *
+     * @return int|null
+     */
+    private function findInitialTokenPosition($input)
+    {
+        $pos = 0;
+
+        // search for first valid annotation
+        while (($pos = strpos($input, '@', $pos)) !== false) {
+            // if the @ is preceded by a space or * it is valid
+            if ($pos === 0 || $input[$pos - 1] === ' ' || $input[$pos - 1] === '*') {
+                return $pos;
+            }
+
+            $pos++;
+        }
     }
 
     /**
@@ -474,7 +492,7 @@ final class DocParser
                 // collect all public properties
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
                     $metadata['properties'][$property->name] = $property->name;
-                    
+
                     if (false === ($propertyComment = $property->getDocComment())) {
                         continue;
                     }
