@@ -19,8 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Doctrine\Common\Annotations\Reader;
-
 /**
  * Allows the reader to be used in-place of Doctrine's reader.
  *
@@ -34,7 +32,7 @@ class IndexedReader implements Reader
     private $delegate;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param Reader $reader
      */
@@ -44,10 +42,7 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Get Annotations for class
-     *
-     * @param \ReflectionClass $class
-     * @return array
+     * {@inheritDoc}
      */
     public function getClassAnnotations(\ReflectionClass $class)
     {
@@ -60,11 +55,7 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Get selected annotation for class
-     *
-     * @param \ReflectionClass $class
-     * @param string $annotation
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getClassAnnotation(\ReflectionClass $class, $annotation)
     {
@@ -72,10 +63,7 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Get Annotations for method
-     *
-     * @param \ReflectionMethod $method
-     * @return array
+     * {@inheritDoc}
      */
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
@@ -88,11 +76,7 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Get selected annotation for method
-     *
-     * @param \ReflectionMethod $method
-     * @param string $annotation
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getMethodAnnotation(\ReflectionMethod $method, $annotation)
     {
@@ -100,10 +84,7 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Get annotations for property
-     *
-     * @param \ReflectionProperty $property
-     * @return array
+     * {@inheritDoc}
      */
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
@@ -116,11 +97,7 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Get selected annotation for property
-     *
-     * @param \ReflectionProperty $property
-     * @param string $annotation
-     * @return mixed
+     * {@inheritDoc}
      */
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotation)
     {
@@ -128,10 +105,11 @@ class IndexedReader implements Reader
     }
 
     /**
-     * Proxy all methods to the delegate.
+     * Proxies all methods to the delegate.
      *
      * @param string $method
-     * @param array $args
+     * @param array  $args
+     *
      * @return mixed
      */
     public function __call($method, $args)

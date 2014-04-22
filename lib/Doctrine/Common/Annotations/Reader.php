@@ -27,41 +27,63 @@ namespace Doctrine\Common\Annotations;
 interface Reader
 {
     /**
-     * @param \ReflectionClass $class
-     * @return mixed
+     * Gets the annotations applied to a class.
+     *
+     * @param \ReflectionClass $class The ReflectionClass of the class from which
+     *                                the class annotations should be read.
+     *
+     * @return array An array of Annotations.
      */
     function getClassAnnotations(\ReflectionClass $class);
 
     /**
-     * @param \ReflectionClass $class
-     * @param string $annotationName
-     * @return mixed
+     * Gets a class annotation.
+     *
+     * @param \ReflectionClass $class          The ReflectionClass of the class from which
+     *                                         the class annotations should be read.
+     * @param string           $annotationName The name of the annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
     function getClassAnnotation(\ReflectionClass $class, $annotationName);
 
     /**
-     * @param \ReflectionMethod $method
-     * @return mixed
+     * Gets the annotations applied to a method.
+     *
+     * @param \ReflectionMethod $method The ReflectionMethod of the method from which
+     *                                  the annotations should be read.
+     *
+     * @return array An array of Annotations.
      */
     function getMethodAnnotations(\ReflectionMethod $method);
 
     /**
-     * @param \ReflectionMethod $method
-     * @param string $annotationName
-     * @return mixed
+     * Gets a method annotation.
+     *
+     * @param \ReflectionMethod $method         The ReflectionMethod to read the annotations from.
+     * @param string            $annotationName The name of the annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
     function getMethodAnnotation(\ReflectionMethod $method, $annotationName);
 
     /**
-     * @param \ReflectionProperty $property
-     * @return mixed
+     * Gets the annotations applied to a property.
+     *
+     * @param \ReflectionProperty $property The ReflectionProperty of the property
+     *                                      from which the annotations should be read.
+     *
+     * @return array An array of Annotations.
      */
     function getPropertyAnnotations(\ReflectionProperty $property);
 
     /**
-     * @param \ReflectionProperty $property
-     * @param string $annotationName
-     * @return mixed
+     * Gets a property annotation.
+     *
+     * @param \ReflectionProperty $property       The ReflectionProperty to read the annotations from.
+     * @param string              $annotationName The name of the annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
     function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
 }

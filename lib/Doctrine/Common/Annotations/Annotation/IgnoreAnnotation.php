@@ -34,7 +34,7 @@ final class IgnoreAnnotation
     public $names;
 
     /**
-     * Constructor
+     * Constructor.
      *
      * @param array $values
      *
