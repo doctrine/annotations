@@ -699,7 +699,7 @@ DOCBLOCK;
         $parser->setTarget(Target::TARGET_PROPERTY);
         $parser->parse($docblock, $context);
     }
-   
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage @Enum supports only scalar values "array" given.
@@ -725,7 +725,7 @@ DOCBLOCK;
         $parser->setIgnoreNotImportedAnnotations(false);
         $parser->parse($docblock);
     }
-    
+
     public function getConstantsProvider()
     {
         $provider[] = array(
@@ -816,7 +816,7 @@ DOCBLOCK;
             'intefacewithconstants'     => 'Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants',
             'annotationwithconstants'   => 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
         ));
-        
+
         $result = $parser->parse($docblock);
         $this->assertInstanceOf('\Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants', $annotation = $result[0]);
         $this->assertEquals($expected, $annotation->value);
@@ -955,7 +955,7 @@ DOCBLOCK;
 
         $this->assertEquals(0, count($result));
     }
-    
+
     /**
      * @group DCOM-168
      */
@@ -965,7 +965,7 @@ DOCBLOCK;
         $parser->setIgnoreNotImportedAnnotations(true);
         $parser->setIgnoredAnnotationNames(array('PHPUnit_Framework_TestCase' => true));
         $result = $parser->parse('@PHPUnit_Framework_TestCase');
-        
+
         $this->assertEquals(0, count($result));
     }
 
@@ -1235,6 +1235,26 @@ DOCBLOCK;
         $annots = $parser->parse('@Name({"foo": {}})');
         $this->assertEquals(1, count($annots));
         $this->assertEquals(array('foo' => array()), $annots[0]->value);
+    }
+
+    public function testKeyHasNumber()
+    {
+        $parser = $this->createTestParser();
+        $annots = $parser->parse('@SettingsAnnotation(foo="test", bar2="test")');
+
+        $this->assertEquals(1, count($annots));
+        $this->assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
+    }
+}
+
+/** @Annotation */
+class SettingsAnnotation
+{
+    public $settings;
+
+    public function __construct($settings)
+    {
+        $this->settings = $settings;
     }
 }
 
