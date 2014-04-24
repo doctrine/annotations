@@ -955,6 +955,19 @@ DOCBLOCK;
 
         $this->assertEquals(0, count($result));
     }
+    
+    /**
+     * @group DCOM-168
+     */
+    public function testNotAnAnnotationClassIsIgnoredWithoutWarning()
+    {
+        $parser = new DocParser();
+        $parser->setIgnoreNotImportedAnnotations(true);
+        $parser->setIgnoredAnnotationNames(array('PHPUnit_Framework_TestCase' => true));
+        $result = $parser->parse('@PHPUnit_Framework_TestCase');
+        
+        $this->assertEquals(0, count($result));
+    }
 
     /**
      * @expectedException \Doctrine\Common\Annotations\AnnotationException
