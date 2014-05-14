@@ -942,6 +942,12 @@ final class DocParser
             }
         }
 
+        // checks if identifier ends with ::class, \strlen('::class') === 7
+        $classPos = stripos($identifier, '::class');
+        if ($classPos === strlen($identifier) - 7) {
+            return substr($identifier, 0, $classPos);
+        }
+
         if (!defined($identifier)) {
             throw AnnotationException::semanticalErrorConstants($identifier, $this->context);
         }
