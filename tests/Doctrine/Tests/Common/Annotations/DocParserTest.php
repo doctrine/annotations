@@ -802,6 +802,22 @@ DOCBLOCK;
                 ClassWithConstants::SOME_KEY    => IntefaceWithConstants::SOME_VALUE
             )
         );
+        $provider[] = array(
+            '@AnnotationWithConstants(AnnotationWithConstants::class)',
+            'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants({AnnotationWithConstants::class = AnnotationWithConstants::class})',
+            array('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants' => 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants')
+        );
+        $provider[] = array(
+            '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
+            'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+        );
+        $provider[] = array(
+            '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
+            'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+        );
         return $provider;
     }
 
