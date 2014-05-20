@@ -98,6 +98,8 @@ class AnnotationReader implements Reader
         'noinspection' => true,
         // PEAR
         'package_version' => true,
+        // PlantUML
+        'startuml' => true, 'enduml' => true,
     );
 
     /**
