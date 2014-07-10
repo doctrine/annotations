@@ -80,23 +80,6 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('value1', $annot->value[1]['key1']);
         $this->assertEquals('value2', $annot->value[1]['key2']);
 
-        // Array as first value
-        $result = $parser->parse('@Name({"key1"="value1"})');
-        $annot = $result[0];
-
-        $this->assertTrue($annot instanceof Name);
-        $this->assertTrue(is_array($annot->value));
-        $this->assertEquals('value1', $annot->value['key1']);
-
-        // Array as first value and additional values
-        $result = $parser->parse('@Name({"key1"="value1"}, foo="bar")');
-        $annot = $result[0];
-
-        $this->assertTrue($annot instanceof Name);
-        $this->assertTrue(is_array($annot->value));
-        $this->assertEquals('value1', $annot->value['key1']);
-        $this->assertEquals('bar', $annot->foo);
-
         // Complete docblock
         $docblock = <<<DOCBLOCK
 /**
@@ -114,6 +97,28 @@ DOCBLOCK;
         $this->assertEquals("bar", $annot->foo);
         $this->assertNull($annot->value);
    }
+
+    public function testDefaultValueAnnotations()
+    {
+        $parser = $this->createTestParser();
+
+        // Array as first value
+        $result = $parser->parse('@Name({"key1"="value1"})');
+        $annot = $result[0];
+
+        $this->assertTrue($annot instanceof Name);
+        $this->assertTrue(is_array($annot->value));
+        $this->assertEquals('value1', $annot->value['key1']);
+
+        // Array as first value and additional values
+        $result = $parser->parse('@Name({"key1"="value1"}, foo="bar")');
+        $annot = $result[0];
+
+        $this->assertTrue($annot instanceof Name);
+        $this->assertTrue(is_array($annot->value));
+        $this->assertEquals('value1', $annot->value['key1']);
+        $this->assertEquals('bar', $annot->foo);
+    }
 
     public function testNamespacedAnnotations()
     {
