@@ -64,11 +64,8 @@ class FileCacheReader implements Reader
     public function __construct(Reader $reader, $cacheDir, $debug = false)
     {
         $this->reader = $reader;
-        if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" does not exist and could not be created.', $cacheDir));
-        }
-
         $this->dir   = rtrim($cacheDir, '\\/');
+        $this->createCacheDir();
         $this->debug = $debug;
     }
 
@@ -186,9 +183,7 @@ class FileCacheReader implements Reader
      */
     private function saveCacheFile($path, $data)
     {
-        if (!is_writable($this->dir)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" is not writable. Both, the webserver and the console user need access. You can manage access rights for multiple users with "chmod +a". If your system does not support this, check out the acl package.', $this->dir));
-        }
+        $this->createCacheDir();
         file_put_contents($path, '<?php return unserialize('.var_export(serialize($data), true).');');
     }
 
@@ -248,5 +243,21 @@ class FileCacheReader implements Reader
     public function clearLoadedAnnotations()
     {
         $this->loadedAnnotations = array();
+    }
+
+    private function createCacheDir()
+    {
+        if (!is_dir($this->dir) && !@mkdir($this->dir, 0777, true)) {
+            throw new \InvalidArgumentException(sprintf(
+                'The directory "%s" does not exist and could not be created.',
+                $this->dir
+            ));
+        }
+        if (!is_writable($this->dir . '/')) {
+            throw new \InvalidArgumentException(sprintf(
+                'The directory "%s" is not writable. Both, the webserver and the console user need access. You can manage access rights for multiple users with "chmod +a". If your system does not support this, check out the acl package.',
+                $this->dir
+            ));
+        }
     }
 }
