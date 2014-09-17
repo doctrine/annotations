@@ -2,10 +2,6 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use ReflectionClass, ReflectionProperty, ReflectionMethod;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
-
 class NamespacedSingleClassLOC1000
 {
     const TEST1 = 1234567890;
