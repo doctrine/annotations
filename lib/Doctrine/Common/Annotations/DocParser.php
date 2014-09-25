@@ -354,6 +354,8 @@ final class DocParser
 
             $pos++;
         }
+
+        return null;
     }
 
     /**
