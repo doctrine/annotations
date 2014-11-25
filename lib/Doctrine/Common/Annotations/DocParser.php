@@ -700,6 +700,14 @@ final class DocParser
                     return false;
                 }
 
+                foreach (array_keys($this->ignoredAnnotationNames) as $annotationName) {
+                    $annotationName = rtrim($annotationName, '\\') . '\\';
+
+                    if (0 === stripos($name, $annotationName) || 0 === stripos($name . '\\', $annotationName)) {
+                        return false;
+                    }
+                }
+
                 throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported. Did you maybe forget to add a "use" statement for this annotation?', $name, $this->context));
             }
         }
