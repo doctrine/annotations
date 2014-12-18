@@ -18,6 +18,8 @@
  */
 
 namespace Doctrine\Common\Annotations;
+use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\Cache\Cache;
 
 /**
  * File cache reader for annotations.
@@ -53,6 +55,11 @@ class FileCacheReader implements Reader
     private $classNameHashes = array();
 
     /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
      * Constructor.
      *
      * @param Reader  $reader
@@ -69,6 +76,8 @@ class FileCacheReader implements Reader
         }
 
         $this->dir   = rtrim($cacheDir, '\\/');
+        $this->cache = new FilesystemCache($this->dir, '.annotationscache.data');
+
         $this->debug = $debug;
     }
 
@@ -86,24 +95,23 @@ class FileCacheReader implements Reader
             return $this->loadedAnnotations[$key];
         }
 
-        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
-        if (!is_file($path)) {
+        $cacheKey = $key . filemtime($class->getFileName());
+        $cached = $this->cache->fetch($cacheKey);
+        if (false === $cached) {
             $annot = $this->reader->getClassAnnotations($class);
-            $this->saveCacheFile($path, $annot);
+            $this->saveCacheFile($cacheKey, $annot);
             return $this->loadedAnnotations[$key] = $annot;
         }
 
-        if ($this->debug
-            && (false !== $filename = $class->getFilename())
-            && filemtime($path) < filemtime($filename)) {
-            @unlink($path);
+        if ($this->debug && (false !== $filename = $class->getFilename())) {
+            $this->cache->delete($cacheKey);
 
             $annot = $this->reader->getClassAnnotations($class);
-            $this->saveCacheFile($path, $annot);
+            $this->saveCacheFile($cacheKey, $annot);
             return $this->loadedAnnotations[$key] = $annot;
         }
 
-        return $this->loadedAnnotations[$key] = include $path;
+        return $this->loadedAnnotations[$key] = $cached;
     }
 
     /**
@@ -121,24 +129,23 @@ class FileCacheReader implements Reader
             return $this->loadedAnnotations[$key];
         }
 
-        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
-        if (!is_file($path)) {
+        $cacheKey = $key . filemtime($class->getFileName());
+        $cached = $this->cache->fetch($cacheKey);
+        if (false === $cached) {
             $annot = $this->reader->getPropertyAnnotations($property);
-            $this->saveCacheFile($path, $annot);
+            $this->saveCacheFile($cacheKey, $annot);
             return $this->loadedAnnotations[$key] = $annot;
         }
 
-        if ($this->debug
-            && (false !== $filename = $class->getFilename())
-            && filemtime($path) < filemtime($filename)) {
-            @unlink($path);
+        if ($this->debug && (false !== $filename = $class->getFilename())) {
+            $this->cache->delete($cacheKey);
 
             $annot = $this->reader->getPropertyAnnotations($property);
-            $this->saveCacheFile($path, $annot);
+            $this->saveCacheFile($cacheKey, $annot);
             return $this->loadedAnnotations[$key] = $annot;
         }
 
-        return $this->loadedAnnotations[$key] = include $path;
+        return $this->loadedAnnotations[$key] = $cached;
     }
 
     /**
@@ -156,24 +163,23 @@ class FileCacheReader implements Reader
             return $this->loadedAnnotations[$key];
         }
 
-        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
-        if (!is_file($path)) {
+        $cacheKey = $key . filemtime($class->getFileName());
+        $cached = $this->cache->fetch($cacheKey);
+        if (false === $cached) {
             $annot = $this->reader->getMethodAnnotations($method);
-            $this->saveCacheFile($path, $annot);
+            $this->saveCacheFile($cacheKey, $annot);
             return $this->loadedAnnotations[$key] = $annot;
         }
 
-        if ($this->debug
-            && (false !== $filename = $class->getFilename())
-            && filemtime($path) < filemtime($filename)) {
-            @unlink($path);
+        if ($this->debug && (false !== $filename = $class->getFilename())) {
+            $this->cache->delete($cacheKey);
 
             $annot = $this->reader->getMethodAnnotations($method);
-            $this->saveCacheFile($path, $annot);
+            $this->saveCacheFile($cacheKey, $annot);
             return $this->loadedAnnotations[$key] = $annot;
         }
 
-        return $this->loadedAnnotations[$key] = include $path;
+        return $this->loadedAnnotations[$key] = $cached;
     }
 
     /**
@@ -186,10 +192,7 @@ class FileCacheReader implements Reader
      */
     private function saveCacheFile($path, $data)
     {
-        if (!is_writable($this->dir)) {
-            throw new \InvalidArgumentException(sprintf('The directory "%s" is not writable. Both, the webserver and the console user need access. You can manage access rights for multiple users with "chmod +a". If your system does not support this, check out the acl package.', $this->dir));
-        }
-        file_put_contents($path, '<?php return unserialize('.var_export(serialize($data), true).');');
+        $this->cache->save($path, $data);
     }
 
     /**

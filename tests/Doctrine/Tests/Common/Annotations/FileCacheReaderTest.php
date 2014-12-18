@@ -4,6 +4,9 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\FileCacheReader;
+use FilesystemIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class FileCacheReaderTest extends AbstractReaderTest
 {
@@ -18,8 +21,12 @@ class FileCacheReaderTest extends AbstractReaderTest
 
     public function tearDown()
     {
-        foreach (glob($this->cacheDir.'/*.php') AS $file) {
-            unlink($file);
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->cacheDir, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach($files as $path) {
+            $path->isDir() && !$path->isLink() ? rmdir($path->getPathname()) : unlink($path->getPathname());
         }
         rmdir($this->cacheDir);
     }
