@@ -154,4 +154,15 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($lexer->moveNext());
     }
 
+    /**
+     * @group 44
+     */
+    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit()
+    {
+        $lexer = new DocLexer();
+
+        $lexer->setInput('"' . str_repeat('.', 10240) . '"');
+
+        $this->assertInternalType('array', $lexer->glimpse());
+    }
 }
