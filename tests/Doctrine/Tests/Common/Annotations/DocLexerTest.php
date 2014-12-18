@@ -153,19 +153,15 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($lexer->moveNext());
     }
-    
+
     public function testWithinDoubleQuotesVeryVeryLongString()
     {
         $lexer = new DocLexer();
 
-        for($i = 0, $buffer_size = 0; $i < 10; $i++, $buffer_size += 1024){
-
-            $docblock   = '"' . str_repeat('.', $buffer_size) . '"';
-
-            $lexer->setInput($docblock); // Dead yet ?
-
-            $this->assertTrue(true);
+        for($i = 0, $bufferSize = 0; $i < 10; $i++, $bufferSize += 1024){
+            $lexer->setInput('"' . str_repeat('.', $bufferSize) . '"'); // Dead yet ?
         }
-    }
 
+        $this->assertTrue(true);
+    }
 }
