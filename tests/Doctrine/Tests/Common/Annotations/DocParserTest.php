@@ -1282,6 +1282,19 @@ DOCBLOCK;
         $this->assertEquals(1, count($annots));
         $this->assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
     }
+
+    /**
+     * @group 44
+     */
+    public function testSupportsEscapedQuotedValues()
+    {
+        $result = $this->createTestParser()->parse('@Doctrine\Tests\Common\Annotations\Name(foo="""bar""")');
+
+        $this->assertCount(1, $result);
+
+        $this->assertTrue($result[0] instanceof Name);
+        $this->assertEquals('"bar"', $result[0]->foo);
+    }
 }
 
 /** @Annotation */
