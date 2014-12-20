@@ -195,11 +195,13 @@ class FileCacheReader implements Reader
         }
 
         $tempfile = tempnam($this->dir, uniqid('', true));
+
         if (false === $tempfile) {
             throw new \RuntimeException(sprintf('Unable to create tempfile in directory: %s', $this->dir));
         }
 
         $written = file_put_contents($tempfile, '<?php return unserialize('.var_export(serialize($data), true).');');
+
         if (false === $written) {
             throw new \RuntimeException(sprintf('Unable to write cached file to: %s', $tempfile));
         }
@@ -208,6 +210,7 @@ class FileCacheReader implements Reader
             throw new \RuntimeException(sprintf('Unable to rename %s to %s', $tempfile, $path));
         }
 
+        @chmod($path, 0666 & ~umask());
         @unlink($tempfile);
     }
 
