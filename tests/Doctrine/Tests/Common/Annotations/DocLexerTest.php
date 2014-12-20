@@ -161,7 +161,7 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
     {
         $lexer = new DocLexer();
 
-        $lexer->setInput('"' . str_repeat('.', 10240) . '"');
+        $lexer->setInput('"' . str_repeat('.', 20240) . '"');
 
         $this->assertInternalType('array', $lexer->glimpse());
     }
