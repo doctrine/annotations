@@ -161,8 +161,57 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
     {
         $lexer = new DocLexer();
 
-        $lexer->setInput('"' . str_repeat('.', 10240) . '"');
+        $lexer->setInput('"' . str_repeat('.', 20240) . '"');
 
         $this->assertInternalType('array', $lexer->glimpse());
+    }
+
+    /**
+     * @group 44
+     */
+    public function testRecognizesDoubleQuotesEscapeSequence()
+    {
+        $lexer    = new DocLexer();
+        $docblock = '@Foo("""' . "\n" . '""")';
+
+        $tokens = array (
+            array(
+                'value'     => '@',
+                'position'  => 0,
+                'type'      => DocLexer::T_AT,
+            ),
+            array(
+                'value'     => 'Foo',
+                'position'  => 1,
+                'type'      => DocLexer::T_IDENTIFIER,
+            ),
+            array(
+                'value'     => '(',
+                'position'  => 4,
+                'type'      => DocLexer::T_OPEN_PARENTHESIS,
+            ),
+            array(
+                'value'     => "\"\n\"",
+                'position'  => 5,
+                'type'      => DocLexer::T_STRING,
+            ),
+            array(
+                'value'     => ')',
+                'position'  => 12,
+                'type'      => DocLexer::T_CLOSE_PARENTHESIS,
+            ),
+        );
+
+        $lexer->setInput($docblock);
+
+        foreach ($tokens as $expected) {
+            $lexer->moveNext();
+            $lookahead = $lexer->lookahead;
+            $this->assertEquals($expected['value'],    $lookahead['value']);
+            $this->assertEquals($expected['type'],     $lookahead['type']);
+            $this->assertEquals($expected['position'], $lookahead['position']);
+        }
+
+        $this->assertFalse($lexer->moveNext());
     }
 }
