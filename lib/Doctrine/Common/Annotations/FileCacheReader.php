@@ -207,11 +207,11 @@ class FileCacheReader implements Reader
         }
 
         if (false === rename($tempfile, $path)) {
+            @unlink($tempfile);
             throw new \RuntimeException(sprintf('Unable to rename %s to %s', $tempfile, $path));
         }
 
         @chmod($path, 0666 & ~umask());
-        @unlink($tempfile);
     }
 
     /**
