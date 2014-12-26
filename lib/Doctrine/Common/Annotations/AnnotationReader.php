@@ -100,6 +100,8 @@ class AnnotationReader implements Reader
         'package_version' => true,
         // PlantUML
         'startuml' => true, 'enduml' => true,
+        'struct' => true,
+        'typedef' => true,
     );
 
     /**
