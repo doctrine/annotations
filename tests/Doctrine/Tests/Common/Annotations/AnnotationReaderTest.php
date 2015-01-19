@@ -72,4 +72,58 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
         $this->assertEquals(array(), $annotations);
     }
+    public function testClassAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\TestInvalidClassAnnotationClass');
+
+        $reader::addGlobalIgnoredNamespace('SomeClassAnnotationNamespace');
+
+        $annotations = $reader->getClassAnnotations($ref);
+
+        $this->assertEquals(0, count($annotations));
+    }
+
+    public function testMethodAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\TestInvalidMethodAnnotationClass');
+
+        $reader::addGlobalIgnoredNamespace('SomeMethodAnnotationNamespace');
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('test'));
+
+        $this->assertEquals(0, count($annotations));
+    }
+
+    public function testPropertyAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\TestInvalidPropertyAnnotationClass');
+
+        $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        $annotations = $reader->getPropertyAnnotations($ref->getProperty('field'));
+
+        $this->assertEquals(0, count($annotations));
+    }
+}
+
+/**
+ * @SomeClassAnnotationNamespace\Subnamespace\Name
+ */
+class TestInvalidClassAnnotationClass {}
+
+class TestInvalidMethodAnnotationClass {
+    /**
+     * @SomeMethodAnnotationNamespace\Subnamespace\Name
+     */
+    public function test() {}
+}
+
+class TestInvalidPropertyAnnotationClass {
+    /**
+     * @SomePropertyAnnotationNamespace\Subnamespace\Name
+     */
+    private $field;
 }

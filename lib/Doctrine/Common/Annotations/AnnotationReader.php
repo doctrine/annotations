@@ -103,6 +103,15 @@ class AnnotationReader implements Reader
     );
 
     /**
+     * A list with annotations that are not causing exceptions when not resolved to an annotation class.
+     *
+     * The names are case sensitive.
+     *
+     * @var array
+     */
+    private static $globalIgnoredNamespaces = array();
+
+    /**
      * Add a new annotation to the globally ignored annotation names with regard to exception handling.
      *
      * @param string $name
@@ -110,6 +119,16 @@ class AnnotationReader implements Reader
     static public function addGlobalIgnoredName($name)
     {
         self::$globalIgnoredNames[$name] = true;
+    }
+
+    /**
+     * Add a new annotation to the globally ignored annotation namespaces with regard to exception handling.
+     *
+     * @param string $namespace
+     */
+    static public function addGlobalIgnoredNamespace($namespace)
+    {
+        self::$globalIgnoredNamespaces[$namespace] = true;
     }
 
     /**
@@ -194,6 +213,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_CLASS);
         $this->parser->setImports($this->getClassImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
+        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
 
         return $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
     }
@@ -225,6 +245,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_PROPERTY);
         $this->parser->setImports($this->getPropertyImports($property));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
+        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
 
         return $this->parser->parse($property->getDocComment(), $context);
     }
@@ -256,6 +277,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_METHOD);
         $this->parser->setImports($this->getMethodImports($method));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
+        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
 
         return $this->parser->parse($method->getDocComment(), $context);
     }
