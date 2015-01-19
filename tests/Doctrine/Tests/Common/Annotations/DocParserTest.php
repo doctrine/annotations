@@ -1006,7 +1006,7 @@ DOCBLOCK;
     public function testIgnoreWholeNamespaces($ignoreAnnotationName, $input)
     {
         $parser = new DocParser();
-        $parser->setIgnoredAnnotationNames(array($ignoreAnnotationName => true));
+        $parser->setIgnoredAnnotationNamespaces(array($ignoreAnnotationName => true));
         $result = $parser->parse($input);
 
         $this->assertEquals(0, count($result));
