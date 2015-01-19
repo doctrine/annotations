@@ -120,6 +120,14 @@ final class DocParser
     private $ignoredAnnotationNames = array();
 
     /**
+     * A list with annotations in namespaced format
+     * that are not causing exceptions when not resolved to an annotation class.
+     *
+     * @var array
+     */
+    private $ignoredAnnotationNamespaces = array();
+
+    /**
      * @var string
      */
     private $context = '';
@@ -249,6 +257,18 @@ final class DocParser
     public function setIgnoredAnnotationNames(array $names)
     {
         $this->ignoredAnnotationNames = $names;
+    }
+
+    /**
+     * Sets the annotation namespaces that are ignored during the parsing process.
+     *
+     * @param array $ignoredAnnotationNamespaces
+     *
+     * @return void
+     */
+    public function setIgnoredAnnotationNamespaces($ignoredAnnotationNamespaces)
+    {
+        $this->ignoredAnnotationNamespaces = $ignoredAnnotationNamespaces;
     }
 
     /**
@@ -700,10 +720,10 @@ final class DocParser
                     return false;
                 }
 
-                foreach (array_keys($this->ignoredAnnotationNames) as $annotationName) {
-                    $annotationName = rtrim($annotationName, '\\') . '\\';
+                foreach (array_keys($this->ignoredAnnotationNamespaces) as $ignoredAnnotationNamespace) {
+                    $ignoredAnnotationNamespace = rtrim($ignoredAnnotationNamespace, '\\') . '\\';
 
-                    if (0 === stripos($name, $annotationName) || 0 === stripos($name . '\\', $annotationName)) {
+                    if (0 === stripos($name, $ignoredAnnotationNamespace) || 0 === stripos($name . '\\', $ignoredAnnotationNamespace)) {
                         return false;
                     }
                 }
