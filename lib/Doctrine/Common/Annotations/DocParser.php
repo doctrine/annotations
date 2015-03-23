@@ -791,7 +791,7 @@ final class DocParser
         // check if the annotation expects values via the constructor,
         // or directly injected into public properties
         if (self::$annotationMetadata[$name]['has_constructor'] === true) {
-            return new $name($values);
+            return new $name($values, $this->context);
         }
 
         $instance = new $name();
