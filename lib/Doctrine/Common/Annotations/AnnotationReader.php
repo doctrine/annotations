@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\Common\Annotations\Annotation\InheritDoc;
 use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
 use ReflectionMethod;
@@ -43,6 +44,7 @@ class AnnotationReader implements Reader
      */
     private static $globalImports = array(
         'ignoreannotation' => 'Doctrine\Common\Annotations\Annotation\IgnoreAnnotation',
+        'inheritdoc' => 'Doctrine\Common\Annotations\Annotation\InheritDoc',
     );
 
     /**
@@ -67,7 +69,7 @@ class AnnotationReader implements Reader
         'deprec'=> true,
         'endcode' => true, 'exception'=> true,
         'final'=> true,
-        'ingroup' => true, 'inheritdoc'=> true, 'inheritDoc'=> true,
+        'ingroup' => true,
         'magic' => true,
         'name'=> true,
         'toc' => true, 'tutorial'=> true,
@@ -172,6 +174,7 @@ class AnnotationReader implements Reader
         }
 
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/InheritDoc.php');
 
         $this->parser    = new DocParser;
         $this->preParser = new DocParser;
@@ -249,11 +252,23 @@ class AnnotationReader implements Reader
         $class   = $method->getDeclaringClass();
         $context = 'method ' . $class->getName() . '::' . $method->getName() . '()';
 
+        if (false === $method->getDocComment() && $method->getPrototype()) {
+            $method = $method->getPrototype();
+        }
         $this->parser->setTarget(Target::TARGET_METHOD);
         $this->parser->setImports($this->getMethodImports($method));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
-        return $this->parser->parse($method->getDocComment(), $context);
+        $annotations = $this->parser->parse($method->getDocComment(), $context);
+        foreach ($annotations as $key => $annotation) {
+            if ($annotation instanceof InheritDoc && $method->getPrototype()) {
+                //exclude inheritdoc annotation from results
+                unset($annotations[$key]);
+                return array_merge($annotations, $this->getMethodAnnotations($method->getPrototype()));
+            }
+        }
+
+        return $annotations;
     }
 
     /**
