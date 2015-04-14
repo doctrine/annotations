@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
+use Doctrine\Common\Annotations\Annotation\Inherited;
 use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
 use ReflectionMethod;
@@ -172,6 +173,7 @@ class AnnotationReader implements Reader
         }
 
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
+        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Inherited.php');
 
         $this->parser    = new DocParser;
         $this->preParser = new DocParser;
@@ -253,7 +255,14 @@ class AnnotationReader implements Reader
         $this->parser->setImports($this->getMethodImports($method));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
-        return $this->parser->parse($method->getDocComment(), $context);
+        $annotations = $this->parser->parse($method->getDocComment(), $context);
+        foreach ($annotations as $key => $annotation) {
+            if ($annotation instanceof Inherited && $method->getPrototype()) {
+                unset($annotations[$key]);
+                return array_merge($this->getMethodAnnotations($method->getPrototype()), $annotations);
+            }
+        }
+        return $annotations;
     }
 
     /**

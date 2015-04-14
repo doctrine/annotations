@@ -56,4 +56,22 @@ class AnnotationReaderTest extends AbstractReaderTest
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
     }
 
+    public function testInheritedMethodAnnotationViaInheritedAnnotation()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInheritedMethodAnnotation');
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithAnnotation'));
+        $this->assertEquals(1, count($annotations));
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetMethod', $annotations[0]);
+    }
+
+    public function testInheritedMethodAnnotationWithEmptyAnnotationShouldBeEmpty()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInheritedMethodAnnotation');
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('anotherMethodWithAnnotation'));
+        $this->assertEquals(0, count($annotations));
+    }
 }
