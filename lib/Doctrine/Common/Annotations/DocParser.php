@@ -672,7 +672,7 @@ final class DocParser
             $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
             $found = false;
 
-            if ($this->namespaces) {
+            if ( ! isset($this->ignoredAnnotationNames[$name]) && $this->namespaces) {
                 foreach ($this->namespaces as $namespace) {
                     if ($this->classExists($namespace.'\\'.$name)) {
                         $name = $namespace.'\\'.$name;

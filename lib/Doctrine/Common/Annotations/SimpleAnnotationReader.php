@@ -45,6 +45,7 @@ class SimpleAnnotationReader implements Reader
     {
         $this->parser = new DocParser();
         $this->parser->setIgnoreNotImportedAnnotations(true);
+        $this->parser->setIgnoredAnnotationNames(AnnotationReader::getGlobalIgnoredNames());
     }
 
     /**

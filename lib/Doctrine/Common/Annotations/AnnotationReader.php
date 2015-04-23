@@ -113,6 +113,16 @@ class AnnotationReader implements Reader
     }
 
     /**
+     * Gets the globally ignored annotation names.
+     *
+     * @return array An array of Annotation names to ignore.
+     */
+    static public function getGlobalIgnoredNames()
+    {
+        return self::$globalIgnoredNames;
+    }
+
+    /**
      * Annotations parser.
      *
      * @var \Doctrine\Common\Annotations\DocParser
