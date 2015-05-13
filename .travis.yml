@@ -1,5 +1,11 @@
 language: php
 
+sudo: false
+
+cache:
+  directory:
+    - $HOME/.composer/cache
+
 php:
   - 5.3
   - 5.4
@@ -8,4 +14,4 @@ php:
   - hhvm
 
 before_script:
-    - composer --prefer-source --dev install
+    - composer install -n
