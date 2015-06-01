@@ -192,7 +192,7 @@ class AnnotationReader implements Reader
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
         $annotations = $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
-        if(PHP_VERSION_ID > 50300)
+        if(PHP_VERSION_ID >= 50400)
         {
             foreach($class->getTraits() as $trait)
             {
