@@ -192,9 +192,12 @@ class AnnotationReader implements Reader
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
 
         $annotations = $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
-        foreach($class->getTraits() as $trait)
+        if(PHP_VERSION_ID > 50300)
         {
-            $annotations = array_merge($annotations, $this->parser->parse($trait->getDocComment(), 'class ' . $trait->getName()));
+            foreach($class->getTraits() as $trait)
+            {
+                $annotations = array_merge($annotations, $this->parser->parse($trait->getDocComment(), 'class ' . $trait->getName()));
+            }
         }
         return $annotations;
     }
