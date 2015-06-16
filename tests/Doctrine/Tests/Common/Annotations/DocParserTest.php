@@ -1180,6 +1180,11 @@ DOCBLOCK;
 
     public function testReservedKeywordsInAnnotations()
     {
+        if (PHP_VERSION_ID >= 70000) {
+            $this->markTestSkipped('This test requires PHP 5.6 or lower.');
+        }
+        require 'ReservedKeywordsClasses.php';
+
         $parser = $this->createTestParser();
 
         $result = $parser->parse('@Doctrine\Tests\Common\Annotations\True');
@@ -1355,15 +1360,6 @@ class Name extends \Doctrine\Common\Annotations\Annotation {
 class Marker {
     public $value;
 }
-
-/** @Annotation */
-class True {}
-
-/** @Annotation */
-class False {}
-
-/** @Annotation */
-class Null {}
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
