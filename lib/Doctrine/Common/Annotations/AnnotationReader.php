@@ -197,10 +197,15 @@ class AnnotationReader implements Reader
             return $annotations;
         }
         
-        foreach($class->getTraits() as $trait)
-        {
+        $ignoredAnnotationNames = array_map('get_class', $annotations);
+        foreach($class->getTraits() as $trait) {
             $this->parser->setImports($this->getClassImports($trait));
-            $annotations = array_merge($annotations, $this->parser->parse($trait->getDocComment(), 'trait ' . $trait->getName()));
+            foreach($this->parser->parse($trait->getDocComment(), 'trait ' . $trait->getName()) as $annotation){
+                if(!in_array(($name = get_class($annotation)), $ignoredAnnotationNames)){
+                    $ignoredAnnotationNames[] = $name;
+                    $annotations[] = $annotation;
+                }
+            }
         }
         
         return $annotations;
