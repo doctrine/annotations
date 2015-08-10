@@ -199,7 +199,8 @@ class AnnotationReader implements Reader
         
         foreach($class->getTraits() as $trait)
         {
-            $annotations = array_merge($annotations, $this->parser->parse($trait->getDocComment(), 'class ' . $trait->getName()));
+            $this->parser->setImports($this->getClassImports($trait));
+            $annotations = array_merge($annotations, $this->parser->parse($trait->getDocComment(), 'trait ' . $trait->getName()));
         }
         
         return $annotations;
