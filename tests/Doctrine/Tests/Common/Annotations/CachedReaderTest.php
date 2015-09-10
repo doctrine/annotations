@@ -13,23 +13,50 @@ class CachedReaderTest extends AbstractReaderTest
 
     public function testIgnoresStaleCache()
     {
-        $file = __DIR__.'/Fixtures/Controller.php';
-        touch($file);
-        $name = 'Doctrine\Tests\Common\Annotations\Fixtures\Controller';
-        $cacheKey = $name.'@[Annot]';
+        $cache = time() - 10;
+        touch(__DIR__.'/Fixtures/Controller.php', $cache + 10);
+
+        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\Controller', $cache);
+    }
+
+    public function testIgnoresStaleCacheWithParentClass()
+    {
+        $cache = time() - 10;
+        touch(__DIR__.'/Fixtures/ControllerWithParentClass.php', $cache - 10);
+        touch(__DIR__.'/Fixtures/AbstractController.php', $cache + 10);
+
+        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithParentClass', $cache);
+    }
+
+    public function testIgnoresStaleCacheWithTraits()
+    {
+        if (version_compare(PHP_VERSION, '5.4.0') < 0) {
+            $this->markTestSkipped('This test needs PHP >= 5.4');
+        }
+
+        $cache = time() - 10;
+        touch(__DIR__.'/Fixtures/ControllerWithTrait.php', $cache - 10);
+        touch(__DIR__.'/Fixtures/Traits/SecretRouteTrait.php', $cache + 10);
+
+        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithTrait', $cache);
+    }
+
+    protected function doTestCacheStale($className, $lastCacheModification)
+    {
+        $cacheKey = $className.'@[Annot]';
 
         $cache = $this->getMock('Doctrine\Common\Cache\Cache');
         $cache
             ->expects($this->at(0))
             ->method('fetch')
             ->with($this->equalTo($cacheKey))
-            ->will($this->returnValue(array()))
+            ->will($this->returnValue(array())) // Result was cached, but there was no annotation
         ;
         $cache
             ->expects($this->at(1))
             ->method('fetch')
             ->with($this->equalTo('[C]'.$cacheKey))
-            ->will($this->returnValue(time() - 10))
+            ->will($this->returnValue($lastCacheModification))
         ;
         $cache
             ->expects($this->at(2))
@@ -45,7 +72,8 @@ class CachedReaderTest extends AbstractReaderTest
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
         $route = new Route();
         $route->pattern = '/someprefix';
-        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($name)));
+
+        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
     protected function getReader()
