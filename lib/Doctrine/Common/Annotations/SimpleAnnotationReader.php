@@ -64,7 +64,17 @@ class SimpleAnnotationReader implements Reader
      */
     public function getClassAnnotations(\ReflectionClass $class)
     {
-        return $this->parser->parse($class->getDocComment(), 'class '.$class->getName());
+        if (!method_exists($class, 'getTraits')) {
+            return $this->parser->parse($class->getDocComment(), 'class '.$class->getName());
+        }
+
+        $parsed = array();
+
+        foreach ($class->getTraits() as $reflectedtrait) {
+            $parsed = array_merge($parsed, $this->parser->parse($reflectedtrait->getDocComment(), 'class '.$reflectedtrait->getName()));
+        }
+
+        return array_merge($this->parser->parse($class->getDocComment(), 'class '.$class->getName()), $parsed);
     }
 
     /**
