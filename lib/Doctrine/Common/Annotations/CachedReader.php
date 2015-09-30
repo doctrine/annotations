@@ -191,7 +191,7 @@ final class CachedReader implements Reader
     {
         $cacheKey = $rawCacheKey . self::$CACHE_SALT;
         if (($data = $this->cache->fetch($cacheKey)) !== false) {
-            if (!$this->debug || $this->isCacheFresh($cacheKey, $class)) {
+            if (!$this->debug && $this->isCacheFresh($cacheKey, $class)) {
                 return $data;
             }
         }
