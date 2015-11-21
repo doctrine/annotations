@@ -30,11 +30,6 @@ use Doctrine\Common\Cache\Cache;
 final class CachedReader implements Reader
 {
     /**
-     * @var string
-     */
-    private static $CACHE_SALT = '@[Annot]';
-
-    /**
      * @var Reader
      */
     private $delegate;
@@ -182,14 +177,13 @@ final class CachedReader implements Reader
     /**
      * Fetches a value from the cache.
      *
-     * @param string           $rawCacheKey The cache key.
-     * @param \ReflectionClass $class       The related class.
+     * @param string           $cacheKey The cache key.
+     * @param \ReflectionClass $class    The related class.
      *
      * @return mixed The cached value or false when the value is not in cache.
      */
-    private function fetchFromCache($rawCacheKey, \ReflectionClass $class)
+    private function fetchFromCache($cacheKey, \ReflectionClass $class)
     {
-        $cacheKey = $rawCacheKey . self::$CACHE_SALT;
         if (($data = $this->cache->fetch($cacheKey)) !== false) {
             if (!$this->debug || $this->isCacheFresh($cacheKey, $class)) {
                 return $data;
@@ -202,14 +196,13 @@ final class CachedReader implements Reader
     /**
      * Saves a value to the cache.
      *
-     * @param string $rawCacheKey The cache key.
-     * @param mixed  $value       The value.
+     * @param string $cacheKey The cache key.
+     * @param mixed  $value    The value.
      *
      * @return void
      */
-    private function saveToCache($rawCacheKey, $value)
+    private function saveToCache($cacheKey, $value)
     {
-        $cacheKey = $rawCacheKey . self::$CACHE_SALT;
         $this->cache->save($cacheKey, $value);
         if ($this->debug) {
             $this->cache->save('[C]'.$cacheKey, time());
