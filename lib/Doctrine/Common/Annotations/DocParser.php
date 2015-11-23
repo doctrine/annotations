@@ -349,7 +349,7 @@ final class DocParser
         while (($pos = strpos($input, '@', $pos)) !== false) {
             $preceding = substr($input, $pos - 1, 1);
             // if the @ is preceded by a space or * it is valid
-            if ($pos === 0 || $preceding === ' ' || $preceding === '*')) {
+            if ($pos === 0 || $preceding === ' ' || $preceding === '*') {
                 return $pos;
             }
 
