@@ -33,6 +33,18 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         ), $parser->parseClass($class));
     }
 
+    public function testParseClassWithGroupUseStatement()
+    {
+        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\GroupUseStatement');
+        $parser = new PhpParser();
+
+        $this->assertEquals(array(
+            'route'  => __NAMESPACE__ . '\Fixtures\Annotation\Route',
+            'supersecure' => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+        ), $parser->parseClass($class));
+    }
+
     public function testParseClassWhenNotUserDefined()
     {
         $parser = new PhpParser();
