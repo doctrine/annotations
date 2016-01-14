@@ -33,6 +33,9 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         ), $parser->parseClass($class));
     }
 
+    /**
+     * @requires PHP 7.0
+     */
     public function testParseClassWithGroupUseStatement()
     {
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\GroupUseStatement');
