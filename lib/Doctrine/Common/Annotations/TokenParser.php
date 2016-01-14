@@ -99,6 +99,8 @@ class TokenParser
      */
     public function parseUseStatement()
     {
+
+        $rootClass = '';
         $class = '';
         $alias = '';
         $statements = array();
@@ -114,13 +116,18 @@ class TokenParser
                 $explicitAlias = true;
                 $alias = '';
             } else if ($token === ',') {
-                $statements[strtolower($alias)] = $class;
+                $statements[strtolower($alias)] = $rootClass . $class;
                 $class = '';
                 $alias = '';
                 $explicitAlias = false;
             } else if ($token === ';') {
-                $statements[strtolower($alias)] = $class;
+                $statements[strtolower($alias)] = $rootClass . $class;
                 break;
+            } else if ($token === '{' ) {
+                $rootClass = $class;
+                $class = '';
+            } else if ($token === '}' ) {
+                continue;
             } else {
                 break;
             }
