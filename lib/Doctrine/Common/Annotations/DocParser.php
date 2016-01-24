@@ -347,7 +347,7 @@ final class DocParser
 
         // search for first valid annotation
         while (($pos = strpos($input, '@', $pos)) !== false) {
-            // if the @ is preceded by a space or * it is valid
+            // if the @ is preceded by a space, tab, or * it is valid
             if ($pos === 0 || $input[$pos - 1] === ' ' || $input[$pos - 1] === "\t" || $input[$pos - 1] === '*') {
                 return $pos;
             }
