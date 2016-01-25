@@ -1294,7 +1294,7 @@ DOCBLOCK;
         $result = $parser->parse($docblock);
         $this->assertCount(1, $result);
         $annot = $result[0];
-        $this->assertInstanceOf('Name', $annot);
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Name', $annot);
     }
 
     public function testDefaultAnnotationValueIsNotOverwritten()
