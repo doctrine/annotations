@@ -35,22 +35,14 @@ use Doctrine\Annotations\Annotation\Target;
 class MetadataFactory
 {
     /**
-     * Hash-map for handle types declaration.
-     *
-     * @var array
-     */
-    private static $typeMap = array(
-        'float'     => 'double',
-        'bool'      => 'boolean',
-        // allow uppercase Boolean in honor of George Boole
-        'Boolean'   => 'boolean',
-        'int'       => 'integer',
-    );
-
-    /**
      * @var MetadataParser
      */
     private $parser;
+
+    /**
+     * @var array
+     */
+    private $cache = [];
 
     /**
      * Constructor
@@ -73,6 +65,10 @@ class MetadataFactory
      */
     public function getMetadataFor(string $className) : ClassMetadata
     {
+        if (isset($this->cache[$className])) {
+            return $this->cache[$className];
+        }
+
         $class       = new \ReflectionClass($className);
         $constructor = $class->getConstructor();
         $docComment  = $class->getDocComment();
@@ -88,7 +84,7 @@ class MetadataFactory
 
         $this->collectMetadata($class, $metadata);
 
-        return $metadata;
+        return $this->cache[$className] = $metadata;
     }
 
     /**
