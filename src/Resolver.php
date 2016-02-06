@@ -111,10 +111,14 @@ class Resolver
             return null;
         }
 
-        if ($index === false) {
-            return $imports[$alias];
+        $class = ($index !== false)
+            ? $imports[$alias] . substr($name, $index)
+            : $imports[$alias];
+
+        if ( ! $this->classExists($class)) {
+            return null;
         }
 
-        return $imports[$alias] . substr($name, $index);
+        return $class;
     }
 }

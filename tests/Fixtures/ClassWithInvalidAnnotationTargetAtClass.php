@@ -2,7 +2,7 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetPropertyMethod;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetPropertyMethod;
 
 /**
  * @AnnotationTargetPropertyMethod("Some data")

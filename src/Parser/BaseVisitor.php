@@ -39,6 +39,11 @@ abstract class BaseVisitor implements Visit
     abstract protected function resolveClass(string $class) : string;
 
     /**
+     * @var bool
+     */
+    private $isNested = false;
+
+    /**
      * {@inheritdoc}
      */
     public function visit(Element $element, &$handle = null, $eldnah = null)
@@ -143,13 +148,16 @@ abstract class BaseVisitor implements Visit
             ? $this->visitValues($element->getChild(1), $handle, $eldnah)
             : [];
 
-        return $this->createAnnotation(new Reference($class, $values));
+        return $this->createAnnotation(new Reference($class, $values, $this->isNested));
     }
 
     private function visitValues(Element $element, &$handle = null, $eldnah = null)
     {
         $children = $element->getChildren();
+        $isNested = $this->isNested;
         $values   = [];
+
+        $this->isNested = true;
 
         foreach ($children as $params) {
             foreach ($params->getChildren() as $child) {
@@ -176,6 +184,8 @@ abstract class BaseVisitor implements Visit
                 $values['value'][] = $child->accept($this, $handle, $eldnah);
             }
         }
+
+        $this->isNested = $isNested;
 
         return $values;
     }

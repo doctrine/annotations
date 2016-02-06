@@ -34,4 +34,28 @@ final class IgnoreAnnotation
      * @var array<string>
      */
     public $names = [];
+
+    /**
+     * Annotation constructor.
+     *
+     * @param array $values
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(array $values)
+    {
+        if ( ! isset($values['names']) && isset($values['value'])){
+            $values['names'] = $values['value'];
+        }
+
+        if ( ! isset($values['names'])){
+            $values['names'] = [];
+        }
+
+        if (is_string($values['names'])){
+            $values['names'] = [$values['names']];
+        }
+
+        $this->names = $values['names'];
+    }
 }

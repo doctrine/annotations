@@ -4,6 +4,7 @@ namespace Doctrine\AnnotationsTests\Fixtures;
 
 use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAll;
 use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetClass;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAnnotation;
 use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetPropertyMethod;
 
 /**

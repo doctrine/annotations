@@ -2,7 +2,7 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\AnnotationsTests\Fixtures\AnnotationWithTargetSyntaxError;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithTargetSyntaxError;
 
 /**
  * @AnnotationWithTargetSyntaxError()

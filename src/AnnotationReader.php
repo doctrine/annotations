@@ -26,6 +26,7 @@ use ReflectionMethod;
 use ReflectionProperty;
 
 use Doctrine\Annotations\Parser\DocParser;
+use Doctrine\Annotations\Parser\MetadataParser;
 use Doctrine\Annotations\Annotation\IgnoreAnnotation;
 
 /**
@@ -72,7 +73,7 @@ class AnnotationReader implements Reader
             return [];
         }
 
-        $parser = new DocParser($this->config->getBuilder());
+        $parser = new DocParser($this->config->getHoaParser(), $this->config->getBuilder());
         $result = $parser->parse($docblock, $context);
 
         return $result;
@@ -104,13 +105,13 @@ class AnnotationReader implements Reader
         $namespace = $class->getNamespaceName();
         $imports   = $this->getPropertyImports($property);
         $ignored   = $this->getIgnoredAnnotationNames($class);
-        $context   = new Context($class, $namespace, $imports, $ignored);
+        $context   = new Context($property, $namespace, $imports, $ignored);
 
         if ($docblock === false) {
             return [];
         }
 
-        $parser = new DocParser($this->config->getBuilder());
+        $parser = new DocParser($this->config->getHoaParser(), $this->config->getBuilder());
         $result = $parser->parse($docblock, $context);
 
         return $result;
@@ -142,13 +143,13 @@ class AnnotationReader implements Reader
         $namespace = $class->getNamespaceName();
         $imports   = $this->getMethodImports($method);
         $ignored   = $this->getIgnoredAnnotationNames($class);
-        $context   = new Context($class, $namespace, $imports, $ignored);
+        $context   = new Context($method, $namespace, $imports, $ignored);
 
         if ($docblock === false) {
             return [];
         }
 
-        $parser = new DocParser($this->config->getBuilder());
+        $parser = new DocParser($this->config->getHoaParser(), $this->config->getBuilder());
         $result = $parser->parse($docblock, $context);
 
         return $result;
@@ -179,19 +180,9 @@ class AnnotationReader implements Reader
      */
     private function getIgnoredAnnotationNames(ReflectionClass $class) : array
     {
-        $docblock     = $class->getDocComment();
-        $namespace    = 'Doctrine\Annotations\Annotation';
+        $parser       = new MetadataParser($this->config->getHoaParser(), $this->config->getResolver());
         $ignoredNames = $this->config->getIgnoredAnnotationNames()->getArrayCopy();
-        $context      = new Context($class, $namespace, [
-            'ignoreannotation' => 'Doctrine\Annotations\Annotation\IgnoreAnnotation',
-        ]);
-
-        if ($docblock === false) {
-            return $ignoredNames;
-        }
-
-        $parser      = new DocParser($this->config->getBuilder(), true);
-        $annotations = $parser->parse($docblock, $context);
+        $annotations  = $parser->parseAnnotationClass($class);
 
         foreach ($annotations as $annotation) {
             if ( ! $annotation instanceof IgnoreAnnotation) {
@@ -202,6 +193,7 @@ class AnnotationReader implements Reader
                 $ignoredNames[$name] = true;
             }
         }
+
 
         return $ignoredNames;
     }

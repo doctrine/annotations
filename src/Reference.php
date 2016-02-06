@@ -39,14 +39,21 @@ class Reference
     public $values;
 
     /**
+     * @var bool
+     */
+    public $nested;
+
+    /**
      * Constructor.
      *
      * @param string $name
      * @param array  $values
+     * @param bool   $nested
      */
-    public final function __construct(string $name, array $values = [])
+    public final function __construct(string $name, array $values = [], bool $nested = false)
     {
         $this->name   = $name;
         $this->values = $values;
+        $this->nested = $nested;
     }
 }

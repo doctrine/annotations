@@ -28,6 +28,7 @@ use ReflectionProperty;
 use Doctrine\Annotations\Context;
 use Doctrine\Annotations\Resolver;
 use Doctrine\Annotations\Annotation\Type;
+use Doctrine\Annotations\Exception\ParserException;
 
 /**
  * A parser for annotations metadata.
@@ -109,10 +110,14 @@ class MetadataParser
      */
     private function parseDockblock(Reflector $reflector, string $namespace, string $docblock) : array
     {
-        $context = new Context($reflector, $namespace, $this->imports);
-        $visitor = new MetadataVisitor($this->resolver, $context);
-        $result  = $this->parser->parseDockblock($docblock, $visitor);
+        try {
+            $context = new Context($reflector, $namespace, $this->imports);
+            $visitor = new MetadataVisitor($this->resolver, $context);
+            $result  = $this->parser->parseDockblock($docblock, $visitor);
 
-        return $result;
+            return $result;
+        } catch (\Hoa\Compiler\Exception $e) {
+            throw ParserException::hoaException($e, $context->getDescription());
+        }
     }
 }

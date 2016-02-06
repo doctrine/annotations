@@ -2,9 +2,9 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\AnnotationsTests\Fixtures\AnnotationWithVarType;
-use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAll;
-use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAnnotation;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAll;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithVarType;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAnnotation;
 
 class ClassWithAnnotationWithVarType
 {

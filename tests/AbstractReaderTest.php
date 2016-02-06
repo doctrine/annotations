@@ -2,30 +2,32 @@
 
 namespace Doctrine\AnnotationsTests;
 
+use Doctrine\AnnotationsTests\TestCase;
+
+use Doctrine\AnnotationsTests\Fixtures\Reader\TestParentClass;
 use Doctrine\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Annotations\AnnotationReader;
 use Doctrine\Annotations\Annotation;
 use Doctrine\Annotations\Reader;
 use ReflectionClass;
 
-/**
- * @group deprecated
- */
-abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
+require  __DIR__ . '/Fixtures/Reader/TopLevelAnnotation.php';
+
+abstract class AbstractReaderTest extends TestCase
 {
     public function getReflectionClass()
     {
-        $className = 'Doctrine\AnnotationsTests\Fixtures\DummyClass';
-        return new ReflectionClass($className);
+        return new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\DummyClass');
     }
 
     public function testAnnotations()
     {
-        $class = $this->getReflectionClass();
-        $reader = $this->getReader();
+        $class     = $this->getReflectionClass();
+        $reader    = $this->getReader();
+        $annotName = 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation';
 
         $this->assertEquals(1, count($reader->getClassAnnotations($class)));
-        $this->assertInstanceOf($annotName = DummyAnnotation::CLASS, $annot = $reader->getClassAnnotation($class, $annotName));
+        $this->assertInstanceOf($annotName, $annot = $reader->getClassAnnotation($class, $annotName));
         $this->assertEquals("hello", $annot->dummyValue);
 
         $field1Prop = $class->getProperty('field1');
@@ -43,24 +45,24 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $field2Prop = $class->getProperty('field2');
         $propAnnots = $reader->getPropertyAnnotations($field2Prop);
         $this->assertEquals(1, count($propAnnots));
-        $this->assertInstanceOf($annotName = DummyJoinTable::CLASS, $joinTableAnnot = $reader->getPropertyAnnotation($field2Prop, $annotName));
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Reader\DummyJoinTable', $joinTableAnnot = $reader->getPropertyAnnotation($field2Prop, 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyJoinTable'));
         $this->assertEquals(1, count($joinTableAnnot->joinColumns));
         $this->assertEquals(1, count($joinTableAnnot->inverseJoinColumns));
-        $this->assertTrue($joinTableAnnot->joinColumns[0] instanceof DummyJoinColumn);
-        $this->assertTrue($joinTableAnnot->inverseJoinColumns[0] instanceof DummyJoinColumn);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Reader\DummyJoinColumn', $joinTableAnnot->joinColumns[0]);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Reader\DummyJoinColumn', $joinTableAnnot->inverseJoinColumns[0]);
         $this->assertEquals('col1', $joinTableAnnot->joinColumns[0]->name);
         $this->assertEquals('col2', $joinTableAnnot->joinColumns[0]->referencedColumnName);
         $this->assertEquals('col3', $joinTableAnnot->inverseJoinColumns[0]->name);
         $this->assertEquals('col4', $joinTableAnnot->inverseJoinColumns[0]->referencedColumnName);
 
-        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), DummyAnnotation::CLASS);
+        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
         $this->assertEquals('', $dummyAnnot->dummyValue);
         $this->assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
 
-        $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), DummyAnnotation::CLASS);
+        $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
         $this->assertEquals('fieldHello', $dummyAnnot->dummyValue);
 
-        $classAnnot = $reader->getClassAnnotation($class, DummyAnnotation::CLASS);
+        $classAnnot = $reader->getClassAnnotation($class, 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
         $this->assertEquals('hello', $classAnnot->dummyValue);
     }
 
@@ -69,10 +71,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $class  = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithValidAnnotationTarget');
 
-        $this->assertEquals(1,count($reader->getClassAnnotations($class)));
-        $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('foo'))));
-        $this->assertEquals(1,count($reader->getMethodAnnotations($class->getMethod('someFunction'))));
-        $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('nested'))));
+        $this->assertCount(1, $reader->getClassAnnotations($class));
+        $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
+        $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('nested')));
+        $this->assertCount(1, $reader->getMethodAnnotations($class->getMethod('someFunction')));
     }
 
     public function testAnnotationsWithVarType()
@@ -80,11 +82,11 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $class  = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType');
 
-        $this->assertEquals(1,count($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
-        $this->assertEquals(1,count($barAnnot = $reader->getMethodAnnotations($class->getMethod('bar'))));
+        $this->assertCount(1, ($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
+        $this->assertCount(1, ($barAnnot = $reader->getMethodAnnotations($class->getMethod('bar'))));
 
         $this->assertInternalType('string',  $fooAnnot[0]->string);
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAll', $barAnnot[0]->annotation);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAll', $barAnnot[0]->annotation);
     }
 
     public function testAtInDescription()
@@ -92,143 +94,169 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $class  = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAtInDescriptionAndAnnotation');
 
-        $this->assertEquals(1, count($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
-        $this->assertEquals(1, count($barAnnot = $reader->getPropertyAnnotations($class->getProperty('bar'))));
+        $this->assertCount(1, ($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
+        $this->assertCount(1, ($barAnnot = $reader->getPropertyAnnotations($class->getProperty('bar'))));
 
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\AnnotationTargetPropertyMethod', $fooAnnot[0]);
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\AnnotationTargetPropertyMethod', $barAnnot[0]);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetPropertyMethod', $fooAnnot[0]);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetPropertyMethod', $barAnnot[0]);
     }
 
     public function testClassWithWithDanglingComma()
     {
         $reader = $this->getReader();
-        $annots = $reader->getClassAnnotations(new \ReflectionClass('Doctrine\AnnotationsTests\DummyClassWithDanglingComma'));
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassWithDanglingComma');
 
-        $this->assertCount(1, $annots);
+        $this->assertCount(1, $reader->getClassAnnotations($class));
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetPropertyMethod is not allowed to be declared on class Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtClass. You may only use this annotation on these code elements: METHOD, PROPERTY
+    /**
+     * @expectedException \Doctrine\Annotations\Exception\TargetNotAllowedException
+     * @expectedExceptionMessage Annotation @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetPropertyMethod is not allowed to be declared on class Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtClass. You may only use this annotation on these code elements: METHOD,PROPERTY.
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getClassAnnotations(new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtClass'));
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtClass');
+
+        $reader->getClassAnnotations($class);
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo. You may only use this annotation on these code elements: CLASS
+    /**
+     * @expectedException \Doctrine\Annotations\Exception\TargetNotAllowedException
+     * @expectedExceptionMessage Annotation @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetClass is not allowed to be declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo. You may only use this annotation on these code elements: CLASS.
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty', 'foo'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty', 'foo');
+
+        $reader->getPropertyAnnotations($property);
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetAnnotation is not allowed to be declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar. You may only use this annotation on these code elements: ANNOTATION
+    /**
+     * @expectedException \Doctrine\Annotations\Exception\TargetNotAllowedException
+     * @expectedExceptionMessage Annotation @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAnnotation is not allowed to be declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar. You may only use this annotation on these code elements: ANNOTATION.
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty', 'bar'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtProperty', 'bar');
+
+        $reader->getPropertyAnnotations($property);
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on method Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName(). You may only use this annotation on these code elements: CLASS
+    /**
+     * @expectedException \Doctrine\Annotations\Exception\TargetNotAllowedException
+     * @expectedExceptionMessage Annotation @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetClass is not allowed to be declared on method Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName(). You may only use this annotation on these code elements: CLASS.
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getMethodAnnotations(new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtMethod', 'functionName'));
+        $reader = $this->getReader();
+        $method = new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\ClassWithInvalidAnnotationTargetAtMethod', 'functionName');
+
+        $reader->getMethodAnnotations($method);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\AnnotationsTests\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedException \Doctrine\Annotations\Exception\ParserException
+     * @expectedExceptionMessage Fail to parse class Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithTargetSyntaxError
+     * @expectedExceptionMessage Unrecognized token ")" at line 1 and column 32
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getClassAnnotations(new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithTargetSyntaxError'));
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithTargetSyntaxError');
+
+        $reader->getClassAnnotations($class);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\AnnotationsTests\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedException \Doctrine\Annotations\Exception\ParserException
+     * @expectedExceptionMessage Fail to parse class Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithTargetSyntaxError
+     * @expectedExceptionMessage Unrecognized token ")" at line 1 and column 32
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithTargetSyntaxError','foo'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithTargetSyntaxError','foo');
+
+        $reader->getPropertyAnnotations($property);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\AnnotationsTests\Fixtures\AnnotationWithTargetSyntaxError.
+     * @expectedException \Doctrine\Annotations\Exception\ParserException
+     * @expectedExceptionMessage Fail to parse class Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithTargetSyntaxError
+     * @expectedExceptionMessage Unrecognized token ")" at line 1 and column 32
      */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock()
     {
-        $reader  = $this->getReader();
-        $reader->getMethodAnnotations(new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithTargetSyntaxError','bar'));
+        $reader = $this->getReader();
+        $method = new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithTargetSyntaxError','bar');
+
+        $reader->getMethodAnnotations($method);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Type Error] Attribute "string" of @AnnotationWithVarType declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty expects a(n) string, but got integer.
+     * @expectedException \Doctrine\Annotations\Exception\TypeMismatchException
+     * @expectedExceptionMessage Attribute "string" of @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithVarType declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty expects a(n) string, but got integer.
      */
     public function testClassWithPropertyInvalidVarTypeError()
     {
-        $reader = $this->getReader();
-        $class  = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType');
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType', 'invalidProperty');
 
-        $reader->getPropertyAnnotations($class->getProperty('invalidProperty'));
+        $reader->getPropertyAnnotations($property);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Type Error] Attribute "annotation" of @AnnotationWithVarType declared on method Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType::invalidMethod() expects a(n) Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAll, but got an instance of Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAnnotation.
+     * @expectedException \Doctrine\Annotations\Exception\TypeMismatchException
+     * @expectedExceptionMessage Attribute "annotation" of @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationWithVarType declared on method Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType::invalidMethod() expects a(n) Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAll, but got an instance of Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAnnotation.
      */
     public function testClassWithMethodInvalidVarTypeError()
     {
         $reader = $this->getReader();
-        $class  = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType');
+        $method = new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationWithVarType','invalidMethod');
 
-        $reader->getMethodAnnotations($class->getMethod('invalidMethod'));
+        $reader->getMethodAnnotations($method);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in class Doctrine\AnnotationsTests\DummyClassSyntaxError.
+     * @expectedException \Doctrine\Annotations\Exception\ParserException
+     * @expectedExceptionMessage Fail to parse class Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassSyntaxError
+     * @expectedExceptionMessage Unrecognized token ")" at line 1 and column 26
      */
     public function testClassSyntaxErrorContext()
     {
         $reader = $this->getReader();
-        $reader->getClassAnnotations(new \ReflectionClass('Doctrine\AnnotationsTests\DummyClassSyntaxError'));
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassSyntaxError');
+
+        $reader->getClassAnnotations($class);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in method Doctrine\AnnotationsTests\DummyClassMethodSyntaxError::foo().
+     * @expectedException \Doctrine\Annotations\Exception\ParserException
+     * @expectedExceptionMessage Fail to parse method Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassMethodSyntaxError::foo()
+     * @expectedExceptionMessage Unrecognized token ")" at line 1 and column 30
      */
     public function testMethodSyntaxErrorContext()
     {
         $reader = $this->getReader();
-        $reader->getMethodAnnotations(new \ReflectionMethod('Doctrine\AnnotationsTests\DummyClassMethodSyntaxError', 'foo'));
+        $method = new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassMethodSyntaxError', 'foo');
+
+        $reader->getMethodAnnotations($method);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in property Doctrine\AnnotationsTests\DummyClassPropertySyntaxError::$foo.
+     * @expectedException \Doctrine\Annotations\Exception\ParserException
+     * @expectedExceptionMessage Fail to parse property Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassPropertySyntaxError::$foo
+     * @expectedExceptionMessage Unrecognized token ")" at line 1 and column 30
      */
     public function testPropertySyntaxErrorContext()
     {
-        $reader = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\DummyClassPropertySyntaxError', 'foo'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassPropertySyntaxError', 'foo');
+
+        $reader->getPropertyAnnotations($property);
     }
 
     /**
@@ -236,87 +264,101 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
      */
     public function testMultipleAnnotationsOnSameLine()
     {
-        $reader = $this->getReader();
-        $annots = $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\DummyClass2', 'id'));
-        $this->assertEquals(3, count($annots));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\DummyClass2', 'id');
+        $result   = $reader->getPropertyAnnotations($property);
+
+        $this->assertCount(3, $result);
     }
 
     public function testNonAnnotationProblem()
     {
-        $reader = $this->getReader();
+        $reader   = $this->getReader();
+        $name     = 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation';
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\DummyClassNonAnnotationProblem', 'foo');
+        $result   = $reader->getPropertyAnnotation($property, $name);
 
-        $this->assertNotNull($annot = $reader->getPropertyAnnotation(new \ReflectionProperty('Doctrine\AnnotationsTests\DummyClassNonAnnotationProblem', 'foo'), $name = 'Doctrine\AnnotationsTests\DummyAnnotation'));
-        $this->assertInstanceOf($name, $annot);
+        $this->assertInstanceOf($name, $result);
     }
 
     public function testIncludeIgnoreAnnotation()
     {
-        $reader = $this->getReader();
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithIgnoreAnnotation', 'foo');
+        $result   = $reader->getPropertyAnnotations($property);
 
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\ClassWithIgnoreAnnotation', 'foo'));
-        $this->assertFalse(class_exists('Doctrine\AnnotationsTests\Fixtures\IgnoreAnnotationClass', false));
+        $this->assertEmpty($result);
     }
 
     public function testImportWithConcreteAnnotation()
     {
-        $reader = $this->getReader();
-        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\TestImportWithConcreteAnnotation', 'field');
+        $reader      = $this->getReader();
+        $name        = 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation';
+        $property    = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\TestImportWithConcreteAnnotation', 'field');
         $annotations = $reader->getPropertyAnnotations($property);
-        $this->assertEquals(1, count($annotations));
-        $this->assertNotNull($reader->getPropertyAnnotation($property, 'Doctrine\AnnotationsTests\DummyAnnotation'));
+        $annotation  = $reader->getPropertyAnnotation($property, $name);
+
+        $this->assertCount(1, $annotations);
+        $this->assertInstanceOf($name, $annotation);
     }
 
     public function testImportWithInheritance()
     {
         $reader = $this->getReader();
+        $class  = new TestParentClass();
+        $ref    = new \ReflectionClass($class);
 
-        $class = new TestParentClass();
-        $ref = new \ReflectionClass($class);
-
-        $childAnnotations = $reader->getPropertyAnnotations($ref->getProperty('child'));
-        $this->assertEquals(1, count($childAnnotations));
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Foo\Name', reset($childAnnotations));
-
+        $childAnnotations  = $reader->getPropertyAnnotations($ref->getProperty('child'));
         $parentAnnotations = $reader->getPropertyAnnotations($ref->getProperty('parent'));
-        $this->assertEquals(1, count($parentAnnotations));
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Bar\Name', reset($parentAnnotations));
+
+        $this->assertCount(1, $childAnnotations);
+        $this->assertCount(1, $parentAnnotations);
+
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Reader\Foo\Name', $childAnnotations[0]);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Reader\Bar\Name', $parentAnnotations[0]);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage The annotation "@NameFoo" in property Doctrine\AnnotationsTests\TestAnnotationNotImportedClass::$field was never imported.
+     * @expectedException \Doctrine\Annotations\Exception\ClassNotFoundException
+     * @expectedExceptionMessage The annotation "@NameFoo" in property Doctrine\AnnotationsTests\Fixtures\Reader\TestAnnotationNotImportedClass::$field was never imported. Did you maybe forget to add a "use" statement for this annotation ?
      */
     public function testImportDetectsNotImportedAnnotation()
     {
-        $reader = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\TestAnnotationNotImportedClass', 'field'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\TestAnnotationNotImportedClass', 'field');
+
+        $reader->getPropertyAnnotations($property);
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage The annotation "@Foo\Bar\Name" in property Doctrine\AnnotationsTests\TestNonExistentAnnotationClass::$field was never imported.
+     * @expectedException \Doctrine\Annotations\Exception\ClassNotFoundException
+     * @expectedExceptionMessage The annotation "@Foo\Bar\Name" in property Doctrine\AnnotationsTests\Fixtures\Reader\TestNonExistentAnnotationClass::$field was never imported. Did you maybe forget to add a "use" statement for this annotation ?
      */
     public function testImportDetectsNonExistentAnnotation()
     {
-        $reader = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\TestNonExistentAnnotationClass', 'field'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\TestNonExistentAnnotationClass', 'field');
+
+        $reader->getPropertyAnnotations($property);
     }
 
     public function testTopLevelAnnotation()
     {
-        $reader = $this->getReader();
-        $annotations = $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\AnnotationsTests\TestTopLevelAnnotationClass', 'field'));
+        $reader   = $this->getReader();
+        $property = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Reader\TestTopLevelAnnotationClass', 'field');
+        $result   = $reader->getPropertyAnnotations($property);
 
-        $this->assertEquals(1, count($annotations));
-        $this->assertInstanceOf('\TopLevelAnnotation', reset($annotations));
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf('\TopLevelAnnotation', $result[0]);
     }
 
     public function testIgnoresAnnotationsNotPrefixedWithWhitespace()
     {
         $reader = $this->getReader();
+        $name   = 'Doctrine\AnnotationsTests\Fixtures\Reader\Name';
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Reader\TestIgnoresNonAnnotationsClass');
 
-        $annotation = $reader->getClassAnnotation(new \ReflectionClass(new TestIgnoresNonAnnotationsClass()), 'Doctrine\AnnotationsTests\Name');
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Name', $annotation);
+        $result = $reader->getClassAnnotation($class, $name);
     }
 
     private static $testResetsPhpParserAfterUseRun = false;
@@ -442,207 +484,3 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
      */
     abstract protected function getReader();
 }
-
-/**
- * @parseAnnotation("var")
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- *
- */
-class TestParseAnnotationClass
-{
-    /**
-     * @var
-     */
-    private $field;
-}
-
-/**
- * @Name
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- */
-class TestIgnoresNonAnnotationsClass
-{
-}
-
-class TestTopLevelAnnotationClass
-{
-    /**
-     * @\TopLevelAnnotation
-     */
-    private $field;
-}
-
-class TestNonExistentAnnotationClass
-{
-    /**
-     * @Foo\Bar\Name
-     */
-    private $field;
-}
-
-class TestAnnotationNotImportedClass
-{
-    /**
-     * @NameFoo
-     */
-    private $field;
-}
-
-class TestChildClass
-{
-    /**
-     * @\Doctrine\AnnotationsTests\Foo\Name(name = "foo")
-     */
-    protected $child;
-}
-
-class TestParentClass extends TestChildClass
-{
-    /**
-     * @\Doctrine\AnnotationsTests\Bar\Name(name = "bar")
-     */
-    private $parent;
-}
-
-class TestImportWithConcreteAnnotation
-{
-    /**
-     * @DummyAnnotation(dummyValue = "bar")
-     */
-    private $field;
-}
-
-/**
- * @ignoreAnnotation({"var"})
- */
-class DummyClass2 {
-    /**
-     * @DummyId @DummyColumn(type="integer") @DummyGeneratedValue
-     * @var integer
-     */
-    private $id;
-}
-
-/** @Annotation */
-class DummyId extends Annotation {}
-/** @Annotation */
-class DummyColumn extends Annotation {
-    public $type;
-}
-/** @Annotation */
-class DummyGeneratedValue extends Annotation {}
-/** @Annotation */
-class DummyAnnotation extends Annotation {
-    public $dummyValue;
-}
-
-/**
- * @api
- * @Annotation
- */
-class DummyAnnotationWithIgnoredAnnotation extends Annotation {
-    public $dummyValue;
-}
-
-/** @Annotation */
-class DummyJoinColumn extends Annotation {
-    public $name;
-    public $referencedColumnName;
-}
-/** @Annotation */
-class DummyJoinTable extends Annotation {
-    public $name;
-    public $joinColumns;
-    public $inverseJoinColumns;
-}
-
-/**
- * @DummyAnnotation(dummyValue = "bar",)
- */
-class DummyClassWithDanglingComma
-{
-}
-
-/**
- * @DummyAnnotation(@)
- */
-class DummyClassSyntaxError
-{
-
-}
-
-class DummyClassMethodSyntaxError
-{
-    /**
-     * @DummyAnnotation(@)
-     */
-    public function foo()
-    {
-
-    }
-}
-
-class DummyClassPropertySyntaxError
-{
-    /**
-     * @DummyAnnotation(@)
-     */
-    public $foo;
-}
-
-/**
- * @ignoreAnnotation({"since", "var"})
- */
-class DummyClassNonAnnotationProblem
-{
-    /**
-     * @DummyAnnotation
-     *
-     * @var \Test
-     * @since 0.1
-     */
-    public $foo;
-}
-
-
-/**
-* @DummyAnnotation Foo bar <foobar@1domain.com>
-*/
-class DummyClassWithEmail
-{
-
-}
-
-
-/**
- * @fixme public
- * @TODO
- */
-class DCOM106
-{
-
-}
-
-namespace Doctrine\AnnotationsTests\Foo;
-
-/** @Annotation */
-class Name extends \Doctrine\Annotations\Annotation
-{
-    public $name;
-}
-
-namespace Doctrine\AnnotationsTests\Bar;
-
-/** @Annotation */
-class Name extends \Doctrine\Annotations\Annotation
-{
-    public $name;
-}
-
-use Doctrine\Annotations\Annotation;
-
-/** @Annotation */
-class TopLevelAnnotation extends Annotation
-{
-}
-

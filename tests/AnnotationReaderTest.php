@@ -4,9 +4,6 @@ namespace Doctrine\AnnotationsTests;
 
 use Doctrine\Annotations\AnnotationReader;
 
-/**
- * @group deprecated
- */
 class AnnotationReaderTest extends AbstractReaderTest
 {
     /**
@@ -14,7 +11,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      */
     protected function getReader()
     {
-        return new AnnotationReader();
+        return new AnnotationReader($this->config);
     }
 
     public function testMethodAnnotationFromTrait()

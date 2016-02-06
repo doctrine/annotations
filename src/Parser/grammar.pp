@@ -4,7 +4,7 @@
 %skip   star                [*]
 
 %token  at                  @                           -> annot
-%token  text                [^@].+
+%token  text                [^@].*
 
 %token  annot:identifier    [\\a-zA-Z_][\\a-zA-Z0-9_]*  -> values
 
@@ -33,10 +33,6 @@
 %token  value:comma         ,
 %token  value:equals        =
 %token  value:number        \-?(0|[1-9]\d*)(\.\d+)?([eE][\+\-]?\d+)?
-
-%token  value:dquote_       ""       -> string
-%token  string:string       [^""]+
-%token  string:_dquote      ""       -> value
 
 %token  value:quote_        "        -> string
 %token  string:string       [^"]+

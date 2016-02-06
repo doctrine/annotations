@@ -2,8 +2,8 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetClass;
-use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAnnotation;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetClass;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAnnotation;
 
 /**
  * @AnnotationTargetClass("Some data")

@@ -2,10 +2,10 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\AnnotationsTests\Reader\Name;
-use Doctrine\AnnotationsTests\Reader\DummyAnnotation;
-use Doctrine\AnnotationsTests\Reader\DummyJoinTable;
-use Doctrine\AnnotationsTests\Reader\DummyJoinColumn;
+use Doctrine\AnnotationsTests\Fixtures\Reader\Name;
+use Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation;
+use Doctrine\AnnotationsTests\Fixtures\Reader\DummyJoinTable;
+use Doctrine\AnnotationsTests\Fixtures\Reader\DummyJoinColumn;
 
 /**
  * A description of this class.

@@ -72,18 +72,7 @@ class Builder
      */
     public function create(Context $context, Reference $reference)
     {
-        return $this->createAnotation($context, $reference, $context->getTarget());
-    }
-
-    /**
-     * @param Context   $context
-     * @param Reference $reference
-     * @param integer   $target
-     *
-     * @return object
-     */
-    private function createAnotation(Context $context, Reference $reference, int $target)
-    {
+        $target    = $reference->nested ? Target::TARGET_ANNOTATION : $context->getTarget();
         $fullClass = $this->resolver->resolve($context, $reference->name);
         $metadata  = $this->metadataFactory->getMetadataFor($fullClass);
         $values    = $reference->values;

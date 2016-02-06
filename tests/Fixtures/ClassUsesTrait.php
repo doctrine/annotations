@@ -4,7 +4,8 @@ namespace Doctrine\AnnotationsTests\Fixtures;
 
 use Doctrine\AnnotationsTests\Bar\Autoload;
 
-class ClassUsesTrait {
+class ClassUsesTrait
+{
     use TraitWithAnnotatedMethod;
 
     /**
