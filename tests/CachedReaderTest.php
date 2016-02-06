@@ -1,12 +1,15 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations;
+namespace Doctrine\AnnotationsTests;
 
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
 
+/**
+ * @group deprecated
+ */
 class CachedReaderTest extends AbstractReaderTest
 {
     private $cache;

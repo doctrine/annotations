@@ -43,6 +43,8 @@ class HoaParser
     /**
      * @param string $dockblock
      * @param Visit  $visitor
+     *
+     * @return mixed
      */
     public function parseDockblock(string $dockblock, Visit $visitor)
     {

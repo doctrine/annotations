@@ -1,9 +1,12 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations;
+namespace Doctrine\AnnotationsTests;
 
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
+/**
+ * @group deprecated
+ */
 class SimpleAnnotationReaderTest extends AbstractReaderTest
 {
     /**

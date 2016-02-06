@@ -2,9 +2,8 @@
 
 namespace Doctrine\AnnotationsTests;
 
-use Hoa\File\Read;
-use Hoa\Compiler\Llk\Llk;
 use Hoa\Compiler\Visitor\Dump;
+use Doctrine\Annotations\Parser\HoaParser;
 
 class GrammarTest extends TestCase
 {
@@ -205,12 +204,9 @@ DOCBLOCK
      */
     public function testGrammar($docblock, $expected)
     {
-        $file     = new Read(__DIR__ . '/../src/parser/grammar.pp');
-        $compiler = Llk::load($file);
         $dump     = new Dump();
-
-        $ast  = $compiler->parse($docblock);
-        $text = $dump->visit($ast);
+        $compiler = new HoaParser();
+        $text     = $compiler->parseDockblock($docblock, $dump);
 
         $this->assertEquals($expected, $text);
     }
