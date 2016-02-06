@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations;
+namespace Doctrine\Annotations;
 
 /**
  * Interface for annotation readers.
