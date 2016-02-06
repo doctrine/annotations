@@ -30,6 +30,7 @@ class MetadataFactoryTest extends TestCase
         $factory  = $this->createMetadataFactory();
         $metadata = $factory->getMetadataFor(Annotation::CLASS);
 
+        $this->assertNotNull($metadata);
         $this->assertEquals(Annotation::CLASS, $metadata->class);
         $this->assertEquals(Target::TARGET_ALL, $metadata->target);
         $this->assertTrue($metadata->hasConstructor);
@@ -47,6 +48,7 @@ class MetadataFactoryTest extends TestCase
         $factory  = $this->createMetadataFactory();
         $metadata = $factory->getMetadataFor($class);
 
+        $this->assertNotNull($metadata);
         $this->assertEquals($class, $metadata->class);
         $this->assertEquals(Target::TARGET_CLASS, $metadata->target);
     }
@@ -57,6 +59,7 @@ class MetadataFactoryTest extends TestCase
         $factory  = $this->createMetadataFactory();
         $metadata = $factory->getMetadataFor($class);
 
+        $this->assertNotNull($metadata);
         $this->assertEquals($class, $metadata->class);
 
         $this->assertArrayHasKey('mixed', $metadata->properties);

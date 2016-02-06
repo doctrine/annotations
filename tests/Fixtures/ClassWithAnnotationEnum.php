@@ -2,7 +2,7 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\AnnotationsTests\Fixtures\AnnotationEnum;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationEnum;
 
 class ClassWithAnnotationEnum
 {

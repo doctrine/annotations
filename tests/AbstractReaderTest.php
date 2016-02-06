@@ -409,23 +409,25 @@ abstract class AbstractReaderTest extends TestCase
     }
 
     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
+     * @expectedException \Doctrine\Annotations\Exception\InvalidAnnotationException
      * @expectedExceptionMessage The class "Doctrine\AnnotationsTests\Fixtures\NoAnnotation" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\AnnotationsTests\Fixtures\NoAnnotation". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class Doctrine\AnnotationsTests\Fixtures\InvalidAnnotationUsageClass.
      */
     public function testErrorWhenInvalidAnnotationIsUsed()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\InvalidAnnotationUsageClass');
-        $reader->getClassAnnotations($ref);
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\InvalidAnnotationUsageClass');
+
+        $reader->getClassAnnotations($class);
     }
 
     public function testInvalidAnnotationUsageButIgnoredClass()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\InvalidAnnotationUsageButIgnoredClass');
-        $annots = $reader->getClassAnnotations($ref);
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\InvalidAnnotationUsageButIgnoredClass');
+        $result = $reader->getClassAnnotations($class);
 
-        $this->assertEquals(2, count($annots));
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\Route', $result[0]);
     }
 
     /**
@@ -437,7 +439,6 @@ abstract class AbstractReaderTest extends TestCase
         $reader = $this->getReader();
         $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassDDC1660');
 
-        $this->assertTrue(class_exists('Doctrine\AnnotationsTests\Fixtures\Annotation\Version'));
         $this->assertCount(0, $reader->getClassAnnotations($class));
         $this->assertCount(0, $reader->getMethodAnnotations($class->getMethod('bar')));
         $this->assertCount(0, $reader->getPropertyAnnotations($class->getProperty('foo')));
@@ -445,27 +446,30 @@ abstract class AbstractReaderTest extends TestCase
 
     public function testAnnotationEnumeratorException()
     {
-        $reader     = $this->getReader();
-        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum');
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum');
 
-        $this->assertCount(1, $bar = $reader->getMethodAnnotations($class->getMethod('bar')));
-        $this->assertCount(1, $foo = $reader->getPropertyAnnotations($class->getProperty('foo')));
+        $bar = $reader->getMethodAnnotations($class->getMethod('bar'));
+        $foo = $reader->getPropertyAnnotations($class->getProperty('foo'));
 
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\AnnotationEnum', $bar[0]);
-        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\AnnotationEnum', $foo[0]);
+        $this->assertCount(1, $bar);
+        $this->assertCount(1, $foo);
+
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationEnum', $bar[0]);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationEnum', $foo[0]);
 
         try {
             $reader->getPropertyAnnotations($class->getProperty('invalidProperty'));
             $this->fail();
-        } catch (\Doctrine\Annotations\AnnotationException $exc) {
-            $this->assertEquals('[Enum Error] Attribute "value" of @Doctrine\AnnotationsTests\Fixtures\AnnotationEnum declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum::$invalidProperty accept only [ONE, TWO, THREE], but got FOUR.', $exc->getMessage());
+        } catch (\Doctrine\Annotations\Exception\TypeMismatchException $exc) {
+            $this->assertEquals('Attribute "value" of @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationEnum declared on property Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum::$invalidProperty accept only [ONE, TWO, THREE], but got FOUR.', $exc->getMessage());
         }
 
         try {
             $reader->getMethodAnnotations($class->getMethod('invalidMethod'));
             $this->fail();
-        } catch (\Doctrine\Annotations\AnnotationException $exc) {
-            $this->assertEquals('[Enum Error] Attribute "value" of @Doctrine\AnnotationsTests\Fixtures\AnnotationEnum declared on method Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum::invalidMethod() accept only [ONE, TWO, THREE], but got 5.', $exc->getMessage());
+        } catch (\Doctrine\Annotations\Exception\TypeMismatchException $exc) {
+            $this->assertEquals('Attribute "value" of @Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationEnum declared on method Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum::invalidMethod() accept only [ONE, TWO, THREE], but got 5.', $exc->getMessage());
         }
     }
 
@@ -475,8 +479,10 @@ abstract class AbstractReaderTest extends TestCase
     public function testIgnoreFixMeAndUpperCaseToDo()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\AnnotationsTests\DCOM106');
-        $reader->getClassAnnotations($ref);
+        $class  = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Reader\DCOM106');
+        $result = $reader->getClassAnnotations($class);
+
+        $this->assertEmpty($result);
     }
 
     /**

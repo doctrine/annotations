@@ -17,7 +17,7 @@
 %token  values:_brace       }                           -> value
 %token  values:parenthesis_ \(                          -> value
 %token  values:_parenthesis \)                          -> default
-%token  values:text         [^@].+                      -> default
+%token  values:text         [^@].*                      -> default
 
 %skip   value:star          [*]
 %skip   value:_doc          [*/]

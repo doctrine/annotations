@@ -26,6 +26,7 @@ use Doctrine\Annotations\Metadata\ClassMetadata;
 use Doctrine\Annotations\Metadata\MetadataFactory;
 use Doctrine\Annotations\Exception\TypeMismatchException;
 use Doctrine\Annotations\Exception\TargetNotAllowedException;
+use Doctrine\Annotations\Exception\InvalidAnnotationException;
 
 /**
  * Build annotations objects
@@ -76,6 +77,10 @@ class Builder
         $fullClass = $this->resolver->resolve($context, $reference->name);
         $metadata  = $this->metadataFactory->getMetadataFor($fullClass);
         $values    = $reference->values;
+
+        if ($metadata === null) {
+            throw InvalidAnnotationException::notAnnotationException($fullClass, $reference->name, $context->getDescription());
+        }
 
         if (($metadata->target & $target) === 0) {
             $contextDesc   = $context->getDescription();

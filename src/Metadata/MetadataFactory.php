@@ -24,6 +24,7 @@ namespace Doctrine\Annotations\Metadata;
 use ReflectionClass;
 use ReflectionProperty;
 
+
 use Doctrine\Annotations\Parser\MetadataParser;
 use Doctrine\Annotations\Annotation\Target;
 
@@ -63,7 +64,7 @@ class MetadataFactory
      *
      * @throws \Exception
      */
-    public function getMetadataFor(string $className) : ClassMetadata
+    public function getMetadataFor(string $className)
     {
         if (isset($this->cache[$className])) {
             return $this->cache[$className];
@@ -82,24 +83,40 @@ class MetadataFactory
             $metadata->hasConstructor = true;
         }
 
-        $this->collectMetadata($class, $metadata);
-
-        return $this->cache[$className] = $metadata;
-    }
-
-    /**
-     * @return array
-     */
-    private function collectMetadata(ReflectionClass $class, ClassMetadata $metadata)
-    {
         $annotations = $this->parser->parseAnnotationClass($class);
         $indexed     = $this->getIndexedAnnotations($annotations);
+
+        if ( ! $this->isAnnotation($class, $indexed)) {
+            return null;
+        }
 
         if (isset($indexed['Target'])) {
             $metadata->target = $indexed['Target']->target;
         }
 
         $this->collectPropertiesMetadata($class, $metadata);
+
+        return $this->cache[$className] = $metadata;
+    }
+
+    /**
+     * @return bool
+     */
+    private function isAnnotation(ReflectionClass $class, array $annotations) : bool
+    {
+        if ($class->isSubclassOf('Doctrine\Annotations\Annotation')) {
+            return true;
+        }
+
+        if ($class->name === 'Doctrine\Annotations\Annotation') {
+            return true;
+        }
+
+        if (isset($annotations['Annotation'])) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
