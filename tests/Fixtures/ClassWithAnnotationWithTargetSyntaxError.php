@@ -1,8 +1,8 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationWithTargetSyntaxError;
 
 /**
  * @AnnotationWithTargetSyntaxError()

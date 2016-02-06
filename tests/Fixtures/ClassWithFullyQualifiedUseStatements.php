@@ -1,11 +1,11 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
 use
-    \Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure,
-    \Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route
+    \Doctrine\AnnotationsTests\Fixtures\Annotation\Secure,
+    \Doctrine\AnnotationsTests\Fixtures\Annotation\Route
 ;
-use \Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
+use \Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
 
 class ClassWithFullyQualifiedUseStatements {}

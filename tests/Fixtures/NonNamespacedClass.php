@@ -1,7 +1,7 @@
 <?php
 
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Route;
 
 /**
  * @Route("foo")

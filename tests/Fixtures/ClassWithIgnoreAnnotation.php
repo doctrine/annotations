@@ -1,9 +1,9 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
 /**
- * @ignoreAnnotation("IgnoreAnnotationClass")
+ * @ignoreAnnotation({"IgnoreAnnotationClass"})
  */
 class ClassWithIgnoreAnnotation
 {

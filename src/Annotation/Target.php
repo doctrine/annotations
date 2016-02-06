@@ -18,7 +18,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations\Annotation;
+namespace Doctrine\Annotations\Annotation;
 
 /**
  * Annotation that can be used to signal to the parser
@@ -53,18 +53,11 @@ final class Target
     public $value;
 
     /**
-     * Targets as bitmask.
+     * Target as bitmask.
      *
      * @var integer
      */
-    public $targets;
-
-    /**
-     * Literal target declaration.
-     *
-     * @var integer
-     */
-    public $literal;
+    public $target;
 
     /**
      * Annotation constructor.
@@ -75,12 +68,14 @@ final class Target
      */
     public function __construct(array $values)
     {
-        if (!isset($values['value'])){
+        if ( ! isset($values['value'])){
             $values['value'] = null;
         }
+
         if (is_string($values['value'])){
-            $values['value'] = array($values['value']);
+            $values['value'] = [$values['value']];
         }
+
         if (!is_array($values['value'])){
             throw new \InvalidArgumentException(
                 sprintf('@Target expects either a string value, or an array of strings, "%s" given.',
@@ -90,18 +85,47 @@ final class Target
         }
 
         $bitmask = 0;
+
         foreach ($values['value'] as $literal) {
-            if(!isset(self::$map[$literal])){
+            if( ! isset(self::$map[$literal])){
                 throw new \InvalidArgumentException(
                     sprintf('Invalid Target "%s". Available targets: [%s]',
                             $literal,  implode(', ', array_keys(self::$map)))
                 );
             }
+
             $bitmask |= self::$map[$literal];
         }
 
-        $this->targets  = $bitmask;
-        $this->value    = $values['value'];
-        $this->literal  = implode(', ', $this->value);
+        $this->target = $bitmask;
+        $this->value  = $values['value'];
+    }
+
+    /**
+     * @param int $target
+     *
+     * @return array
+     */
+    public static function getNames(int $target) : array
+    {
+        $names = [];
+
+        if ($target & self::TARGET_CLASS) {
+            $names[] = 'CLASS';
+        }
+
+        if ($target & self::TARGET_METHOD) {
+            $names[] = 'METHOD';
+        }
+
+        if ($target & self::TARGET_PROPERTY) {
+            $names[] = 'PROPERTY';
+        }
+
+        if ($target & self::TARGET_ANNOTATION) {
+            $names[] = 'ANNOTATION';
+        }
+
+        return $names;
     }
 }

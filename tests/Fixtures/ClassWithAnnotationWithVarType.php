@@ -1,10 +1,10 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType;
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationWithVarType;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAll;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAnnotation;
 
 class ClassWithAnnotationWithVarType
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures {
-    use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
+namespace Doctrine\AnnotationsTests\Fixtures {
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Secure;
 
     class DifferentNamespacesPerFileWithClassAsFirst {}
 }
 
 namespace {
-    use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Route;
 }
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures\Foo {
-    use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
+namespace Doctrine\AnnotationsTests\Fixtures\Foo {
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
 }

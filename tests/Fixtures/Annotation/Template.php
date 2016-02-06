@@ -1,6 +1,6 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures\Annotation;
+namespace Doctrine\AnnotationsTests\Fixtures\Annotation;
 
 /** @Annotation */
 class Template
@@ -10,5 +10,10 @@ class Template
     public function __construct(array $values)
     {
         $this->name = isset($values['value']) ? $values['value'] : null;
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }

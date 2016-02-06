@@ -1,11 +1,11 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
 // Include a class named Api
 require_once(__DIR__ . '/Api.php');
 
-use Doctrine\Tests\Common\Annotations\DummyAnnotationWithIgnoredAnnotation;
+use Doctrine\AnnotationsTests\DummyAnnotationWithIgnoredAnnotation;
 
 /**
  * @DummyAnnotationWithIgnoredAnnotation(dummyValue="hello")

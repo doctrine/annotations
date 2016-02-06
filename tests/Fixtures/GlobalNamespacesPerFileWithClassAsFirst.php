@@ -1,12 +1,12 @@
 <?php
 
 namespace {
-	use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
-	use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Secure;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Route;
 
-	class GlobalNamespacesPerFileWithClassAsFirst {}
+    class GlobalNamespacesPerFileWithClassAsFirst {}
 }
 
 namespace {
-	use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
 }

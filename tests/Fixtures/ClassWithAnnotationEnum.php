@@ -1,8 +1,8 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnum;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationEnum;
 
 class ClassWithAnnotationEnum
 {

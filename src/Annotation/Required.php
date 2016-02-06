@@ -18,7 +18,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations\Annotation;
+namespace Doctrine\Annotations\Annotation;
 
 /**
  * Annotation that can be used to signal to the parser

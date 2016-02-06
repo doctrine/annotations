@@ -1,35 +1,35 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations;
+namespace Doctrine\AnnotationsTests\Parser;
 
 use ReflectionClass;
-use Doctrine\Common\Annotations\PhpParser;
+use Doctrine\Annotations\Parser\PhpParser;
 
-require_once __DIR__.'/Fixtures/NonNamespacedClass.php';
-require_once __DIR__.'/Fixtures/GlobalNamespacesPerFileWithClassAsFirst.php';
-require_once __DIR__.'/Fixtures/GlobalNamespacesPerFileWithClassAsLast.php';
+require_once __DIR__ . '/../Fixtures/NonNamespacedClass.php';
+require_once __DIR__ . '/../Fixtures/GlobalNamespacesPerFileWithClassAsFirst.php';
+require_once __DIR__ . '/../Fixtures/GlobalNamespacesPerFileWithClassAsLast.php';
 
 class PhpParserTest extends \PHPUnit_Framework_TestCase
 {
     public function testParseClassWithMultipleClassesInFile()
     {
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\MultipleClassesInFile');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\MultipleClassesInFile');
         $parser = new PhpParser();
 
         $this->assertEquals(array(
-            'route'  => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'secure' => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'route'  => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'secure' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
         ), $parser->parseClass($class));
     }
 
     public function testParseClassWithMultipleImportsInUseStatement()
     {
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\MultipleImportsInUseStatement');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\MultipleImportsInUseStatement');
         $parser = new PhpParser();
 
         $this->assertEquals(array(
-            'route'  => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'secure' => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'route'  => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'secure' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
         ), $parser->parseClass($class));
     }
 
@@ -58,83 +58,83 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         $class = new ReflectionClass('\AnnotationsTestsFixturesNonNamespacedClass');
 
         $this->assertEquals(array(
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
     public function testParseClassWhenClassIsInterface()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\TestInterface');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\TestInterface');
 
         $this->assertEquals(array(
-            'secure' => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'secure' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
         ), $parser->parseClass($class));
     }
 
     public function testClassWithFullyQualifiedUseStatements()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassWithFullyQualifiedUseStatements');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithFullyQualifiedUseStatements');
 
         $this->assertEquals(array(
-            'secure'   => '\\' . __NAMESPACE__ . '\Fixtures\Annotation\Secure',
-            'route'    => '\\' . __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => '\\' . __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'secure'   => '\Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
+            'route'    => '\Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => '\Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
     public function testNamespaceAndClassCommentedOut()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceAndClassCommentedOut');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\NamespaceAndClassCommentedOut');
 
         $this->assertEquals(array(
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
 	}
 
     public function testEqualNamespacesPerFileWithClassAsFirst()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\EqualNamespacesPerFileWithClassAsFirst');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\EqualNamespacesPerFileWithClassAsFirst');
 
         $this->assertEquals(array(
-            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
+            'secure'   => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
         ), $parser->parseClass($class));
     }
 
     public function testEqualNamespacesPerFileWithClassAsLast()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\EqualNamespacesPerFileWithClassAsLast');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\EqualNamespacesPerFileWithClassAsLast');
 
         $this->assertEquals(array(
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
     public function testDifferentNamespacesPerFileWithClassAsFirst()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\DifferentNamespacesPerFileWithClassAsFirst');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\DifferentNamespacesPerFileWithClassAsFirst');
 
         $this->assertEquals(array(
-            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
+            'secure'   => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
         ), $parser->parseClass($class));
     }
 
     public function testDifferentNamespacesPerFileWithClassAsLast()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\DifferentNamespacesPerFileWithClassAsLast');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\DifferentNamespacesPerFileWithClassAsLast');
 
         $this->assertEquals(array(
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
@@ -144,8 +144,8 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         $class = new \ReflectionClass('\GlobalNamespacesPerFileWithClassAsFirst');
 
         $this->assertEquals(array(
-            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
+            'secure'   => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
         ), $parser->parseClass($class));
     }
 
@@ -155,38 +155,38 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
         $class = new ReflectionClass('\GlobalNamespacesPerFileWithClassAsLast');
 
         $this->assertEquals(array(
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
     public function testNamespaceWithClosureDeclaration()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceWithClosureDeclaration');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\NamespaceWithClosureDeclaration');
 
         $this->assertEquals(array(
-            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'secure'   => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
     public function testIfPointerResetsOnMultipleParsingTries()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceWithClosureDeclaration');
+        $class = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\NamespaceWithClosureDeclaration');
 
         $this->assertEquals(array(
-            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'secure'   => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
 
         $this->assertEquals(array(
-            'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
-            'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
-            'template' => __NAMESPACE__ . '\Fixtures\Annotation\Template',
+            'secure'   => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Secure',
+            'route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
         ), $parser->parseClass($class));
     }
 
@@ -197,11 +197,11 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
     public function testClassWithClosure()
     {
         $parser = new PhpParser();
-        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassWithClosure');
+        $class  = new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\ClassWithClosure');
 
         $this->assertEquals(array(
-          'annotationtargetall'         => __NAMESPACE__ . '\Fixtures\AnnotationTargetAll',
-          'annotationtargetannotation'  => __NAMESPACE__ . '\Fixtures\AnnotationTargetAnnotation',
+          'annotationtargetall'         => 'Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAll',
+          'annotationtargetannotation'  => 'Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAnnotation',
         ), $parser->parseClass($class));
     }
 }

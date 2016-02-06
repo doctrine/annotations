@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations;
+namespace Doctrine\Annotations\Parser;
 
 /**
  * Parses a file for namespaces/use/class declarations.

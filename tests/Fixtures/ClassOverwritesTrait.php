@@ -1,8 +1,8 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Bar2\Autoload;
+use Doctrine\AnnotationsTests\Bar2\Autoload;
 
 class ClassOverwritesTrait {
     use TraitWithAnnotatedMethod;
@@ -17,7 +17,7 @@ class ClassOverwritesTrait {
 }
 
 
-namespace Doctrine\Tests\Common\Annotations\Bar2;
+namespace Doctrine\AnnotationsTests\Bar2;
 
 /** @Annotation */
 class Autoload

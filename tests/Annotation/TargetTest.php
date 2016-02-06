@@ -17,16 +17,17 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Tests\Common\Annotations\Annotation;
+namespace Doctrine\AnnotationsTests\Annotation;
 
-use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\Annotations\Annotation\Target;
+use Doctrine\AnnotationsTests\TestCase;
 
 /**
- * Tests for {@see \Doctrine\Common\Annotations\Annotation\Target}
+ * Tests for {@see \Doctrine\Annotations\Annotation\Target}
  *
- * @covers \Doctrine\Common\Annotations\Annotation\Target
+ * @covers \Doctrine\Annotations\Annotation\Target
  */
-class TargetTest extends \PHPUnit_Framework_TestCase
+class TargetTest extends TestCase
 {
     /**
      * @group DDC-3006
@@ -34,14 +35,33 @@ class TargetTest extends \PHPUnit_Framework_TestCase
     public function testValidMixedTargets()
     {
         $target = new Target(array("value" => array("ALL")));
-        $this->assertEquals(Target::TARGET_ALL, $target->targets);
+        $this->assertEquals(Target::TARGET_ALL, $target->target);
 
         $target = new Target(array("value" => array("METHOD", "METHOD")));
-        $this->assertEquals(Target::TARGET_METHOD, $target->targets);
-        $this->assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
+        $this->assertEquals(Target::TARGET_METHOD, $target->target);
+        $this->assertNotEquals(Target::TARGET_PROPERTY, $target->target);
 
         $target = new Target(array("value" => array("PROPERTY", "METHOD")));
-        $this->assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
+        $this->assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->target);
+    }
+
+    public function testGetNames()
+    {
+        $this->assertEquals([
+            'CLASS',
+            'METHOD',
+            'PROPERTY',
+            'ANNOTATION'
+        ], Target::getNames(Target::TARGET_ALL));
+
+        $this->assertEquals([
+            'METHOD'
+        ], Target::getNames(Target::TARGET_METHOD));
+
+        $this->assertEquals([
+            'METHOD',
+            'PROPERTY'
+        ], Target::getNames(Target::TARGET_METHOD | Target::TARGET_PROPERTY));
     }
 }
 

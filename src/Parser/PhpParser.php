@@ -17,7 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
-namespace Doctrine\Common\Annotations;
+namespace Doctrine\Annotations\Parser;
 
 use SplFileObject;
 
@@ -27,7 +27,7 @@ use SplFileObject;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Christian Kaps <christian.kaps@mohiva.com>
  */
-final class PhpParser
+class PhpParser
 {
     /**
      * Parses a class.

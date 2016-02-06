@@ -1,20 +1,20 @@
 <?php
 
-// namespace Doctrine\Tests\Common\Annotations\Fixtures;
-namespace Doctrine\Tests\Common\Annotations\Fixtures\Foo {
+// namespace Doctrine\AnnotationsTests\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures\Foo {
 
-    use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Secure;
 
     // class NamespaceAndClassCommentedOut {}
 }
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures {
+namespace Doctrine\AnnotationsTests\Fixtures {
 
     // class NamespaceAndClassCommentedOut {}
-    use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Route;
 
-    // namespace Doctrine\Tests\Common\Annotations\Fixtures;
-    use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
+    // namespace Doctrine\AnnotationsTests\Fixtures;
+    use Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
 
     class NamespaceAndClassCommentedOut {}
 }

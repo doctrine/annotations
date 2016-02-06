@@ -1,10 +1,10 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Secure;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Route;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
 
 $var = 1;
 function () use ($var) {};

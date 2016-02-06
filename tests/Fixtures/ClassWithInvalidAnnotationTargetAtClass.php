@@ -1,8 +1,8 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetPropertyMethod;
 
 /**
  * @AnnotationTargetPropertyMethod("Some data")

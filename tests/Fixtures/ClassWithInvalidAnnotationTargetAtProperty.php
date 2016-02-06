@@ -1,9 +1,9 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass;
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetClass;
+use Doctrine\AnnotationsTests\Fixtures\AnnotationTargetAnnotation;
 
 /**
  * @AnnotationTargetClass("Some data")

@@ -1,6 +1,6 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures\Annotation;
+namespace Doctrine\AnnotationsTests\Fixtures\Annotation;
 
 /** @Annotation */
 class Secure

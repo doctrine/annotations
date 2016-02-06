@@ -19,10 +19,15 @@
 
 namespace Doctrine\Annotations;
 
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
+
 /**
  * Interface for annotation readers.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
 interface Reader
 {
@@ -34,7 +39,7 @@ interface Reader
      *
      * @return array An array of Annotations.
      */
-    function getClassAnnotations(\ReflectionClass $class);
+    function getClassAnnotations(ReflectionClass $class) : array;
 
     /**
      * Gets a class annotation.
@@ -45,7 +50,7 @@ interface Reader
      *
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    function getClassAnnotation(\ReflectionClass $class, $annotationName);
+    function getClassAnnotation(ReflectionClass $class, $annotationName);
 
     /**
      * Gets the annotations applied to a method.
@@ -55,7 +60,7 @@ interface Reader
      *
      * @return array An array of Annotations.
      */
-    function getMethodAnnotations(\ReflectionMethod $method);
+    function getMethodAnnotations(ReflectionMethod $method) : array;
 
     /**
      * Gets a method annotation.
@@ -65,7 +70,7 @@ interface Reader
      *
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    function getMethodAnnotation(\ReflectionMethod $method, $annotationName);
+    function getMethodAnnotation(ReflectionMethod $method, $annotationName);
 
     /**
      * Gets the annotations applied to a property.
@@ -75,7 +80,7 @@ interface Reader
      *
      * @return array An array of Annotations.
      */
-    function getPropertyAnnotations(\ReflectionProperty $property);
+    function getPropertyAnnotations(ReflectionProperty $property) : array;
 
     /**
      * Gets a property annotation.
@@ -85,5 +90,5 @@ interface Reader
      *
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
+    function getPropertyAnnotation(ReflectionProperty $property, $annotationName);
 }

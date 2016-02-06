@@ -1,8 +1,8 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Bar\Autoload;
+use Doctrine\AnnotationsTests\Bar\Autoload;
 
 class ClassUsesTrait {
     use TraitWithAnnotatedMethod;
@@ -22,7 +22,7 @@ class ClassUsesTrait {
 }
 
 
-namespace Doctrine\Tests\Common\Annotations\Bar;
+namespace Doctrine\AnnotationsTests\Bar;
 
 /** @Annotation */
 class Autoload

@@ -1,7 +1,7 @@
 <?php
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Autoload;
 
 trait TraitWithAnnotatedMethod {
 

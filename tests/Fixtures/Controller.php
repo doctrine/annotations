@@ -1,9 +1,9 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Template;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\Route;
 
 /**
  * @Route("/someprefix")
@@ -11,6 +11,8 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
  */
 class Controller
 {
+    private $service;
+
     /**
      * @Route("/", name="_demo")
      * @Template()

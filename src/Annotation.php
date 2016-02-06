@@ -22,17 +22,17 @@ namespace Doctrine\Annotations;
 /**
  * Annotations class.
  *
- * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
  * @author Jonathan Wage <jonwage@gmail.com>
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
  * @author Roman Borschel <roman@code-factory.org>
+ * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
  */
 class Annotation
 {
     /**
      * Value property. Common among all derived classes.
      *
-     * @var string
+     * @var mixed
      */
     public $value;
 

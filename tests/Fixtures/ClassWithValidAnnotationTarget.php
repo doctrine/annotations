@@ -1,10 +1,10 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\AnnotationsTests\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass;
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetAll;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetClass;
+use Doctrine\AnnotationsTests\Fixtures\Annotation\AnnotationTargetPropertyMethod;
 
 /**
  * @AnnotationTargetClass("Some data")
