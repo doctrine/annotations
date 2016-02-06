@@ -18,20 +18,17 @@
  * <http://www.doctrine-project.org>.
  */
 
+declare(strict_types=1);
+
 namespace Doctrine\Annotations\Annotation;
 
 /**
  * Annotation that can be used to signal to the parser
  * to check the available values during the parsing process.
  *
- * @since  2.4
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  *
  * @Annotation
- * @Attributes({
- *    @Attribute("value",   required = true,  type = "array"),
- *    @Attribute("literal", required = false, type = "array")
- * })
  */
 final class Enum
 {
