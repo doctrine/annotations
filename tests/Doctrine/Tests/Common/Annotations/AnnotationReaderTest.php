@@ -56,4 +56,13 @@ class AnnotationReaderTest extends AbstractReaderTest
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
     }
 
+    public function testOmitNotRegisteredAnnotation()
+    {
+        $reader = $this->getReader();
+        $reader->setParserIgnoreNotImportedAnnotations(true);
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithNotRegisteredAnnotationUsed');
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
+        $this->assertEquals([], $annotations);
+    }
 }

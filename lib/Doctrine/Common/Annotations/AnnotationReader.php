@@ -184,6 +184,14 @@ class AnnotationReader implements Reader
     }
 
     /**
+     * @param bool $notImportedAnnotationsIgnored
+     */
+    public function setParserIgnoreNotImportedAnnotations($notImportedAnnotationsIgnored)
+    {
+        $this->parser->setIgnoreNotImportedAnnotations($notImportedAnnotationsIgnored);
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function getClassAnnotations(ReflectionClass $class)
