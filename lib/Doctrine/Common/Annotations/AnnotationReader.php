@@ -153,7 +153,6 @@ class AnnotationReader implements Reader
      * Initializes a new AnnotationReader.
      *
      * @param DocParser $parser
-     * @throws AnnotationException
      */
     public function __construct(DocParser $parser = null)
     {
@@ -177,7 +176,7 @@ class AnnotationReader implements Reader
 
         AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
 
-        $this->parser = is_null($parser) ? new DocParser() : $parser;
+        $this->parser = (null === $parser) ? new DocParser() : $parser;
 
         $this->preParser = new DocParser;
 
