@@ -3,12 +3,17 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\DocParser;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
-    protected function getReader()
+    /**
+     * @param DocParser|null $parser
+     * @return AnnotationReader
+     */
+    protected function getReader(DocParser $parser = null)
     {
-        return new AnnotationReader();
+        return new AnnotationReader($parser);
     }
 
     public function testMethodAnnotationFromTrait()
@@ -58,8 +63,10 @@ class AnnotationReaderTest extends AbstractReaderTest
 
     public function testOmitNotRegisteredAnnotation()
     {
-        $reader = $this->getReader();
-        $reader->setParserIgnoreNotImportedAnnotations(true);
+        $parser = new DocParser();
+        $parser->setIgnoreNotImportedAnnotations(true);
+
+        $reader = $this->getReader($parser);
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithNotRegisteredAnnotationUsed');
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
