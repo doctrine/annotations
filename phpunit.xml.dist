@@ -19,7 +19,6 @@
     <groups>
         <exclude>
             <group>performance</group>
-            <group>deprecated</group>
         </exclude>
     </groups>
 

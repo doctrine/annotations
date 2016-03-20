@@ -53,9 +53,9 @@ class AnnotationReader implements Reader
      *
      * @param \Doctrine\Annotations\Configuration $config
      */
-    public function __construct(Configuration $config)
+    public function __construct(Configuration $config = null)
     {
-        $this->config = $config;
+        $this->config = $config ?: new Configuration();
     }
 
     /**
@@ -67,7 +67,7 @@ class AnnotationReader implements Reader
         $namespace = $class->getNamespaceName();
         $imports   = $this->getClassImports($class);
         $ignored   = $this->getIgnoredAnnotationNames($class);
-        $context   = new Context($class, $namespace, $imports, $ignored);
+        $context   = new Context($class, [$namespace], $imports, $ignored);
 
         if ($docblock === false) {
             return [];
@@ -105,7 +105,7 @@ class AnnotationReader implements Reader
         $namespace = $class->getNamespaceName();
         $imports   = $this->getPropertyImports($property);
         $ignored   = $this->getIgnoredAnnotationNames($class);
-        $context   = new Context($property, $namespace, $imports, $ignored);
+        $context   = new Context($property, [$namespace], $imports, $ignored);
 
         if ($docblock === false) {
             return [];
@@ -143,7 +143,7 @@ class AnnotationReader implements Reader
         $namespace = $class->getNamespaceName();
         $imports   = $this->getMethodImports($method);
         $ignored   = $this->getIgnoredAnnotationNames($class);
-        $context   = new Context($method, $namespace, $imports, $ignored);
+        $context   = new Context($method, [$namespace], $imports, $ignored);
 
         if ($docblock === false) {
             return [];

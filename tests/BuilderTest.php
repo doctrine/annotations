@@ -28,13 +28,13 @@ class BuilderTest extends TestCase
 
     public function testCreateSimpleAnnotation()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
-        $imports   = [
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
+        $imports    = [
             'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template'
         ];
 
-        $context   = new Context($class, $namespace, $imports);
+        $context   = new Context($class, $namespaces, $imports);
         $reference = new Reference('Template', [
             'value' => 'BlogBundle:Post:show.html.twig'
         ]);
@@ -51,10 +51,10 @@ class BuilderTest extends TestCase
      */
     public function testTargetNotAllowedException()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures\Annotation';
-        $context   = new Context($class, $namespace);
-        $reference = new Reference('AnnotationTargetPropertyMethod', [
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures\Annotation'];
+        $context    = new Context($class, $namespaces);
+        $reference  = new Reference('AnnotationTargetPropertyMethod', [
             'data'  => 'string val'
         ]);
 

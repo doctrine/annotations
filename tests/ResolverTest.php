@@ -9,11 +9,11 @@ class ResolverTest extends TestCase
 {
     public function testResolveFromSameNamespace()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $expected  = 'Doctrine\AnnotationsTests\Fixtures\NoAnnotation';
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $expected   = 'Doctrine\AnnotationsTests\Fixtures\NoAnnotation';
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
 
-        $context  = new Context($class, $namespace);
+        $context  = new Context($class, $namespaces);
         $resolver = new Resolver();
 
         $this->assertEquals($expected, $resolver->resolve($context, 'NoAnnotation'));
@@ -21,14 +21,14 @@ class ResolverTest extends TestCase
 
     public function testResolveFromImports()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $expected  = 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template';
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
-        $imports   = [
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $expected   = 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template';
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
+        $imports    = [
             'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template'
         ];
 
-        $context   = new Context($class, $namespace, $imports);
+        $context   = new Context($class, $namespaces, $imports);
         $resolver  = new Resolver();
 
         $this->assertEquals($expected, $resolver->resolve($context, 'Template'));
@@ -36,15 +36,15 @@ class ResolverTest extends TestCase
 
     public function testResolveFromImportsAlias()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $expected  = 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template';
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
-        $imports   = [
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $expected   = 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template';
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
+        $imports    = [
             // use Doctrine\AnnotationsTests\Fixtures\Annotation as Annot;
             'annot' => 'Doctrine\AnnotationsTests\Fixtures\Annotation'
         ];
 
-        $context   = new Context($class, $namespace, $imports);
+        $context   = new Context($class, $namespaces, $imports);
         $resolver  = new Resolver();
 
         $this->assertEquals($expected, $resolver->resolve($context, 'Annot\Template'));
@@ -52,10 +52,10 @@ class ResolverTest extends TestCase
 
     public function testResolveFullyQualified()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
 
-        $context   = new Context($class, $namespace);
+        $context   = new Context($class, $namespaces);
         $resolver  = new Resolver();
 
         $this->assertEquals(
@@ -75,10 +75,10 @@ class ResolverTest extends TestCase
      */
     public function testAnnotationNotImportedException()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
 
-        $context   = new Context($class, $namespace);
+        $context   = new Context($class, $namespaces);
         $resolver  = new Resolver();
 
         $resolver->resolve($context, 'UNKNOWN_ANNOTATION');
@@ -90,10 +90,10 @@ class ResolverTest extends TestCase
      */
     public function testAnnotationNotFoundException()
     {
-        $class     = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $namespace = 'Doctrine\AnnotationsTests\Fixtures';
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures'];
 
-        $context   = new Context($class, $namespace);
+        $context   = new Context($class, $namespaces);
         $resolver  = new Resolver();
 
         $resolver->resolve($context, '\UNKNOWN_FULLY_QUALIFIED_ANNOTATION');

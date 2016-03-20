@@ -51,7 +51,7 @@ class Resolver
             throw ClassNotFoundException::annotationNotFound($className, $contextDescription);
         }
 
-        if ( ($fqcn = $this->resolveNamespace($className, $context->getNamespace())) !== null) {
+        if ( ($fqcn = $this->resolveNamespaces($className, $context->getNamespaces())) !== null) {
             return $fqcn;
         }
 
@@ -71,21 +71,23 @@ class Resolver
      *
      * @return bool
      */
-    private function classExists($class) : bool
+    private function classExists(string $class) : bool
     {
         return class_exists($class) || interface_exists($class);
     }
 
     /**
      * @param string $className
-     * @param string $namespace
+     * @param array  $namespaces
      *
      * @return string|null
      */
-    private function resolveNamespace($class, $namespace)
+    private function resolveNamespaces(string $class, array $namespaces)
     {
-        if ($this->classExists($namespace . '\\' . $class)) {
-            return $namespace . '\\' . $class;
+        foreach ($namespaces as $namespace) {
+            if ($this->classExists($namespace . '\\' . $class)) {
+                return $namespace . '\\' . $class;
+            }
         }
 
         return null;
@@ -97,7 +99,7 @@ class Resolver
      *
      * @return string|null
      */
-    private function resolveImports($name, array $imports)
+    private function resolveImports(string $name, array $imports)
     {
         $index = strpos($name, '\\');
         $alias = strtolower($name);

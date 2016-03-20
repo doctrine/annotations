@@ -4,7 +4,7 @@ namespace Doctrine\AnnotationsTests\Fixtures\Annotation;
 
 /**
  * @Annotation
- * @Target("PROPERTY")
+ * @Target("ALL")
  */
 final class Version
 {

@@ -49,16 +49,16 @@ class Context
     private $reflection;
 
     /**
-     * The namespace name.
+     * List of namespaces.
      *
-     * @var string
+     * @var string[]
      */
-    private $namespace;
+    private $namespaces;
 
     /**
      * A map with use statements in the form (Alias => FQN).
      *
-     * @var array
+     * @var string[]
      */
     private $imports;
 
@@ -66,15 +66,15 @@ class Context
      * Constructor.
      *
      * @param Reflector $reflection
-     * @param string    $namespace
+     * @param array     $namespaces
      * @param array     $imports
      * @param array     $ignoredNames
      */
-    public final function __construct(Reflector $reflection, string $namespace, array $imports = [], array $ignoredNames = [])
+    public final function __construct(Reflector $reflection, array $namespaces, array $imports = [], array $ignoredNames = [])
     {
         $this->ignoredNames = $ignoredNames;
         $this->reflection   = $reflection;
-        $this->namespace    = $namespace;
+        $this->namespaces   = $namespaces;
         $this->imports      = $imports;
     }
 
@@ -105,15 +105,15 @@ class Context
     }
 
     /**
-     * @return string
+     * @return string[]
      */
-    public function getNamespace() : string
+    public function getNamespaces() : array
     {
-        return $this->namespace;
+        return $this->namespaces;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getImports() : array
     {

@@ -2,6 +2,10 @@
 
 namespace Doctrine\AnnotationsTests\Fixtures;
 
+/**
+ * @since 2.0
+ * @version 1
+ */
 class ClassDDC1660
 {
     /**

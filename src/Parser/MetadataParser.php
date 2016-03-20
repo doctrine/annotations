@@ -72,11 +72,9 @@ class MetadataParser
      */
     public function parseAnnotationClass(ReflectionClass $class) : array
     {
-        $docblock  = $class->getDocComment();
-        $namespace = $class->getNamespaceName();
-        $annotations = ($docblock !== false)
-            ? $this->parseDockblock($class, $namespace, $docblock)
-            : [];
+        $docblock    = $class->getDocComment();
+        $namespace   = $class->getNamespaceName();
+        $annotations = $this->parseDockblock($class, $namespace, $docblock);
 
         return $annotations;
     }
@@ -89,12 +87,10 @@ class MetadataParser
     public function parseAnnotationProperty(ReflectionProperty $property) : array
     {
         $matches     = null;
-        $class       = $property->getDeclaringClass();
         $docblock    = $property->getDocComment();
+        $class       = $property->getDeclaringClass();
         $namespace   = $class->getNamespaceName();
-        $annotations = ($docblock !== false)
-            ? $this->parseDockblock($class, $namespace, $docblock)
-            : [];
+        $annotations = $this->parseDockblock($property, $namespace, $docblock);
 
         if ($docblock && preg_match('/@var\s+([^\s]+)/', $docblock, $matches)) {
             $annotations[] = new Type(['value' => $matches[1]]);
@@ -104,16 +100,22 @@ class MetadataParser
     }
 
     /**
-     * @param ReflectionProperty $property
+     * @param \Reflector  $reflector
+     * @param string      $namespace
+     * @param string|bool $docblock
      *
      * @return array
      */
-    private function parseDockblock(Reflector $reflector, string $namespace, string $docblock) : array
+    private function parseDockblock(Reflector $reflector, $namespace, $docblock) : array
     {
+        if ($docblock == false) {
+            return [];
+        }
+
         try {
-            $context = new Context($reflector, $namespace, $this->imports);
-            $visitor = new MetadataVisitor($this->resolver, $context);
-            $result  = $this->parser->parseDockblock($docblock, $visitor);
+            $context   = new Context($reflector, [], $this->imports);
+            $visitor   = new MetadataVisitor($this->resolver, $context);
+            $result    = $this->parser->parseDockblock($docblock, $visitor);
 
             return $result;
         } catch (\Hoa\Compiler\Exception $e) {

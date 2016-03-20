@@ -9,17 +9,17 @@ class ContextTest extends TestCase
     public function testContextAccessors()
     {
         $class        = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
-        $namespace    = 'Doctrine\AnnotationsTests\Fixtures';
+        $namespaces   = ['Doctrine\AnnotationsTests\Fixtures'];
         $ignoredNames = ['todo' => true];
         $imports      = [
             'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
             'Route' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route;'
         ];
 
-        $context = new Context($class, $namespace, $imports, $ignoredNames);
+        $context = new Context($class, $namespaces, $imports, $ignoredNames);
 
         $this->assertEquals($ignoredNames, $context->getIgnoredNames());
-        $this->assertEquals($namespace, $context->getNamespace());
+        $this->assertEquals($namespaces, $context->getNamespaces());
         $this->assertEquals($class, $context->getReflection());
         $this->assertEquals($imports, $context->getImports());
 
@@ -29,14 +29,14 @@ class ContextTest extends TestCase
 
     public function testContextDescription()
     {
-        $namespace    = 'Doctrine\AnnotationsTests\Fixtures';
+        $namespaces   = ['Doctrine\AnnotationsTests\Fixtures'];
         $class        = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
         $property     = new \ReflectionProperty('Doctrine\AnnotationsTests\Fixtures\Controller', 'service');
         $method       = new \ReflectionMethod('Doctrine\AnnotationsTests\Fixtures\Controller', 'indexAction');
 
-        $classContext    = new Context($class, $namespace);
-        $methodsContext  = new Context($method, $namespace);
-        $propertyContext = new Context($property, $namespace);
+        $classContext    = new Context($class, $namespaces);
+        $methodsContext  = new Context($method, $namespaces);
+        $propertyContext = new Context($property, $namespaces);
 
         $this->assertEquals('class Doctrine\AnnotationsTests\Fixtures\Controller', $classContext->getDescription());
         $this->assertEquals('property Doctrine\AnnotationsTests\Fixtures\Controller::$service', $propertyContext->getDescription());

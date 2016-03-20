@@ -862,7 +862,7 @@ DOCBLOCK;
             $namespace = 'Doctrine\AnnotationsTests\Fixtures\Parser';
         }
 
-        return new Context($reflection, $namespace, $imports, $ignoredNames);
+        return new Context($reflection, [$namespace], $imports, $ignoredNames);
     }
 
     /**

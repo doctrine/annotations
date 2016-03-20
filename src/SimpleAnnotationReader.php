@@ -19,13 +19,19 @@
 
 namespace Doctrine\Annotations;
 
+use Doctrine\Annotations\Parser\DocParser;
+
+use Reflector;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionProperty;
+
 /**
  * Simple Annotation Reader.
  *
  * This annotation reader is intended to be used in projects where you have
  * full-control over all annotations that are available.
  *
- * @since  2.2
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
@@ -37,14 +43,29 @@ class SimpleAnnotationReader implements Reader
     private $parser;
 
     /**
+     * Annotations parser.
+     *
+     * @var \Doctrine\Annotations\Configuration
+     */
+    private $config;
+
+    /**
+     * List of namespaces.
+     *
+     * @var string[]
+     */
+    private $namespaces;
+
+    /**
      * Constructor.
      *
-     * Initializes a new SimpleAnnotationReader.
+     * @param \Doctrine\Annotations\Configuration $config
+     * @param array                               $namespaces
      */
-    public function __construct()
+    public function __construct(Configuration $config = null, array $namespaces = [])
     {
-        $this->parser = new DocParser();
-        $this->parser->setIgnoreNotImportedAnnotations(true);
+        $this->namespaces = $namespaces;
+        $this->config     = $config ?: new Configuration();
     }
 
     /**
@@ -54,43 +75,32 @@ class SimpleAnnotationReader implements Reader
      *
      * @return void
      */
-    public function addNamespace($namespace)
+    public function addNamespace(string $namespace)
     {
-        $this->parser->addNamespace($namespace);
+        $this->namespaces[] = $namespace;
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotations(\ReflectionClass $class)
+    public function getClassAnnotations(ReflectionClass $class) : array
     {
-        return $this->parser->parse($class->getDocComment(), 'class '.$class->getName());
+        $namespace = $class->getNamespaceName();
+        $docblock  = $class->getDocComment();
+
+        return $this->parse($class, $namespace, $docblock);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotations(\ReflectionMethod $method)
+    public function getClassAnnotation(ReflectionClass $class, $annotationName)
     {
-        return $this->parser->parse($method->getDocComment(), 'method '.$method->getDeclaringClass()->name.'::'.$method->getName().'()');
-    }
+        $annotations = $this->getClassAnnotations($class);
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getPropertyAnnotations(\ReflectionProperty $property)
-    {
-        return $this->parser->parse($property->getDocComment(), 'property '.$property->getDeclaringClass()->name.'::$'.$property->getName());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
-    {
-        foreach ($this->getClassAnnotations($class) as $annot) {
-            if ($annot instanceof $annotationName) {
-                return $annot;
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
             }
         }
 
@@ -100,11 +110,25 @@ class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName)
+    public function getPropertyAnnotations(ReflectionProperty $property) : array
     {
-        foreach ($this->getMethodAnnotations($method) as $annot) {
-            if ($annot instanceof $annotationName) {
-                return $annot;
+        $class     = $property->getDeclaringClass();
+        $namespace = $class->getNamespaceName();
+        $docblock  = $property->getDocComment();
+
+        return $this->parse($property, $namespace, $docblock);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
+    {
+        $annotations = $this->getPropertyAnnotations($property);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
             }
         }
 
@@ -114,14 +138,48 @@ class SimpleAnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName)
+    public function getMethodAnnotations(ReflectionMethod $method) : array
     {
-        foreach ($this->getPropertyAnnotations($property) as $annot) {
-            if ($annot instanceof $annotationName) {
-                return $annot;
+        $class     = $method->getDeclaringClass();
+        $namespace = $class->getNamespaceName();
+        $docblock  = $method->getDocComment();
+
+        return $this->parse($method, $namespace, $docblock);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
+    {
+        $annotations = $this->getMethodAnnotations($method);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
             }
         }
 
         return null;
+    }
+
+    /**
+     * @param \Reflector  $reflector
+     * @param string      $namespace
+     * @param string|bool $docblock
+     *
+     * @return array
+     */
+    private function parse(Reflector $reflector, $namespace, $docblock) : array
+    {
+        if ($docblock === false) {
+            return [];
+        }
+
+        $parser     = new DocParser($this->config->getHoaParser(), $this->config->getBuilder(), true);
+        $namespaces = array_merge($this->namespaces, [$namespace]);
+        $context    = new Context($reflector, $namespaces);
+
+        return $parser->parse($docblock, $context);
     }
 }
