@@ -24,7 +24,6 @@ namespace Doctrine\Annotations\Exception;
 /**
  * Description of AnnotationException
  *
- * @since  2.0
  * @author Jonathan Wage <jonwage@gmail.com>
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  * @author Roman Borschel <roman@code-factory.org>

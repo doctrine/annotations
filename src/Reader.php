@@ -41,7 +41,7 @@ interface Reader
      *
      * @return array An array of Annotations.
      */
-    function getClassAnnotations(ReflectionClass $class) : array;
+    public function getClassAnnotations(ReflectionClass $class) : array;
 
     /**
      * Gets a class annotation.
@@ -52,7 +52,7 @@ interface Reader
      *
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    function getClassAnnotation(ReflectionClass $class, $annotationName);
+    public function getClassAnnotation(ReflectionClass $class, string $annotationName);
 
     /**
      * Gets the annotations applied to a method.
@@ -62,7 +62,7 @@ interface Reader
      *
      * @return array An array of Annotations.
      */
-    function getMethodAnnotations(ReflectionMethod $method) : array;
+    public function getMethodAnnotations(ReflectionMethod $method) : array;
 
     /**
      * Gets a method annotation.
@@ -72,7 +72,7 @@ interface Reader
      *
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    function getMethodAnnotation(ReflectionMethod $method, $annotationName);
+    public function getMethodAnnotation(ReflectionMethod $method, string $annotationName);
 
     /**
      * Gets the annotations applied to a property.
@@ -82,7 +82,7 @@ interface Reader
      *
      * @return array An array of Annotations.
      */
-    function getPropertyAnnotations(ReflectionProperty $property) : array;
+    public function getPropertyAnnotations(ReflectionProperty $property) : array;
 
     /**
      * Gets a property annotation.
@@ -92,5 +92,5 @@ interface Reader
      *
      * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    function getPropertyAnnotation(ReflectionProperty $property, $annotationName);
+    public function getPropertyAnnotation(ReflectionProperty $property, string $annotationName);
 }

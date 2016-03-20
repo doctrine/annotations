@@ -1,17 +1,25 @@
-language: php
-
 sudo: false
 
+language: php
+
 cache:
-  directory:
+  directories:
     - $HOME/.composer/cache
 
 php:
-  - 7
-  - hhvm
+    - 7
+    - hhvm
 
-before_script:
-    - composer install -n
+install:
+    - composer self-update
+    - composer --prefer-source install
+
+script:
+    - ./vendor/bin/phpcs -p --extensions=php --standard=ruleset.xml src
+    - ./vendor/bin/phpunit -v --coverage-clover ./build/logs/clover.xml
+
+after_script:
+    - ./vendor/bin/coveralls -v
 
 matrix:
     allow_failures:

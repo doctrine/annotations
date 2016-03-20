@@ -43,7 +43,7 @@ class Annotation
      *
      * @param array $data Key-value for properties to be defined in this class.
      */
-    public final function __construct(array $data)
+    final public function __construct(array $data)
     {
         foreach ($data as $key => $value) {
             $this->$key = $value;

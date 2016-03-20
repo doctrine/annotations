@@ -50,7 +50,7 @@ class Reference
      * @param array  $values
      * @param bool   $nested
      */
-    public final function __construct(string $name, array $values = [], bool $nested = false)
+    public function __construct(string $name, array $values = [], bool $nested = false)
     {
         $this->name   = $name;
         $this->values = $values;

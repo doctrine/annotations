@@ -44,15 +44,15 @@ final class IgnoreAnnotation
      */
     public function __construct(array $values)
     {
-        if ( ! isset($values['names']) && isset($values['value'])){
+        if ( ! isset($values['names']) && isset($values['value'])) {
             $values['names'] = $values['value'];
         }
 
-        if ( ! isset($values['names'])){
+        if ( ! isset($values['names'])) {
             $values['names'] = [];
         }
 
-        if (is_string($values['names'])){
+        if (is_string($values['names'])) {
             $values['names'] = [$values['names']];
         }
 

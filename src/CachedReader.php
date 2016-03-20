@@ -92,7 +92,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotation(ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(ReflectionClass $class, string $annotationName)
     {
         foreach ($this->getClassAnnotations($class) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -126,7 +126,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(ReflectionProperty $property, string $annotationName)
     {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -160,7 +160,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(ReflectionMethod $method, string $annotationName)
     {
         foreach ($this->getMethodAnnotations($method) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -207,7 +207,7 @@ final class CachedReader implements Reader
      *
      * @return void
      */
-    private function saveToCache($rawCacheKey, $value)
+    private function saveToCache(string $rawCacheKey, $value)
     {
         $key  = $rawCacheKey . self::CACHE_SALT;
         $data = [

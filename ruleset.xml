@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Doctrine Annotations">
+    <description>Doctrine Annotations Coding Standard</description>
+
+    <rule ref="./vendor/instaclick/coding-standard/Instaclick/ruleset.xml">
+        <exclude name="Instaclick.Namespaces.NamespaceStructure"/>
+    </rule>
+
+    <rule ref="Symfony2.NamingConventions.InterfaceSuffix">
+        <severity>0</severity>
+    </rule>
+
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <severity>0</severity>
+    </rule>
+
+</ruleset>

@@ -51,11 +51,11 @@ class Resolver
             throw ClassNotFoundException::annotationNotFound($className, $contextDescription);
         }
 
-        if ( ($fqcn = $this->resolveNamespaces($className, $context->getNamespaces())) !== null) {
+        if (($fqcn = $this->resolveNamespaces($className, $context->getNamespaces())) !== null) {
             return $fqcn;
         }
 
-        if ( ($fqcn = $this->resolveImports($className, $context->getImports())) !== null) {
+        if (($fqcn = $this->resolveImports($className, $context->getImports())) !== null) {
             return $fqcn;
         }
 
@@ -77,7 +77,7 @@ class Resolver
     }
 
     /**
-     * @param string $className
+     * @param string $class
      * @param array  $namespaces
      *
      * @return string|null
@@ -94,7 +94,7 @@ class Resolver
     }
 
     /**
-     * @param string $className
+     * @param string $name
      * @param array  $imports
      *
      * @return string|null

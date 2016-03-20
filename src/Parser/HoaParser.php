@@ -56,7 +56,7 @@ class HoaParser
     }
 
     /**
-     * @param \Hoa\Compiler\Llk\Parser
+     * @return \Hoa\Compiler\Llk\Parser
      */
     private function getParser()
     {
@@ -64,6 +64,9 @@ class HoaParser
             return $this->parser;
         }
 
-        return $this->parser = Llk::load(new Read(__DIR__ . '/grammar.pp'));
+        $file   = new Read(__DIR__ . '/grammar.pp');
+        $parser = Llk::load($file);
+
+        return $this->parser = $parser;
     }
 }

@@ -36,13 +36,13 @@ final class Type
      *
      * @var array
      */
-    private static $typeMap = array(
+    private static $typeMap = [
         'float'     => 'double',
         'bool'      => 'boolean',
         // allow uppercase Boolean in honor of George Boole
         'Boolean'   => 'boolean',
         'int'       => 'integer',
-    );
+    ];
 
     /**
      * @var string
@@ -71,7 +71,7 @@ final class Type
         $arrayType = null;
         $type      = trim($values['value']);
 
-        if ( isset(self::$typeMap[$type]) ) {
+        if (isset(self::$typeMap[$type])) {
             $type = self::$typeMap[$type];
         }
 

@@ -55,8 +55,9 @@ class DocParser
     /**
      * Constructor
      *
-     * @param Builder $builder
-     * @param bool    $ignoreNotImported
+     * @param HoaParser $parser
+     * @param Builder   $builder
+     * @param bool      $ignoreNotImported
      */
     public function __construct(HoaParser $parser, Builder $builder, bool $ignoreNotImported = false)
     {
@@ -68,6 +69,8 @@ class DocParser
     /**
      * @param string  $docblock
      * @param Context $context
+     *
+     * @return array
      */
     public function parse(string $docblock, Context $context)
     {

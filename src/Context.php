@@ -70,7 +70,7 @@ class Context
      * @param array     $imports
      * @param array     $ignoredNames
      */
-    public final function __construct(Reflector $reflection, array $namespaces, array $imports = [], array $ignoredNames = [])
+    public function __construct(Reflector $reflection, array $namespaces, array $imports = [], array $ignoredNames = [])
     {
         $this->ignoredNames = $ignoredNames;
         $this->reflection   = $reflection;

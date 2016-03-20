@@ -106,7 +106,7 @@ abstract class BaseVisitor implements Visit
             $annotations = [];
 
             foreach ($element->getChildren() as $child) {
-                $annotations[] = $child->accept($this, $handle, $eldnah);;
+                $annotations[] = $child->accept($this, $handle, $eldnah);
             }
 
             return array_filter($annotations);

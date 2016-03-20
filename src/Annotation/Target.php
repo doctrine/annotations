@@ -70,30 +70,30 @@ final class Target
      */
     public function __construct(array $values)
     {
-        if ( ! isset($values['value'])){
+        if ( ! isset($values['value'])) {
             $values['value'] = null;
         }
 
-        if (is_string($values['value'])){
+        if (is_string($values['value'])) {
             $values['value'] = [$values['value']];
         }
 
-        if (!is_array($values['value'])){
-            throw new \InvalidArgumentException(
-                sprintf('@Target expects either a string value, or an array of strings, "%s" given.',
-                    is_object($values['value']) ? get_class($values['value']) : gettype($values['value'])
-                )
-            );
+        if ( ! is_array($values['value'])) {
+            throw new \InvalidArgumentException(sprintf(
+                '@Target expects either a string value, or an array of strings, "%s" given.',
+                is_object($values['value']) ? get_class($values['value']) : gettype($values['value'])
+            ));
         }
 
         $bitmask = 0;
 
         foreach ($values['value'] as $literal) {
-            if( ! isset(self::$map[$literal])){
-                throw new \InvalidArgumentException(
-                    sprintf('Invalid Target "%s". Available targets: [%s]',
-                            $literal,  implode(', ', array_keys(self::$map)))
-                );
+            if ( ! isset(self::$map[$literal])) {
+                throw new \InvalidArgumentException(sprintf(
+                    'Invalid Target "%s". Available targets: [%s]',
+                    $literal,
+                    implode(', ', array_keys(self::$map))
+                ));
             }
 
             $bitmask |= self::$map[$literal];

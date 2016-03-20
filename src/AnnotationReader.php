@@ -82,7 +82,7 @@ class AnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotation(ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(ReflectionClass $class, string $annotationName)
     {
         $annotations = $this->getClassAnnotations($class);
 
@@ -120,7 +120,7 @@ class AnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
+    public function getPropertyAnnotation(ReflectionProperty $property, string $annotationName)
     {
         $annotations = $this->getPropertyAnnotations($property);
 
@@ -158,7 +158,7 @@ class AnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getMethodAnnotation(ReflectionMethod $method, $annotationName)
+    public function getMethodAnnotation(ReflectionMethod $method, string $annotationName)
     {
         $annotations = $this->getMethodAnnotations($method);
 

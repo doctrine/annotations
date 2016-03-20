@@ -51,7 +51,7 @@ class Builder
      * @param Resolver        $resolver
      * @param MetadataFactory $metadataFactory
      */
-    public final function __construct(Resolver $resolver, MetadataFactory $metadataFactory)
+    public function __construct(Resolver $resolver, MetadataFactory $metadataFactory)
     {
         $this->resolver        = $resolver;
         $this->metadataFactory = $metadataFactory;
@@ -202,7 +202,7 @@ class Builder
             }
 
             // mixed values
-            if (! isset($property['type']) || $property['type'] === 'mixed') {
+            if ( ! isset($property['type']) || $property['type'] === 'mixed') {
                 continue;
             }
 

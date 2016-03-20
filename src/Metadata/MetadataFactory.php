@@ -100,6 +100,9 @@ class MetadataFactory
     }
 
     /**
+     * @param \ReflectionClass $class
+     * @param array            $annotations
+     *
      * @return bool
      */
     private function isAnnotation(ReflectionClass $class, array $annotations) : bool
@@ -120,6 +123,9 @@ class MetadataFactory
     }
 
     /**
+     * @param ReflectionClass $class
+     * @param ClassMetadata   $metadata
+     *
      * @return array
      */
     private function collectPropertiesMetadata(ReflectionClass $class, ClassMetadata $metadata)
@@ -137,6 +143,8 @@ class MetadataFactory
     }
 
     /**
+     * @param ReflectionProperty $property
+     *
      * @return array
      */
     private function collectPropertyMetadata(ReflectionProperty $property)
@@ -171,7 +179,7 @@ class MetadataFactory
     }
 
     /**
-     * @param array $annotation
+     * @param array $annotations
      *
      * @return array
      */

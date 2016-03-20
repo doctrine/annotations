@@ -29,7 +29,6 @@ use Doctrine\Annotations\Context;
 use Hoa\Visitor\Visit;
 use Hoa\Visitor\Element;
 
-
 /**
  * A visitor for docblock annotations.
  *
@@ -45,7 +44,7 @@ class DocVisitor extends BaseVisitor
     /**
      * @var Context
      */
-    protected $context;
+    private $context;
 
     /**
      * Whether annotations that have not been imported should be ignored.
@@ -56,6 +55,10 @@ class DocVisitor extends BaseVisitor
 
     /**
      * Constructor
+     *
+     * @param Context $context
+     * @param Builder $builder
+     * @param boolean $ignoreNotImported
      */
     public function __construct(Context $context, Builder $builder, bool $ignoreNotImported = false)
     {

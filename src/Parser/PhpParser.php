@@ -44,23 +44,21 @@ class PhpParser
             return $class->getUseStatements();
         }
 
-        if (false === $filename = $class->getFilename()) {
-            return array();
-        }
+        $filename = $class->getFilename();
+        $content  = ($filename !== false)
+            ? $this->getFileContent($filename, $class->getStartLine())
+            : null;
 
-        $content = $this->getFileContent($filename, $class->getStartLine());
-
-        if (null === $content) {
-            return array();
+        if ($content === null) {
+            return [];
         }
 
         $namespace = preg_quote($class->getNamespaceName());
-        $content = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
+        $regex     = '/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s';
+        $content   = preg_replace($regex, '\\1', $content);
         $tokenizer = new TokenParser('<?php ' . $content);
 
-        $statements = $tokenizer->parseUseStatements($class->getNamespaceName());
-
-        return $statements;
+        return $tokenizer->parseUseStatements($class->getNamespaceName());
     }
 
     /**
@@ -77,10 +75,11 @@ class PhpParser
             return null;
         }
 
-        $content = '';
         $lineCnt = 0;
-        $file = new SplFileObject($filename);
-        while (!$file->eof()) {
+        $content = '';
+        $file    = new SplFileObject($filename);
+
+        while ( ! $file->eof()) {
             if ($lineCnt++ == $lineNumber) {
                 break;
             }
