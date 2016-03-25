@@ -13,7 +13,7 @@ class ContextTest extends TestCase
         $ignoredNames = ['todo' => true];
         $imports      = [
             'template' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Template',
-            'Route' => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route;'
+            'Route'    => 'Doctrine\AnnotationsTests\Fixtures\Annotation\Route'
         ];
 
         $context = new Context($class, $namespaces, $imports, $ignoredNames);

@@ -3,10 +3,10 @@
 %skip   _doc                [*/]
 %skip   star                [*]
 
-%token  at                  @                           -> annot
+%token  at                  @                             -> annot
 %token  text                [^@].*
 
-%token  annot:identifier    [\\a-zA-Z_][\\a-zA-Z0-9_]*  -> values
+%token  annot:identifier    [\\]?[a-zA-Z_][\\a-zA-Z0-9_]* -> values
 
 %skip   values:star         [*]
 %skip   values:_doc         [*/]
@@ -79,9 +79,6 @@ identifier:
 
 string:
     ::quote_:: <string> ::_quote::
-
-quote:
-    ::quote_:: ::quote_:: <quote_> <string> <_quote> ::_quote:: ::_quote::
 
 text:
     <text>
