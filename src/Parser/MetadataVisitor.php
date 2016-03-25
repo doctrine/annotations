@@ -34,20 +34,20 @@ use Doctrine\Annotations\Context;
 class MetadataVisitor extends BaseVisitor
 {
     /**
-     * @var Resolver
+     * @var \Doctrine\Annotations\Resolver
      */
     protected $resolver;
 
     /**
-     * @var Context
+     * @var \Doctrine\Annotations\Context
      */
     protected $context;
 
     /**
      * Constructor
      *
-     * @param Resolver $resolver
-     * @param Context  $context
+     * @param \Doctrine\Annotations\Resolver $resolver
+     * @param \Doctrine\Annotations\Context  $context
      */
     public function __construct(Resolver $resolver, Context $context)
     {

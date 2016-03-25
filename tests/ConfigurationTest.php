@@ -4,25 +4,44 @@ namespace Doctrine\AnnotationsTests;
 
 use Doctrine\Annotations\Configuration;
 
+use Doctrine\Annotations\Metadata\MetadataFactory;
+use Doctrine\Annotations\IgnoredAnnotationNames;
+use Doctrine\Annotations\Parser\MetadataParser;
+use Doctrine\Annotations\Parser\HoaParser;
+use Doctrine\Annotations\Parser\DocParser;
+use Doctrine\Annotations\Parser\PhpParser;
+use Doctrine\Annotations\Resolver;
+use Doctrine\Annotations\Builder;
+
 class ConfigurationTest extends TestCase
 {
     public function testConfigurationAccessors()
     {
-        $metadata  = $this->getMock('Doctrine\Annotations\Metadata\MetadataFactory', [], [], '', false);
-        $ignored   = $this->getMock('Doctrine\Annotations\IgnoredAnnotationNames', [], [], '', false);
-        $phpParser = $this->getMock('Doctrine\Annotations\Parser\PhpParser', [], [], '', false);
-        $resolver  = $this->getMock('Doctrine\Annotations\Resolver', [], [], '', false);
-        $builder   = $this->getMock('Doctrine\Annotations\Builder', [], [], '', false);
-        $config    = new Configuration();
+        $ignored   = new IgnoredAnnotationNames();
+        $hoaParser = new HoaParser();
+        $phpParser = new PhpParser();
+        $resolver  = new Resolver();
 
+        $metadataParser  = new MetadataParser($hoaParser, $resolver);
+        $metadataFactory = new MetadataFactory($metadataParser);
+
+        $builder   = new Builder($resolver, $metadataFactory);
+        $docParser = new DocParser($hoaParser, $builder, $resolver);
+
+        $config = new Configuration();
+
+        $config->setMetadataFactory($metadataFactory);
         $config->setIgnoredAnnotationNames($ignored);
-        $config->setMetadataFactory($metadata);
+        $config->setMetadataParser($metadataParser);
+        $config->setDocParser($docParser);
         $config->setPhpParser($phpParser);
         $config->setResolver($resolver);
         $config->setBuilder($builder);
 
+        $this->assertSame($metadataFactory, $config->getMetadataFactory());
         $this->assertSame($ignored, $config->getIgnoredAnnotationNames());
-        $this->assertSame($metadata, $config->getMetadataFactory());
+        $this->assertSame($metadataParser, $config->getMetadataParser());
+        $this->assertSame($docParser, $config->getDocParser());
         $this->assertSame($phpParser, $config->getPhpParser());
         $this->assertSame($resolver, $config->getResolver());
         $this->assertSame($builder, $config->getBuilder());
@@ -32,10 +51,12 @@ class ConfigurationTest extends TestCase
     {
         $config = new Configuration();
 
-        $this->assertInstanceOf('Doctrine\Annotations\IgnoredAnnotationNames', $config->getIgnoredAnnotationNames());
-        $this->assertInstanceOf('Doctrine\Annotations\Metadata\MetadataFactory', $config->getMetadataFactory());
-        $this->assertInstanceOf('Doctrine\Annotations\Parser\PhpParser', $config->getPhpParser());
-        $this->assertInstanceOf('Doctrine\Annotations\Resolver', $config->getResolver());
-        $this->assertInstanceOf('Doctrine\Annotations\Builder', $config->getBuilder());
+        $this->assertInstanceOf(IgnoredAnnotationNames::CLASS, $config->getIgnoredAnnotationNames());
+        $this->assertInstanceOf(MetadataFactory::CLASS, $config->getMetadataFactory());
+        $this->assertInstanceOf(MetadataParser::CLASS, $config->getMetadataParser());
+        $this->assertInstanceOf(DocParser::CLASS, $config->getDocParser());
+        $this->assertInstanceOf(PhpParser::CLASS, $config->getPhpParser());
+        $this->assertInstanceOf(Resolver::CLASS, $config->getResolver());
+        $this->assertInstanceOf(Builder::CLASS, $config->getBuilder());
     }
 }

@@ -42,22 +42,22 @@
     (comments() | annotations())*
 
 #annotations:
-    annotation() ( annotation() )*
+    annotation()+
 
 #annotation:
     ::at:: identifier() ( parameters() | comments() )?
 
 #comments:
-    text() ( text() )*
+    text()+
 
 #values:
-    value() ( ::comma:: value() )* (::comma::)?
-
-#map:
-    ::brace_:: pairs() (::comma::)? ::_brace::
+    value() ( ::comma:: value() )* ::comma::?
 
 #list:
-    ::brace_:: ( (value() ( ::comma:: value() )*) (::comma::)? )? ::_brace::
+    ::brace_:: ( (value() ( ::comma:: value() )*) ::comma::? )? ::_brace::
+
+#map:
+    ::brace_:: pairs() ::comma::? ::_brace::
 
 #pairs:
     pair() ( ::comma:: pair() )*
@@ -69,7 +69,7 @@
     <boolean> | <null> | string() | map() | list() | number() | pair() | annotation() | constant()
 
 parameters:
-    ( ::parenthesis_:: ( values() )? ::_parenthesis:: ) | ( string() )?
+    ( ::parenthesis_:: ( values() )? ::_parenthesis:: ) | string()?
 
 identifier:
     <identifier>

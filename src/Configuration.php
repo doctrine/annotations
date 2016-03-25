@@ -23,6 +23,7 @@ namespace Doctrine\Annotations;
 
 use Doctrine\Annotations\Metadata\MetadataFactory;
 use Doctrine\Annotations\Parser\MetadataParser;
+use Doctrine\Annotations\Parser\DocParser;
 use Doctrine\Annotations\Parser\HoaParser;
 use Doctrine\Annotations\Parser\PhpParser;
 
@@ -47,6 +48,16 @@ class Configuration
      * @var \Doctrine\Annotations\Metadata\MetadataFactory
      */
     private $metadataFactory;
+
+    /**
+     * @var \Doctrine\Annotations\Parser\MetadataParser
+     */
+    private $metadataParser;
+
+    /**
+     * @var \Doctrine\Annotations\Parser\DocParser
+     */
+    private $docParser;
 
     /**
      * @var \Doctrine\Annotations\Parser\PhpParser
@@ -105,11 +116,7 @@ class Configuration
             return $this->metadataFactory;
         }
 
-        $resolver       = $this->getResolver();
-        $hoaParser      = $this->getHoaParser();
-        $metadataParser = new MetadataParser($hoaParser, $resolver);
-
-        return $this->metadataFactory = new MetadataFactory($metadataParser);
+        return $this->metadataFactory = new MetadataFactory($this->getMetadataParser());
     }
 
     /**
@@ -194,5 +201,54 @@ class Configuration
         $builder  = new Builder($resolver, $factory);
 
         return $this->builder = $builder;
+    }
+
+    /**
+     * @param \Doctrine\Annotations\Parser\MetadataParser $parser
+     */
+    public function setMetadataParser(MetadataParser $parser)
+    {
+        $this->metadataParser = $parser;
+    }
+
+    /**
+     * @return \Doctrine\Annotations\Parser\MetadataParser
+     */
+    public function getMetadataParser() : MetadataParser
+    {
+        if ($this->metadataParser !== null) {
+            return $this->metadataParser;
+        }
+
+        $resolver  = $this->getResolver();
+        $hoaParser = $this->getHoaParser();
+        $parser    = new MetadataParser($hoaParser, $resolver);
+
+        return $this->metadataParser = $parser;
+    }
+
+    /**
+     * @param \Doctrine\Annotations\Parser\DocParser $parser
+     */
+    public function setDocParser(DocParser $parser)
+    {
+        $this->docParser = $parser;
+    }
+
+    /**
+     * @return \Doctrine\Annotations\Parser\DocParser
+     */
+    public function getDocParser() : DocParser
+    {
+        if ($this->docParser !== null) {
+            return $this->docParser;
+        }
+
+        $builder   = $this->getBuilder();
+        $resolver  = $this->getResolver();
+        $hoaParser = $this->getHoaParser();
+        $parser    = new DocParser($hoaParser, $builder, $resolver);
+
+        return $this->docParser = $parser;
     }
 }

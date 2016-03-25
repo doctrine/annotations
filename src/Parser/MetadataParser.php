@@ -38,7 +38,7 @@ use Doctrine\Annotations\Exception\ParserException;
 class MetadataParser
 {
     /**
-     * @var HoaParser
+     * @var \Doctrine\Annotations\Parser\HoaParser
      */
     private $parser;
 
@@ -56,8 +56,8 @@ class MetadataParser
     /**
      * Constructor
      *
-     * @param HoaParser $parser
-     * @param Resolver  $resolver
+     * @param \Doctrine\Annotations\Parser\HoaParser $parser
+     * @param \Doctrine\Annotations\Resolver         $resolver
      */
     public function __construct(HoaParser $parser, Resolver $resolver)
     {
@@ -66,7 +66,7 @@ class MetadataParser
     }
 
     /**
-     * @param ReflectionClass $class
+     * @param \ReflectionClass $class
      *
      * @return array
      */
@@ -80,7 +80,7 @@ class MetadataParser
     }
 
    /**
-     * @param ReflectionProperty $property
+     * @param \ReflectionProperty $property
      *
      * @return array
      */

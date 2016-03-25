@@ -31,8 +31,8 @@ use Doctrine\Annotations\Exception\ClassNotFoundException;
 class Resolver
 {
     /**
-     * @param Context $context
-     * @param string  $className
+     * @param \Doctrine\Annotations\Context $context
+     * @param string                        $className
      *
      * @return string
      *
@@ -51,11 +51,11 @@ class Resolver
             throw ClassNotFoundException::annotationNotFound($className, $contextDescription);
         }
 
-        if (($fqcn = $this->resolveNamespaces($className, $context->getNamespaces())) !== null) {
+        if (($fqcn = $this->resolveImports($className, $context->getImports())) !== null) {
             return $fqcn;
         }
 
-        if (($fqcn = $this->resolveImports($className, $context->getImports())) !== null) {
+        if (($fqcn = $this->resolveNamespaces($className, $context->getNamespaces())) !== null) {
             return $fqcn;
         }
 

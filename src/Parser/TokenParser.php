@@ -53,7 +53,7 @@ class TokenParser
     /**
      * @param string $contents
      */
-    public function __construct($contents)
+    public function __construct(string $contents)
     {
         $this->tokens = token_get_all($contents);
 
@@ -77,7 +77,7 @@ class TokenParser
      *
      * @return array|null The token if exists, null otherwise.
      */
-    public function next($docCommentIsComment = true)
+    public function next(bool $docCommentIsComment = true)
     {
         for ($i = $this->pointer; $i < $this->numTokens; $i++) {
             $this->pointer++;
@@ -100,7 +100,7 @@ class TokenParser
      *
      * @return array A list with all found class names for a use statement.
      */
-    public function parseUseStatement()
+    public function parseUseStatement() : array
     {
         $class         = '';
         $alias         = '';
@@ -159,7 +159,7 @@ class TokenParser
      *
      * @return array A list with all found use statements.
      */
-    public function parseUseStatements($namespaceName)
+    public function parseUseStatements(string $namespaceName) : array
     {
         $statements = [];
 
@@ -188,7 +188,7 @@ class TokenParser
      *
      * @return string The found namespace.
      */
-    public function parseNamespace()
+    public function parseNamespace() : string
     {
         $name = '';
 
@@ -204,7 +204,7 @@ class TokenParser
      *
      * @return string The found class name.
      */
-    public function parseClass()
+    public function parseClass() : string
     {
         // Namespaces and class names are tokenized the same: T_STRINGs
         // separated by T_NS_SEPARATOR so we can use one function to provide

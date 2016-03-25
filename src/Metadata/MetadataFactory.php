@@ -24,9 +24,9 @@ namespace Doctrine\Annotations\Metadata;
 use ReflectionClass;
 use ReflectionProperty;
 
-
 use Doctrine\Annotations\Parser\MetadataParser;
 use Doctrine\Annotations\Annotation\Target;
+use Doctrine\Annotations\Annotation;
 
 /**
  * Annotation metadata factory
@@ -107,11 +107,11 @@ class MetadataFactory
      */
     private function isAnnotation(ReflectionClass $class, array $annotations) : bool
     {
-        if ($class->isSubclassOf('Doctrine\Annotations\Annotation')) {
+        if ($class->isSubclassOf(Annotation::CLASS)) {
             return true;
         }
 
-        if ($class->name === 'Doctrine\Annotations\Annotation') {
+        if ($class->name === Annotation::CLASS) {
             return true;
         }
 

@@ -14,17 +14,17 @@
         {"name": "Fabio B. Silva", "email": "fabio.bat.silva@gmail.com"}
     ],
     "require": {
-        "php":          ">=7.0.0",
+        "php": ">=7.0.0",
         "hoa/compiler": "3.*"
     },
     "require-dev": {
-        "doctrine/cache"                        : "1.*",
-        "phpunit/phpunit"                       : "5.*",
-        "instaclick/coding-standard"            : "~1.1",
-        "squizlabs/php_codesniffer"             : "~1.5",
-        "satooshi/php-coveralls"                : "~1.0",
-        "instaclick/object-calisthenics-sniffs" : "dev-master",
-        "instaclick/symfony2-coding-standard"   : "dev-remaster"
+        "doctrine/cache": "1.*",
+        "phpunit/phpunit": "5.*",
+        "satooshi/php-coveralls": "~1.0",
+        "squizlabs/php_codesniffer": "~1.5",
+        "instaclick/coding-standard": "~1.1",
+        "instaclick/object-calisthenics-sniffs": "dev-master",
+        "instaclick/symfony2-coding-standard": "dev-remaster"
     },
     "autoload": {
         "psr-4": {

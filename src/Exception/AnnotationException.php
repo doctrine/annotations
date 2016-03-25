@@ -33,9 +33,9 @@ namespace Doctrine\Annotations\Exception;
 class AnnotationException extends \Exception
 {
     /**
-     * @return AnnotationException
+     * @return \Doctrine\Annotations\Exception\AnnotationException
      */
-    public static function optimizerPlusSaveComments()
+    public static function optimizerPlusSaveComments() : AnnotationException
     {
         return new self(
             "You have to enable opcache.save_comments=1 or zend_optimizerplus.save_comments=1."
@@ -43,9 +43,9 @@ class AnnotationException extends \Exception
     }
 
     /**
-     * @return AnnotationException
+     * @return \Doctrine\Annotations\Exception\AnnotationException
      */
-    public static function optimizerPlusLoadComments()
+    public static function optimizerPlusLoadComments() : AnnotationException
     {
         return new self(
             "You have to enable opcache.load_comments=1 or zend_optimizerplus.load_comments=1."

@@ -69,6 +69,24 @@ class ResolverTest extends TestCase
         );
     }
 
+    public function testResolutionOrder()
+    {
+        $class      = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Controller');
+        $namespaces = ['Doctrine\AnnotationsTests\Fixtures\Annotation'];
+        $imports    = [
+            // use Doctrine\AnnotationsTests\Fixtures\Route as Template;
+            'template' => '\Doctrine\AnnotationsTests\Fixtures\Annotation\Route'
+        ];
+
+        $context  = new Context($class, $namespaces, $imports);
+        $resolver = new Resolver();
+
+        $this->assertEquals(
+            '\Doctrine\AnnotationsTests\Fixtures\Annotation\Route',
+            $resolver->resolve($context, 'Template')
+        );
+    }
+
     /**
      * @expectedException \Doctrine\Annotations\Exception\ClassNotFoundException
      * @expectedExceptionMessage The annotation "@UNKNOWN_ANNOTATION" in class Doctrine\AnnotationsTests\Fixtures\Controller was never imported. Did you maybe forget to add a "use" statement for this annotation ?

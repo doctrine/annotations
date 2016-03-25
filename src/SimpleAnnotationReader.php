@@ -38,9 +38,9 @@ use ReflectionProperty;
 class SimpleAnnotationReader implements Reader
 {
     /**
-     * @var DocParser
+     * @var \Doctrine\Annotations\Parser\DocParser
      */
-    private $parser;
+    private $docParser;
 
     /**
      * Annotations parser.
@@ -66,6 +66,7 @@ class SimpleAnnotationReader implements Reader
     {
         $this->namespaces = $namespaces;
         $this->config     = $config ?: new Configuration();
+        $this->docParser  = $this->config->getDocParser();
     }
 
     /**
@@ -176,10 +177,12 @@ class SimpleAnnotationReader implements Reader
             return [];
         }
 
-        $parser     = new DocParser($this->config->getHoaParser(), $this->config->getBuilder(), true);
         $namespaces = array_merge($this->namespaces, [$namespace]);
         $context    = new Context($reflector, $namespaces);
 
-        return $parser->parse($docblock, $context);
+        $parser = $this->docParser;
+        $result = $parser->parse($docblock, $context, true);
+
+        return $result;
     }
 }

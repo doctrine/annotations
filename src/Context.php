@@ -65,10 +65,10 @@ class Context
     /**
      * Constructor.
      *
-     * @param Reflector $reflection
-     * @param array     $namespaces
-     * @param array     $imports
-     * @param array     $ignoredNames
+     * @param \Reflector $reflection
+     * @param array      $namespaces
+     * @param array      $imports
+     * @param array      $ignoredNames
      */
     public function __construct(Reflector $reflection, array $namespaces, array $imports = [], array $ignoredNames = [])
     {

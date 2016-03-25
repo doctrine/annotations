@@ -34,8 +34,18 @@ use Hoa\Visitor\Element;
  */
 abstract class BaseVisitor implements Visit
 {
+    /**
+     * @param \Doctrine\Annotations\Reference $reference
+     *
+     * @return object
+     */
     abstract protected function createAnnotation(Reference $reference);
 
+    /**
+     * @param string $class
+     *
+     * @return string
+     */
     abstract protected function resolveClass(string $class) : string;
 
     /**
@@ -72,7 +82,7 @@ abstract class BaseVisitor implements Visit
             foreach ($element->getChildren() as $child) {
                 $result = $child->accept($this, $handle, $eldnah);
                 $values = $values + $result;
-                // array_merge won`t preserve numeric keys
+                // array_merge won't preserve numeric keys
             }
 
             return $values;
@@ -139,7 +149,13 @@ abstract class BaseVisitor implements Visit
     }
 
     /**
-     * {@inheritdoc}
+     * Visit an annotation.
+     *
+     * @param \Hoa\Visitor\Element $element
+     * @param mixed                $handle
+     * @param mixed                $eldnah
+     *
+     * @return object
      */
     private function visitAnnotation(Element $element, &$handle = null, $eldnah = null)
     {
@@ -151,6 +167,15 @@ abstract class BaseVisitor implements Visit
         return $this->createAnnotation(new Reference($class, $values, $this->isNested));
     }
 
+    /**
+     * Visit annotation values.
+     *
+     * @param \Hoa\Visitor\Element $element
+     * @param mixed                $handle
+     * @param mixed                $eldnah
+     *
+     * @return array
+     */
     private function visitValues(Element $element, &$handle = null, $eldnah = null)
     {
         $children = $element->getChildren();
@@ -190,6 +215,15 @@ abstract class BaseVisitor implements Visit
         return $values;
     }
 
+    /**
+     * Visit annotation constant.
+     *
+     * @param \Hoa\Visitor\Element $element
+     * @param mixed                $handle
+     * @param mixed                $eldnah
+     *
+     * @return mixed
+     */
     private function visitConstant(Element $element, &$handle = null, $eldnah = null)
     {
         $identifier = $element->getChild(0)->accept($this, $handle, $eldnah);
@@ -220,6 +254,13 @@ abstract class BaseVisitor implements Visit
         return constant($name);
     }
 
+    /**
+     * Visit a token.
+     *
+     * @param \Hoa\Visitor\Element $element
+     *
+     * @return mixed
+     */
     private function visitToken(Element $element)
     {
         $token = $element->getValueToken();

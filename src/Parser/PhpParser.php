@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Doctrine\Annotations\Parser;
 
 use SplFileObject;
+use ReflectionClass;
 
 /**
  * Parses a file for namespaces/use/class declarations.
@@ -29,7 +30,7 @@ use SplFileObject;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Christian Kaps <christian.kaps@mohiva.com>
  */
-class PhpParser
+final class PhpParser
 {
     /**
      * Parses a class.
@@ -38,15 +39,16 @@ class PhpParser
      *
      * @return array A list with use statements in the form (Alias => FQN).
      */
-    public function parseClass(\ReflectionClass $class)
+    public function parseClass(ReflectionClass $class) : array
     {
         if (method_exists($class, 'getUseStatements')) {
             return $class->getUseStatements();
         }
 
-        $filename = $class->getFilename();
-        $content  = ($filename !== false)
-            ? $this->getFileContent($filename, $class->getStartLine())
+        $lineNumber = $class->getStartLine();
+        $filename   = $class->getFilename();
+        $content    = ($filename !== false)
+            ? $this->getFileContent($filename, $lineNumber)
             : null;
 
         if ($content === null) {
@@ -69,7 +71,7 @@ class PhpParser
      *
      * @return string The content of the file.
      */
-    private function getFileContent($filename, $lineNumber)
+    private function getFileContent(string $filename, int $lineNumber)
     {
         if ( ! is_file($filename)) {
             return null;
@@ -79,11 +81,7 @@ class PhpParser
         $content = '';
         $file    = new SplFileObject($filename);
 
-        while ( ! $file->eof()) {
-            if ($lineCnt++ == $lineNumber) {
-                break;
-            }
-
+        while ( ! $file->eof() && $lineCnt++ < $lineNumber) {
             $content .= $file->fgets();
         }
 

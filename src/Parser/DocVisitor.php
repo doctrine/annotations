@@ -23,11 +23,9 @@ namespace Doctrine\Annotations\Parser;
 
 use Doctrine\Annotations\Exception\ClassNotFoundException;
 use Doctrine\Annotations\Reference;
+use Doctrine\Annotations\Resolver;
 use Doctrine\Annotations\Builder;
 use Doctrine\Annotations\Context;
-
-use Hoa\Visitor\Visit;
-use Hoa\Visitor\Element;
 
 /**
  * A visitor for docblock annotations.
@@ -37,12 +35,17 @@ use Hoa\Visitor\Element;
 class DocVisitor extends BaseVisitor
 {
     /**
-     * @var Builder
+     * @var \Doctrine\Annotations\Resolver
+     */
+    protected $resolver;
+
+    /**
+     * @var \Doctrine\Annotations\Builder
      */
     private $builder;
 
     /**
-     * @var Context
+     * @var \Doctrine\Annotations\Context
      */
     private $context;
 
@@ -56,14 +59,16 @@ class DocVisitor extends BaseVisitor
     /**
      * Constructor
      *
-     * @param Context $context
-     * @param Builder $builder
-     * @param boolean $ignoreNotImported
+     * @param \Doctrine\Annotations\Context  $context
+     * @param \Doctrine\Annotations\Builder  $builder
+     * @param \Doctrine\Annotations\Resolver $resolver
+     * @param boolean                        $ignoreNotImported
      */
-    public function __construct(Context $context, Builder $builder, bool $ignoreNotImported = false)
+    public function __construct(Context $context, Builder $builder, Resolver $resolver, bool $ignoreNotImported = false)
     {
         $this->builder           = $builder;
         $this->context           = $context;
+        $this->resolver          = $resolver;
         $this->ignoreNotImported = $ignoreNotImported;
     }
 
@@ -72,7 +77,7 @@ class DocVisitor extends BaseVisitor
      */
     protected function resolveClass(string $class) : string
     {
-        return $this->builder->getResolver()->resolve($this->context, $class);
+        return $this->resolver->resolve($this->context, $class);
     }
 
     /**

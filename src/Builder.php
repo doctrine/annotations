@@ -36,20 +36,20 @@ use Doctrine\Annotations\Exception\InvalidAnnotationException;
 class Builder
 {
     /**
-     * @var Resolver
+     * @var \Doctrine\Annotations\Resolver
      */
     private $resolver;
 
     /**
-     * @var MetadataFactory
+     * @var \Doctrine\Annotations\MetadataFactory
      */
     private $metadataFactory;
 
     /**
      * Constructor.
      *
-     * @param Resolver        $resolver
-     * @param MetadataFactory $metadataFactory
+     * @param \Doctrine\Annotations\Resolver        $resolver
+     * @param \Doctrine\Annotations\MetadataFactory $metadataFactory
      */
     public function __construct(Resolver $resolver, MetadataFactory $metadataFactory)
     {
@@ -58,7 +58,7 @@ class Builder
     }
 
     /**
-     * @return Doctrine\Annotations\Resolver
+     * @return \Doctrine\Annotations\Resolver
      */
     public function getResolver() : Resolver
     {

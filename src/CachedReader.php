@@ -42,7 +42,7 @@ final class CachedReader implements Reader
     const CACHE_SALT = '@[Annot]';
 
     /**
-     * @var Reader
+     * @var \Doctrine\Annotations\Reader
      */
     private $delegate;
 
@@ -59,9 +59,9 @@ final class CachedReader implements Reader
     /**
      * Constructor.
      *
-     * @param Reader $reader
-     * @param Cache  $cache
-     * @param bool   $debug
+     * @param \Doctrine\Annotations\Reader $reader
+     * @param \Doctrine\Common\Cache\Cache $cache
+     * @param bool                         $debug
      */
     public function __construct(Reader $reader, Cache $cache, bool $debug = false)
     {
@@ -221,8 +221,8 @@ final class CachedReader implements Reader
     /**
      * Checks if the cache is fresh.
      *
-     * @param int             $time
-     * @param ReflectionClass $class
+     * @param int              $time
+     * @param \ReflectionClass $class
      *
      * @return bool
      */

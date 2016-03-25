@@ -42,11 +42,24 @@ use Doctrine\Annotations\Annotation\IgnoreAnnotation;
 class AnnotationReader implements Reader
 {
     /**
-     * Annotations parser.
-     *
      * @var \Doctrine\Annotations\Configuration
      */
     private $config;
+
+    /**
+     * @var \Doctrine\Annotations\Parser\PhpParser
+     */
+    private $phpParser;
+
+    /**
+     * @var \Doctrine\Annotations\Parser\DocParser
+     */
+    private $docParser;
+
+    /**
+     * @var \Doctrine\Annotations\Parser\MetadataParser
+     */
+    private $metadataParser;
 
     /**
      * Constructor.
@@ -55,7 +68,10 @@ class AnnotationReader implements Reader
      */
     public function __construct(Configuration $config = null)
     {
-        $this->config = $config ?: new Configuration();
+        $this->config         = $config ?: new Configuration();
+        $this->phpParser      = $this->config->getPhpParser();
+        $this->docParser      = $this->config->getDocParser();
+        $this->metadataParser = $this->config->getMetadataParser();
     }
 
     /**
@@ -73,10 +89,7 @@ class AnnotationReader implements Reader
             return [];
         }
 
-        $parser = new DocParser($this->config->getHoaParser(), $this->config->getBuilder());
-        $result = $parser->parse($docblock, $context);
-
-        return $result;
+        return $this->docParser->parse($docblock, $context);
     }
 
     /**
@@ -111,10 +124,7 @@ class AnnotationReader implements Reader
             return [];
         }
 
-        $parser = new DocParser($this->config->getHoaParser(), $this->config->getBuilder());
-        $result = $parser->parse($docblock, $context);
-
-        return $result;
+        return $this->docParser->parse($docblock, $context);
     }
 
     /**
@@ -149,10 +159,7 @@ class AnnotationReader implements Reader
             return [];
         }
 
-        $parser = new DocParser($this->config->getHoaParser(), $this->config->getBuilder());
-        $result = $parser->parse($docblock, $context);
-
-        return $result;
+        return $this->docParser->parse($docblock, $context);
     }
 
     /**
@@ -180,9 +187,8 @@ class AnnotationReader implements Reader
      */
     private function getIgnoredAnnotationNames(ReflectionClass $class) : array
     {
-        $parser       = new MetadataParser($this->config->getHoaParser(), $this->config->getResolver());
         $ignoredNames = $this->config->getIgnoredAnnotationNames()->getArrayCopy();
-        $annotations  = $parser->parseAnnotationClass($class);
+        $annotations  = $this->metadataParser->parseAnnotationClass($class);
 
         foreach ($annotations as $annotation) {
             if ( ! $annotation instanceof IgnoreAnnotation) {
@@ -211,7 +217,7 @@ class AnnotationReader implements Reader
             return $this->imports[$name];
         }
 
-        $parser = $this->config->getPhpParser();
+        $parser = $this->phpParser;
         $result = $parser->parseClass($class);
 
         return $this->imports[$name] = $result;
@@ -226,8 +232,8 @@ class AnnotationReader implements Reader
      */
     private function getMethodImports(ReflectionMethod $method)
     {
+        $parser       = $this->phpParser;
         $class        = $method->getDeclaringClass();
-        $parser       = $this->config->getPhpParser();
         $classImports = $this->getClassImports($class);
         $traitImports = [];
 
@@ -255,7 +261,7 @@ class AnnotationReader implements Reader
      */
     private function getPropertyImports(ReflectionProperty $property)
     {
-        $parser       = $this->config->getPhpParser();
+        $parser       = $this->phpParser;
         $class        = $property->getDeclaringClass();
         $classImports = $this->getClassImports($class);
         $traitImports = [];

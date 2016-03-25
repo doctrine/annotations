@@ -107,7 +107,7 @@ class DocParserTest extends TestCase
  */
 DOCBLOCK;
 
-        $result = $parser->parse($docblock, $context);
+        $result = $parser->parse($docblock, $context, true);
         $this->assertEquals(1, count($result));
         $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
@@ -155,7 +155,7 @@ DOCBLOCK;
  */
 DOCBLOCK;
 
-        $result = $parser->parse($docblock, $context);
+        $result = $parser->parse($docblock, $context, true);
         $this->assertCount(1, $result);
         $annot = $result[0];
         $this->assertInstanceOf(Name::CLASS, $annot);
@@ -183,7 +183,7 @@ DOCBLOCK;
  */
 DOCBLOCK;
 
-        $result = $parser->parse($docblock, $context);
+        $result = $parser->parse($docblock, $context, true);
         $this->assertCount(2, $result);
         $this->assertTrue(isset($result[0]));
         $this->assertTrue(isset($result[1]));
@@ -778,7 +778,7 @@ DOCBLOCK;
     {
         $parser  = $this->createTestParser();
         $context = $this->createTestContext();
-        $result  = $parser->parse("@param", $context);
+        $result  = $parser->parse("@param", $context, true);
 
         $this->assertEquals(0, count($result));
     }
@@ -788,7 +788,7 @@ DOCBLOCK;
      */
     public function testNotAnAnnotationClassIsIgnoredWithoutWarning()
     {
-        $parser  = $this->createTestParser(false);
+        $parser  = $this->createTestParser();
         $context = $this->createTestContext(null, null, [], [
             'PHPUnit_Framework_TestCase' => true
         ]);
@@ -835,13 +835,14 @@ DOCBLOCK;
         $parser->parse("@Doctrine\AnnotationsTests\Fixtures\Parser\Name(@')", $context);
     }
 
-    public function createTestParser($ignoreNotImported = true)
+    public function createTestParser()
     {
-        return new DocParser(
-            $this->config->getHoaParser(),
-            $this->config->getBuilder(),
-            $ignoreNotImported
-        );
+        $builder   = $this->config->getBuilder();
+        $resolver  = $this->config->getResolver();
+        $hoaParser = $this->config->getHoaParser();
+        $parser    = new DocParser($hoaParser, $builder, $resolver);
+
+        return $parser;
     }
 
     public function createTestContext(\Reflector $reflection = null, string $namespace = null, array $imports = [], array $ignoredNames = [])
@@ -897,7 +898,7 @@ TEXT;
  */
 DOCBLOCK;
 
-        $parser->parse($docblock, $context);
+        $parser->parse($docblock, $context, true);
     }
 
     /**
@@ -913,7 +914,7 @@ DOCBLOCK;
  */
 DOCBLOCK;
 
-        $parser->parse($docblock, $context);
+        $parser->parse($docblock, $context, true);
     }
 
     /**
@@ -990,7 +991,7 @@ DOCBLOCK;
      */
     public function testInvalidIdentifierInAnnotation()
     {
-        $parser  = $this->createTestParser(false);
+        $parser  = $this->createTestParser();
         $context = $this->createTestContext();
 
         $parser->parse('@Foo\3.42', $context);

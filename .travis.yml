@@ -8,11 +8,12 @@ cache:
 
 php:
     - 7
-    - hhvm
+
+before_install:
+    - composer self-update
 
 install:
-    - composer self-update
-    - composer --prefer-source install
+    - composer install --prefer-dist
 
 script:
     - ./vendor/bin/phpcs -p --extensions=php --standard=ruleset.xml src
@@ -20,7 +21,3 @@ script:
 
 after_script:
     - ./vendor/bin/coveralls -v
-
-matrix:
-    allow_failures:
-        - php: hhvm

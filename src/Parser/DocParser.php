@@ -23,10 +23,10 @@ namespace Doctrine\Annotations\Parser;
 
 use Doctrine\Annotations\Context;
 use Doctrine\Annotations\Builder;
+use Doctrine\Annotations\Resolver;
 use Doctrine\Annotations\Exception\ParserException;
 
-use Hoa\Compiler\Llk\Llk;
-use Hoa\File\Read;
+use Hoa\Compiler\Exception as HoaException;
 
 /**
  * A parser for docblock annotations.
@@ -36,50 +36,49 @@ use Hoa\File\Read;
 class DocParser
 {
     /**
-     * @var Builder
+     * @var \Doctrine\Annotations\Resolver
+     */
+    protected $resolver;
+
+    /**
+     * @var \Doctrine\Annotations\Builder
      */
     private $builder;
 
     /**
-     * @var HoaParser
+     * @var \Doctrine\Annotations\Parser\HoaParser
      */
     private $parser;
 
     /**
-     * Whether annotations that have not been imported should be ignored.
-     *
-     * @var bool
-     */
-    private $ignoreNotImported;
-
-    /**
      * Constructor
      *
-     * @param HoaParser $parser
-     * @param Builder   $builder
-     * @param bool      $ignoreNotImported
+     * @param \Doctrine\Annotations\Parser\HoaParser $parser
+     * @param \Doctrine\Annotations\Builder          $builder
+     * @param \Doctrine\Annotations\Resolver         $resolver
      */
-    public function __construct(HoaParser $parser, Builder $builder, bool $ignoreNotImported = false)
+    public function __construct(HoaParser $parser, Builder $builder, Resolver $resolver)
     {
-        $this->parser            = $parser;
-        $this->builder           = $builder;
-        $this->ignoreNotImported = $ignoreNotImported;
+        $this->parser   = $parser;
+        $this->builder  = $builder;
+        $this->resolver = $resolver;
     }
 
     /**
-     * @param string  $docblock
-     * @param Context $context
+     * @param string                        $docblock
+     * @param \Doctrine\Annotations\Context $context
+     * @param bool                          $ignoreNotImported
      *
      * @return array
      */
-    public function parse(string $docblock, Context $context)
+    public function parse(string $docblock, Context $context, bool $ignoreNotImported = false)
     {
         try {
-            $visitor = new DocVisitor($context, $this->builder, $this->ignoreNotImported);
+            $visitor = new DocVisitor($context, $this->builder, $this->resolver, $ignoreNotImported);
             $result  = $this->parser->parseDockblock($docblock, $visitor);
 
             return $result;
-        } catch (\Hoa\Compiler\Exception $e) {
+        } catch (HoaException $e) {
             throw ParserException::hoaException($e, $context->getDescription());
         }
     }
