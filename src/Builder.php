@@ -58,14 +58,6 @@ class Builder
     }
 
     /**
-     * @return \Doctrine\Annotations\Resolver
-     */
-    public function getResolver() : Resolver
-    {
-        return $this->resolver;
-    }
-
-    /**
      * @param Context   $context
      * @param Reference $reference
      *
@@ -128,7 +120,6 @@ class Builder
         $propertyNames   = array_keys($metadata->properties);
 
         foreach ($values as $property => $value) {
-
             if (isset($properties[$property])) {
                 $annotation->{$property} = $value;
 
@@ -175,7 +166,6 @@ class Builder
 
         // checks all declared attributes
         foreach ($metadata->properties as $propertyName => $property) {
-
             if ($propertyName === $defaultProperty && ! isset($values[$propertyName]) && isset($values['value'])) {
                 $propertyName = 'value';
             }

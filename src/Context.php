@@ -63,19 +63,36 @@ class Context
     private $imports;
 
     /**
+     * Whether annotations that have not been imported should be ignored.
+     *
+     * @var bool
+     */
+    private $ignoreNotImported;
+
+    /**
      * Constructor.
      *
      * @param \Reflector $reflection
      * @param array      $namespaces
      * @param array      $imports
      * @param array      $ignoredNames
+     * @param bool       $ignoreNotImported
      */
-    public function __construct(Reflector $reflection, array $namespaces, array $imports = [], array $ignoredNames = [])
+    public function __construct(Reflector $reflection, array $namespaces, array $imports = [], array $ignoredNames = [], bool $ignoreNotImported = false)
     {
-        $this->ignoredNames = $ignoredNames;
-        $this->reflection   = $reflection;
-        $this->namespaces   = $namespaces;
-        $this->imports      = $imports;
+        $this->ignoreNotImported = $ignoreNotImported;
+        $this->ignoredNames      = $ignoredNames;
+        $this->reflection        = $reflection;
+        $this->namespaces        = $namespaces;
+        $this->imports           = $imports;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIgnoreNotImported() : bool
+    {
+        return $this->ignoreNotImported;
     }
 
     /**

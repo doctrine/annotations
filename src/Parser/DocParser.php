@@ -67,15 +67,15 @@ class DocParser
     /**
      * @param string                        $docblock
      * @param \Doctrine\Annotations\Context $context
-     * @param bool                          $ignoreNotImported
      *
      * @return array
      */
-    public function parse(string $docblock, Context $context, bool $ignoreNotImported = false)
+    public function parse(string $docblock, Context $context)
     {
         try {
-            $visitor = new DocVisitor($context, $this->builder, $this->resolver, $ignoreNotImported);
-            $result  = $this->parser->parseDockblock($docblock, $visitor);
+            $ignoreNotImported = $context->getIgnoreNotImported();
+            $visitor           = new DocVisitor($context, $this->builder, $this->resolver, $ignoreNotImported);
+            $result            = $this->parser->parseDockblock($docblock, $visitor);
 
             return $result;
         } catch (HoaException $e) {

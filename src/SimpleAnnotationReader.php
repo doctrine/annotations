@@ -178,10 +178,10 @@ class SimpleAnnotationReader implements Reader
         }
 
         $namespaces = array_merge($this->namespaces, [$namespace]);
-        $context    = new Context($reflector, $namespaces);
+        $context    = new Context($reflector, $namespaces, [], [], true);
 
         $parser = $this->docParser;
-        $result = $parser->parse($docblock, $context, true);
+        $result = $parser->parse($docblock, $context);
 
         return $result;
     }

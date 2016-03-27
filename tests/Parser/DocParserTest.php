@@ -98,6 +98,8 @@ class DocParserTest extends TestCase
         $this->assertEquals('value2', $annot->value[1]['key2']);
 
         // Complete docblock
+        $parser   = $this->createTestParser();
+        $context  = $this->createTestContext(null, null, [], [], true);
         $docblock = <<<DOCBLOCK
 /**
  * Some nifty class.
@@ -107,7 +109,7 @@ class DocParserTest extends TestCase
  */
 DOCBLOCK;
 
-        $result = $parser->parse($docblock, $context, true);
+        $result = $parser->parse($docblock, $context);
         $this->assertEquals(1, count($result));
         $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
@@ -140,9 +142,8 @@ DOCBLOCK;
 
     public function testNamespacedAnnotations()
     {
-        $parser  = $this->createTestParser();
-        $context = $this->createTestContext();
-
+        $parser   = $this->createTestParser();
+        $context  = $this->createTestContext(null, null, [], [], true);
         $docblock = <<<DOCBLOCK
 /**
  * Some nifty class.
@@ -155,7 +156,7 @@ DOCBLOCK;
  */
 DOCBLOCK;
 
-        $result = $parser->parse($docblock, $context, true);
+        $result = $parser->parse($docblock, $context);
         $this->assertCount(1, $result);
         $annot = $result[0];
         $this->assertInstanceOf(Name::CLASS, $annot);
@@ -168,7 +169,7 @@ DOCBLOCK;
     public function testTypicalMethodDocBlock()
     {
         $parser   = $this->createTestParser();
-        $context  = $this->createTestContext();
+        $context  = $this->createTestContext(null, null, [], [], true);
         $docblock = <<<DOCBLOCK
 /**
  * Some nifty method.
@@ -183,7 +184,7 @@ DOCBLOCK;
  */
 DOCBLOCK;
 
-        $result = $parser->parse($docblock, $context, true);
+        $result = $parser->parse($docblock, $context);
         $this->assertCount(2, $result);
         $this->assertTrue(isset($result[0]));
         $this->assertTrue(isset($result[1]));
@@ -777,8 +778,8 @@ DOCBLOCK;
     public function testAnnotationWithoutClassIsIgnoredWithoutWarning()
     {
         $parser  = $this->createTestParser();
-        $context = $this->createTestContext();
-        $result  = $parser->parse("@param", $context, true);
+        $context = $this->createTestContext(null, null, [], [], true);
+        $result  = $parser->parse("@param", $context);
 
         $this->assertEquals(0, count($result));
     }
@@ -845,7 +846,7 @@ DOCBLOCK;
         return $parser;
     }
 
-    public function createTestContext(\Reflector $reflection = null, string $namespace = null, array $imports = [], array $ignoredNames = [])
+    public function createTestContext(\Reflector $reflection = null, string $namespace = null, array $imports = [], array $ignoredNames = [], bool $ignoreNotImported = false)
     {
         if ($reflection == null) {
             $reflection = new \ReflectionClass('Doctrine\AnnotationsTests\Fixtures\Parser\MyClass');
@@ -863,7 +864,7 @@ DOCBLOCK;
             $namespace = 'Doctrine\AnnotationsTests\Fixtures\Parser';
         }
 
-        return new Context($reflection, [$namespace], $imports, $ignoredNames);
+        return new Context($reflection, [$namespace], $imports, $ignoredNames, $ignoreNotImported);
     }
 
     /**
@@ -890,7 +891,7 @@ TEXT;
     public function testSyntaxErrorWithUnknownCharacters()
     {
         $parser   = $this->createTestParser();
-        $context  = $this->createTestContext();
+        $context  = $this->createTestContext(null, null, [], [], true);
         $docblock = <<<DOCBLOCK
 /****
  * @Entity
@@ -898,7 +899,7 @@ TEXT;
  */
 DOCBLOCK;
 
-        $parser->parse($docblock, $context, true);
+        $parser->parse($docblock, $context);
     }
 
     /**
@@ -907,14 +908,14 @@ DOCBLOCK;
     public function testIgnorePHPDocThrowTag()
     {
         $parser   = $this->createTestParser();
-        $context  = $this->createTestContext();
+        $context  = $this->createTestContext(null, null, [], [], true);
         $docblock = <<<DOCBLOCK
 /**
  * @throws \RuntimeException
  */
 DOCBLOCK;
 
-        $parser->parse($docblock, $context, true);
+        $parser->parse($docblock, $context);
     }
 
     /**

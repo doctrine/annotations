@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 namespace Doctrine\Annotations;
 
+use Doctrine\Annotations\Reflection\ReflectionFactory;
 use Doctrine\Annotations\Metadata\MetadataFactory;
 use Doctrine\Annotations\Parser\MetadataParser;
 use Doctrine\Annotations\Parser\DocParser;
@@ -43,6 +44,11 @@ class Configuration
      * @var \Doctrine\Annotations\IgnoredAnnotationNames
      */
     private $ignoredAnnotationNames;
+
+    /**
+     * @var \Doctrine\Annotations\Reflection\ReflectionFactory
+     */
+    private $reflectionFactory;
 
     /**
      * @var \Doctrine\Annotations\Metadata\MetadataFactory
@@ -117,6 +123,26 @@ class Configuration
         }
 
         return $this->metadataFactory = new MetadataFactory($this->getMetadataParser());
+    }
+
+    /**
+     * @param \Doctrine\Annotations\Reflection\ReflectionFactory $factory
+     */
+    public function setReflectionFactory(ReflectionFactory $factory)
+    {
+        $this->reflectionFactory = $factory;
+    }
+
+    /**
+     * @return \Doctrine\Annotations\Reflection\ReflectionFactory
+     */
+    public function getReflectionFactory() : ReflectionFactory
+    {
+        if ($this->reflectionFactory !== null) {
+            return $this->reflectionFactory;
+        }
+
+        return $this->reflectionFactory = new ReflectionFactory($this->getPhpParser());
     }
 
     /**

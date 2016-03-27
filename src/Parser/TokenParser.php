@@ -164,7 +164,6 @@ class TokenParser
         $statements = [];
 
         while (($token = $this->next())) {
-
             if ($token[0] === T_USE) {
                 $statements = array_merge($statements, $this->parseUseStatement());
                 continue;
