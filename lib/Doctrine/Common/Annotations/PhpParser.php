@@ -58,6 +58,11 @@ final class PhpParser
 
         $statements = $tokenizer->parseUseStatements($class->getNamespaceName());
 
+        while ($parent = $class->getParentClass()) {
+            $statements = array_merge($statements, $this->parseClass($parent));
+            $class = $parent;
+        }
+
         return $statements;
     }
 
