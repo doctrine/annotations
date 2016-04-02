@@ -204,4 +204,17 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
           'annotationtargetannotation'  => __NAMESPACE__ . '\Fixtures\AnnotationTargetAnnotation',
         ), $parser->parseClass($class));
     }
+
+    public function testParseChildClassForInheritedMethod()
+    {
+        $parser = new PhpParser();
+
+        // ChildClassInheritingFromParentClass extends ParentClassWithAnnotatedMethod
+        $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ChildClassInheritingFromParentClass');
+
+        // @Autoload annotation should be found within ParentClassWithAnnotatedMethod
+        $this->assertEquals(array(
+            'autoload' => __NAMESPACE__ . '\Fixtures\Annotation\Autoload',
+        ), $parser->parseClass($class));
+    }
 }
