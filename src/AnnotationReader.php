@@ -42,11 +42,6 @@ use Doctrine\Annotations\Annotation\IgnoreAnnotation;
 class AnnotationReader implements Reader
 {
     /**
-     * @var \Doctrine\Annotations\Configuration
-     */
-    private $config;
-
-    /**
      * @var \Doctrine\Annotations\Parser\PhpParser
      */
     private $phpParser;
@@ -78,12 +73,15 @@ class AnnotationReader implements Reader
      */
     public function __construct(Configuration $config = null)
     {
-        $this->config                 = $config ?: new Configuration();
-        $this->phpParser              = $this->config->getPhpParser();
-        $this->docParser              = $this->config->getDocParser();
-        $this->metadataParser         = $this->config->getMetadataParser();
-        $this->reflectionFactory      = $this->config->getReflectionFactory();
-        $this->ignoredAnnotationNames = $this->config->getIgnoredAnnotationNames();
+        if ($config === null) {
+            $config = new Configuration();
+        }
+
+        $this->phpParser              = $config->getPhpParser();
+        $this->docParser              = $config->getDocParser();
+        $this->metadataParser         = $config->getMetadataParser();
+        $this->reflectionFactory      = $config->getReflectionFactory();
+        $this->ignoredAnnotationNames = $config->getIgnoredAnnotationNames();
     }
 
     /**
