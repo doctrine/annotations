@@ -292,7 +292,7 @@ abstract class BaseVisitor implements Visit
     /**
      * Visit a string value.
      *
-     * @param string $element
+     * @param string $value
      *
      * @return string
      */
