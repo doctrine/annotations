@@ -1071,14 +1071,44 @@ DOCBLOCK;
      */
     public function testSupportsEscapedQuotedValues()
     {
-        $this->markTestIncomplete();
-        $parser  = $this->createTestParser();
-        $context = $this->createTestContext();
-        $result  = $parser->parse('@Name(foo="""bar""")', $context);
+        $parser   = $this->createTestParser();
+        $context  = $this->createTestContext();
+        $docblock = <<<DOCBLOCK
+/**
+ * @Name("'foo bar'")
+ * @Name("`foo bar`")
+ * @Name("\"foo bar\"")
+ * @Name("\"foo.bar\"")
+ * @Name("\"foo\bar\"")
+ * @Name("\"foo\.bar\"")
+ * @Name("\"foo\\nbar\"")
+ * @Name("\"foo\\tbar\"")
+ * @Name("{\"foo\":\"bar\"}")
+ */
+DOCBLOCK;
 
-        $this->assertCount(1, $result);
+        $result = $parser->parse($docblock, $context);
 
-        $this->assertTrue($result[0] instanceof Name);
-        $this->assertEquals('"bar"', $result[0]->foo);
+        $this->assertCount(9, $result);
+
+        $this->assertInstanceOf(Name::CLASS, $result[0]);
+        $this->assertInstanceOf(Name::CLASS, $result[1]);
+        $this->assertInstanceOf(Name::CLASS, $result[2]);
+        $this->assertInstanceOf(Name::CLASS, $result[3]);
+        $this->assertInstanceOf(Name::CLASS, $result[4]);
+        $this->assertInstanceOf(Name::CLASS, $result[5]);
+        $this->assertInstanceOf(Name::CLASS, $result[6]);
+        $this->assertInstanceOf(Name::CLASS, $result[7]);
+        $this->assertInstanceOf(Name::CLASS, $result[8]);
+
+        $this->assertEquals('\'foo bar\'', $result[0]->value);
+        $this->assertEquals('`foo bar`', $result[1]->value);
+        $this->assertEquals('"foo bar"', $result[2]->value);
+        $this->assertEquals('"foo.bar"', $result[3]->value);
+        $this->assertEquals('"foo\bar"', $result[4]->value);
+        $this->assertEquals('"foo\\.bar"', $result[5]->value);
+        $this->assertEquals('"foo\\nbar"', $result[6]->value);
+        $this->assertEquals('"foo\\tbar"', $result[7]->value);
+        $this->assertEquals('{"foo":"bar"}', $result[8]->value);
     }
 }

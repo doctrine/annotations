@@ -34,9 +34,7 @@
 %token  value:equals        =
 %token  value:number        \-?(0|[1-9]\d*)(\.\d+)?([eE][\+\-]?\d+)?
 
-%token  value:quote_        "        -> string
-%token  string:string       [^"]+
-%token  string:_quote       "        -> value
+%token  value:string        "(.*?)(?<!\\)"
 
 #dockblock:
     (comments() | annotations())*
@@ -78,7 +76,7 @@ identifier:
     <identifier> (<colon> <colon> <identifier>)?
 
 string:
-    ::quote_:: <string> ::_quote::
+    <string>
 
 text:
     <text>

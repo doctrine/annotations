@@ -43,7 +43,7 @@ DOCBLOCK
 >  >  >  >  token(annot:identifier, \Ns\Annotation)
 >  >  >  >  #values
 >  >  >  >  >  #value
->  >  >  >  >  >  token(string:string, value)
+>  >  >  >  >  >  token(value:string, "value")
 
 DOCBLOCK
             ],

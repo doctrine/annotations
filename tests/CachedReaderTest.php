@@ -17,7 +17,7 @@ class CachedReaderTest extends AbstractReaderTest
 
         touch($file);
 
-        $cache  = $this->getMock('Doctrine\Common\Cache\Cache');
+        $cache  = $this->getMockBuilder('Doctrine\Common\Cache\Cache')->getMock();
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
 
         $cache

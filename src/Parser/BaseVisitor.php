@@ -145,7 +145,7 @@ abstract class BaseVisitor implements Visit
             return $this->visitToken($element, $handle, $eldnah);
         }
 
-        throw new \RuntimeException("Unknown AST node : $id");
+        throw new \RuntimeException("Unknown AST node: $id");
     }
 
     /**
@@ -278,10 +278,29 @@ abstract class BaseVisitor implements Visit
             return filter_var($value, FILTER_VALIDATE_INT);
         }
 
+        if ($token === 'string') {
+            return $this->visitStringValue($value);
+        }
+
         if ($token === 'null') {
             return null;
         }
 
         return $value;
+    }
+
+    /**
+     * Visit a string value.
+     *
+     * @param string $element
+     *
+     * @return string
+     */
+    private function visitStringValue(string $value) : string
+    {
+        $string = substr($value, 1, -1);
+        $result = str_replace('\"', '"', $string);
+
+        return $result;
     }
 }
