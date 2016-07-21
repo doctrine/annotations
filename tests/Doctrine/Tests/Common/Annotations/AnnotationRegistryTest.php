@@ -8,12 +8,12 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 {
     protected $class = 'Doctrine\Common\Annotations\AnnotationRegistry';
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testReset()
     {
         $data = array('foo' => 'bar');
-
-        $originalAutoloadNamespaces = $this->getStaticField($this->class, 'autoloadNamespaces');
-        $originalLoaders = $this->getStaticField($this->class, 'loaders');
 
         $this->setStaticField($this->class, 'autoloadNamespaces', $data);
         $this->setStaticField($this->class, 'loaders', $data);
@@ -25,25 +25,22 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEmpty($this->getStaticField($this->class, 'autoloadNamespaces'));
         $this->assertEmpty($this->getStaticField($this->class, 'loaders'));
-
-        // restore original values because some tests depend on this values
-        $this->setStaticField($this->class, 'autoloadNamespaces', $originalAutoloadNamespaces);
-        $this->setStaticField($this->class, 'loaders', $originalLoaders);
     }
 
+    /**
+     * @runInSeparateProcess
+     */
     public function testRegisterAutoloadNamespaces()
     {
-        $originalAutoloadNamespaces = $this->getStaticField($this->class, 'autoloadNamespaces');
         $this->setStaticField($this->class, 'autoloadNamespaces', array('foo' => 'bar'));
 
         AnnotationRegistry::registerAutoloadNamespaces(array('test' => 'bar'));
         $this->assertEquals(array('foo' => 'bar', 'test' => 'bar'), $this->getStaticField($this->class, 'autoloadNamespaces'));
-
-        //  restore original value because some tests depend on this value
-        $this->setStaticField($this->class, 'autoloadNamespaces', $originalAutoloadNamespaces);
     }
 
     /**
+     * @runInSeparateProcess
+     *
      * @expectedException   \InvalidArgumentException
      * @expectedExceptionMessage A callable is expected in AnnotationRegistry::registerLoader().
      */
