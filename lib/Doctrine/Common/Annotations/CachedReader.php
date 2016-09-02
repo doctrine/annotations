@@ -226,10 +226,43 @@ final class CachedReader implements Reader
      */
     private function isCacheFresh($cacheKey, \ReflectionClass $class)
     {
-        if (false === $filename = $class->getFilename()) {
+        if (null === $lastModification = $this->getLastModification($class)) {
             return true;
         }
 
-        return $this->cache->fetch('[C]'.$cacheKey) >= filemtime($filename);
+        return $this->cache->fetch('[C]'.$cacheKey) >= $lastModification;
+    }
+
+    /**
+     * Returns the time the class was last modified, testing traits and parents
+     *
+     * @param \ReflectionClass $class
+     * @return int|null
+     */
+    private function getLastModification(\ReflectionClass $class)
+    {
+        if (false === $filename = $class->getFilename()) {
+            return;
+        }
+
+        $lastModification = filemtime($filename);
+
+        // Test traits
+        if (method_exists($class, 'getTraits')) {
+            foreach($class->getTraits() as $trait) {
+                if (false === $traitFilename = $trait->getFilename()) {
+                    continue;
+                }
+                $lastModification = max($lastModification, filemtime($traitFilename));
+            }
+        }
+
+        // Test parents
+        while ($parent = $class->getParentClass()) {
+            $lastModification = max($lastModification, $this->getLastModification($parent));
+            $class = $parent;
+        }
+
+        return $lastModification;
     }
 }
