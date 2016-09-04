@@ -16,7 +16,7 @@ class CachedReaderTest extends AbstractReaderTest
         $file = __DIR__.'/Fixtures/Controller.php';
         touch($file);
         $name = 'Doctrine\Tests\Common\Annotations\Fixtures\Controller';
-        $cacheKey = $name.'@[Annot]';
+        $cacheKey = $name;
 
         $cache = $this->getMock('Doctrine\Common\Cache\Cache');
         $cache
