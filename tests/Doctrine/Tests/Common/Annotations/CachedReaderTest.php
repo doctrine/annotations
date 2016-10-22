@@ -54,7 +54,7 @@ class CachedReaderTest extends AbstractReaderTest
     {
         $cacheKey = $className.'@[Annot]';
 
-        $cache = $this->getMock('Doctrine\Common\Cache\Cache');
+        $cache = $this->createMock('Doctrine\Common\Cache\Cache');
         $cache
             ->expects($this->at(0))
             ->method('fetch')
