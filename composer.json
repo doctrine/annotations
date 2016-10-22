@@ -13,12 +13,12 @@
         {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"}
     ],
     "require": {
-        "php": "^5.6|^7.0",
+        "php": "^5.6 || ^7.0",
         "doctrine/lexer": "1.*"
     },
     "require-dev": {
         "doctrine/cache": "1.*",
-        "phpunit/phpunit": "4.*"
+        "phpunit/phpunit": "^4.1.6 || ^5.6.1"
     },
     "autoload": {
         "psr-0": { "Doctrine\\Common\\Annotations\\": "lib/" }
