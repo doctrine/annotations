@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Cache\Cache;
+use ReflectionClass;
 
 /**
  * A cache aware annotation reader.
@@ -71,7 +72,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotations(\ReflectionClass $class)
+    public function getClassAnnotations(ReflectionClass $class)
     {
         $cacheKey = $class->getName();
 
@@ -90,7 +91,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(ReflectionClass $class, $annotationName)
     {
         foreach ($this->getClassAnnotations($class) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -183,11 +184,11 @@ final class CachedReader implements Reader
      * Fetches a value from the cache.
      *
      * @param string           $rawCacheKey The cache key.
-     * @param \ReflectionClass $class       The related class.
+     * @param ReflectionClass $class       The related class.
      *
      * @return mixed The cached value or false when the value is not in cache.
      */
-    private function fetchFromCache($rawCacheKey, \ReflectionClass $class)
+    private function fetchFromCache($rawCacheKey, ReflectionClass $class)
     {
         $cacheKey = $rawCacheKey . self::$CACHE_SALT;
         if (($data = $this->cache->fetch($cacheKey)) !== false) {
@@ -220,11 +221,11 @@ final class CachedReader implements Reader
      * Checks if the cache is fresh.
      *
      * @param string           $cacheKey
-     * @param \ReflectionClass $class
+     * @param ReflectionClass $class
      *
      * @return boolean
      */
-    private function isCacheFresh($cacheKey, \ReflectionClass $class)
+    private function isCacheFresh($cacheKey, ReflectionClass $class)
     {
         if (null === $lastModification = $this->getLastModification($class)) {
             return true;
@@ -236,33 +237,28 @@ final class CachedReader implements Reader
     /**
      * Returns the time the class was last modified, testing traits and parents
      *
-     * @param \ReflectionClass $class
-     * @return int|null
+     * @param ReflectionClass $class
+     * @return int
      */
-    private function getLastModification(\ReflectionClass $class)
+    private function getLastModification(ReflectionClass $class)
     {
-        if (false === $filename = $class->getFilename()) {
-            return;
-        }
+        $filename = $class->getFileName();
+        $parent   = $class->getParentClass();
 
-        $lastModification = filemtime($filename);
+        return max(array_merge(
+            [$filename ? filemtime($filename) : 0],
+            array_map([$this, 'getTraitLastModificationTimes'], $class->getTraits()),
+            $parent ? [$this->getLastModification($parent)] : []
+        ));
+    }
 
-        // Test traits
-        if (method_exists($class, 'getTraits')) {
-            foreach($class->getTraits() as $trait) {
-                if (false === $traitFilename = $trait->getFilename()) {
-                    continue;
-                }
-                $lastModification = max($lastModification, filemtime($traitFilename));
-            }
-        }
+    private function getTraitLastModificationTimes(ReflectionClass $reflectionTrait)
+    {
+        $fileName = $reflectionTrait->getFileName();
 
-        // Test parents
-        while ($parent = $class->getParentClass()) {
-            $lastModification = max($lastModification, $this->getLastModification($parent));
-            $class = $parent;
-        }
-
-        return $lastModification;
+        return array_merge(
+            [$fileName ? filemtime($fileName) : 0],
+            array_map([$this, 'getTraitLastModificationTimes'], $reflectionTrait->getTraits())
+        );
     }
 }
