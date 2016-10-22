@@ -37,6 +37,19 @@ class CachedReaderTest extends AbstractReaderTest
         $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithTrait', $cache);
     }
 
+    public function testIgnoresStaleCacheWithTraitsThatUseOtherTraits()
+    {
+        $cache = time() - 10;
+
+        touch(__DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTrait.php', $cache - 10);
+        touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cache + 10);
+
+        $this->doTestCacheStale(
+            'Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait',
+            $cache
+        );
+    }
+
     protected function doTestCacheStale($className, $lastCacheModification)
     {
         $cacheKey = $className.'@[Annot]';
