@@ -30,10 +30,6 @@ class CachedReaderTest extends AbstractReaderTest
 
     public function testIgnoresStaleCacheWithTraits()
     {
-        if (version_compare(PHP_VERSION, '5.4.0') < 0) {
-            $this->markTestSkipped('This test needs PHP >= 5.4');
-        }
-
         $cache = time() - 10;
         touch(__DIR__.'/Fixtures/ControllerWithTrait.php', $cache - 10);
         touch(__DIR__.'/Fixtures/Traits/SecretRouteTrait.php', $cache + 10);
