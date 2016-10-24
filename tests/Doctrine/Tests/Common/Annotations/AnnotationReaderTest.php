@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -75,13 +76,11 @@ class AnnotationReaderTest extends AbstractReaderTest
     public function testClassAnnotationIsIgnored()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\TestInvalidClassAnnotationClass');
+        $ref = new \ReflectionClass(AnnotatedAtClassLevel::class);
 
         $reader::addGlobalIgnoredNamespace('SomeClassAnnotationNamespace');
 
-        $annotations = $reader->getClassAnnotations($ref);
-
-        $this->assertEquals(0, count($annotations));
+        self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
     public function testMethodAnnotationIsIgnored()
