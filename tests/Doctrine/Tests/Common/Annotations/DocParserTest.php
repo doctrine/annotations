@@ -1343,6 +1343,32 @@ DOCBLOCK;
         $this->assertTrue($result[0] instanceof Name);
         $this->assertEquals('"bar"', $result[0]->foo);
     }
+
+    /**
+     * @see http://php.net/manual/en/mbstring.configuration.php
+     * mbstring.func_overload can be changed only in php.ini
+     * so for testing this case instead of skipping it you need to manually configure your php installation
+     */
+    public function testMultiByteAnnotation()
+    {
+        $overloadStringFunctions = 2;
+        if (!extension_loaded('mbstring') || (ini_get("mbstring.func_overload") & $overloadStringFunctions) == 0) {
+            $this->markTestSkipped('This test requires mbstring function overloading is turned on');
+        }
+
+        $docblock = <<<DOCBLOCK
+        /**
+         * Мультибайтовый текст ломал парсер при оверлоадинге строковых функций
+         * @Doctrine\Tests\Common\Annotations\Name
+         */
+DOCBLOCK;
+
+        $docParser = $this->createTestParser();
+        $result = $docParser->parse($docblock);
+
+        $this->assertCount(1, $result);
+
+    }
 }
 
 /** @Annotation */
