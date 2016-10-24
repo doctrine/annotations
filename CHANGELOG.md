@@ -40,7 +40,38 @@ Total issues resolved: **15**
 - [98: Enhancement/#65 remove cache salt from cached reader](https://github.com/doctrine/annotations/pull/98)
 - [99: Fix - #70 - allow tab character before first annotation in docblock](https://github.com/doctrine/annotations/pull/99)
 
-### v1.2.0
+### 1.2.4
+
+Total issues resolved: **1**
+
+- [51: FileCacheReader::saveCacheFile::unlink fix](https://github.com/doctrine/annotations/pull/51)
+
+### 1.2.3
+
+Total issues resolved: [**2**](https://github.com/doctrine/annotations/milestones/v1.2.3)
+
+- [49: #46 - applying correct `chmod()` to generated cache file](https://github.com/doctrine/annotations/pull/49)
+- [50: Hotfix: match escaped quotes (revert #44)](https://github.com/doctrine/annotations/pull/50)
+
+### 1.2.2
+
+Total issues resolved: **4**
+
+- [43: Exclude files from distribution with .gitattributes](https://github.com/doctrine/annotations/pull/43)
+- [44: Update DocLexer.php](https://github.com/doctrine/annotations/pull/44)
+- [46: A plain &quot;file&#95;put&#95;contents&quot; can cause havoc](https://github.com/doctrine/annotations/pull/46)
+- [48: Deprecating the `FileCacheReader` in 1.2.2: will be removed in 2.0.0](https://github.com/doctrine/annotations/pull/48)
+
+### 1.2.1
+
+Total issues resolved: **4**
+
+- [38: fixes doctrine/common#326](https://github.com/doctrine/annotations/pull/38)
+- [39: Remove superfluous NS](https://github.com/doctrine/annotations/pull/39)
+- [41: Warn if load_comments is not enabled.](https://github.com/doctrine/annotations/pull/41)
+- [42: Clean up unused uses](https://github.com/doctrine/annotations/pull/42)
+
+### 1.2.0
 
  * HHVM support
  * Allowing dangling comma in annotations
@@ -48,6 +79,6 @@ Total issues resolved: **15**
  * Importing namespaces also in traits
  * Added support for `::class` 5.5-style constant, works also in 5.3 and 5.4
 
-### v1.1
+### 1.1.0
 
  * Add Exception when ZendOptimizer+ or Opcache is configured to drop comments
