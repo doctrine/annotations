@@ -20,6 +20,7 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Cache\Cache;
+use ReflectionClass;
 
 /**
  * A cache aware annotation reader.
@@ -71,7 +72,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotations(\ReflectionClass $class)
+    public function getClassAnnotations(ReflectionClass $class)
     {
         $cacheKey = $class->getName();
 
@@ -90,7 +91,7 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName)
+    public function getClassAnnotation(ReflectionClass $class, $annotationName)
     {
         foreach ($this->getClassAnnotations($class) as $annot) {
             if ($annot instanceof $annotationName) {
@@ -183,11 +184,11 @@ final class CachedReader implements Reader
      * Fetches a value from the cache.
      *
      * @param string           $rawCacheKey The cache key.
-     * @param \ReflectionClass $class       The related class.
+     * @param ReflectionClass $class       The related class.
      *
      * @return mixed The cached value or false when the value is not in cache.
      */
-    private function fetchFromCache($rawCacheKey, \ReflectionClass $class)
+    private function fetchFromCache($rawCacheKey, ReflectionClass $class)
     {
         $cacheKey = $rawCacheKey . self::$CACHE_SALT;
         if (($data = $this->cache->fetch($cacheKey)) !== false) {
@@ -220,16 +221,45 @@ final class CachedReader implements Reader
      * Checks if the cache is fresh.
      *
      * @param string           $cacheKey
-     * @param \ReflectionClass $class
+     * @param ReflectionClass $class
      *
      * @return boolean
      */
-    private function isCacheFresh($cacheKey, \ReflectionClass $class)
+    private function isCacheFresh($cacheKey, ReflectionClass $class)
     {
-        if (false === $filename = $class->getFilename()) {
+        if (null === $lastModification = $this->getLastModification($class)) {
             return true;
         }
 
-        return $this->cache->fetch('[C]'.$cacheKey) >= filemtime($filename);
+        return $this->cache->fetch('[C]'.$cacheKey) >= $lastModification;
+    }
+
+    /**
+     * Returns the time the class was last modified, testing traits and parents
+     *
+     * @param ReflectionClass $class
+     * @return int
+     */
+    private function getLastModification(ReflectionClass $class)
+    {
+        $filename = $class->getFileName();
+        $parent   = $class->getParentClass();
+
+        return max(array_merge(
+            [$filename ? filemtime($filename) : 0],
+            array_map([$this, 'getTraitLastModificationTimes'], $class->getTraits()),
+            array_map([$this, 'getLastModification'], $class->getInterfaces()),
+            $parent ? [$this->getLastModification($parent)] : []
+        ));
+    }
+
+    private function getTraitLastModificationTimes(ReflectionClass $reflectionTrait)
+    {
+        $fileName = $reflectionTrait->getFileName();
+
+        return array_merge(
+            [$fileName ? filemtime($fileName) : 0],
+            array_map([$this, 'getTraitLastModificationTimes'], $reflectionTrait->getTraits())
+        );
     }
 }
