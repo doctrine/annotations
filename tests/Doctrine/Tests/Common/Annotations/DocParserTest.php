@@ -1002,6 +1002,7 @@ DOCBLOCK;
      * @return void
      *
      * @dataProvider provideTestIgnoreWholeNamespaces
+     * @group 45
      */
     public function testIgnoreWholeNamespaces($ignoreAnnotationName, $input)
     {

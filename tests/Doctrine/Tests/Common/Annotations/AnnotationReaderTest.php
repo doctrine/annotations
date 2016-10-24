@@ -76,6 +76,9 @@ class AnnotationReaderTest extends AbstractReaderTest
         $this->assertEquals(array(), $annotations);
     }
 
+    /**
+     * @group 45
+     */
     public function testClassAnnotationIsIgnored()
     {
         $reader = $this->getReader();
@@ -86,6 +89,9 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
+    /**
+     * @group 45
+     */
     public function testMethodAnnotationIsIgnored()
     {
         $reader = $this->getReader();
@@ -96,6 +102,9 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
     }
 
+    /**
+     * @group 45
+     */
     public function testPropertyAnnotationIsIgnored()
     {
         $reader = $this->getReader();
