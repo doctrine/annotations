@@ -77,7 +77,7 @@ class CachedReaderTest extends AbstractReaderTest
 
     protected function doTestCacheStale($className, $lastCacheModification)
     {
-        $cacheKey = $className.'@[Annot]';
+        $cacheKey = $className;
 
         $cache = $this->createMock('Doctrine\Common\Cache\Cache');
         $cache
