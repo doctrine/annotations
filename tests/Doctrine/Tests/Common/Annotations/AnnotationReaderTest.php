@@ -5,6 +5,7 @@ namespace Doctrine\Tests\Common\Annotations;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -73,6 +74,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
         $this->assertEquals(array(), $annotations);
     }
+
     public function testClassAnnotationIsIgnored()
     {
         $reader = $this->getReader();
@@ -86,13 +88,11 @@ class AnnotationReaderTest extends AbstractReaderTest
     public function testMethodAnnotationIsIgnored()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\TestInvalidMethodAnnotationClass');
+        $ref = new \ReflectionClass(AnnotatedAtMethodLevel::class);
 
         $reader::addGlobalIgnoredNamespace('SomeMethodAnnotationNamespace');
 
-        $annotations = $reader->getMethodAnnotations($ref->getMethod('test'));
-
-        $this->assertEquals(0, count($annotations));
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
     }
 
     public function testPropertyAnnotationIsIgnored()
