@@ -78,6 +78,8 @@ class AnnotationReaderTest extends AbstractReaderTest
 
     /**
      * @group 45
+     *
+     * @runInSeparateProcess
      */
     public function testClassAnnotationIsIgnored()
     {
@@ -91,6 +93,8 @@ class AnnotationReaderTest extends AbstractReaderTest
 
     /**
      * @group 45
+     *
+     * @runInSeparateProcess
      */
     public function testMethodAnnotationIsIgnored()
     {
@@ -104,6 +108,8 @@ class AnnotationReaderTest extends AbstractReaderTest
 
     /**
      * @group 45
+     *
+     * @runInSeparateProcess
      */
     public function testPropertyAnnotationIsIgnored()
     {
