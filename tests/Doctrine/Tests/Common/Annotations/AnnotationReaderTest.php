@@ -106,22 +106,3 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
 }
-
-/**
- * @SomeClassAnnotationNamespace\Subnamespace\Name
- */
-class TestInvalidClassAnnotationClass {}
-
-class TestInvalidMethodAnnotationClass {
-    /**
-     * @SomeMethodAnnotationNamespace\Subnamespace\Name
-     */
-    public function test() {}
-}
-
-class TestInvalidPropertyAnnotationClass {
-    /**
-     * @SomePropertyAnnotationNamespace\Subnamespace\Name
-     */
-    private $field;
-}
