@@ -994,6 +994,49 @@ DOCBLOCK;
     }
 
     /**
+     * Tests if it's possible to ignore whole namespaces
+     *
+     * @param string $ignoreAnnotationName annotation/namespace to ignore
+     * @param string $input                annotation/namespace from the docblock
+     *
+     * @return void
+     *
+     * @dataProvider provideTestIgnoreWholeNamespaces
+     * @group 45
+     */
+    public function testIgnoreWholeNamespaces($ignoreAnnotationName, $input)
+    {
+        $parser = new DocParser();
+        $parser->setIgnoredAnnotationNamespaces(array($ignoreAnnotationName => true));
+        $result = $parser->parse($input);
+
+        self::assertEmpty($result);
+    }
+
+    public function provideTestIgnoreWholeNamespaces()
+    {
+        return array(
+            array('Namespace', '@Namespace'),
+            array('Namespace\\', '@Namespace'),
+
+            array('Namespace', '@Namespace\Subnamespace'),
+            array('Namespace\\', '@Namespace\Subnamespace'),
+
+            array('Namespace', '@Namespace\Subnamespace\SubSubNamespace'),
+            array('Namespace\\', '@Namespace\Subnamespace\SubSubNamespace'),
+
+            array('Namespace\Subnamespace', '@Namespace\Subnamespace'),
+            array('Namespace\Subnamespace\\', '@Namespace\Subnamespace'),
+
+            array('Namespace\Subnamespace', '@Namespace\Subnamespace\SubSubNamespace'),
+            array('Namespace\Subnamespace\\', '@Namespace\Subnamespace\SubSubNamespace'),
+
+            array('Namespace\Subnamespace\SubSubNamespace', '@Namespace\Subnamespace\SubSubNamespace'),
+            array('Namespace\Subnamespace\SubSubNamespace\\', '@Namespace\Subnamespace\SubSubNamespace'),
+        );
+    }
+
+    /**
      * @group DCOM-168
      */
     public function testNotAnAnnotationClassIsIgnoredWithoutWarning()

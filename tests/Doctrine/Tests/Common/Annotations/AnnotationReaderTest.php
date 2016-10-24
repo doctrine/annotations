@@ -4,6 +4,9 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -71,5 +74,50 @@ class AnnotationReaderTest extends AbstractReaderTest
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
         $this->assertEquals(array(), $annotations);
+    }
+
+    /**
+     * @group 45
+     *
+     * @runInSeparateProcess
+     */
+    public function testClassAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedAtClassLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomeClassAnnotationNamespace');
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
+    }
+
+    /**
+     * @group 45
+     *
+     * @runInSeparateProcess
+     */
+    public function testMethodAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedAtMethodLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomeMethodAnnotationNamespace');
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
+    }
+
+    /**
+     * @group 45
+     *
+     * @runInSeparateProcess
+     */
+    public function testPropertyAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedAtPropertyLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
 }

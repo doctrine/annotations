@@ -115,9 +115,17 @@ final class DocParser
      * The names must be the raw names as used in the class, not the fully qualified
      * class names.
      *
-     * @var array
+     * @var bool[] indexed by annotation name
      */
     private $ignoredAnnotationNames = array();
+
+    /**
+     * A list with annotations in namespaced format
+     * that are not causing exceptions when not resolved to an annotation class.
+     *
+     * @var bool[] indexed by namespace name
+     */
+    private $ignoredAnnotationNamespaces = array();
 
     /**
      * @var string
@@ -242,13 +250,25 @@ final class DocParser
      * The names are supposed to be the raw names as used in the class, not the
      * fully qualified class names.
      *
-     * @param array $names
+     * @param bool[] $names indexed by annotation name
      *
      * @return void
      */
     public function setIgnoredAnnotationNames(array $names)
     {
         $this->ignoredAnnotationNames = $names;
+    }
+
+    /**
+     * Sets the annotation namespaces that are ignored during the parsing process.
+     *
+     * @param bool[] $ignoredAnnotationNamespaces indexed by annotation namespace name
+     *
+     * @return void
+     */
+    public function setIgnoredAnnotationNamespaces($ignoredAnnotationNamespaces)
+    {
+        $this->ignoredAnnotationNamespaces = $ignoredAnnotationNamespaces;
     }
 
     /**
@@ -696,7 +716,7 @@ final class DocParser
             }
 
             if ( ! $found) {
-                if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
+                if ($this->isIgnoredAnnotation($name)) {
                     return false;
                 }
 
@@ -1134,5 +1154,29 @@ final class DocParser
         }
 
         return array(null, $this->Value());
+    }
+
+    /**
+     * Checks whether the given $name matches any ignored annotation name or namespace
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    private function isIgnoredAnnotation($name)
+    {
+        if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
+            return true;
+        }
+
+        foreach (array_keys($this->ignoredAnnotationNamespaces) as $ignoredAnnotationNamespace) {
+            $ignoredAnnotationNamespace = rtrim($ignoredAnnotationNamespace, '\\') . '\\';
+
+            if (0 === stripos(rtrim($name, '\\') . '\\', $ignoredAnnotationNamespace)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
