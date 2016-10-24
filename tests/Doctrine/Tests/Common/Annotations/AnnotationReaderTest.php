@@ -6,6 +6,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -98,13 +99,11 @@ class AnnotationReaderTest extends AbstractReaderTest
     public function testPropertyAnnotationIsIgnored()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\TestInvalidPropertyAnnotationClass');
+        $ref = new \ReflectionClass(AnnotatedAtPropertyLevel::class);
 
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
 
-        $annotations = $reader->getPropertyAnnotations($ref->getProperty('field'));
-
-        $this->assertEquals(0, count($annotations));
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
 }
 
