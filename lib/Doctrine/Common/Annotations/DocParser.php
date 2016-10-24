@@ -115,7 +115,7 @@ final class DocParser
      * The names must be the raw names as used in the class, not the fully qualified
      * class names.
      *
-     * @var array
+     * @var bool[] indexed by annotation name
      */
     private $ignoredAnnotationNames = array();
 
@@ -123,7 +123,7 @@ final class DocParser
      * A list with annotations in namespaced format
      * that are not causing exceptions when not resolved to an annotation class.
      *
-     * @var array
+     * @var bool[] indexed by namespace name
      */
     private $ignoredAnnotationNamespaces = array();
 
@@ -250,7 +250,7 @@ final class DocParser
      * The names are supposed to be the raw names as used in the class, not the
      * fully qualified class names.
      *
-     * @param array $names
+     * @param bool[] $names indexed by annotation name
      *
      * @return void
      */
@@ -262,7 +262,7 @@ final class DocParser
     /**
      * Sets the annotation namespaces that are ignored during the parsing process.
      *
-     * @param array $ignoredAnnotationNamespaces
+     * @param bool[] $ignoredAnnotationNamespaces indexed by annotation namespace name
      *
      * @return void
      */
@@ -716,16 +716,8 @@ final class DocParser
             }
 
             if ( ! $found) {
-                if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
+                if ($this->isIgnoredAnnotation($name)) {
                     return false;
-                }
-
-                foreach (array_keys($this->ignoredAnnotationNamespaces) as $ignoredAnnotationNamespace) {
-                    $ignoredAnnotationNamespace = rtrim($ignoredAnnotationNamespace, '\\') . '\\';
-
-                    if (0 === stripos($name, $ignoredAnnotationNamespace) || 0 === stripos($name . '\\', $ignoredAnnotationNamespace)) {
-                        return false;
-                    }
                 }
 
                 throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s was never imported. Did you maybe forget to add a "use" statement for this annotation?', $name, $this->context));
@@ -1162,5 +1154,29 @@ final class DocParser
         }
 
         return array(null, $this->Value());
+    }
+
+    /**
+     * Checks whether the given $name matches any ignored annotation name or namespace
+     *
+     * @param string $name
+     *
+     * @return bool
+     */
+    private function isIgnoredAnnotation($name)
+    {
+        if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$name])) {
+            return true;
+        }
+
+        foreach (array_keys($this->ignoredAnnotationNamespaces) as $ignoredAnnotationNamespace) {
+            $ignoredAnnotationNamespace = rtrim($ignoredAnnotationNamespace, '\\') . '\\';
+
+            if (0 === stripos(rtrim($name, '\\') . '\\', $ignoredAnnotationNamespace)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
