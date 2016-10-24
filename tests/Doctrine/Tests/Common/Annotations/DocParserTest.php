@@ -996,8 +996,8 @@ DOCBLOCK;
     /**
      * Tests if it's possible to ignore whole namespaces
      *
-     * @param $ignoreAnnotationName annotation/namespace to ignore
-     * @param $input annotation/namespace from the docblock
+     * @param string $ignoreAnnotationName annotation/namespace to ignore
+     * @param string $input                annotation/namespace from the docblock
      *
      * @return void
      *
@@ -1009,7 +1009,7 @@ DOCBLOCK;
         $parser->setIgnoredAnnotationNamespaces(array($ignoreAnnotationName => true));
         $result = $parser->parse($input);
 
-        $this->assertEquals(0, count($result));
+        self::assertEmpty($result);
     }
 
     public function provideTestIgnoreWholeNamespaces()
