@@ -6,14 +6,4 @@ Docblock Annotations Parser library (extracted from [Doctrine Common](https://gi
 
 ## Changelog
 
-### v1.2.0
-
- * HHVM support
- * Allowing dangling comma in annotations
- * Excluded annotations are no longer autoloaded
- * Importing namespaces also in traits
- * Added support for `::class` 5.5-style constant, works also in 5.3 and 5.4
-
-### v1.1
-
- * Add Exception when ZendOptimizer+ or Opcache is configured to drop comments
+See [CHANGELOG.md](CHANGELOG.md)
