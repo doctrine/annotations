@@ -1282,6 +1282,20 @@ DOCBLOCK;
         $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
 
+    public function testTabPrefixIsAllowed()
+    {
+        $docblock = <<<DOCBLOCK
+/**
+ *	@Name
+ */
+DOCBLOCK;
+
+        $parser = $this->createTestParser();
+        $result = $parser->parse($docblock);
+        $this->assertCount(1, $result);
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Name', $result[0]);
+    }
+
     public function testDefaultAnnotationValueIsNotOverwritten()
     {
         $parser = $this->createTestParser();
