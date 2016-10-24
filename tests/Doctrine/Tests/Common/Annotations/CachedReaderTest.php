@@ -19,6 +19,9 @@ class CachedReaderTest extends AbstractReaderTest
         $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\Controller', $cache);
     }
 
+    /**
+     * @group 62
+     */
     public function testIgnoresStaleCacheWithParentClass()
     {
         $cache = time() - 10;
@@ -28,6 +31,9 @@ class CachedReaderTest extends AbstractReaderTest
         $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithParentClass', $cache);
     }
 
+    /**
+     * @group 62
+     */
     public function testIgnoresStaleCacheWithTraits()
     {
         $cache = time() - 10;
@@ -37,6 +43,9 @@ class CachedReaderTest extends AbstractReaderTest
         $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithTrait', $cache);
     }
 
+    /**
+     * @group 62
+     */
     public function testIgnoresStaleCacheWithTraitsThatUseOtherTraits()
     {
         $cache = time() - 10;
@@ -46,6 +55,22 @@ class CachedReaderTest extends AbstractReaderTest
 
         $this->doTestCacheStale(
             'Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait',
+            $cache
+        );
+    }
+
+    /**
+     * @group 62
+     */
+    public function testIgnoresStaleCacheWithInterfacesThatExtendOtherInterfaces()
+    {
+        $cache = time() - 10;
+
+        touch(__DIR__ . '/Fixtures/InterfaceThatExtendsAnInterface.php', $cache - 10);
+        touch(__DIR__ . '/Fixtures/EmptyInterface.php', $cache + 10);
+
+        $this->doTestCacheStale(
+            'Doctrine\Tests\Common\Annotations\Fixtures\InterfaceThatExtendsAnInterface',
             $cache
         );
     }
