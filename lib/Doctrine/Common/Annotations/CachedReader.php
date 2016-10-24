@@ -248,6 +248,7 @@ final class CachedReader implements Reader
         return max(array_merge(
             [$filename ? filemtime($filename) : 0],
             array_map([$this, 'getTraitLastModificationTimes'], $class->getTraits()),
+            array_map([$this, 'getLastModification'], $class->getInterfaces()),
             $parent ? [$this->getLastModification($parent)] : []
         ));
     }
