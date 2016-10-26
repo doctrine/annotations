@@ -45,4 +45,13 @@ class DummyClass
     public function getField1()
     {
     }
+
+    /**
+     * A parameter value with a space in it.
+     *
+     * @DummyAnnotation("\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d")
+     */
+    public function getField3()
+    {
+    }
 }

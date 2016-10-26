@@ -55,6 +55,9 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('', $dummyAnnot->dummyValue);
         $this->assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
 
+        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField3'), 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
+        $this->assertEquals('\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d', $dummyAnnot->value);
+
         $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), 'Doctrine\Tests\Common\Annotations\DummyAnnotation');
         $this->assertEquals('fieldHello', $dummyAnnot->dummyValue);
 
