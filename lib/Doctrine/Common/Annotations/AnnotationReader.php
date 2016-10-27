@@ -344,22 +344,15 @@ class AnnotationReader implements Reader
     private function getMethodImports(ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
-        $classImports = $this->getClassImports($class);
-        if (!method_exists($class, 'getTraits')) {
-            return $classImports;
-        }
+        $classImports  = $this->getClassImports($class);
 
-        $traitImports = array();
+        // Since there is no way to know where a method originates
+        // when conflict resolution for traits has been used we fall
+        // back to using the filename form the \ReflectionMethod
+        // directly.
+        $methodImports = $this->phpParser->parseMethod($method);
 
-        foreach ($class->getTraits() as $trait) {
-            if ($trait->hasMethod($method->getName())
-                && $trait->getFileName() === $method->getFileName()
-            ) {
-                $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
-            }
-        }
-
-        return array_merge($classImports, $traitImports);
+        return array_merge($classImports, $methodImports);
     }
 
     /**
@@ -377,15 +370,40 @@ class AnnotationReader implements Reader
             return $classImports;
         }
 
-        $traitImports = array();
-
-        foreach ($class->getTraits() as $trait) {
-            if ($trait->hasProperty($property->getName())) {
-                $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
-            }
-        }
+        $traitImports = $this->getDefiningTraitImports($property, $class);
 
         return array_merge($classImports, $traitImports);
+    }
+
+    /**
+     * Perform depth first search for trait defining the property.
+     * Return the imports from the defining trait.
+     *
+     * @param ReflectionProperty $property
+     * @param ReflectionClass    $classOrTrait
+     *
+     * @return array
+     */
+    private function getDefiningTraitImports(ReflectionProperty $property, ReflectionClass $classOrTrait)
+    {
+        $traitImports = [];
+
+        foreach ($classOrTrait->getTraits() as $trait)
+        {
+            // Depth first.
+            if ($traitImports === []) {
+                $traitImports = $this->getDefiningTraitImports($property, $trait);
+            } else {
+                // exit early if we found our leaf definition of the property.
+                break;
+            }
+
+            // Do not add additional imports when going back up the recursion tree.
+            if ($traitImports === [] && $trait->hasProperty($property->getName())) {
+                return $this->phpParser->parseClass($trait);
+            }
+        }
+        return $traitImports;
     }
 
     /**

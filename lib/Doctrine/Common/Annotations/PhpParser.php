@@ -46,19 +46,50 @@ final class PhpParser
             return array();
         }
 
-        $content = $this->getFileContent($filename, $class->getStartLine());
+        return $this->parse($filename, $class->getStartLine(), $class->getNamespaceName());
+    }
+
+    /**
+     * Parses a method.
+     *
+     * @param \Reflectionmethod $method A <code>ReflectionMethod</code> object.
+     *
+     * @return array A list with use statements in the form (Alias => FQN).
+     */
+    public function parseMethod(\ReflectionMethod $method)
+    {
+        if (method_exists($method, 'getUseStatements')) {
+            return $method->getUseStatements();
+        }
+
+        if (false === $filename = $method->getFilename()) {
+            return array();
+        }
+
+        return $this->parse($filename, $method->getStartLine(), $method->getNamespaceName());
+    }
+
+    /**
+     * Parse use statements from file.
+     *
+     * @param $filename
+     * @param $lineNumber
+     * @param $namespace
+     *
+     * @return array
+     */
+    private function parse($filename, $lineNumber, $namespace)
+    {
+        $content = $this->getFileContent($filename, $lineNumber);
 
         if (null === $content) {
             return array();
         }
 
-        $namespace = preg_quote($class->getNamespaceName());
         $content = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
         $tokenizer = new TokenParser('<?php ' . $content);
 
-        $statements = $tokenizer->parseUseStatements($class->getNamespaceName());
-
-        return $statements;
+        return $tokenizer->parseUseStatements($namespace);
     }
 
     /**

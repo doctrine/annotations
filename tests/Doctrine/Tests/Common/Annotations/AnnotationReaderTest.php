@@ -4,6 +4,8 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Version;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
@@ -49,6 +51,35 @@ class AnnotationReaderTest extends AbstractReaderTest
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Bar\Autoload', $annotations[0]);
 
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('traitProperty'));
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
+    }
+
+    public function testPropertyAnnotationFromTraitThatUsesAnotherTrait()
+    {
+        $reader = $this->getReader();
+        $ref =
+            new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait');
+
+        $annotations = $reader->getPropertyAnnotations($ref->getProperty('route'));
+        $this->assertInstanceOf(Version::class, $annotations[0]);
+
+        $annotations = $reader->getPropertyAnnotations($ref->getProperty('intermediate'));
+        $this->assertInstanceOf(Autoload::class, $annotations[0]);
+    }
+
+    public function testMethodAnnotationFromTraitThatUsesAnotherTrait()
+    {
+        $reader = $this->getReader();
+        $ref =
+            new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait');
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('secretAction'));
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route', $annotations[0]);
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('conflict'));
+        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template', $annotations[0]);
+
+        $annotations = $reader->getMethodAnnotations($ref->getMethod('noConflict'));
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
     }
 
