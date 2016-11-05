@@ -214,6 +214,8 @@ class FileCacheReader implements Reader
             throw new \RuntimeException(sprintf('Unable to create tempfile in directory: %s', $this->dir));
         }
 
+        @chmod($tempfile, 0666 & (~$this->umask));
+
         $written = file_put_contents($tempfile, '<?php return unserialize('.var_export(serialize($data), true).');');
 
         if (false === $written) {
