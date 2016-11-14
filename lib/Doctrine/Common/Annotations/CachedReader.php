@@ -246,13 +246,17 @@ final class CachedReader implements Reader
         ));
     }
 
+    /**
+     * @param ReflectionClass $reflectionTrait
+     * @return int
+     */
     private function getTraitLastModificationTimes(ReflectionClass $reflectionTrait)
     {
         $fileName = $reflectionTrait->getFileName();
 
-        return array_merge(
+        return max(array_merge(
             [$fileName ? filemtime($fileName) : 0],
             array_map([$this, 'getTraitLastModificationTimes'], $reflectionTrait->getTraits())
-        );
+        ));
     }
 }
