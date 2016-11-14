@@ -185,8 +185,12 @@ final class CachedReader implements Reader
      */
     private function fetchFromCache($cacheKey, ReflectionClass $class)
     {
+        if ($this->debug) {
+            return false;
+        }
+
         if (($data = $this->cache->fetch($cacheKey)) !== false) {
-            if (!$this->debug || $this->isCacheFresh($cacheKey, $class)) {
+            if ($this->isCacheFresh($cacheKey, $class)) {
                 return $data;
             }
         }
@@ -204,6 +208,11 @@ final class CachedReader implements Reader
      */
     private function saveToCache($cacheKey, $value)
     {
+        // Debug won't use the cache - save io and skip all writes.
+        if ($this->debug) {
+            return;
+        }
+
         $this->cache->save($cacheKey, $value);
         if ($this->debug) {
             $this->cache->save('[C]'.$cacheKey, time());
