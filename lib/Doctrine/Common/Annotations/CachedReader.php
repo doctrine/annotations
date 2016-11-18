@@ -240,7 +240,7 @@ final class CachedReader implements Reader
 
         return max(array_merge(
             [$filename ? filemtime($filename) : 0],
-            array_map([$this, 'getTraitLastModificationTimes'], $class->getTraits()),
+            array_map([$this, 'getTraitLastModificationTime'], $class->getTraits()),
             array_map([$this, 'getLastModification'], $class->getInterfaces()),
             $parent ? [$this->getLastModification($parent)] : []
         ));
@@ -250,13 +250,13 @@ final class CachedReader implements Reader
      * @param ReflectionClass $reflectionTrait
      * @return int
      */
-    private function getTraitLastModificationTimes(ReflectionClass $reflectionTrait)
+    private function getTraitLastModificationTime(ReflectionClass $reflectionTrait)
     {
         $fileName = $reflectionTrait->getFileName();
 
         return max(array_merge(
             [$fileName ? filemtime($fileName) : 0],
-            array_map([$this, 'getTraitLastModificationTimes'], $reflectionTrait->getTraits())
+            array_map([$this, 'getTraitLastModificationTime'], $reflectionTrait->getTraits())
         ));
     }
 }
