@@ -993,6 +993,15 @@ DOCBLOCK;
         $this->assertEquals(0, count($result));
     }
 
+    public function testNotAnAnnotationClassIsIgnoredWithoutWarning()
+    {
+        $parser = new DocParser();
+        $parser->setIgnoreNotImportedAnnotations(true);
+        $result = $parser->parse('@PHPUnit_Framework_TestCase');
+
+        $this->assertEquals(0, count($result));
+    }
+
     /**
      * Tests if it's possible to ignore whole namespaces
      *
