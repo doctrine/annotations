@@ -172,7 +172,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
 
     private function printResults($test, $time, $iterations)
     {
-        if (0 == $iterations) {
+        if (! $iterations) {
             throw new \InvalidArgumentException('$iterations cannot be zero.');
         }
 
