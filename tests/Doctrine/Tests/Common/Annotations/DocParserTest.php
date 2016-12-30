@@ -1055,7 +1055,7 @@ DOCBLOCK;
         $parser->setIgnoreNotImportedAnnotations(true);
         $result = $parser->parse('@PHPUnit_Framework_TestCase');
 
-        $this->assertEquals(0, count($result));
+        $this->assertEmpty($result);
     }
 
     /**
