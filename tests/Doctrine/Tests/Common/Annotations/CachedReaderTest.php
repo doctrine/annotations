@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Cache\Cache;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
@@ -75,6 +76,23 @@ class CachedReaderTest extends AbstractReaderTest
         );
     }
 
+    /**
+     * @group 62
+     * @group 105
+     */
+    public function testUsesFreshCacheWithTraitsThatUseOtherTraits()
+    {
+        $cacheTime = time();
+
+        touch(__DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTrait.php', $cacheTime - 10);
+        touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cacheTime - 10);
+
+        $this->doTestCacheFresh(
+            'Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait',
+            $cacheTime
+        );
+    }
+
     protected function doTestCacheStale($className, $lastCacheModification)
     {
         $cacheKey = $className;
@@ -106,6 +124,31 @@ class CachedReaderTest extends AbstractReaderTest
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
         $route = new Route();
         $route->pattern = '/someprefix';
+
+        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+    }
+
+    protected function doTestCacheFresh($className, $lastCacheModification)
+    {
+        $cacheKey       = $className;
+        $route          = new Route();
+        $route->pattern = '/someprefix';
+
+        /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
+        $cache = $this->createMock('Doctrine\Common\Cache\Cache');
+        $cache
+            ->expects($this->at(0))
+            ->method('fetch')
+            ->with($this->equalTo($cacheKey))
+            ->will($this->returnValue(array($route))); // Result was cached, but there was an annotation;
+        $cache
+            ->expects($this->at(1))
+            ->method('fetch')
+            ->with($this->equalTo('[C]' . $cacheKey))
+            ->will($this->returnValue($lastCacheModification));
+        $cache->expects(self::never())->method('save');
+
+        $reader = new CachedReader(new AnnotationReader(), $cache, true);
 
         $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
