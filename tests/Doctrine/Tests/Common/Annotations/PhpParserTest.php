@@ -56,6 +56,7 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
 
     public function testClassFileDoesNotExist()
     {
+        /* @var $class ReflectionClass|\PHPUnit_Framework_MockObject_MockObject */
         $class = $this->getMockBuilder(ReflectionClass::class)
                 ->disableOriginalConstructor()
                           ->getMock();
