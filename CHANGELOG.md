@@ -1,5 +1,20 @@
 ## Changelog
 
+### 1.3.1 - 2016-12-30
+
+This release fixes an issue with ignored annotations that were already
+autoloaded, causing the `SimpleAnnotationReader` to pick them up
+anyway. [#110](https://github.com/doctrine/annotations/pull/110)
+
+Additionally, an issue was fixed in the `CachedReader`, which was
+not correctly checking the freshness of cached annotations when
+traits were defined on a class. [#105](https://github.com/doctrine/annotations/pull/105)
+
+Total issues resolved: **2**
+
+- [105: Return single max timestamp](https://github.com/doctrine/annotations/pull/105)
+- [110: setIgnoreNotImportedAnnotations(true) didn&rsquo;t work for existing classes](https://github.com/doctrine/annotations/pull/110)
+
 ### 1.3.0
 
 This release introduces a PHP version bump. `doctrine/annotations` now requires PHP
