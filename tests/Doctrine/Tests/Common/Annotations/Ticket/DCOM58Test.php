@@ -18,9 +18,10 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $reader     = new AnnotationReader();
         $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__ . '\MappedClass'));
 
-        foreach ($result as $annot) {
-            $classAnnotations[get_class($annot)] = $annot;
-        }
+        $classAnnotations = array_combine(
+            array_map('get_class', $result),
+            $result
+        );
 
         $this->assertArrayNotHasKey('', $classAnnotations, 'Class "xxx" is not a valid entity or mapped super class.');
     }
