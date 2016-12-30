@@ -2,12 +2,15 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
-use Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants;
+use Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants;
 
 class DocParserTest extends \PHPUnit_Framework_TestCase
 {
@@ -19,16 +22,16 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $result = $parser->parse('@Name(foo={1,2, {"key"=@Name}})');
         $annot = $result[0];
 
-        $this->assertTrue($annot instanceof Name);
-        $this->assertNull($annot->value);
-        $this->assertEquals(3, count($annot->foo));
-        $this->assertEquals(1, $annot->foo[0]);
-        $this->assertEquals(2, $annot->foo[1]);
-        $this->assertTrue(is_array($annot->foo[2]));
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertNull($annot->value);
+        self::assertCount(3, $annot->foo);
+        self::assertEquals(1, $annot->foo[0]);
+        self::assertEquals(2, $annot->foo[1]);
+        self::assertInternalType('array', $annot->foo[2]);
 
         $nestedArray = $annot->foo[2];
-        $this->assertTrue(isset($nestedArray['key']));
-        $this->assertTrue($nestedArray['key'] instanceof Name);
+        self::assertTrue(isset($nestedArray['key']));
+        self::assertInstanceOf(Name::class, $nestedArray['key']);
     }
 
     public function testBasicAnnotations()
@@ -36,48 +39,48 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $parser = $this->createTestParser();
 
         // Marker annotation
-        $result = $parser->parse("@Name");
+        $result = $parser->parse('@Name');
         $annot = $result[0];
-        $this->assertTrue($annot instanceof Name);
-        $this->assertNull($annot->value);
-        $this->assertNull($annot->foo);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertNull($annot->value);
+        self::assertNull($annot->foo);
 
         // Associative arrays
         $result = $parser->parse('@Name(foo={"key1" = "value1"})');
         $annot = $result[0];
-        $this->assertNull($annot->value);
-        $this->assertTrue(is_array($annot->foo));
-        $this->assertTrue(isset($annot->foo['key1']));
+        self::assertNull($annot->value);
+        self::assertInternalType('array', $annot->foo);
+        self::assertTrue(isset($annot->foo['key1']));
 
         // Numerical arrays
         $result = $parser->parse('@Name({2="foo", 4="bar"})');
         $annot = $result[0];
-        $this->assertTrue(is_array($annot->value));
-        $this->assertEquals('foo', $annot->value[2]);
-        $this->assertEquals('bar', $annot->value[4]);
-        $this->assertFalse(isset($annot->value[0]));
-        $this->assertFalse(isset($annot->value[1]));
-        $this->assertFalse(isset($annot->value[3]));
+        self::assertInternalType('array', $annot->value);
+        self::assertEquals('foo', $annot->value[2]);
+        self::assertEquals('bar', $annot->value[4]);
+        self::assertFalse(isset($annot->value[0]));
+        self::assertFalse(isset($annot->value[1]));
+        self::assertFalse(isset($annot->value[3]));
 
         // Multiple values
         $result = $parser->parse('@Name(@Name, @Name)');
         $annot = $result[0];
 
-        $this->assertTrue($annot instanceof Name);
-        $this->assertTrue(is_array($annot->value));
-        $this->assertTrue($annot->value[0] instanceof Name);
-        $this->assertTrue($annot->value[1] instanceof Name);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertInternalType('array', $annot->value);
+        self::assertInstanceOf(Name::class, $annot->value[0]);
+        self::assertInstanceOf(Name::class, $annot->value[1]);
 
         // Multiple types as values
         $result = $parser->parse('@Name(foo="Bar", @Name, {"key1"="value1", "key2"="value2"})');
         $annot = $result[0];
 
-        $this->assertTrue($annot instanceof Name);
-        $this->assertTrue(is_array($annot->value));
-        $this->assertTrue($annot->value[0] instanceof Name);
-        $this->assertTrue(is_array($annot->value[1]));
-        $this->assertEquals('value1', $annot->value[1]['key1']);
-        $this->assertEquals('value2', $annot->value[1]['key2']);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertInternalType('array', $annot->value);
+        self::assertInstanceOf(Name::class, $annot->value[0]);
+        self::assertInternalType('array', $annot->value[1]);
+        self::assertEquals('value1', $annot->value[1]['key1']);
+        self::assertEquals('value2', $annot->value[1]['key2']);
 
         // Complete docblock
         $docblock = <<<DOCBLOCK
@@ -90,11 +93,11 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
 DOCBLOCK;
 
         $result = $parser->parse($docblock);
-        $this->assertEquals(1, count($result));
+        self::assertCount(1, $result);
         $annot = $result[0];
-        $this->assertTrue($annot instanceof Name);
-        $this->assertEquals("bar", $annot->foo);
-        $this->assertNull($annot->value);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertEquals('bar', $annot->foo);
+        self::assertNull($annot->value);
    }
 
     public function testDefaultValueAnnotations()
@@ -105,18 +108,18 @@ DOCBLOCK;
         $result = $parser->parse('@Name({"key1"="value1"})');
         $annot = $result[0];
 
-        $this->assertTrue($annot instanceof Name);
-        $this->assertTrue(is_array($annot->value));
-        $this->assertEquals('value1', $annot->value['key1']);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertInternalType('array', $annot->value);
+        self::assertEquals('value1', $annot->value['key1']);
 
         // Array as first value and additional values
         $result = $parser->parse('@Name({"key1"="value1"}, foo="bar")');
         $annot = $result[0];
 
-        $this->assertTrue($annot instanceof Name);
-        $this->assertTrue(is_array($annot->value));
-        $this->assertEquals('value1', $annot->value['key1']);
-        $this->assertEquals('bar', $annot->foo);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertInternalType('array', $annot->value);
+        self::assertEquals('value1', $annot->value['key1']);
+        self::assertEquals('bar', $annot->foo);
     }
 
     public function testNamespacedAnnotations()
@@ -137,10 +140,10 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result = $parser->parse($docblock);
-        $this->assertEquals(1, count($result));
+        self::assertCount(1, $result);
         $annot = $result[0];
-        $this->assertTrue($annot instanceof Name);
-        $this->assertEquals("bar", $annot->foo);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertEquals('bar', $annot->foo);
     }
 
     /**
@@ -165,14 +168,14 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result = $parser->parse($docblock);
-        $this->assertEquals(2, count($result));
-        $this->assertTrue(isset($result[0]));
-        $this->assertTrue(isset($result[1]));
+        self::assertCount(2, $result);
+        self::assertTrue(isset($result[0]));
+        self::assertTrue(isset($result[1]));
         $annot = $result[0];
-        $this->assertTrue($annot instanceof Name);
-        $this->assertEquals("bar", $annot->foo);
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertEquals('bar', $annot->foo);
         $marker = $result[1];
-        $this->assertTrue($marker instanceof Marker);
+        self::assertInstanceOf(Marker::class, $marker);
     }
 
 
@@ -188,15 +191,14 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertNotNull($annot);
-        $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
+        self::assertInstanceOf(SomeAnnotationClassNameWithoutConstructor::class, $annot);
 
-        $this->assertNull($annot->name);
-        $this->assertNotNull($annot->data);
-        $this->assertEquals($annot->data, "Some data");
+        self::assertNull($annot->name);
+        self::assertNotNull($annot->data);
+        self::assertEquals($annot->data, 'Some data');
 
 
 
@@ -209,14 +211,14 @@ DOCBLOCK;
 
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertNotNull($annot);
-        $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
+        self::assertNotNull($annot);
+        self::assertInstanceOf(SomeAnnotationClassNameWithoutConstructor::class, $annot);
 
-        $this->assertEquals($annot->name, "Some Name");
-        $this->assertEquals($annot->data, "Some data");
+        self::assertEquals($annot->name, 'Some Name');
+        self::assertEquals($annot->data, 'Some data');
 
 
 
@@ -228,11 +230,11 @@ $docblock = <<<DOCBLOCK
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
-        $this->assertNull($annot->name);
+        self::assertEquals($annot->data, 'Some data');
+        self::assertNull($annot->name);
 
 
         $docblock = <<<DOCBLOCK
@@ -242,11 +244,11 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertNull($annot->data);
+        self::assertEquals($annot->name, 'Some name');
+        self::assertNull($annot->data);
 
         $docblock = <<<DOCBLOCK
 /**
@@ -255,11 +257,11 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
-        $this->assertNull($annot->name);
+        self::assertEquals($annot->data, 'Some data');
+        self::assertNull($annot->name);
 
 
 
@@ -270,11 +272,11 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        self::assertEquals($annot->name, 'Some name');
+        self::assertEquals($annot->data, 'Some data');
 
 
         $docblock = <<<DOCBLOCK
@@ -284,11 +286,11 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
+        self::assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        self::assertEquals($annot->name, 'Some name');
+        self::assertEquals($annot->data, 'Some data');
 
         $docblock = <<<DOCBLOCK
 /**
@@ -297,8 +299,8 @@ DOCBLOCK;
 DOCBLOCK;
 
         $result     = $parser->parse($docblock);
-        $this->assertEquals(count($result), 1);
-        $this->assertTrue($result[0] instanceof SomeAnnotationClassNameWithoutConstructorAndProperties);
+        self::assertCount(1, $result);
+        self::assertInstanceOf(SomeAnnotationClassNameWithoutConstructorAndProperties::class, $result[0]);
     }
 
     public function testAnnotationTarget()
@@ -308,14 +310,14 @@ DOCBLOCK;
         $parser->setImports(array(
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Fixtures',
         ));
-        $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithValidAnnotationTarget');
+        $class  = new \ReflectionClass(Fixtures\ClassWithValidAnnotationTarget::class);
 
 
         $context    = 'class ' . $class->getName();
         $docComment = $class->getDocComment();
 
         $parser->setTarget(Target::TARGET_CLASS);
-        $this->assertNotNull($parser->parse($docComment,$context));
+        self::assertNotNull($parser->parse($docComment,$context));
 
 
         $property   = $class->getProperty('foo');
@@ -323,7 +325,7 @@ DOCBLOCK;
         $context    = 'property ' . $class->getName() . "::\$" . $property->getName();
 
         $parser->setTarget(Target::TARGET_PROPERTY);
-        $this->assertNotNull($parser->parse($docComment,$context));
+        self::assertNotNull($parser->parse($docComment,$context));
 
 
 
@@ -332,11 +334,11 @@ DOCBLOCK;
         $context    = 'method ' . $class->getName() . '::' . $method->getName() . '()';
 
         $parser->setTarget(Target::TARGET_METHOD);
-        $this->assertNotNull($parser->parse($docComment,$context));
+        self::assertNotNull($parser->parse($docComment,$context));
 
 
         try {
-            $class      = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass');
+            $class      = new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class);
             $context    = 'class ' . $class->getName();
             $docComment = $class->getDocComment();
 
@@ -344,14 +346,14 @@ DOCBLOCK;
             $parser->parse($docComment, $context);
 
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertNotNull($exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertNotNull($exc->getMessage());
         }
 
 
         try {
 
-            $class      = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod');
+            $class      = new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class);
             $method     = $class->getMethod('functionName');
             $docComment = $method->getDocComment();
             $context    = 'method ' . $class->getName() . '::' . $method->getName() . '()';
@@ -360,13 +362,13 @@ DOCBLOCK;
             $parser->parse($docComment, $context);
 
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertNotNull($exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertNotNull($exc->getMessage());
         }
 
 
         try {
-            $class      = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty');
+            $class      = new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class);
             $property   = $class->getProperty('foo');
             $docComment = $property->getDocComment();
             $context    = 'property ' . $class->getName() . "::\$" . $property->getName();
@@ -375,8 +377,8 @@ DOCBLOCK;
             $parser->parse($docComment, $context);
 
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertNotNull($exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertNotNull($exc->getMessage());
         }
 
     }
@@ -477,13 +479,13 @@ DOCBLOCK;
             array('string','string', '{1,2,3,4}','array'),
 
              // annotation instance
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'true','boolean'),
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'false','boolean'),
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '12','integer'),
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '1.2','double'),
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{"str"}','array'),
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{1,2,3,4}','array'),
-            array('annotation','Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'),
+            array('annotation', AnnotationTargetAll::class, 'true','boolean'),
+            array('annotation', AnnotationTargetAll::class, 'false','boolean'),
+            array('annotation', AnnotationTargetAll::class, '12','integer'),
+            array('annotation', AnnotationTargetAll::class, '1.2','double'),
+            array('annotation', AnnotationTargetAll::class, '{"str"}','array'),
+            array('annotation', AnnotationTargetAll::class, '{1,2,3,4}','array'),
+            array('annotation', AnnotationTargetAll::class, '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'),
         );
     }
 
@@ -505,12 +507,12 @@ DOCBLOCK;
             array('arrayOfStrings', 'string', '{"foo","bar",1.2}', 'double'),
             array('arrayOfStrings', 'string', '1', 'integer'),
 
-            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'true', 'boolean'),
-            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', 'false', 'boolean'),
-            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
-            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
-            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}', 'double'),
-            array('arrayOfAnnotations', 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}', 'string'),
+            array('arrayOfAnnotations', AnnotationTargetAll::class, 'true', 'boolean'),
+            array('arrayOfAnnotations', AnnotationTargetAll::class, 'false', 'boolean'),
+            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
+            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
+            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}', 'double'),
+            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}', 'string'),
         );
     }
 
@@ -526,9 +528,9 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock, $context);
 
-        $this->assertTrue(sizeof($result) === 1);
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType', $result[0]);
-        $this->assertNotNull($result[0]->$attribute);
+        self::assertCount(1, $result);
+        self::assertInstanceOf(Fixtures\AnnotationWithVarType::class, $result[0]);
+        self::assertNotNull($result[0]->$attribute);
     }
 
     /**
@@ -544,8 +546,11 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertStringMatchesFormat(
+                '[Type Error] Attribute "' . $attribute . '" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects a(n) %A' . $type . ', but got ' . $given . '.',
+                $exc->getMessage()
+            );
         }
     }
 
@@ -563,8 +568,11 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertStringMatchesFormat(
+                '[Type Error] Attribute "' . $attribute . '" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) %A' . $type . ', or an array of %A' . $type . 's, but got ' . $given . '.',
+                $exc->getMessage()
+            );
         }
     }
 
@@ -580,10 +588,10 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock, $context);
 
-        $this->assertTrue(sizeof($result) === 1);
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes', $result[0]);
-        $getter = "get".ucfirst($attribute);
-        $this->assertNotNull($result[0]->$getter());
+        self::assertCount(1, $result);
+        self::assertInstanceOf(Fixtures\AnnotationWithAttributes::class, $result[0]);
+        $getter = 'get' .ucfirst($attribute);
+        self::assertNotNull($result[0]->$getter());
     }
 
    /**
@@ -599,8 +607,8 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
         }
     }
 
@@ -618,8 +626,8 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
         }
     }
 
@@ -633,60 +641,64 @@ DOCBLOCK;
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         $result     = $parser->parse($docblock);
 
-        $this->assertTrue(sizeof($result) === 1);
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes', $result[0]);
-        $this->assertEquals("Some Value",$result[0]->getValue());
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->getAnnot());
+        self::assertCount(1, $result);
+
+        /* @var $annotation Fixtures\AnnotationWithRequiredAttributes */
+        $annotation = $result[0];
+
+        self::assertInstanceOf(Fixtures\AnnotationWithRequiredAttributes::class, $annotation);
+        self::assertEquals('Some Value', $annotation->getValue());
+        self::assertInstanceOf(Fixtures\AnnotationTargetAnnotation::class, $annotation->getAnnot());
 
 
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes("Some Value")';
         try {
-            $result = $parser->parse($docblock,$context);
+            $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
         }
 
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes(annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         try {
-            $result = $parser->parse($docblock,$context);
+            $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
         }
 
     }
 
-    public function testAnnotationWithRequiredAttributesWithoutContructor()
+    public function testAnnotationWithRequiredAttributesWithoutConstructor()
     {
         $parser     = $this->createTestParser();
         $context    = 'property SomeClassName::invalidProperty.';
         $parser->setTarget(Target::TARGET_PROPERTY);
 
 
-        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutConstructor("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         $result     = $parser->parse($docblock);
 
-        $this->assertTrue(sizeof($result) === 1);
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor', $result[0]);
-        $this->assertEquals("Some Value", $result[0]->value);
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->annot);
+        self::assertCount(1, $result);
+        self::assertInstanceOf(Fixtures\AnnotationWithRequiredAttributesWithoutConstructor::class, $result[0]);
+        self::assertEquals('Some Value', $result[0]->value);
+        self::assertInstanceOf(Fixtures\AnnotationTargetAnnotation::class, $result[0]->annot);
 
 
-        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor("Some Value")';
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutConstructor("Some Value")';
         try {
-            $result = $parser->parse($docblock,$context);
+            $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutConstructor declared on property SomeClassName::invalidProperty. expects a(n) \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
         }
 
-        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor(annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
+        $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutConstructor(annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         try {
-            $result = $parser->parse($docblock,$context);
+            $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
-            $this->assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
+        } catch (AnnotationException $exc) {
+            self::assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutConstructor declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
         }
 
     }
@@ -782,12 +794,12 @@ DOCBLOCK;
             ClassWithConstants::SOME_VALUE
         );
         $provider[] = array(
-            '@AnnotationWithConstants(IntefaceWithConstants::SOME_VALUE)',
-            IntefaceWithConstants::SOME_VALUE
+            '@AnnotationWithConstants(InterfaceWithConstants::SOME_VALUE)',
+            InterfaceWithConstants::SOME_VALUE
         );
         $provider[] = array(
-            '@AnnotationWithConstants(\Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_VALUE)',
-            IntefaceWithConstants::SOME_VALUE
+            '@AnnotationWithConstants(\Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)',
+            InterfaceWithConstants::SOME_VALUE
         );
         $provider[] = array(
             '@AnnotationWithConstants({AnnotationWithConstants::STRING, AnnotationWithConstants::INTEGER, AnnotationWithConstants::FLOAT})',
@@ -801,43 +813,43 @@ DOCBLOCK;
         );
         $provider[] = array(
             '@AnnotationWithConstants({
-                Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
+                Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
              })',
-            array(IntefaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
+            array(InterfaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
         );
         $provider[] = array(
             '@AnnotationWithConstants({
-                \Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
+                \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
              })',
-            array(IntefaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
+            array(InterfaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
         );
         $provider[] = array(
             '@AnnotationWithConstants({
                 AnnotationWithConstants::STRING = AnnotationWithConstants::INTEGER,
                 ClassWithConstants::SOME_KEY = ClassWithConstants::SOME_VALUE,
-                Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_KEY = IntefaceWithConstants::SOME_VALUE
+                Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_KEY = InterfaceWithConstants::SOME_VALUE
              })',
             array(
                 AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER,
                 ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
-                ClassWithConstants::SOME_KEY    => IntefaceWithConstants::SOME_VALUE
+                ClassWithConstants::SOME_KEY    => InterfaceWithConstants::SOME_VALUE
             )
         );
         $provider[] = array(
             '@AnnotationWithConstants(AnnotationWithConstants::class)',
-            'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+            AnnotationWithConstants::class
         );
         $provider[] = array(
             '@AnnotationWithConstants({AnnotationWithConstants::class = AnnotationWithConstants::class})',
-            array('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants' => 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants')
+            array(AnnotationWithConstants::class => AnnotationWithConstants::class)
         );
         $provider[] = array(
             '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
-            'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+            AnnotationWithConstants::class
         );
         $provider[] = array(
             '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
-            'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+            AnnotationWithConstants::class
         );
         return $provider;
     }
@@ -849,14 +861,14 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
         $parser->setImports(array(
-            'classwithconstants'        => 'Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants',
-            'intefacewithconstants'     => 'Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants',
-            'annotationwithconstants'   => 'Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants'
+            'classwithconstants'        => ClassWithConstants::class,
+            'interfacewithconstants'    => InterfaceWithConstants::class,
+            'annotationwithconstants'   => AnnotationWithConstants::class
         ));
 
         $result = $parser->parse($docblock);
-        $this->assertInstanceOf('\Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants', $annotation = $result[0]);
-        $this->assertEquals($expected, $annotation->value);
+        self::assertInstanceOf(AnnotationWithConstants::class, $annotation = $result[0]);
+        self::assertEquals($expected, $annotation->value);
     }
 
     /**
@@ -909,7 +921,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $parser->setTarget(Target::TARGET_CLASS);
-        $parser->parse($docblock,$context);
+        $parser->parse($docblock, $context);
     }
 
     /**
@@ -927,7 +939,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $parser->setTarget(Target::TARGET_CLASS);
-        $parser->parse($docblock,$context);
+        $parser->parse($docblock, $context);
     }
 
     /**
@@ -945,7 +957,7 @@ DOCBLOCK;
 DOCBLOCK;
 
         $parser->setTarget(Target::TARGET_CLASS);
-        $parser->parse($docblock,$context);
+        $parser->parse($docblock, $context);
     }
 
     /**
@@ -965,7 +977,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
 
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Name", $result[0]);
+        self::assertInstanceOf(Name::class, $result[0]);
 
         $docblock = <<<DOCBLOCK
 /**
@@ -978,7 +990,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock);
 
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Name", $result[0]);
+        self::assertInstanceOf(Name::class, $result[0]);
     }
 
     /**
@@ -988,9 +1000,9 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $result = $parser->parse("@param");
+        $result = $parser->parse('@param');
 
-        $this->assertEquals(0, count($result));
+        self::assertEmpty($result);
     }
 
     /**
@@ -1043,10 +1055,10 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $parser->setIgnoredAnnotationNames(array('PHPUnit_Framework_TestCase' => true));
+        $parser->setIgnoredAnnotationNames(array(\PHPUnit_Framework_TestCase::class => true));
         $result = $parser->parse('@PHPUnit_Framework_TestCase');
 
-        $this->assertEquals(0, count($result));
+        self::assertEmpty($result);
     }
 
     public function testNotAnAnnotationClassIsIgnoredWithoutWarningWithoutCheating()
@@ -1055,7 +1067,7 @@ DOCBLOCK;
         $parser->setIgnoreNotImportedAnnotations(true);
         $result = $parser->parse('@PHPUnit_Framework_TestCase');
 
-        $this->assertEmpty($result);
+        self::assertEmpty($result);
     }
 
     /**
@@ -1076,7 +1088,7 @@ DOCBLOCK;
         $parser = new DocParser();
         $result = $parser->parse("'@'");
 
-        $this->assertEquals(0, count($result));
+        self::assertEmpty($result);
     }
 
     /**
@@ -1094,19 +1106,19 @@ DOCBLOCK;
      */
     public function testAutoloadAnnotation()
     {
-        $this->assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
+        self::assertFalse(class_exists('Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Common\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
 
         $parser = new DocParser();
 
         AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
 
         $parser->setImports(array(
-            'autoload' => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload',
+            'autoload' => Fixtures\Annotation\Autoload::class,
         ));
         $annotations = $parser->parse('@Autoload');
 
-        $this->assertEquals(1, count($annotations));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
+        self::assertCount(1, $annotations);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
     public function createTestParser()
@@ -1114,7 +1126,7 @@ DOCBLOCK;
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
         $parser->setImports(array(
-            'name' => 'Doctrine\Tests\Common\Annotations\Name',
+            'name' => Name::class,
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations',
         ));
 
@@ -1185,9 +1197,9 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=1234)");
+        $result = $parser->parse('@Name(foo=1234)');
         $annot = $result[0];
-        $this->assertInternalType('int', $annot->foo);
+        self::assertInternalType('int', $annot->foo);
     }
 
     /**
@@ -1197,9 +1209,9 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=-1234)");
+        $result = $parser->parse('@Name(foo=-1234)');
         $annot = $result[0];
-        $this->assertInternalType('int', $annot->foo);
+        self::assertInternalType('int', $annot->foo);
     }
 
     /**
@@ -1209,9 +1221,9 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=1234.345)");
+        $result = $parser->parse('@Name(foo=1234.345)');
         $annot = $result[0];
-        $this->assertInternalType('float', $annot->foo);
+        self::assertInternalType('float', $annot->foo);
     }
 
     /**
@@ -1221,13 +1233,13 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=-1234.345)");
+        $result = $parser->parse('@Name(foo=-1234.345)');
         $annot = $result[0];
-        $this->assertInternalType('float', $annot->foo);
+        self::assertInternalType('float', $annot->foo);
 
-        $result = $parser->parse("@Marker(-1234.345)");
+        $result = $parser->parse('@Marker(-1234.345)');
         $annot = $result[0];
-        $this->assertInternalType('float', $annot->value);
+        self::assertInternalType('float', $annot->value);
     }
 
     public function testReservedKeywordsInAnnotations()
@@ -1235,23 +1247,23 @@ DOCBLOCK;
         if (PHP_VERSION_ID >= 70000) {
             $this->markTestSkipped('This test requires PHP 5.6 or lower.');
         }
-        require 'ReservedKeywordsClasses.php';
+        require __DIR__ . '/ReservedKeywordsClasses.php';
 
         $parser = $this->createTestParser();
 
         $result = $parser->parse('@Doctrine\Tests\Common\Annotations\True');
-        $this->assertTrue($result[0] instanceof True);
+        self::assertInstanceOf(True::class, $result[0]);
         $result = $parser->parse('@Doctrine\Tests\Common\Annotations\False');
-        $this->assertTrue($result[0] instanceof False);
+        self::assertInstanceOf(False::class, $result[0]);
         $result = $parser->parse('@Doctrine\Tests\Common\Annotations\Null');
-        $this->assertTrue($result[0] instanceof Null);
+        self::assertInstanceOf(Null::class, $result[0]);
 
         $result = $parser->parse('@True');
-        $this->assertTrue($result[0] instanceof True);
+        self::assertInstanceOf(True::class, $result[0]);
         $result = $parser->parse('@False');
-        $this->assertTrue($result[0] instanceof False);
+        self::assertInstanceOf(False::class, $result[0]);
         $result = $parser->parse('@Null');
-        $this->assertTrue($result[0] instanceof Null);
+        self::assertInstanceOf(Null::class, $result[0]);
     }
 
      /**
@@ -1287,8 +1299,8 @@ DOCBLOCK;
             "Foo",
             "Bar",
         })');
-        $this->assertEquals(1, count($annots));
-        $this->assertEquals(array('Foo', 'Bar'), $annots[0]->value);
+        self::assertCount(1, $annots);
+        self::assertEquals(array('Foo', 'Bar'), $annots[0]->value);
     }
 
     public function testTabPrefixIsAllowed()
@@ -1301,8 +1313,8 @@ DOCBLOCK;
 
         $parser = $this->createTestParser();
         $result = $parser->parse($docblock);
-        $this->assertCount(1, $result);
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Name', $result[0]);
+        self::assertCount(1, $result);
+        self::assertInstanceOf(Name::class, $result[0]);
     }
 
     public function testDefaultAnnotationValueIsNotOverwritten()
@@ -1310,8 +1322,8 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $annots = $parser->parse('@Doctrine\Tests\Common\Annotations\Fixtures\Annotation\AnnotWithDefaultValue');
-        $this->assertEquals(1, count($annots));
-        $this->assertEquals('bar', $annots[0]->foo);
+        self::assertCount(1, $annots);
+        self::assertEquals('bar', $annots[0]->foo);
     }
 
     public function testArrayWithColon()
@@ -1319,8 +1331,8 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $annots = $parser->parse('@Name({"foo": "bar"})');
-        $this->assertEquals(1, count($annots));
-        $this->assertEquals(array('foo' => 'bar'), $annots[0]->value);
+        self::assertCount(1, $annots);
+        self::assertEquals(array('foo' => 'bar'), $annots[0]->value);
     }
 
     /**
@@ -1341,8 +1353,8 @@ DOCBLOCK;
         $parser = $this->createTestParser();
 
         $annots = $parser->parse('@Name({"foo": {}})');
-        $this->assertEquals(1, count($annots));
-        $this->assertEquals(array('foo' => array()), $annots[0]->value);
+        self::assertCount(1, $annots);
+        self::assertEquals(array('foo' => array()), $annots[0]->value);
     }
 
     public function testKeyHasNumber()
@@ -1350,8 +1362,8 @@ DOCBLOCK;
         $parser = $this->createTestParser();
         $annots = $parser->parse('@SettingsAnnotation(foo="test", bar2="test")');
 
-        $this->assertEquals(1, count($annots));
-        $this->assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
+        self::assertCount(1, $annots);
+        self::assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
     }
 
     /**
@@ -1361,10 +1373,10 @@ DOCBLOCK;
     {
         $result = $this->createTestParser()->parse('@Doctrine\Tests\Common\Annotations\Name(foo="""bar""")');
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
 
-        $this->assertTrue($result[0] instanceof Name);
-        $this->assertEquals('"bar"', $result[0]->foo);
+        self::assertInstanceOf(Name::class, $result[0]);
+        self::assertEquals('"bar"', $result[0]->foo);
     }
 
     /**
@@ -1375,7 +1387,7 @@ DOCBLOCK;
     public function testMultiByteAnnotation()
     {
         $overloadStringFunctions = 2;
-        if (!extension_loaded('mbstring') || (ini_get("mbstring.func_overload") & $overloadStringFunctions) == 0) {
+        if (!extension_loaded('mbstring') || (ini_get('mbstring.func_overload') & $overloadStringFunctions) == 0) {
             $this->markTestSkipped('This test requires mbstring function overloading is turned on');
         }
 
@@ -1389,7 +1401,7 @@ DOCBLOCK;
         $docParser = $this->createTestParser();
         $result = $docParser->parse($docblock);
 
-        $this->assertCount(1, $result);
+        self::assertCount(1, $result);
 
     }
 }
@@ -1415,9 +1427,9 @@ class SomeAnnotationClassNameWithoutConstructor
 /** @Annotation */
 class SomeAnnotationWithConstructorWithoutParams
 {
-    function __construct()
+    public function __construct()
     {
-        $this->data = "Some data";
+        $this->data = 'Some data';
     }
     public $data;
     public $name;
@@ -1439,12 +1451,12 @@ class AnnotationWithInvalidTargetDeclaration{}
 class AnnotationWithTargetEmpty{}
 
 /** @Annotation */
-class AnnotationExtendsAnnotationTargetAll extends \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
+class AnnotationExtendsAnnotationTargetAll extends AnnotationTargetAll
 {
 }
 
 /** @Annotation */
-class Name extends \Doctrine\Common\Annotations\Annotation {
+class Name extends Annotation {
     public $foo;
 }
 
@@ -1455,6 +1467,8 @@ class Marker {
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
+use Doctrine\Common\Annotations\Annotation;
+
 /** @Annotation */
-class Name extends \Doctrine\Common\Annotations\Annotation {
+class Name extends Annotation {
 }

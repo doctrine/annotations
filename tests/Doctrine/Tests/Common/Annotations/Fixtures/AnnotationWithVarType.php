@@ -45,7 +45,7 @@ final class AnnotationWithVarType
     public $array;
 
     /**
-     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
+     * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
      */
     public $annotation;
 
@@ -60,7 +60,7 @@ final class AnnotationWithVarType
     public $arrayOfStrings;
 
     /**
-     * @var array<Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll>
+     * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll[]
      */
     public $arrayOfAnnotations;
 

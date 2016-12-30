@@ -33,15 +33,15 @@ class TargetTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidMixedTargets()
     {
-        $target = new Target(array("value" => array("ALL")));
-        $this->assertEquals(Target::TARGET_ALL, $target->targets);
+        $target = new Target(array('value' => array('ALL')));
+        self::assertEquals(Target::TARGET_ALL, $target->targets);
 
-        $target = new Target(array("value" => array("METHOD", "METHOD")));
-        $this->assertEquals(Target::TARGET_METHOD, $target->targets);
-        $this->assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
+        $target = new Target(array('value' => array('METHOD', 'METHOD')));
+        self::assertEquals(Target::TARGET_METHOD, $target->targets);
+        self::assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
 
-        $target = new Target(array("value" => array("PROPERTY", "METHOD")));
-        $this->assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
+        $target = new Target(array('value' => array('PROPERTY', 'METHOD')));
+        self::assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
     }
 }
 

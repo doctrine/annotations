@@ -10,25 +10,25 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
     {
         $lexer = new DocLexer;
 
-        $lexer->setInput("@Name");
-        $this->assertNull($lexer->token);
-        $this->assertNull($lexer->lookahead);
+        $lexer->setInput('@Name');
+        self::assertNull($lexer->token);
+        self::assertNull($lexer->lookahead);
 
-        $this->assertTrue($lexer->moveNext());
-        $this->assertNull($lexer->token);
-        $this->assertEquals('@', $lexer->lookahead['value']);
+        self::assertTrue($lexer->moveNext());
+        self::assertNull($lexer->token);
+        self::assertEquals('@', $lexer->lookahead['value']);
 
-        $this->assertTrue($lexer->moveNext());
-        $this->assertEquals('@', $lexer->token['value']);
-        $this->assertEquals('Name', $lexer->lookahead['value']);
+        self::assertTrue($lexer->moveNext());
+        self::assertEquals('@', $lexer->token['value']);
+        self::assertEquals('Name', $lexer->lookahead['value']);
 
-        $this->assertFalse($lexer->moveNext());
+        self::assertFalse($lexer->moveNext());
     }
 
     public function testScannerTokenizesDocBlockWhitConstants()
     {
         $lexer      = new DocLexer();
-        $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_VALUE)';
+        $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
 
         $tokens = array (
             array(
@@ -87,13 +87,13 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
                 'type'      => DocLexer::T_COMMA,
             ),
             array(
-                'value'     => '\\Doctrine\\Tests\\Common\\Annotations\\Fixtures\\IntefaceWithConstants::SOME_VALUE',
+                'value'     => '\\Doctrine\\Tests\\Common\\Annotations\\Fixtures\\InterfaceWithConstants::SOME_VALUE',
                 'position'  => 129,
                 'type'      => DocLexer::T_IDENTIFIER,
             ),
             array(
                 'value'     => ')',
-                'position'  => 206,
+                'position'  => 207,
                 'type'      => DocLexer::T_CLOSE_PARENTHESIS,
             )
 
@@ -104,12 +104,12 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
         foreach ($tokens as $expected) {
             $lexer->moveNext();
             $lookahead = $lexer->lookahead;
-            $this->assertEquals($expected['value'],     $lookahead['value']);
-            $this->assertEquals($expected['type'],      $lookahead['type']);
-            $this->assertEquals($expected['position'],  $lookahead['position']);
+            self::assertEquals($expected['value'],     $lookahead['value']);
+            self::assertEquals($expected['type'],      $lookahead['type']);
+            self::assertEquals($expected['position'],  $lookahead['position']);
         }
 
-        $this->assertFalse($lexer->moveNext());
+        self::assertFalse($lexer->moveNext());
     }
 
 
@@ -146,12 +146,12 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
         foreach ($tokens as $expected) {
             $lexer->moveNext();
             $lookahead = $lexer->lookahead;
-            $this->assertEquals($expected['value'],     $lookahead['value']);
-            $this->assertEquals($expected['type'],      $lookahead['type']);
-            $this->assertEquals($expected['position'],  $lookahead['position']);
+            self::assertEquals($expected['value'],     $lookahead['value']);
+            self::assertEquals($expected['type'],      $lookahead['type']);
+            self::assertEquals($expected['position'],  $lookahead['position']);
         }
 
-        $this->assertFalse($lexer->moveNext());
+        self::assertFalse($lexer->moveNext());
     }
 
     /**
@@ -163,7 +163,7 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
 
         $lexer->setInput('"' . str_repeat('.', 20240) . '"');
 
-        $this->assertInternalType('array', $lexer->glimpse());
+        self::assertInternalType('array', $lexer->glimpse());
     }
 
     /**
@@ -207,11 +207,11 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
         foreach ($tokens as $expected) {
             $lexer->moveNext();
             $lookahead = $lexer->lookahead;
-            $this->assertEquals($expected['value'],    $lookahead['value']);
-            $this->assertEquals($expected['type'],     $lookahead['type']);
-            $this->assertEquals($expected['position'], $lookahead['position']);
+            self::assertEquals($expected['value'],    $lookahead['value']);
+            self::assertEquals($expected['type'],     $lookahead['type']);
+            self::assertEquals($expected['position'], $lookahead['position']);
         }
 
-        $this->assertFalse($lexer->moveNext());
+        self::assertFalse($lexer->moveNext());
     }
 }

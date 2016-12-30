@@ -81,8 +81,8 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
         $imports = array(
             'ignorephpdoc'     => 'Annotations\Annotation\IgnorePhpDoc',
             'ignoreannotation' => 'Annotations\Annotation\IgnoreAnnotation',
-            'route'            => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route',
-            'template'         => 'Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template',
+            'route'            => Fixtures\Annotation\Route::class,
+            'template'         => Fixtures\Annotation\Template::class,
             '__NAMESPACE__'    => 'Doctrine\Tests\Common\Annotations\Fixtures',
         );
         $ignored = array(
@@ -136,7 +136,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testPhpParserPerformanceWithShortCut()
     {
-        $class = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\NamespacedSingleClassLOC1000');
+        $class = new \ReflectionClass(Fixtures\NamespacedSingleClassLOC1000::class);
 
         $time = microtime(true);
         for ($i=0,$c=500; $i<$c; $i++) {
@@ -153,7 +153,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
      */
     public function testPhpParserPerformanceWithoutShortCut()
     {
-        $class = new \ReflectionClass('SingleClassLOC1000');
+        $class = new \ReflectionClass(\SingleClassLOC1000::class);
 
         $time = microtime(true);
         for ($i=0,$c=500; $i<$c; $i++) {
@@ -167,12 +167,12 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
 
     private function getMethod()
     {
-        return new \ReflectionMethod('Doctrine\Tests\Common\Annotations\Fixtures\Controller', 'helloAction');
+        return new \ReflectionMethod(Fixtures\Controller::class, 'helloAction');
     }
 
     private function printResults($test, $time, $iterations)
     {
-        if (0 == $iterations) {
+        if (! $iterations) {
             throw new \InvalidArgumentException('$iterations cannot be zero.');
         }
 

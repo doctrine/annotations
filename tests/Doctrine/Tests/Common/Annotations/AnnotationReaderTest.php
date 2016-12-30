@@ -22,34 +22,34 @@ class AnnotationReaderTest extends AbstractReaderTest
     public function testMethodAnnotationFromTrait()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassUsesTrait');
+        $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('someMethod'));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Bar\Autoload', $annotations[0]);
+        self::assertInstanceOf(Bar\Autoload::class, $annotations[0]);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
     public function testMethodAnnotationFromOverwrittenTrait()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassOverwritesTrait');
+        $ref = new \ReflectionClass(Fixtures\ClassOverwritesTrait::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Bar2\Autoload', $annotations[0]);
+        self::assertInstanceOf(Bar2\Autoload::class, $annotations[0]);
     }
 
     public function testPropertyAnnotationFromTrait()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassUsesTrait');
+        $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
 
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('aProperty'));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Bar\Autoload', $annotations[0]);
+        self::assertInstanceOf(Bar\Autoload::class, $annotations[0]);
 
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('traitProperty'));
-        $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload', $annotations[0]);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
     public function testOmitNotRegisteredAnnotation()
@@ -58,10 +58,10 @@ class AnnotationReaderTest extends AbstractReaderTest
         $parser->setIgnoreNotImportedAnnotations(true);
 
         $reader = $this->getReader($parser);
-        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithNotRegisteredAnnotationUsed');
+        $ref = new \ReflectionClass(Fixtures\ClassWithNotRegisteredAnnotationUsed::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
-        $this->assertEquals(array(), $annotations);
+        self::assertEquals(array(), $annotations);
     }
 
     /**

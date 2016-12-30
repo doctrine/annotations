@@ -105,7 +105,7 @@ final class DocParser
     /**
      * An array of default namespaces if operating in simple mode.
      *
-     * @var array
+     * @var string[]
      */
     private $namespaces = array();
 
@@ -286,7 +286,7 @@ final class DocParser
     /**
      * Sets the default namespaces.
      *
-     * @param array $namespace
+     * @param string $namespace
      *
      * @return void
      *

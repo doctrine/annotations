@@ -27,8 +27,8 @@ class DCOM55Test extends \PHPUnit_Framework_TestCase
         $reader = new AnnotationReader();
         $annots = $reader->getClassAnnotations($class);
 
-        $this->assertEquals(1, count($annots));
-        $this->assertInstanceOf(__NAMESPACE__.'\\DCOM55Annotation', $annots[0]);
+        self::assertCount(1, $annots);
+        self::assertInstanceOf(__NAMESPACE__.'\\DCOM55Annotation', $annots[0]);
     }
 
     public function testParseAnnotationDocblocks()
@@ -37,7 +37,7 @@ class DCOM55Test extends \PHPUnit_Framework_TestCase
         $reader = new AnnotationReader();
         $annots = $reader->getClassAnnotations($class);
 
-        $this->assertEquals(0, count($annots));
+        self::assertEmpty($annots);
     }
 }
 

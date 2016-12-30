@@ -6,7 +6,7 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  * @Annotation
  * @Target("ALL")
  */
-final class AnnotationWithRequiredAttributesWithoutContructor
+final class AnnotationWithRequiredAttributesWithoutConstructor
 {
 
     /**
@@ -17,7 +17,7 @@ final class AnnotationWithRequiredAttributesWithoutContructor
 
     /**
      * @Required
-     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
+     * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
      */
     public $annot;
 

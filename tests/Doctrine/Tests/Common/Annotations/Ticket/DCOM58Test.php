@@ -16,63 +16,64 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
     public function testIssue()
     {
         $reader     = new AnnotationReader();
-        $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
+        $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__ . '\MappedClass'));
 
-        foreach ($result as $annot) {
-            $classAnnotations[get_class($annot)] = $annot;
-        }
+        $classAnnotations = array_combine(
+            array_map('get_class', $result),
+            $result
+        );
 
-        $this->assertTrue(!isset($classAnnotations['']), 'Class "xxx" is not a valid entity or mapped super class.');
+        self::assertArrayNotHasKey('', $classAnnotations, 'Class "xxx" is not a valid entity or mapped super class.');
     }
 
     public function testIssueGlobalNamespace()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
         $parser->setImports(array(
-            "__NAMESPACE__" =>"Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping"
+            '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping'
         ));
 
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+        self::assertCount(1, $annots);
+        self::assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
     public function testIssueNamespaces()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
-        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
+        $parser->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM');
 
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Entity", $annots[0]);
+        self::assertCount(1, $annots);
+        self::assertInstanceOf(Doctrine\ORM\Entity::class, $annots[0]);
     }
 
     public function testIssueMultipleNamespaces()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
-        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping");
-        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
+        $parser->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping');
+        $parser->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM');
 
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+        self::assertCount(1, $annots);
+        self::assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
     public function testIssueWithNamespacesOrImports()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
         $annots     = $parser->parse($docblock);
 
-        $this->assertEquals(1, count($annots));
-        $this->assertInstanceOf("Entity", $annots[0]);
-        $this->assertEquals(1, count($annots));
+        self::assertCount(1, $annots);
+        self::assertInstanceOf(\Entity::class, $annots[0]);
+        self::assertCount(1, $annots);
     }
 
 
@@ -82,8 +83,8 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $reader->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping');
         $annots     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
 
-        $this->assertEquals(1, count($annots));
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+        self::assertCount(1, $annots);
+        self::assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
 }

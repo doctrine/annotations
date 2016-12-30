@@ -9,5 +9,5 @@ interface TestInterface
     /**
      * @Secure
      */
-    function foo();
+    public function foo();
 }

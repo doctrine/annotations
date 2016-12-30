@@ -6,6 +6,7 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
 
 class CachedReaderTest extends AbstractReaderTest
 {
@@ -16,7 +17,7 @@ class CachedReaderTest extends AbstractReaderTest
         $cache = time() - 10;
         touch(__DIR__.'/Fixtures/Controller.php', $cache + 10);
 
-        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\Controller', $cache);
+        $this->doTestCacheStale(Fixtures\Controller::class, $cache);
     }
 
     /**
@@ -28,7 +29,7 @@ class CachedReaderTest extends AbstractReaderTest
         touch(__DIR__.'/Fixtures/ControllerWithParentClass.php', $cache - 10);
         touch(__DIR__.'/Fixtures/AbstractController.php', $cache + 10);
 
-        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithParentClass', $cache);
+        $this->doTestCacheStale(Fixtures\ControllerWithParentClass::class, $cache);
     }
 
     /**
@@ -40,7 +41,7 @@ class CachedReaderTest extends AbstractReaderTest
         touch(__DIR__.'/Fixtures/ControllerWithTrait.php', $cache - 10);
         touch(__DIR__.'/Fixtures/Traits/SecretRouteTrait.php', $cache + 10);
 
-        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\ControllerWithTrait', $cache);
+        $this->doTestCacheStale(Fixtures\ControllerWithTrait::class, $cache);
     }
 
     /**
@@ -54,7 +55,7 @@ class CachedReaderTest extends AbstractReaderTest
         touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cache + 10);
 
         $this->doTestCacheStale(
-            'Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait',
+            Fixtures\ClassThatUsesTraitThatUsesAnotherTrait::class,
             $cache
         );
     }
@@ -70,7 +71,7 @@ class CachedReaderTest extends AbstractReaderTest
         touch(__DIR__ . '/Fixtures/EmptyInterface.php', $cache + 10);
 
         $this->doTestCacheStale(
-            'Doctrine\Tests\Common\Annotations\Fixtures\InterfaceThatExtendsAnInterface',
+            Fixtures\InterfaceThatExtendsAnInterface::class,
             $cache
         );
     }
@@ -79,7 +80,8 @@ class CachedReaderTest extends AbstractReaderTest
     {
         $cacheKey = $className;
 
-        $cache = $this->createMock('Doctrine\Common\Cache\Cache');
+        /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
+        $cache = $this->createMock(Cache::class);
         $cache
             ->expects($this->at(0))
             ->method('fetch')
@@ -107,7 +109,7 @@ class CachedReaderTest extends AbstractReaderTest
         $route = new Route();
         $route->pattern = '/someprefix';
 
-        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+        self::assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
     protected function getReader()

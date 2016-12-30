@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 {
-    protected $class = 'Doctrine\Common\Annotations\AnnotationRegistry';
+    protected $class = AnnotationRegistry::class;
 
     /**
      * @runInSeparateProcess
@@ -18,13 +18,13 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $this->setStaticField($this->class, 'autoloadNamespaces', $data);
         $this->setStaticField($this->class, 'loaders', $data);
 
-        $this->assertEquals($data, $this->getStaticField($this->class, 'autoloadNamespaces'));
-        $this->assertEquals($data, $this->getStaticField($this->class, 'loaders'));
+        self::assertEquals($data, $this->getStaticField($this->class, 'autoloadNamespaces'));
+        self::assertEquals($data, $this->getStaticField($this->class, 'loaders'));
 
         AnnotationRegistry::reset();
 
-        $this->assertEmpty($this->getStaticField($this->class, 'autoloadNamespaces'));
-        $this->assertEmpty($this->getStaticField($this->class, 'loaders'));
+        self::assertEmpty($this->getStaticField($this->class, 'autoloadNamespaces'));
+        self::assertEmpty($this->getStaticField($this->class, 'loaders'));
     }
 
     /**
@@ -35,7 +35,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $this->setStaticField($this->class, 'autoloadNamespaces', array('foo' => 'bar'));
 
         AnnotationRegistry::registerAutoloadNamespaces(array('test' => 'bar'));
-        $this->assertEquals(array('foo' => 'bar', 'test' => 'bar'), $this->getStaticField($this->class, 'autoloadNamespaces'));
+        self::assertEquals(array('foo' => 'bar', 'test' => 'bar'), $this->getStaticField($this->class, 'autoloadNamespaces'));
     }
 
     /**

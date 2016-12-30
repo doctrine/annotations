@@ -27,7 +27,7 @@ final class AnnotationWithRequiredAttributes
 
     /**
      *
-     * @var Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
+     * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
      */
     private $annot;
 
@@ -40,7 +40,7 @@ final class AnnotationWithRequiredAttributes
     }
 
     /**
-     * @return Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
+     * @return \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
      */
     public function getAnnot()
     {

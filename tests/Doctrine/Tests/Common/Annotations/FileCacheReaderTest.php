@@ -11,7 +11,7 @@ class FileCacheReaderTest extends AbstractReaderTest
 
     protected function getReader()
     {
-        $this->cacheDir = sys_get_temp_dir() . "/annotations_". uniqid();
+        $this->cacheDir = sys_get_temp_dir() . '/annotations_' . uniqid('', true);
         @mkdir($this->cacheDir);
         return new FileCacheReader(new AnnotationReader(), $this->cacheDir);
     }
@@ -29,12 +29,12 @@ class FileCacheReaderTest extends AbstractReaderTest
      */
     public function testAttemptToCreateAnnotationCacheDir()
     {
-        $this->cacheDir = sys_get_temp_dir() . "/not_existed_dir_". uniqid();
+        $this->cacheDir = sys_get_temp_dir() . '/not_existed_dir_' . uniqid('', true);
 
-        $this->assertFalse(is_dir($this->cacheDir));
+        self::assertFalse(is_dir($this->cacheDir));
 
         new FileCacheReader(new AnnotationReader(), $this->cacheDir);
 
-        $this->assertTrue(is_dir($this->cacheDir));
+        self::assertTrue(is_dir($this->cacheDir));
     }
 }
