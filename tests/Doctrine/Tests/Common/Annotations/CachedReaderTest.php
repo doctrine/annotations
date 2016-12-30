@@ -80,6 +80,7 @@ class CachedReaderTest extends AbstractReaderTest
     {
         $cacheKey = $className;
 
+        /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
         $cache = $this->createMock(Cache::class);
         $cache
             ->expects($this->at(0))
