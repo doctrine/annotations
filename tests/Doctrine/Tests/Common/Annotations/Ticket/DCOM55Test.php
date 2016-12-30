@@ -27,7 +27,7 @@ class DCOM55Test extends \PHPUnit_Framework_TestCase
         $reader = new AnnotationReader();
         $annots = $reader->getClassAnnotations($class);
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
         $this->assertInstanceOf(__NAMESPACE__.'\\DCOM55Annotation', $annots[0]);
     }
 
@@ -37,7 +37,7 @@ class DCOM55Test extends \PHPUnit_Framework_TestCase
         $reader = new AnnotationReader();
         $annots = $reader->getClassAnnotations($class);
 
-        $this->assertEquals(0, count($annots));
+        $this->assertEmpty($annots);
     }
 }
 

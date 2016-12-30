@@ -22,30 +22,30 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $class = $this->getReflectionClass();
         $reader = $this->getReader();
 
-        $this->assertEquals(1, count($reader->getClassAnnotations($class)));
+        $this->assertCount(1, $reader->getClassAnnotations($class));
         $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyAnnotation', $annot = $reader->getClassAnnotation($class, $annotName));
         $this->assertEquals("hello", $annot->dummyValue);
 
         $field1Prop = $class->getProperty('field1');
         $propAnnots = $reader->getPropertyAnnotations($field1Prop);
-        $this->assertEquals(1, count($propAnnots));
+        $this->assertCount(1, $propAnnots);
         $this->assertInstanceOf($annotName, $annot = $reader->getPropertyAnnotation($field1Prop, $annotName));
         $this->assertEquals("fieldHello", $annot->dummyValue);
 
         $getField1Method = $class->getMethod('getField1');
         $methodAnnots = $reader->getMethodAnnotations($getField1Method);
-        $this->assertEquals(1, count($methodAnnots));
+        $this->assertCount(1, $methodAnnots);
         $this->assertInstanceOf($annotName, $annot = $reader->getMethodAnnotation($getField1Method, $annotName));
         $this->assertEquals(array(1, 2, "three"), $annot->value);
 
         $field2Prop = $class->getProperty('field2');
         $propAnnots = $reader->getPropertyAnnotations($field2Prop);
-        $this->assertEquals(1, count($propAnnots));
+        $this->assertCount(1, $propAnnots);
         $this->assertInstanceOf($annotName = 'Doctrine\Tests\Common\Annotations\DummyJoinTable', $joinTableAnnot = $reader->getPropertyAnnotation($field2Prop, $annotName));
-        $this->assertEquals(1, count($joinTableAnnot->joinColumns));
-        $this->assertEquals(1, count($joinTableAnnot->inverseJoinColumns));
-        $this->assertTrue($joinTableAnnot->joinColumns[0] instanceof DummyJoinColumn);
-        $this->assertTrue($joinTableAnnot->inverseJoinColumns[0] instanceof DummyJoinColumn);
+        $this->assertCount(1, $joinTableAnnot->joinColumns);
+        $this->assertCount(1, $joinTableAnnot->inverseJoinColumns);
+        $this->assertInstanceOf(DummyJoinColumn::class, $joinTableAnnot->joinColumns[0]);
+        $this->assertInstanceOf(DummyJoinColumn::class, $joinTableAnnot->inverseJoinColumns[0]);
         $this->assertEquals('col1', $joinTableAnnot->joinColumns[0]->name);
         $this->assertEquals('col2', $joinTableAnnot->joinColumns[0]->referencedColumnName);
         $this->assertEquals('col3', $joinTableAnnot->inverseJoinColumns[0]->name);
@@ -70,10 +70,10 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $class  = new ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithValidAnnotationTarget');
 
-        $this->assertEquals(1,count($reader->getClassAnnotations($class)));
-        $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('foo'))));
-        $this->assertEquals(1,count($reader->getMethodAnnotations($class->getMethod('someFunction'))));
-        $this->assertEquals(1,count($reader->getPropertyAnnotations($class->getProperty('nested'))));
+        $this->assertCount(1, $reader->getClassAnnotations($class));
+        $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
+        $this->assertCount(1, $reader->getMethodAnnotations($class->getMethod('someFunction')));
+        $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('nested')));
     }
 
     public function testAnnotationsWithVarType()
@@ -81,8 +81,8 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $class  = new ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAnnotationWithVarType');
 
-        $this->assertEquals(1,count($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
-        $this->assertEquals(1,count($barAnnot = $reader->getMethodAnnotations($class->getMethod('bar'))));
+        $this->assertCount(1, $fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo')));
+        $this->assertCount(1, $barAnnot = $reader->getMethodAnnotations($class->getMethod('bar')));
 
         $this->assertInternalType('string',  $fooAnnot[0]->string);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll', $barAnnot[0]->annotation);
@@ -93,8 +93,8 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $class  = new ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassWithAtInDescriptionAndAnnotation');
 
-        $this->assertEquals(1, count($fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo'))));
-        $this->assertEquals(1, count($barAnnot = $reader->getPropertyAnnotations($class->getProperty('bar'))));
+        $this->assertCount(1, $fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo')));
+        $this->assertCount(1, $barAnnot = $reader->getPropertyAnnotations($class->getProperty('bar')));
 
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod', $fooAnnot[0]);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod', $barAnnot[0]);
@@ -246,7 +246,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
     {
         $reader = $this->getReader();
         $annots = $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\DummyClass2', 'id'));
-        $this->assertEquals(3, count($annots));
+        $this->assertCount(3, $annots);
     }
 
     public function testNonAnnotationProblem()
@@ -270,7 +270,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $property = new \ReflectionProperty('Doctrine\Tests\Common\Annotations\TestImportWithConcreteAnnotation', 'field');
         $annotations = $reader->getPropertyAnnotations($property);
-        $this->assertEquals(1, count($annotations));
+        $this->assertCount(1, $annotations);
         $this->assertNotNull($reader->getPropertyAnnotation($property, 'Doctrine\Tests\Common\Annotations\DummyAnnotation'));
     }
 
@@ -282,11 +282,11 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $ref = new \ReflectionClass($class);
 
         $childAnnotations = $reader->getPropertyAnnotations($ref->getProperty('child'));
-        $this->assertEquals(1, count($childAnnotations));
+        $this->assertCount(1, $childAnnotations);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Foo\Name', reset($childAnnotations));
 
         $parentAnnotations = $reader->getPropertyAnnotations($ref->getProperty('parent'));
-        $this->assertEquals(1, count($parentAnnotations));
+        $this->assertCount(1, $parentAnnotations);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Bar\Name', reset($parentAnnotations));
     }
 
@@ -315,7 +315,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $reader = $this->getReader();
         $annotations = $reader->getPropertyAnnotations(new \ReflectionProperty('Doctrine\Tests\Common\Annotations\TestTopLevelAnnotationClass', 'field'));
 
-        $this->assertEquals(1, count($annotations));
+        $this->assertCount(1, $annotations);
         $this->assertInstanceOf('\TopLevelAnnotation', reset($annotations));
     }
 
@@ -391,7 +391,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageButIgnoredClass');
         $annots = $reader->getClassAnnotations($ref);
 
-        $this->assertEquals(2, count($annots));
+        $this->assertCount(2, $annots);
     }
 
     /**
@@ -404,9 +404,9 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         $class  = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\ClassDDC1660');
 
         $this->assertTrue(class_exists('Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Version'));
-        $this->assertCount(0, $reader->getClassAnnotations($class));
-        $this->assertCount(0, $reader->getMethodAnnotations($class->getMethod('bar')));
-        $this->assertCount(0, $reader->getPropertyAnnotations($class->getProperty('foo')));
+        $this->assertEmpty($reader->getClassAnnotations($class));
+        $this->assertEmpty($reader->getMethodAnnotations($class->getMethod('bar')));
+        $this->assertEmpty($reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
     public function testAnnotationEnumeratorException()
