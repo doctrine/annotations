@@ -22,7 +22,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
             $classAnnotations[get_class($annot)] = $annot;
         }
 
-        $this->assertTrue(!isset($classAnnotations['']), 'Class "xxx" is not a valid entity or mapped super class.');
+        $this->assertArrayNotHasKey('', $classAnnotations, 'Class "xxx" is not a valid entity or mapped super class.');
     }
 
     public function testIssueGlobalNamespace()
