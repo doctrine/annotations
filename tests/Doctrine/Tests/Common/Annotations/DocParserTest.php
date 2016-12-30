@@ -670,7 +670,7 @@ DOCBLOCK;
         $result     = $parser->parse($docblock);
 
         $this->assertCount(1, $result);
-        $this->assertInstanceOf(Fixtures\AnnotationWithRequiredAttributesWithoutContructor::class, $result[0]);
+        $this->assertInstanceOf(Fixtures\AnnotationWithRequiredAttributesWithoutConstructor::class, $result[0]);
         $this->assertEquals('Some Value', $result[0]->value);
         $this->assertInstanceOf(Fixtures\AnnotationTargetAnnotation::class, $result[0]->annot);
 
