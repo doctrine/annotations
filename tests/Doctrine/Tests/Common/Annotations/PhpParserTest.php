@@ -51,12 +51,12 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
     public function testParseClassWhenNotUserDefined()
     {
         $parser = new PhpParser();
-        $this->assertEquals(array(), $parser->parseClass(new \ReflectionClass('\stdClass')));
+        $this->assertEquals(array(), $parser->parseClass(new \ReflectionClass(\stdClass::class)));
     }
 
     public function testClassFileDoesNotExist()
     {
-        $class = $this->getMockBuilder('\ReflectionClass')
+        $class = $this->getMockBuilder(ReflectionClass::class)
                 ->disableOriginalConstructor()
                           ->getMock();
         $class->expects($this->once())
@@ -70,7 +70,7 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
     public function testParseClassWhenClassIsNotNamespaced()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass('\AnnotationsTestsFixturesNonNamespacedClass');
+        $class = new ReflectionClass(\AnnotationsTestsFixturesNonNamespacedClass::class);
 
         $this->assertEquals(array(
             'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',
@@ -156,7 +156,7 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
     public function testGlobalNamespacesPerFileWithClassAsFirst()
     {
         $parser = new PhpParser();
-        $class = new \ReflectionClass('\GlobalNamespacesPerFileWithClassAsFirst');
+        $class = new \ReflectionClass(\GlobalNamespacesPerFileWithClassAsFirst::class);
 
         $this->assertEquals(array(
             'secure'   => __NAMESPACE__ . '\Fixtures\Annotation\Secure',
@@ -167,7 +167,7 @@ class PhpParserTest extends \PHPUnit_Framework_TestCase
     public function testGlobalNamespacesPerFileWithClassAsLast()
     {
         $parser = new PhpParser();
-        $class = new ReflectionClass('\GlobalNamespacesPerFileWithClassAsLast');
+        $class = new ReflectionClass(\GlobalNamespacesPerFileWithClassAsLast::class);
 
         $this->assertEquals(array(
             'route'    => __NAMESPACE__ . '\Fixtures\Annotation\Route',

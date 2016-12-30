@@ -36,7 +36,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $annots     = $parser->parse($docblock);
 
         $this->assertCount(1, $annots);
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+        $this->assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
     public function testIssueNamespaces()
@@ -48,7 +48,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $annots     = $parser->parse($docblock);
 
         $this->assertCount(1, $annots);
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Entity", $annots[0]);
+        $this->assertInstanceOf(Doctrine\ORM\Entity::class, $annots[0]);
     }
 
     public function testIssueMultipleNamespaces()
@@ -61,7 +61,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $annots     = $parser->parse($docblock);
 
         $this->assertCount(1, $annots);
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+        $this->assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
     public function testIssueWithNamespacesOrImports()
@@ -71,7 +71,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $annots     = $parser->parse($docblock);
 
         $this->assertCount(1, $annots);
-        $this->assertInstanceOf('Entity', $annots[0]);
+        $this->assertInstanceOf(\Entity::class, $annots[0]);
         $this->assertCount(1, $annots);
     }
 
@@ -83,7 +83,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $annots     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
 
         $this->assertCount(1, $annots);
-        $this->assertInstanceOf("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping\Entity", $annots[0]);
+        $this->assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
 }

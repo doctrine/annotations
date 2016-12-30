@@ -6,7 +6,7 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 
 class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 {
-    protected $class = 'Doctrine\Common\Annotations\AnnotationRegistry';
+    protected $class = AnnotationRegistry::class;
 
     /**
      * @runInSeparateProcess
