@@ -547,7 +547,10 @@ DOCBLOCK;
             $parser->parse($docblock, $context);
             $this->fail();
         } catch (AnnotationException $exc) {
-            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
+            $this->assertStringMatchesFormat(
+                '[Type Error] Attribute "' . $attribute . '" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects a(n) %A' . $type . ', but got ' . $given . '.',
+                $exc->getMessage()
+            );
         }
     }
 
@@ -566,7 +569,10 @@ DOCBLOCK;
             $parser->parse($docblock, $context);
             $this->fail();
         } catch (AnnotationException $exc) {
-            $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
+            $this->assertStringMatchesFormat(
+                '[Type Error] Attribute "' . $attribute . '" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) %A' . $type . ', or an array of %A' . $type . 's, but got ' . $given . '.',
+                $exc->getMessage()
+            );
         }
     }
 
