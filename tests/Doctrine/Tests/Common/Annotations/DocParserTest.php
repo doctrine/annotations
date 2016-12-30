@@ -2,9 +2,12 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Annotations\Annotation;
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants;
@@ -344,7 +347,7 @@ DOCBLOCK;
             $parser->parse($docComment, $context);
 
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertNotNull($exc->getMessage());
         }
 
@@ -360,7 +363,7 @@ DOCBLOCK;
             $parser->parse($docComment, $context);
 
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertNotNull($exc->getMessage());
         }
 
@@ -375,7 +378,7 @@ DOCBLOCK;
             $parser->parse($docComment, $context);
 
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertNotNull($exc->getMessage());
         }
 
@@ -544,7 +547,7 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
         }
     }
@@ -563,7 +566,7 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
         }
     }
@@ -599,7 +602,7 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects a(n) $type, but got $given.", $exc->getMessage());
         }
     }
@@ -618,7 +621,7 @@ DOCBLOCK;
         try {
             $parser->parse($docblock, $context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains("[Type Error] Attribute \"$attribute\" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes declared on property SomeClassName::invalidProperty. expects either a(n) $type, or an array of {$type}s, but got $given.", $exc->getMessage());
         }
     }
@@ -643,7 +646,7 @@ DOCBLOCK;
         try {
             $result = $parser->parse($docblock,$context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
         }
 
@@ -651,7 +654,7 @@ DOCBLOCK;
         try {
             $result = $parser->parse($docblock,$context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
         }
 
@@ -677,7 +680,7 @@ DOCBLOCK;
         try {
             $result = $parser->parse($docblock,$context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains('Attribute "annot" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor declared on property SomeClassName::invalidProperty. expects a(n) Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation. This value should not be null.', $exc->getMessage());
         }
 
@@ -685,7 +688,7 @@ DOCBLOCK;
         try {
             $result = $parser->parse($docblock,$context);
             $this->fail();
-        } catch (\Doctrine\Common\Annotations\AnnotationException $exc) {
+        } catch (AnnotationException $exc) {
             $this->assertContains('Attribute "value" of @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor declared on property SomeClassName::invalidProperty. expects a(n) string. This value should not be null.', $exc->getMessage());
         }
 
@@ -1439,12 +1442,12 @@ class AnnotationWithInvalidTargetDeclaration{}
 class AnnotationWithTargetEmpty{}
 
 /** @Annotation */
-class AnnotationExtendsAnnotationTargetAll extends \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
+class AnnotationExtendsAnnotationTargetAll extends AnnotationTargetAll
 {
 }
 
 /** @Annotation */
-class Name extends \Doctrine\Common\Annotations\Annotation {
+class Name extends Annotation {
     public $foo;
 }
 
@@ -1455,6 +1458,8 @@ class Marker {
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
 
+use Doctrine\Common\Annotations\Annotation;
+
 /** @Annotation */
-class Name extends \Doctrine\Common\Annotations\Annotation {
+class Name extends Annotation {
 }
