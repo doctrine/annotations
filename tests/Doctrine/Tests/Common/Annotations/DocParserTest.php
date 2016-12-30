@@ -27,7 +27,7 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(3, $annot->foo);
         $this->assertEquals(1, $annot->foo[0]);
         $this->assertEquals(2, $annot->foo[1]);
-        $this->assertTrue(is_array($annot->foo[2]));
+        $this->assertInternalType('array', $annot->foo[2]);
 
         $nestedArray = $annot->foo[2];
         $this->assertTrue(isset($nestedArray['key']));
@@ -49,13 +49,13 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $result = $parser->parse('@Name(foo={"key1" = "value1"})');
         $annot = $result[0];
         $this->assertNull($annot->value);
-        $this->assertTrue(is_array($annot->foo));
+        $this->assertInternalType('array', $annot->foo);
         $this->assertTrue(isset($annot->foo['key1']));
 
         // Numerical arrays
         $result = $parser->parse('@Name({2="foo", 4="bar"})');
         $annot = $result[0];
-        $this->assertTrue(is_array($annot->value));
+        $this->assertInternalType('array', $annot->value);
         $this->assertEquals('foo', $annot->value[2]);
         $this->assertEquals('bar', $annot->value[4]);
         $this->assertFalse(isset($annot->value[0]));
@@ -67,7 +67,7 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $annot = $result[0];
 
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertTrue(is_array($annot->value));
+        $this->assertInternalType('array', $annot->value);
         $this->assertInstanceOf(Name::class, $annot->value[0]);
         $this->assertInstanceOf(Name::class, $annot->value[1]);
 
@@ -76,9 +76,9 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $annot = $result[0];
 
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertTrue(is_array($annot->value));
+        $this->assertInternalType('array', $annot->value);
         $this->assertInstanceOf(Name::class, $annot->value[0]);
-        $this->assertTrue(is_array($annot->value[1]));
+        $this->assertInternalType('array', $annot->value[1]);
         $this->assertEquals('value1', $annot->value[1]['key1']);
         $this->assertEquals('value2', $annot->value[1]['key2']);
 
@@ -109,7 +109,7 @@ DOCBLOCK;
         $annot = $result[0];
 
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertTrue(is_array($annot->value));
+        $this->assertInternalType('array', $annot->value);
         $this->assertEquals('value1', $annot->value['key1']);
 
         // Array as first value and additional values
@@ -117,7 +117,7 @@ DOCBLOCK;
         $annot = $result[0];
 
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertTrue(is_array($annot->value));
+        $this->assertInternalType('array', $annot->value);
         $this->assertEquals('value1', $annot->value['key1']);
         $this->assertEquals('bar', $annot->foo);
     }
