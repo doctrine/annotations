@@ -1415,7 +1415,7 @@ class SomeAnnotationClassNameWithoutConstructor
 /** @Annotation */
 class SomeAnnotationWithConstructorWithoutParams
 {
-    function __construct()
+    public function __construct()
     {
         $this->data = "Some data";
     }
