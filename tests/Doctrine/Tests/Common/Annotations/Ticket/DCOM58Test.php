@@ -27,10 +27,10 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
 
     public function testIssueGlobalNamespace()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
         $parser->setImports(array(
-            "__NAMESPACE__" =>"Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping"
+            '__NAMESPACE__' =>"Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping"
         ));
 
         $annots     = $parser->parse($docblock);
@@ -41,7 +41,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
 
     public function testIssueNamespaces()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
         $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
 
@@ -53,7 +53,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
 
     public function testIssueMultipleNamespaces()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
         $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping");
         $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
@@ -66,12 +66,12 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
 
     public function testIssueWithNamespacesOrImports()
     {
-        $docblock   = "@Entity";
+        $docblock   = '@Entity';
         $parser     = new DocParser();
         $annots     = $parser->parse($docblock);
 
         $this->assertCount(1, $annots);
-        $this->assertInstanceOf("Entity", $annots[0]);
+        $this->assertInstanceOf('Entity', $annots[0]);
         $this->assertCount(1, $annots);
     }
 

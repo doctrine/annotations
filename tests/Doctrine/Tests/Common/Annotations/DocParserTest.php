@@ -36,7 +36,7 @@ class DocParserTest extends \PHPUnit_Framework_TestCase
         $parser = $this->createTestParser();
 
         // Marker annotation
-        $result = $parser->parse("@Name");
+        $result = $parser->parse('@Name');
         $annot = $result[0];
         $this->assertTrue($annot instanceof Name);
         $this->assertNull($annot->value);
@@ -93,7 +93,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot = $result[0];
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertEquals("bar", $annot->foo);
+        $this->assertEquals('bar', $annot->foo);
         $this->assertNull($annot->value);
    }
 
@@ -140,7 +140,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot = $result[0];
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertEquals("bar", $annot->foo);
+        $this->assertEquals('bar', $annot->foo);
     }
 
     /**
@@ -170,7 +170,7 @@ DOCBLOCK;
         $this->assertTrue(isset($result[1]));
         $annot = $result[0];
         $this->assertInstanceOf(Name::class, $annot);
-        $this->assertEquals("bar", $annot->foo);
+        $this->assertEquals('bar', $annot->foo);
         $marker = $result[1];
         $this->assertTrue($marker instanceof Marker);
     }
@@ -196,7 +196,7 @@ DOCBLOCK;
 
         $this->assertNull($annot->name);
         $this->assertNotNull($annot->data);
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals($annot->data, 'Some data');
 
 
 
@@ -215,8 +215,8 @@ DOCBLOCK;
         $this->assertNotNull($annot);
         $this->assertTrue($annot instanceof SomeAnnotationClassNameWithoutConstructor);
 
-        $this->assertEquals($annot->name, "Some Name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals($annot->name, 'Some Name');
+        $this->assertEquals($annot->data, 'Some data');
 
 
 
@@ -231,7 +231,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals($annot->data, 'Some data');
         $this->assertNull($annot->name);
 
 
@@ -245,7 +245,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
+        $this->assertEquals($annot->name, 'Some name');
         $this->assertNull($annot->data);
 
         $docblock = <<<DOCBLOCK
@@ -258,7 +258,7 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals($annot->data, 'Some data');
         $this->assertNull($annot->name);
 
 
@@ -273,8 +273,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals($annot->name, 'Some name');
+        $this->assertEquals($annot->data, 'Some data');
 
 
         $docblock = <<<DOCBLOCK
@@ -287,8 +287,8 @@ DOCBLOCK;
         $this->assertCount(1, $result);
         $annot      = $result[0];
 
-        $this->assertEquals($annot->name, "Some name");
-        $this->assertEquals($annot->data, "Some data");
+        $this->assertEquals($annot->name, 'Some name');
+        $this->assertEquals($annot->data, 'Some data');
 
         $docblock = <<<DOCBLOCK
 /**
@@ -582,7 +582,7 @@ DOCBLOCK;
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes', $result[0]);
-        $getter = "get".ucfirst($attribute);
+        $getter = 'get' .ucfirst($attribute);
         $this->assertNotNull($result[0]->$getter());
     }
 
@@ -635,7 +635,7 @@ DOCBLOCK;
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes', $result[0]);
-        $this->assertEquals("Some Value",$result[0]->getValue());
+        $this->assertEquals('Some Value',$result[0]->getValue());
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->getAnnot());
 
 
@@ -669,7 +669,7 @@ DOCBLOCK;
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor', $result[0]);
-        $this->assertEquals("Some Value", $result[0]->value);
+        $this->assertEquals('Some Value', $result[0]->value);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->annot);
 
 
@@ -988,7 +988,7 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $result = $parser->parse("@param");
+        $result = $parser->parse('@param');
 
         $this->assertEmpty($result);
     }
@@ -1185,7 +1185,7 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=1234)");
+        $result = $parser->parse('@Name(foo=1234)');
         $annot = $result[0];
         $this->assertInternalType('int', $annot->foo);
     }
@@ -1197,7 +1197,7 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=-1234)");
+        $result = $parser->parse('@Name(foo=-1234)');
         $annot = $result[0];
         $this->assertInternalType('int', $annot->foo);
     }
@@ -1209,7 +1209,7 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=1234.345)");
+        $result = $parser->parse('@Name(foo=1234.345)');
         $annot = $result[0];
         $this->assertInternalType('float', $annot->foo);
     }
@@ -1221,11 +1221,11 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $result = $parser->parse("@Name(foo=-1234.345)");
+        $result = $parser->parse('@Name(foo=-1234.345)');
         $annot = $result[0];
         $this->assertInternalType('float', $annot->foo);
 
-        $result = $parser->parse("@Marker(-1234.345)");
+        $result = $parser->parse('@Marker(-1234.345)');
         $annot = $result[0];
         $this->assertInternalType('float', $annot->value);
     }
@@ -1375,7 +1375,7 @@ DOCBLOCK;
     public function testMultiByteAnnotation()
     {
         $overloadStringFunctions = 2;
-        if (!extension_loaded('mbstring') || (ini_get("mbstring.func_overload") & $overloadStringFunctions) == 0) {
+        if (!extension_loaded('mbstring') || (ini_get('mbstring.func_overload') & $overloadStringFunctions) == 0) {
             $this->markTestSkipped('This test requires mbstring function overloading is turned on');
         }
 
@@ -1417,7 +1417,7 @@ class SomeAnnotationWithConstructorWithoutParams
 {
     public function __construct()
     {
-        $this->data = "Some data";
+        $this->data = 'Some data';
     }
     public $data;
     public $name;

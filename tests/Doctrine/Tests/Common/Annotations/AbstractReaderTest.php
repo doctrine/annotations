@@ -23,19 +23,19 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
         $this->assertCount(1, $reader->getClassAnnotations($class));
         $this->assertInstanceOf($annotName = DummyAnnotation::class, $annot = $reader->getClassAnnotation($class, $annotName));
-        $this->assertEquals("hello", $annot->dummyValue);
+        $this->assertEquals('hello', $annot->dummyValue);
 
         $field1Prop = $class->getProperty('field1');
         $propAnnots = $reader->getPropertyAnnotations($field1Prop);
         $this->assertCount(1, $propAnnots);
         $this->assertInstanceOf($annotName, $annot = $reader->getPropertyAnnotation($field1Prop, $annotName));
-        $this->assertEquals("fieldHello", $annot->dummyValue);
+        $this->assertEquals('fieldHello', $annot->dummyValue);
 
         $getField1Method = $class->getMethod('getField1');
         $methodAnnots = $reader->getMethodAnnotations($getField1Method);
         $this->assertCount(1, $methodAnnots);
         $this->assertInstanceOf($annotName, $annot = $reader->getMethodAnnotation($getField1Method, $annotName));
-        $this->assertEquals(array(1, 2, "three"), $annot->value);
+        $this->assertEquals(array(1, 2, 'three'), $annot->value);
 
         $field2Prop = $class->getProperty('field2');
         $propAnnots = $reader->getPropertyAnnotations($field2Prop);

@@ -10,7 +10,7 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
     {
         $lexer = new DocLexer;
 
-        $lexer->setInput("@Name");
+        $lexer->setInput('@Name');
         $this->assertNull($lexer->token);
         $this->assertNull($lexer->lookahead);
 
