@@ -25,10 +25,10 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('someMethod'));
-        $this->assertInstanceOf(Bar\Autoload::class, $annotations[0]);
+        self::assertInstanceOf(Bar\Autoload::class, $annotations[0]);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
-        $this->assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
     public function testMethodAnnotationFromOverwrittenTrait()
@@ -37,7 +37,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(Fixtures\ClassOverwritesTrait::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
-        $this->assertInstanceOf(Bar2\Autoload::class, $annotations[0]);
+        self::assertInstanceOf(Bar2\Autoload::class, $annotations[0]);
     }
 
     public function testPropertyAnnotationFromTrait()
@@ -46,10 +46,10 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
 
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('aProperty'));
-        $this->assertInstanceOf(Bar\Autoload::class, $annotations[0]);
+        self::assertInstanceOf(Bar\Autoload::class, $annotations[0]);
 
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('traitProperty'));
-        $this->assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
     public function testOmitNotRegisteredAnnotation()
@@ -61,7 +61,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(Fixtures\ClassWithNotRegisteredAnnotationUsed::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
-        $this->assertEquals(array(), $annotations);
+        self::assertEquals(array(), $annotations);
     }
 
     /**

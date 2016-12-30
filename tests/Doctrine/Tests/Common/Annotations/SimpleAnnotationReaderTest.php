@@ -78,7 +78,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
         $annots = $reader->getClassAnnotations($ref);
 
-        $this->assertCount(1, $annots);
+        self::assertCount(1, $annots);
     }
 
     public function testIncludeIgnoreAnnotation()
@@ -97,10 +97,10 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         $reader = $this->getReader();
         $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
 
-        $this->assertTrue(class_exists(Fixtures\Annotation\Version::class));
-        $this->assertCount(1, $reader->getClassAnnotations($class));
-        $this->assertCount(1, $reader->getMethodAnnotations($class->getMethod('bar')));
-        $this->assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
+        self::assertTrue(class_exists(Fixtures\Annotation\Version::class));
+        self::assertCount(1, $reader->getClassAnnotations($class));
+        self::assertCount(1, $reader->getMethodAnnotations($class->getMethod('bar')));
+        self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
     protected function getReader()

@@ -109,7 +109,7 @@ class CachedReaderTest extends AbstractReaderTest
         $route = new Route();
         $route->pattern = '/someprefix';
 
-        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+        self::assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
     protected function getReader()
