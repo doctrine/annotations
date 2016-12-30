@@ -95,7 +95,7 @@ final class AnnotationWithAttributes
     }
 
     /**
-     * @return Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
+     * @return \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
      */
     public function getAnnotation()
     {
