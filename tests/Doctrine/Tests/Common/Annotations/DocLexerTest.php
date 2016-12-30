@@ -28,7 +28,7 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
     public function testScannerTokenizesDocBlockWhitConstants()
     {
         $lexer      = new DocLexer();
-        $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\IntefaceWithConstants::SOME_VALUE)';
+        $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
 
         $tokens = array (
             array(
@@ -87,13 +87,13 @@ class DocLexerTest extends \PHPUnit_Framework_TestCase
                 'type'      => DocLexer::T_COMMA,
             ),
             array(
-                'value'     => '\\Doctrine\\Tests\\Common\\Annotations\\Fixtures\\IntefaceWithConstants::SOME_VALUE',
+                'value'     => '\\Doctrine\\Tests\\Common\\Annotations\\Fixtures\\InterfaceWithConstants::SOME_VALUE',
                 'position'  => 129,
                 'type'      => DocLexer::T_IDENTIFIER,
             ),
             array(
                 'value'     => ')',
-                'position'  => 206,
+                'position'  => 207,
                 'type'      => DocLexer::T_CLOSE_PARENTHESIS,
             )
 
