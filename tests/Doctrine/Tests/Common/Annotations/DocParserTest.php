@@ -636,9 +636,13 @@ DOCBLOCK;
         $result     = $parser->parse($docblock);
 
         $this->assertCount(1, $result);
-        $this->assertInstanceOf(Fixtures\AnnotationWithRequiredAttributes::class, $result[0]);
-        $this->assertEquals('Some Value',$result[0]->getValue());
-        $this->assertInstanceOf(Fixtures\AnnotationTargetAnnotation::class, $result[0]->getAnnot());
+
+        /* @var $annotation Fixtures\AnnotationWithRequiredAttributes */
+        $annotation = $result[0];
+
+        $this->assertInstanceOf(Fixtures\AnnotationWithRequiredAttributes::class, $annotation);
+        $this->assertEquals('Some Value', $annotation->getValue());
+        $this->assertInstanceOf(Fixtures\AnnotationTargetAnnotation::class, $annotation->getAnnot());
 
 
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes("Some Value")';
