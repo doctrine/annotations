@@ -631,16 +631,20 @@ class DCOM106
 
 namespace Doctrine\Tests\Common\Annotations\Foo;
 
+use Doctrine\Common\Annotations\Annotation;
+
 /** @Annotation */
-class Name extends \Doctrine\Common\Annotations\Annotation
+class Name extends Annotation
 {
     public $name;
 }
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 
+use Doctrine\Common\Annotations\Annotation;
+
 /** @Annotation */
-class Name extends \Doctrine\Common\Annotations\Annotation
+class Name extends Annotation
 {
     public $name;
 }
