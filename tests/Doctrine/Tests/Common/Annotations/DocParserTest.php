@@ -1237,7 +1237,7 @@ DOCBLOCK;
         if (PHP_VERSION_ID >= 70000) {
             $this->markTestSkipped('This test requires PHP 5.6 or lower.');
         }
-        require 'ReservedKeywordsClasses.php';
+        require __DIR__ . '/ReservedKeywordsClasses.php';
 
         $parser = $this->createTestParser();
 
