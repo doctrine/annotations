@@ -70,12 +70,15 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     }
 
     /**
-     * Contrary to the behavior of the default annotation reader, we do just ignore
-     * these in the simple annotation reader (so, no expected exception here).
+     * The SimpleAnnotationReader doens't include the @IgnoreAnnotation in the results.
      */
     public function testInvalidAnnotationUsageButIgnoredClass()
     {
-        parent::testInvalidAnnotationUsageButIgnoredClass();
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageButIgnoredClass');
+        $annots = $reader->getClassAnnotations($ref);
+
+        $this->assertEquals(1, count($annots));
     }
 
     public function testIncludeIgnoreAnnotation()
