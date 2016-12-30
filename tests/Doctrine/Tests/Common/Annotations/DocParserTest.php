@@ -526,7 +526,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock, $context);
 
-        $this->assertTrue(sizeof($result) === 1);
+        $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType', $result[0]);
         $this->assertNotNull($result[0]->$attribute);
     }
@@ -580,7 +580,7 @@ DOCBLOCK;
 
         $result = $parser->parse($docblock, $context);
 
-        $this->assertTrue(sizeof($result) === 1);
+        $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithAttributes', $result[0]);
         $getter = "get".ucfirst($attribute);
         $this->assertNotNull($result[0]->$getter());
@@ -633,7 +633,7 @@ DOCBLOCK;
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         $result     = $parser->parse($docblock);
 
-        $this->assertTrue(sizeof($result) === 1);
+        $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributes', $result[0]);
         $this->assertEquals("Some Value",$result[0]->getValue());
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->getAnnot());
@@ -667,7 +667,7 @@ DOCBLOCK;
         $docblock   = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor("Some Value", annot = @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation)';
         $result     = $parser->parse($docblock);
 
-        $this->assertTrue(sizeof($result) === 1);
+        $this->assertCount(1, $result);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithRequiredAttributesWithoutContructor', $result[0]);
         $this->assertEquals("Some Value", $result[0]->value);
         $this->assertInstanceOf('Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation', $result[0]->annot);
