@@ -16,7 +16,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
     public function testIssue()
     {
         $reader     = new AnnotationReader();
-        $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
+        $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__ . '\MappedClass'));
 
         foreach ($result as $annot) {
             $classAnnotations[get_class($annot)] = $annot;
@@ -30,7 +30,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         $docblock   = '@Entity';
         $parser     = new DocParser();
         $parser->setImports(array(
-            '__NAMESPACE__' =>"Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping"
+            '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping'
         ));
 
         $annots     = $parser->parse($docblock);
@@ -43,7 +43,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
     {
         $docblock   = '@Entity';
         $parser     = new DocParser();
-        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
+        $parser->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM');
 
         $annots     = $parser->parse($docblock);
 
@@ -55,8 +55,8 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
     {
         $docblock   = '@Entity';
         $parser     = new DocParser();
-        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping");
-        $parser->addNamespace("Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM");
+        $parser->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping');
+        $parser->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM');
 
         $annots     = $parser->parse($docblock);
 
