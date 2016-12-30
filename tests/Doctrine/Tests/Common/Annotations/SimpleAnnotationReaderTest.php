@@ -78,7 +78,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass('Doctrine\Tests\Common\Annotations\Fixtures\InvalidAnnotationUsageButIgnoredClass');
         $annots = $reader->getClassAnnotations($ref);
 
-        $this->assertEquals(1, count($annots));
+        $this->assertCount(1, $annots);
     }
 
     public function testIncludeIgnoreAnnotation()
