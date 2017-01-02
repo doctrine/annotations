@@ -18,7 +18,7 @@
     },
     "require-dev": {
         "doctrine/cache": "1.*",
-        "phpunit/phpunit": "^5.6.1"
+        "phpunit/phpunit": "^5.7"
     },
     "autoload": {
         "psr-4": { "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations" }
