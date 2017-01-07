@@ -9,7 +9,6 @@ cache:
 php:
   - 7
   - 7.1
-  - hhvm
 
 matrix:
   fast_finish: true
