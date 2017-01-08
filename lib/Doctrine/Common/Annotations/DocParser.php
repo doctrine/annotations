@@ -61,7 +61,7 @@ final class DocParser
     /**
      * Current target context.
      *
-     * @var string
+     * @var integer
      */
     private $target;
 
@@ -1071,7 +1071,7 @@ final class DocParser
      * FieldAssignment ::= FieldName "=" PlainValue
      * FieldName ::= identifier
      *
-     * @return array
+     * @return \stdClass
      */
     private function FieldAssignment()
     {
