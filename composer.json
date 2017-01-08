@@ -23,6 +23,9 @@
     "autoload": {
         "psr-4": { "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations" }
     },
+    "autoload-dev": {
+        "psr-4": { "Doctrine\\Tests\\Common\\Annotations\\": "tests/Doctrine/Tests/Common/Annotations" }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.4.x-dev"
