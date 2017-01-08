@@ -691,8 +691,10 @@ final class DocParser
         $originalName = $name;
 
         if ('\\' !== $name[0]) {
-            $alias = (false === $pos = strpos($name, '\\'))? $name : substr($name, 0, $pos);
+            $pos = strpos($name, '\\');
+            $alias = (false === $pos)? $name : substr($name, 0, $pos);
             $found = false;
+            $loweredAlias = strtolower($alias);
 
             if ($this->namespaces) {
                 foreach ($this->namespaces as $namespace) {
@@ -702,7 +704,7 @@ final class DocParser
                         break;
                     }
                 }
-            } elseif (isset($this->imports[$loweredAlias = strtolower($alias)])) {
+            } elseif (isset($this->imports[$loweredAlias])) {
                 $found = true;
                 $name  = (false !== $pos)
                     ? $this->imports[$loweredAlias] . substr($name, $pos)
@@ -919,8 +921,10 @@ final class DocParser
         if ( ! defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
             list($className, $const) = explode('::', $identifier);
 
-            $alias = (false === $pos = strpos($className, '\\')) ? $className : substr($className, 0, $pos);
+            $pos = strpos($className, '\\');
+            $alias = (false === $pos) ? $className : substr($className, 0, $pos);
             $found = false;
+            $loweredAlias = strtolower($alias);
 
             switch (true) {
                 case !empty ($this->namespaces):
@@ -933,7 +937,7 @@ final class DocParser
                     }
                     break;
 
-                case isset($this->imports[$loweredAlias = strtolower($alias)]):
+                case isset($this->imports[$loweredAlias]):
                     $found     = true;
                     $className = (false !== $pos)
                         ? $this->imports[$loweredAlias] . substr($className, $pos)
