@@ -25,8 +25,7 @@ final class ClassWithClosure
      */
     public function methodName(\Closure $callback)
     {
-        $self = $this;
-        return function() use ($self, $callback) {
+        return function() use ($callback) {
             return $callback;
         };
     }
