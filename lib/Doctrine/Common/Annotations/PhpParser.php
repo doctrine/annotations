@@ -42,7 +42,7 @@ final class PhpParser
             return $class->getUseStatements();
         }
 
-        if (false === $filename = $class->getFilename()) {
+        if (false === $filename = $class->getFileName()) {
             return array();
         }
 
