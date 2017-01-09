@@ -100,7 +100,7 @@ class PerformanceTest extends \PHPUnit_Framework_TestCase
         for ($i=0,$c=200; $i<$c; $i++) {
             $parser = new DocParser();
             $parser->setImports($imports);
-            $parser->setIgnoredAnnotationNames($ignored);
+            $parser->setIgnoredAnnotationNames(array_fill_keys($ignored, true));
             $parser->setIgnoreNotImportedAnnotations(true);
 
             $parser->parse($methodComment);

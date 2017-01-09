@@ -42,7 +42,7 @@ final class PhpParser
             return $class->getUseStatements();
         }
 
-        if (false === $filename = $class->getFilename()) {
+        if (false === $filename = $class->getFileName()) {
             return array();
         }
 
@@ -67,7 +67,7 @@ final class PhpParser
      * @param string  $filename   The name of the file to load.
      * @param integer $lineNumber The number of lines to read from file.
      *
-     * @return string The content of the file.
+     * @return string|null The content of the file or null if the file does not exist.
      */
     private function getFileContent($filename, $lineNumber)
     {
