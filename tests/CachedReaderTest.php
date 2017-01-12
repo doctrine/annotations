@@ -14,11 +14,8 @@ class CachedReaderTest extends AbstractReaderTest
      */
     public function testInvalidReaderClass()
     {
-        $namespaces   = ['Doctrine\AnnotationsTests\Fixtures'];
         $cache  = $this->getMockBuilder('Doctrine\Common\Cache\Cache')->getMock();
-        $class = new CachedReader(new InvalidReader(), $cache, true);
-
-        new Context($class, $namespaces);
+        new CachedReader(new InvalidReader(), $cache, true);
     }
 
     public function testIgnoresStaleCache()
