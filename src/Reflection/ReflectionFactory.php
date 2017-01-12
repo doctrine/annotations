@@ -46,6 +46,11 @@ class ReflectionFactory
     private $properties = [];
 
     /**
+     * @var array
+     */
+    private $functions = [];
+
+    /**
      * @var \Doctrine\Annotations\Parser\PhpParser
      */
     private $phpParser;
@@ -108,5 +113,21 @@ class ReflectionFactory
         }
 
         return $this->properties[$className . '$' . $propertyName] = new ReflectionProperty($className, $propertyName, $this->phpParser);
+    }
+
+    /**
+     * @param string $functionName The name of the function.
+     *
+     * @return \Doctrine\Annotations\Reflection\ReflectionFunction
+     *
+     * @throws \ReflectionException
+     */
+    public function getReflectionFunction(string $functionName)
+    {
+        if (isset($this->functions[$functionName])) {
+            return $this->functions[$functionName];
+        }
+
+        return $this->functions[$functionName] = new ReflectionFunction($functionName, $this->phpParser);
     }
 }

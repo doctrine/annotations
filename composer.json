@@ -34,7 +34,10 @@
     "autoload-dev": {
         "psr-4": {
             "Doctrine\\AnnotationsTests\\": "tests/"
-        }
+        },
+        "files": [
+            "tests/Fixtures/functions.php"
+        ]
     },
     "extra": {
         "branch-alias": {

@@ -51,6 +51,7 @@ class TargetTest extends TestCase
             'CLASS',
             'METHOD',
             'PROPERTY',
+            'FUNCTION',
             'ANNOTATION'
         ], Target::getNames(Target::TARGET_ALL));
 
@@ -62,6 +63,11 @@ class TargetTest extends TestCase
             'METHOD',
             'PROPERTY'
         ], Target::getNames(Target::TARGET_METHOD | Target::TARGET_PROPERTY));
+
+        $this->assertEquals([
+            'CLASS',
+            'FUNCTION'
+        ], Target::getNames(Target::TARGET_FUNCTION | Target::TARGET_CLASS));
     }
 }
 

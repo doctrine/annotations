@@ -715,7 +715,7 @@ DOCBLOCK;
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, ANNOTATION]
+     * @expectedExceptionMessage Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, ANNOTATION]
      */
     public function testAnnotationWithInvalidTargetDeclarationError()
     {

@@ -36,7 +36,8 @@ final class Target
     const TARGET_METHOD             = 2;
     const TARGET_PROPERTY           = 4;
     const TARGET_ANNOTATION         = 8;
-    const TARGET_ALL                = 15;
+    const TARGET_FUNCTION           = 16;
+    const TARGET_ALL                = 31;
 
     /**
      * @var array
@@ -46,6 +47,7 @@ final class Target
         'CLASS'      => self::TARGET_CLASS,
         'METHOD'     => self::TARGET_METHOD,
         'PROPERTY'   => self::TARGET_PROPERTY,
+        'FUNCTION'   => self::TARGET_FUNCTION,
         'ANNOTATION' => self::TARGET_ANNOTATION,
     );
 
@@ -122,6 +124,10 @@ final class Target
 
         if ($target & self::TARGET_PROPERTY) {
             $names[] = 'PROPERTY';
+        }
+
+        if ($target & self::TARGET_FUNCTION) {
+            $names[] = 'FUNCTION';
         }
 
         if ($target & self::TARGET_ANNOTATION) {

@@ -19,49 +19,37 @@
 
 declare(strict_types=1);
 
-namespace Doctrine\Annotations\Reflection;
+namespace Doctrine\Annotations;
 
-use Doctrine\Annotations\Parser\PhpParser;
+use ReflectionFunction;
 
 /**
- * Reflection Class
+ * Interface for function annotation readers.
  *
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
-class ReflectionClass extends \ReflectionClass
+interface FunctionReader
 {
     /**
-     * @var \Doctrine\Annotations\Parser\PhpParser
-     */
-    private $phpParser;
-
-    /**
-     * @var array
-     */
-    private $imports;
-
-    /**
-     * Constructor.
+     * Gets the annotations applied to a class.
      *
-     * @param string                                 $className
-     * @param \Doctrine\Annotations\Parser\PhpParser $phpParser
+     * @param \ReflectionFunction $function The ReflectionFunction of the function from
+     *                                      which the function annotations should be read.
+     *
+     * @return array An array of Annotations.
      */
-    public function __construct(string $className, PhpParser $phpParser)
-    {
-        parent::__construct($className);
-
-        $this->phpParser = $phpParser;
-    }
+    public function getFunctionAnnotations(ReflectionFunction $function) : array;
 
     /**
-     * @return array
+     * Gets a class annotation.
+     *
+     * @param \ReflectionFunction $function       The ReflectionFunction of the function from
+     *                                            which the given function annotation should be
+     *                                            read.
+     * @param string              $annotationName The name of the annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
      */
-    public function getImports() : array
-    {
-        if ($this->imports !== null) {
-            return $this->imports;
-        }
-
-        return $this->imports = $this->phpParser->parse($this);
-    }
+    public function getFunctionAnnotation(ReflectionFunction $function, string $annotationName);
 }
