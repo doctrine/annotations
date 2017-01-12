@@ -24,9 +24,10 @@ namespace Doctrine\Annotations;
 /**
  * Interface for annotation readers.
  *
- * @deprecated
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
- * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
+ * @author     Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author     Fabio B. Silva <fabio.bat.silva@gmail.com>
+ *
+ * @deprecated Since version 2.0. Use Object Reader instead.
  */
 interface Reader extends ObjectReader
 {

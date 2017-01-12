@@ -25,6 +25,8 @@ use Doctrine\Annotations\Parser\PhpParser;
 
 /**
  * Reflection Function
+ *
+ * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
 class ReflectionFunction extends \ReflectionFunction
 {
