@@ -26,7 +26,7 @@ class ReflectionFunctionTest extends TestCase
 
     public function testGetImports()
     {
-        $reflection = $this->createReflectionFunction('Doctrine\AnnotationsTests\Fixtures\dummy_function');
+        $reflection = $this->createReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_enum_function');
         $imports    = $reflection->getImports();
 
         $this->assertArrayHasKey('annotationenum', $imports);

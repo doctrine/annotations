@@ -61,11 +61,11 @@ class ReflectionFactoryTest extends TestCase
     public function testGetReflectionFunction()
     {
         $factory    = $this->createReflectionFactory();
-        $reflection = $factory->getReflectionFunction('Doctrine\AnnotationsTests\Fixtures\dummy_function');
+        $reflection = $factory->getReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_enum_function');
 
         $this->assertInstanceOf('\ReflectionFunction', $reflection);
         $this->assertInstanceOf(ReflectionFunction::CLASS, $reflection);
 
-        $this->assertSame($reflection, $factory->getReflectionFunction('Doctrine\AnnotationsTests\Fixtures\dummy_function'));
+        $this->assertSame($reflection, $factory->getReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_enum_function'));
     }
 }

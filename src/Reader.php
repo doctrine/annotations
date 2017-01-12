@@ -27,7 +27,7 @@ namespace Doctrine\Annotations;
  * @author     Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author     Fabio B. Silva <fabio.bat.silva@gmail.com>
  *
- * @deprecated Since version 2.0. Use Object Reader instead.
+ * @deprecated Since version 2.0. Use ObjectReader instead.
  */
 interface Reader extends ObjectReader
 {

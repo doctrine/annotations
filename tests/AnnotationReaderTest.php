@@ -46,4 +46,15 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('traitProperty'));
         $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\Autoload', $annotations[0]);
     }
+
+    public function testFunctionAnnotation()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_autoload_function');
+
+        $annotations = $reader->getFunctionAnnotations($ref);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\Autoload', $annotations[0]);
+
+        $this->assertNull($reader->getFunctionAnnotation($ref, 'foo'));
+    }
 }
