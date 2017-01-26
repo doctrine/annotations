@@ -51,6 +51,8 @@ final class DocLexer extends AbstractLexer
     const T_TRUE                = 110;
     const T_NULL                = 111;
     const T_COLON               = 112;
+    const T_OPEN_SQR_BRACKETS   = 113;
+    const T_CLOSE_SQR_BRACKETS  = 114;
 
     /**
      * @var array
@@ -64,7 +66,9 @@ final class DocLexer extends AbstractLexer
         '}'  => self::T_CLOSE_CURLY_BRACES,
         '='  => self::T_EQUALS,
         ':'  => self::T_COLON,
-        '\\' => self::T_NAMESPACE_SEPARATOR
+        '\\' => self::T_NAMESPACE_SEPARATOR,
+        '['  => self::T_OPEN_SQR_BRACKETS,
+        ']'  => self::T_CLOSE_SQR_BRACKETS
     );
 
     /**
