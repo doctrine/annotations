@@ -422,6 +422,8 @@ DOCBLOCK;
               // array type
             array('array', '{@AnnotationExtendsAnnotationTargetAll}'),
             array('array', '{@AnnotationExtendsAnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll}'),
+            array('array', '[@AnnotationExtendsAnnotationTargetAll]'),
+            array('array', '[@AnnotationExtendsAnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll]'),
 
             array('arrayOfIntegers', '1'),
             array('arrayOfIntegers', '{1}'),
