@@ -1397,7 +1397,6 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        // Nested arrays with nested annotations
         $result = $parser->parse('@Issue67("a", { "b" }, "c")');
         $annot = $result[0];
 
@@ -1416,7 +1415,6 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        // Nested arrays with nested annotations
         $result = $parser->parse('@Issue67("a", { "b" })');
         $annot = $result[0];
 
@@ -1434,7 +1432,6 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        // Nested arrays with nested annotations
         $result = $parser->parse('@Issue67("a", { "b" }, { "c" })');
         $annot = $result[0];
 
