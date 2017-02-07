@@ -1392,6 +1392,66 @@ DOCBLOCK;
         $this->assertCount(1, $result);
 
     }
+
+    public function testIssue67_1()
+    {
+        $parser = $this->createTestParser();
+
+        // Nested arrays with nested annotations
+        $result = $parser->parse('@Issue67("a", { "b" }, "c")');
+        $annot = $result[0];
+
+        self::assertInstanceOf(Issue67::class, $annot);
+        self::assertCount(3, $annot->foo);
+        self::assertEquals('a', $annot->foo[0]);
+        self::assertInternalType('array', $annot->foo[1]);
+        self::assertEquals('c', $annot->foo[2]);
+
+        $array = $annot->foo[1];
+        self::assertTrue(isset($array[0]));
+        self::assertEquals('b', $array[0]);
+    }
+
+    public function testIssue67_2()
+    {
+        $parser = $this->createTestParser();
+
+        // Nested arrays with nested annotations
+        $result = $parser->parse('@Issue67("a", { "b" })');
+        $annot = $result[0];
+
+        self::assertInstanceOf(Issue67::class, $annot);
+        self::assertCount(2, $annot->foo);
+        self::assertEquals('a', $annot->foo[0]);
+        self::assertInternalType('array', $annot->foo[1]);
+
+        $array = $annot->foo[1];
+        self::assertTrue(isset($array[0]));
+        self::assertEquals('b', $array[0]);
+    }
+
+    public function testIssue67_3()
+    {
+        $parser = $this->createTestParser();
+
+        // Nested arrays with nested annotations
+        $result = $parser->parse('@Issue67("a", { "b" }, { "c" })');
+        $annot = $result[0];
+
+        self::assertInstanceOf(Issue67::class, $annot);
+        self::assertCount(3, $annot->foo);
+        self::assertEquals('a', $annot->foo[0]);
+        self::assertInternalType('array', $annot->foo[1]);
+        self::assertInternalType('array', $annot->foo[2]);
+
+        $array1 = $annot->foo[1];
+        self::assertTrue(isset($array1[0]));
+        self::assertEquals('b', $array1[0]);
+
+        $array2 = $annot->foo[2];
+        self::assertTrue(isset($array2[0]));
+        self::assertEquals('c', $array2[0]);
+    }
 }
 
 /** @Annotation */
@@ -1451,6 +1511,17 @@ class Name extends \Doctrine\Common\Annotations\Annotation {
 /** @Annotation */
 class Marker {
     public $value;
+}
+
+/**
+ * @Annotation
+ */
+class Issue67 {
+    public $foo;
+
+    public function __construct(array $values) {
+        $this->foo = $values['value'];
+    }
 }
 
 namespace Doctrine\Tests\Common\Annotations\FooBar;
