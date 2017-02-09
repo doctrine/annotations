@@ -2,8 +2,11 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
@@ -107,5 +110,19 @@ class AnnotationReaderTest extends AbstractReaderTest
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
 
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+    }
+
+    public function testClassWithFullPathUseStatement()
+    {
+        if (class_exists(SingleUseAnnotation::class, false)) {
+            throw new \LogicException('The SingleUseAnnotation must not be used in other tests for this test to be useful');
+        }
+
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithFullPathUseStatement::class);
+
+        $annotations = $reader->getClassAnnotations($ref);
+
+        self::assertInstanceOf(SingleUseAnnotation::class,$annotations[0]);
     }
 }

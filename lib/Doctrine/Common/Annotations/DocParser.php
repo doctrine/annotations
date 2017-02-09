@@ -728,6 +728,8 @@ final class DocParser
             }
         }
 
+        $name = ltrim($name,'\\');
+
         if ( ! $this->classExists($name)) {
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
