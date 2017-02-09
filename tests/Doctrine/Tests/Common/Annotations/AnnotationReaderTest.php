@@ -115,7 +115,11 @@ class AnnotationReaderTest extends AbstractReaderTest
     public function testClassWithFullPathUseStatement()
     {
         if (class_exists(SingleUseAnnotation::class, false)) {
-            throw new \LogicException('The SingleUseAnnotation must not be used in other tests for this test to be useful');
+            throw new \LogicException(
+                'The SingleUseAnnotation must not be used in other tests for this test to be useful.' .
+                'If the class is already loaded then the code path that finds the class to load is not used and ' .
+                'this test becomes useless.'
+            );
         }
 
         $reader = $this->getReader();
