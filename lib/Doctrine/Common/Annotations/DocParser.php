@@ -1181,7 +1181,7 @@ final class DocParser
         if ($this->lexer->isNextToken(DocLexer::T_CLOSE_SQR_BRACKETS)) {
             $this->match(DocLexer::T_CLOSE_SQR_BRACKETS);
 
-            return $array;
+            return $values;
         }
 
         // Get the first value
