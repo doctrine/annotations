@@ -1,5 +1,21 @@
 ## Changelog
 
+
+### 1.4.0
+
+This release fix an issue were some annotations could be not loaded if the namespace in the use statement started with a backslash.
+It also update the tests and drop the support for php 5.X
+
+- [115: Missing annotations with the latest composer version](https://github.com/doctrine/annotations/issues/115) thanks to @pascalporedda
+- [120: Missing annotations with the latest composer version](https://github.com/doctrine/annotations/pull/120) thanks to @gnat42
+- [121: Adding a more detailed explanation of the test](https://github.com/doctrine/annotations/pull/121) thanks to @mikeSimonson
+- [101: Test annotation parameters containing space](https://github.com/doctrine/annotations/pull/101) thanks to @mikeSimonson
+- [111: Cleanup: move to correct phpunit assertions](https://github.com/doctrine/annotations/pull/111) thanks to @Ocramius
+- [112: Removes support for PHP 5.x](https://github.com/doctrine/annotations/pull/112) thanks to @railto
+- [113: bumped phpunit version to 5.7](https://github.com/doctrine/annotations/pull/113) thanks to @gabbydgab
+- [114: Enhancement: Use SVG Travis build badge](https://github.com/doctrine/annotations/pull/114) thanks to @localheinz
+- [118: Integrating PHPStan](https://github.com/doctrine/annotations/pull/118) thanks to @ondrejmirtes
+
 ### 1.3.1 - 2016-12-30
 
 This release fixes an issue with ignored annotations that were already
