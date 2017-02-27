@@ -122,7 +122,7 @@ class CachedReaderTest extends AbstractReaderTest
             ->with($this->equalTo('[C]'.$cacheKey))
         ;
 
-        $reader = new CachedReader(new AnnotationReader(), $cache, true);
+        $reader = new CachedReader(new AnnotationReader(), $cache, false);
         $route = new Route();
         $route->pattern = '/someprefix';
 
