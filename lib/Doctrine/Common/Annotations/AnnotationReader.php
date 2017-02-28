@@ -215,7 +215,13 @@ class AnnotationReader implements Reader
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
         $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
 
-        return $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
+        $parsed = array();
+        $interfaces = $class->getInterfaces();
+        foreach ($interfaces as $interface) {
+            $parsed = array_merge($parsed, $this->parser->parse($interface->getDocComment(), 'interface ' . $interface->getName()));
+        }
+
+        return array_merge($parsed, $this->parser->parse($class->getDocComment(), 'class ' . $class->getName()));
     }
 
     /**

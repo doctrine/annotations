@@ -465,6 +465,10 @@ final class DocParser
             return $this->classExists[$fqcn] = true;
         }
 
+        if(interface_exists($fqcn, false)) {
+            return $this->classExists[$fqcn] = true;
+        }
+
         // final check, does this class exist?
         return $this->classExists[$fqcn] = AnnotationRegistry::loadAnnotationClass($fqcn);
     }
