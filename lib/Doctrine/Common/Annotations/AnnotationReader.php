@@ -56,7 +56,7 @@ class AnnotationReader implements Reader
         // Annotation tags
         'Annotation' => true, 'Attribute' => true, 'Attributes' => true,
         /* Can we enable this? 'Enum' => true, */
-        'Required' => true,
+        'Required' => true, 'required' => true,
         'Target' => true,
         // Widely used tags (but not existent in phpdoc)
         'fix' => true , 'fixme' => true,
