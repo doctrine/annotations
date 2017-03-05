@@ -179,6 +179,29 @@ DOCBLOCK;
         self::assertInstanceOf(Marker::class, $marker);
     }
 
+    /**
+     * @group debug
+     */
+    public function testMethodDocBlockWithWeirdQuotes()
+    {
+        $parser = $this->createTestParser();
+
+        $docblock = <<<DOCBLOCK
+/**
+ * @param mixed description with a single " character.
+ *
+ * @Marker
+ *
+ * @This is an irrelevant text with a single " character.
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+        self::assertCount(1, $result);
+        self::assertTrue(isset($result[0]));
+        $marker = $result[0];
+        self::assertInstanceOf(Marker::class, $marker);
+    }
 
     public function testAnnotationWithoutConstructor() : void
     {
