@@ -433,6 +433,16 @@ DOCBLOCK;
             // annotation instance
             array('annotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
             array('annotation', '@AnnotationExtendsAnnotationTargetAll'),
+
+            array('unqualifiedAnnotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
+            array('renamedAnnotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
+            array('partiallyNamedAnnotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
+            array('partiallyNamedAndRenamedAnnotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
+
+            array('arrayOfUnqualifiedAnnotations', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'),
+            array('arrayOfRenamedAnnotations', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'),
+            array('arrayOfPartiallyNamedAnnotations', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'),
+            array('arrayOfPartiallyNamedAndRenamedAnnotations', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'),
         );
     }
 
@@ -486,6 +496,28 @@ DOCBLOCK;
             array('annotation', AnnotationTargetAll::class, '{"str"}','array'),
             array('annotation', AnnotationTargetAll::class, '{1,2,3,4}','array'),
             array('annotation', AnnotationTargetAll::class, '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'),
+
+            // unqualified annotation instance
+            array('unqualifiedAnnotation', 'AnnotationTargetAll', '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'),
+
+            // renamed annotation instance
+            array('renamedAnnotation', 'RenamedAnnotationTargetAll', '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'),
+
+            // partially namespaced annotation instance
+            array(
+                'partiallyNamedAnnotation',
+                'Common\Annotations\Fixtures\AnnotationTargetAll',
+                '@Name',
+                'an instance of Doctrine\Tests\Common\Annotations\Name'
+            ),
+
+            // partially namespaced and renamed annotation instance
+            array(
+                'partiallyNamedAndRenamedAnnotation',
+                'RenamedCommon\Annotations\Fixtures\AnnotationTargetAll',
+                '@Name',
+                'an instance of Doctrine\Tests\Common\Annotations\Name'
+            ),
         );
     }
 
@@ -513,6 +545,31 @@ DOCBLOCK;
             array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
             array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}', 'double'),
             array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}', 'string'),
+
+            array(
+                'arrayOfUnqualifiedAnnotations',
+                AnnotationTargetAll::class,
+                '{"str"}',
+                'string'
+            ),
+            array(
+                'arrayOfRenamedAnnotations',
+                AnnotationTargetAll::class,
+                '{"str"}',
+                'string'
+            ),
+            array(
+                'arrayOfPartiallyNamedAnnotations',
+                AnnotationTargetAll::class,
+                '{"str"}',
+                'string'
+            ),
+            array(
+                'arrayOfPartiallyNamedAndRenamedAnnotations',
+                AnnotationTargetAll::class,
+                '{"str"}',
+                'string'
+            ),
         );
     }
 

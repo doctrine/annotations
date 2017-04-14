@@ -59,6 +59,13 @@ final class DocParser
     private $lexer;
 
     /**
+     * The PHP parser.
+     *
+     * @var \Doctrine\Common\Annotations\PhpParser
+     */
+    private $phpParser;
+
+    /**
      * Current target context.
      *
      * @var integer
@@ -94,6 +101,13 @@ final class DocParser
      * @var array
      */
     private $classExists = array();
+
+    /**
+     * This hashmap is used internally to cache results of class uses look-ups.
+     *
+     * @var array
+     */
+    private $classUses = array();
 
     /**
      * Whether annotations that have not been imported should be ignored.
@@ -237,11 +251,33 @@ final class DocParser
     );
 
     /**
+     * @var array
+     */
+    private static $reservedTypes = array(
+        'null'     => true,
+        'bool'     => true,
+        'boolean'  => true,
+        'int'      => true,
+        'integer'  => true,
+        'string'   => true,
+        'float'    => true,
+        'double'   => true,
+        'array'    => true,
+        'iterable' => true,
+        'callable' => true,
+        'resource' => true,
+        'mixed'    => true,
+        'object'   => true,
+        'void'     => true,
+    );
+
+    /**
      * Constructs a new DocParser.
      */
     public function __construct()
     {
         $this->lexer = new DocLexer;
+        $this->phpParser = new PhpParser();
     }
 
     /**
@@ -525,7 +561,7 @@ final class DocParser
 
                 if ($annotation instanceof Attributes) {
                     foreach ($annotation->value as $attribute) {
-                        $this->collectAttributeTypeMetadata($metadata, $attribute);
+                        $this->collectAttributeTypeMetadata($metadata, $attribute, $class);
                     }
                 }
             }
@@ -548,7 +584,7 @@ final class DocParser
                         ? $matches[1]
                         : 'mixed';
 
-                    $this->collectAttributeTypeMetadata($metadata, $attribute);
+                    $this->collectAttributeTypeMetadata($metadata, $attribute, $class);
 
                     // checks if the property has @Enum
                     if (false !== strpos($propertyComment, '@Enum')) {
@@ -580,12 +616,13 @@ final class DocParser
     /**
      * Collects parsing metadata for a given attribute.
      *
-     * @param array     $metadata
-     * @param Attribute $attribute
+     * @param array           $metadata
+     * @param Attribute       $attribute
+     * @param ReflectionClass $class
      *
      * @return void
      */
-    private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute)
+    private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute, ReflectionClass $class)
     {
         // handle internal type declaration
         $type = isset(self::$typeMap[$attribute->type])
@@ -627,6 +664,85 @@ final class DocParser
         $metadata['attribute_types'][$attribute->name]['type']     = $type;
         $metadata['attribute_types'][$attribute->name]['value']    = $attribute->type;
         $metadata['attribute_types'][$attribute->name]['required'] = $attribute->required;
+
+        $this->resolveUnqualifiedAttributeType($metadata, $attribute, $class);
+    }
+
+    /**
+     * Resolves a type of the attribute to its fully qualified variant.
+     *
+     * @param array           $metadata
+     * @param Attribute       $attribute
+     * @param ReflectionClass $class
+     *
+     * @return void
+     */
+    private function resolveUnqualifiedAttributeType(&$metadata, Attribute $attribute, ReflectionClass $class)
+    {
+        if ('array' === $metadata['attribute_types'][$attribute->name]['type']) {
+            $this->resolveUnqualifiedType($metadata['attribute_types'][$attribute->name]['array_type'], $class);
+            return;
+        }
+
+        $this->resolveUnqualifiedType($metadata['attribute_types'][$attribute->name]['type'], $class);
+    }
+
+    /**
+     * Resolves a single type to its fully qualified variant.
+     *
+     * @param string|null     $type
+     * @param ReflectionClass $class
+     *
+     * @return void
+     */
+    private function resolveUnqualifiedType(&$type, ReflectionClass $class)
+    {
+        if (null === $type) {
+            return;
+        }
+
+        // the type is already fully qualified
+        if ('\\' === $type[0]) {
+            return;
+        }
+
+        // ignore builtin types & pseudo-types
+        if (isset(self::$reservedTypes[$type])) {
+            return;
+        }
+
+        $className = $class->getName();
+
+        // build a class uses map
+        if ( ! isset($this->classUses[$className])) {
+            $this->classUses[$className] = $this->phpParser->parseClass($class);
+        }
+
+        $typeLower = strtolower($type);
+        $namespacePosition = strpos($typeLower, '\\');
+
+        // handle combination of use & partial namespace
+        // i.e. `use Foo\Bar` and `Bar\Baz` should produce `Foo\Bar\Baz`
+        if (false !== $namespacePosition) {
+            $namespace = substr($typeLower, 0, $namespacePosition);
+
+            if (isset($this->classUses[$className][$namespace])) {
+                $type = $this->classUses[$className][$namespace] . substr($type, $namespacePosition);
+                return;
+            }
+        }
+
+        // handle non-namespaced class name and try unaliasing it
+        if (false === $namespacePosition && isset($this->classUses[$className][$typeLower])) {
+            $type = $this->classUses[$className][$typeLower];
+            return;
+        }
+
+        // assume non-fully-qualified name is actually fully-qualified due to BC
+        // only prepend namespace if the class does not exist in its original form
+        if ( ! $this->classExists($type)) {
+            $type = $class->getNamespaceName() . '\\' . $type;
+        }
     }
 
     /**
