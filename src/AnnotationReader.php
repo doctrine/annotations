@@ -40,7 +40,7 @@ use Doctrine\Annotations\Annotation\IgnoreAnnotation;
  * @author Fabio B. Silva <fabio.bat.silva@hotmail.com>
  * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
  */
-final class AnnotationReader implements Reader, FunctionReader
+final class AnnotationReader implements Reader
 {
     /**
      * @var \Doctrine\Annotations\Parser\PhpParser

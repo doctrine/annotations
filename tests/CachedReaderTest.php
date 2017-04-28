@@ -4,20 +4,10 @@ namespace Doctrine\AnnotationsTests;
 
 use Doctrine\Annotations\AnnotationReader;
 use Doctrine\Annotations\CachedReader;
-use Doctrine\AnnotationsTests\Fixtures\InvalidReader;
 use Doctrine\Common\Cache\ArrayCache;
 
 class CachedReaderTest extends AbstractReaderTest
 {
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidReaderClass()
-    {
-        $cache  = $this->getMockBuilder('Doctrine\Common\Cache\Cache')->getMock();
-        new CachedReader(new InvalidReader(), $cache, true);
-    }
-
     public function testIgnoresStaleCache()
     {
         $name     = 'Doctrine\AnnotationsTests\Fixtures\Controller';

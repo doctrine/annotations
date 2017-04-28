@@ -36,7 +36,7 @@ use Doctrine\Common\Cache\Cache;
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Fabio B. Silva <fabio.bat.silva@hotmail.com>
  */
-final class CachedReader implements Reader, FunctionReader
+final class CachedReader implements Reader
 {
     /**
      * @var string
@@ -44,7 +44,7 @@ final class CachedReader implements Reader, FunctionReader
     const CACHE_SALT = '@[Annot]';
 
     /**
-     * @var \Doctrine\Annotations\Reader|\Doctrine\Annotations\FunctionReader
+     * @var \Doctrine\Annotations\Reader
      */
     private $delegate;
 
@@ -61,21 +61,12 @@ final class CachedReader implements Reader, FunctionReader
     /**
      * Constructor.
      *
-     * @param \Doctrine\Annotations\ObjectReader|\Doctrine\Annotations\FunctionReader $reader
-     * @param \Doctrine\Common\Cache\Cache                                            $cache
-     * @param bool                                                                    $debug
+     * @param \Doctrine\Annotations\Reader $reader
+     * @param \Doctrine\Common\Cache\Cache $cache
+     * @param bool                         $debug
      */
-    public function __construct($reader, Cache $cache, bool $debug = false)
+    public function __construct(Reader $reader, Cache $cache, bool $debug = false)
     {
-        if ( ! $reader instanceof ObjectReader && ! $reader instanceof FunctionReader) {
-            throw new \InvalidArgumentException(sprintf(
-                'Delegated reader must be an instance of %s or %s, got %s',
-                ObjectReader::class,
-                FunctionReader::class,
-                get_class($reader)
-            ));
-        }
-
         $this->delegate = $reader;
         $this->cache    = $cache;
         $this->debug    = $debug;

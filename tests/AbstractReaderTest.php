@@ -20,6 +20,11 @@ abstract class AbstractReaderTest extends TestCase
         return new ReflectionClass('Doctrine\AnnotationsTests\Fixtures\DummyClass');
     }
 
+    public function getReflectionFunction()
+    {
+        return new \ReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_autoload_function');
+    }
+
     public function testAnnotations()
     {
         $class     = $this->getReflectionClass();
@@ -55,15 +60,28 @@ abstract class AbstractReaderTest extends TestCase
         $this->assertEquals('col3', $joinTableAnnot->inverseJoinColumns[0]->name);
         $this->assertEquals('col4', $joinTableAnnot->inverseJoinColumns[0]->referencedColumnName);
 
-        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
+        $method = $class->getMethod('getField1');
+        $dummyAnnot = $reader->getMethodAnnotation($method, 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
         $this->assertEquals('', $dummyAnnot->dummyValue);
         $this->assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
+        $unknownAnnot = $reader->getMethodAnnotation($method, 'UnknownMethodAnnotation');
+        $this->assertNull($unknownAnnot);
 
-        $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
+        $property = $class->getProperty('field1');
+        $dummyAnnot = $reader->getPropertyAnnotation($property, 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
         $this->assertEquals('fieldHello', $dummyAnnot->dummyValue);
+        $unknownAnnot = $reader->getPropertyAnnotation($property, 'UnknownPropertyAnnotation');
+        $this->assertNull($unknownAnnot);
 
         $classAnnot = $reader->getClassAnnotation($class, 'Doctrine\AnnotationsTests\Fixtures\Reader\DummyAnnotation');
         $this->assertEquals('hello', $classAnnot->dummyValue);
+        $unknownAnnot = $reader->getClassAnnotation($class, 'UnknownClassAnnotation');
+        $this->assertNull($unknownAnnot);
+
+        $function = $this->getReflectionFunction();
+        $annotations = $reader->getFunctionAnnotations($function);
+        $this->assertInstanceOf('Doctrine\AnnotationsTests\Fixtures\Annotation\Autoload', $annotations[0]);
+        $this->assertNull($reader->getFunctionAnnotation($function, 'UnknownFunctionAnnotation'));
     }
 
     public function testAnnotationsWithValidTargets()
