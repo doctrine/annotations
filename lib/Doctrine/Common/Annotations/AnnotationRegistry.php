@@ -21,6 +21,8 @@ namespace Doctrine\Common\Annotations;
 
 /**
  * AnnotationRegistry.
+ *
+ * @deprecated Rely on spl_register_autoloader() autoloaders instead
  */
 final class AnnotationRegistry
 {
