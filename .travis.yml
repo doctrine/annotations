@@ -7,15 +7,11 @@ cache:
     - $HOME/.composer/cache
 
 php:
-  - 5.6
-  - 7
   - 7.1
-  - hhvm
+  - nightly
 
 matrix:
   include:
-    - php: 7
-      env: PHPSTAN=1
     - php: 7.1
       env: PHPSTAN=1
 
