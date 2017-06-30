@@ -186,7 +186,7 @@ final class CachedReader implements Reader
     private function fetchFromCache($cacheKey, ReflectionClass $class)
     {
         if (($data = $this->cache->fetch($cacheKey)) !== false) {
-            if (!$this->debug || $this->isCacheFresh($cacheKey, $class)) {
+            if (!$this->debug && $this->isCacheFresh($cacheKey, $class)) {
                 return $data;
             }
         }
