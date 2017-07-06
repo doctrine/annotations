@@ -110,7 +110,9 @@ final class AnnotationRegistry
         if (!is_callable($callable)) {
             throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
         }
-        self::$loaders[] = $callable;
+        if (!in_array($callable, self::$loaders)) {
+            self::$loaders[] = $callable;
+        }
     }
 
     /**

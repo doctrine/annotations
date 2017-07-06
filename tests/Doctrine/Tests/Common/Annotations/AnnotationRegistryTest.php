@@ -65,4 +65,12 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
         return $reflection->getValue();
     }
+
+    public function testRegisterLoaderTwiceOnlySavedOnce()
+    {
+        AnnotationRegistry::registerLoader('class_exists');
+        AnnotationRegistry::registerLoader('class_exists');
+
+        self::assertEquals(['class_exists'], $this->getStaticField($this->class, 'loaders'));
+    }
 }
