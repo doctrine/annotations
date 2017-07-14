@@ -44,12 +44,28 @@ final class AnnotationRegistry
     static private $loaders = array();
 
     /**
+     * An array of loaded classes
+     *
+     * @var array
+     */
+    static private $loaded = array();
+
+    /**
+     * An array of classes which cannot be found
+     *
+     * @var array
+     */
+    static private $unloadable = array();
+
+    /**
      * @return void
      */
     static public function reset()
     {
         self::$autoloadNamespaces = array();
         self::$loaders = array();
+        self::$loaded = array();
+        self::$unloadable = array();
     }
 
     /**
@@ -110,6 +126,9 @@ final class AnnotationRegistry
         if (!is_callable($callable)) {
             throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
         }
+        // Reset our static cache now that we have a new loader to work with
+        self::$loaded = array();
+        self::$unloadable = array();
         self::$loaders[] = $callable;
     }
 
@@ -122,18 +141,26 @@ final class AnnotationRegistry
      */
     static public function loadAnnotationClass($class)
     {
+        if (isset(self::$loaded[$class])) {
+            return true;
+        }
+        if (isset(self::$unloadable[$class])) {
+            return false;
+        }
         foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
             if (strpos($class, $namespace) === 0) {
                 $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
                 if ($dirs === null) {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
+                        self::$loaded[$class] = true;
                         return true;
                     }
                 } else {
                     foreach((array)$dirs AS $dir) {
                         if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
                             require $dir . DIRECTORY_SEPARATOR . $file;
+                            self::$loaded[$class] = true;
                             return true;
                         }
                     }
@@ -143,9 +170,11 @@ final class AnnotationRegistry
 
         foreach (self::$loaders AS $loader) {
             if (call_user_func($loader, $class) === true) {
+                self::$loaded[$class] = true;
                 return true;
             }
         }
+        self::$unloadable[$class] = true;
         return false;
     }
 }

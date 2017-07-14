@@ -25,6 +25,8 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
         self::assertEmpty($this->getStaticField($this->class, 'autoloadNamespaces'));
         self::assertEmpty($this->getStaticField($this->class, 'loaders'));
+        self::assertEmpty($this->getStaticField($this->class, 'loaded'));
+        self::assertEmpty($this->getStaticField($this->class, 'unloadable'));
     }
 
     /**
@@ -64,5 +66,46 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
 
         return $reflection->getValue();
+    }
+
+    public function testStopCallingLoadersIfClassIsNotFound()
+    {
+        AnnotationRegistry::reset();
+        $i = 0;
+        $autoLoader = function($annotation) use (&$i) {
+            $i++;
+            return false;
+        };
+        AnnotationRegistry::registerLoader($autoLoader);
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        $this->assertEquals(1, $i, 'Autoloader should only be called once');
+    }
+
+    public function testStopCallingLoadersAfterClassIsFound()
+    {
+        AnnotationRegistry::reset();
+        $i = 0;
+        $autoLoader = function($annotation) use (&$i) {
+            $i++;
+            return true;
+        };
+        AnnotationRegistry::registerLoader($autoLoader);
+        AnnotationRegistry::loadAnnotationClass(self::class);
+        AnnotationRegistry::loadAnnotationClass(self::class);
+        AnnotationRegistry::loadAnnotationClass(self::class);
+        $this->assertEquals(1, $i, 'Autoloader should only be called once');
+    }
+
+    public function testAddingANewLoaderClearsTheCache()
+    {
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerLoader('class_exists');
+        AnnotationRegistry::loadAnnotationClass(self::class);
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        AnnotationRegistry::registerLoader('class_exists');
+        self::assertEmpty($this->getStaticField($this->class, 'loaded'));
+        self::assertEmpty($this->getStaticField($this->class, 'unloadable'));
     }
 }
