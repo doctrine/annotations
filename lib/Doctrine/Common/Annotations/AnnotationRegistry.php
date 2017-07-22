@@ -139,7 +139,7 @@ final class AnnotationRegistry
                         return true;
                     }
                 } else {
-                    foreach((array)$dirs AS $dir) {
+                    foreach((array) $dirs AS $dir) {
                         if (is_file($dir . \DIRECTORY_SEPARATOR . $file)) {
                             require $dir . \DIRECTORY_SEPARATOR . $file;
                             return true;
