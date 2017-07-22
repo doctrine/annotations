@@ -141,9 +141,10 @@ final class AnnotationRegistry
      */
     static public function loadAnnotationClass($class)
     {
-        if (isset(self::$successfullyLoaded[$class])) {
+        if (\class_exists($class, false)) {
             return true;
         }
+
         if (isset(self::$failedToAutoload[$class])) {
             return false;
         }
