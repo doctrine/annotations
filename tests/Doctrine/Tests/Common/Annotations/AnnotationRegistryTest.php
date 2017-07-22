@@ -40,13 +40,12 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @runInSeparateProcess
-     *
-     * @expectedException   \InvalidArgumentException
-     * @expectedExceptionMessage A callable is expected in AnnotationRegistry::registerLoader().
      */
     public function testRegisterLoaderNoCallable()
     {
-        AnnotationRegistry::registerLoader('test');
+        $this->expectException(\TypeError::class);
+
+        AnnotationRegistry::registerLoader('test' . random_int(10, 10000));
     }
 
     protected function setStaticField($class, $field, $value)
