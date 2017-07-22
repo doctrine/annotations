@@ -44,13 +44,6 @@ final class AnnotationRegistry
     static private $loaders = array();
 
     /**
-     * An array of loaded classes
-     *
-     * @var array
-     */
-    static private $successfullyLoaded = array();
-
-    /**
      * An array of classes which cannot be found
      *
      * @var array
@@ -64,7 +57,6 @@ final class AnnotationRegistry
     {
         self::$autoloadNamespaces = array();
         self::$loaders            = array();
-        self::$successfullyLoaded = array();
         self::$failedToAutoload   = array();
     }
 
@@ -127,7 +119,6 @@ final class AnnotationRegistry
             throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
         }
         // Reset our static cache now that we have a new loader to work with
-        self::$successfullyLoaded = array();
         self::$failedToAutoload   = array();
         self::$loaders[]          = $callable;
     }
@@ -154,14 +145,12 @@ final class AnnotationRegistry
                 if ($dirs === null) {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
-                        self::$successfullyLoaded[$class] = true;
                         return true;
                     }
                 } else {
                     foreach((array)$dirs AS $dir) {
                         if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
                             require $dir . DIRECTORY_SEPARATOR . $file;
-                            self::$successfullyLoaded[$class] = true;
                             return true;
                         }
                     }
@@ -171,7 +160,6 @@ final class AnnotationRegistry
 
         foreach (self::$loaders AS $loader) {
             if (call_user_func($loader, $class) === true) {
-                self::$successfullyLoaded[$class] = true;
                 return true;
             }
         }
