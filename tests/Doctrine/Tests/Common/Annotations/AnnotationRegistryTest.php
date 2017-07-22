@@ -18,8 +18,8 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $this->setStaticField($this->class, 'autoloadNamespaces', $data);
         $this->setStaticField($this->class, 'loaders', $data);
 
-        self::assertEquals($data, $this->getStaticField($this->class, 'autoloadNamespaces'));
-        self::assertEquals($data, $this->getStaticField($this->class, 'loaders'));
+        self::assertSame($data, $this->getStaticField($this->class, 'autoloadNamespaces'));
+        self::assertSame($data, $this->getStaticField($this->class, 'loaders'));
 
         AnnotationRegistry::reset();
 
@@ -35,7 +35,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $this->setStaticField($this->class, 'autoloadNamespaces', array('foo' => 'bar'));
 
         AnnotationRegistry::registerAutoloadNamespaces(array('test' => 'bar'));
-        self::assertEquals(array('foo' => 'bar', 'test' => 'bar'), $this->getStaticField($this->class, 'autoloadNamespaces'));
+        self::assertSame(array('foo' => 'bar', 'test' => 'bar'), $this->getStaticField($this->class, 'autoloadNamespaces'));
     }
 
     /**
@@ -56,7 +56,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $reflection->setValue(null, $value);
     }
 
-    protected function getStaticField($class, $field) : void
+    protected function getStaticField($class, $field)
     {
         $reflection = new \ReflectionProperty($class, $field);
 
@@ -80,7 +80,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         AnnotationRegistry::loadAnnotationClass('unloadableClass');
         AnnotationRegistry::loadAnnotationClass('unloadableClass');
         AnnotationRegistry::loadAnnotationClass('unloadableClass');
-        $this->assertEquals(1, $i, 'Autoloader should only be called once');
+        self::assertSame(1, $i, 'Autoloader should only be called once');
     }
 
     /**
@@ -100,7 +100,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         AnnotationRegistry::loadAnnotationClass($className);
         AnnotationRegistry::loadAnnotationClass($className);
         AnnotationRegistry::loadAnnotationClass($className);
-        $this->assertEquals(1, $i, 'Autoloader should only be called once');
+        self::assertSame(1, $i, 'Autoloader should only be called once');
     }
 
     /**
