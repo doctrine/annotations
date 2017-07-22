@@ -48,14 +48,14 @@ final class AnnotationRegistry
      *
      * @var array
      */
-    static private $loaded = array();
+    static private $successfullyLoaded = array();
 
     /**
      * An array of classes which cannot be found
      *
      * @var array
      */
-    static private $unloadable = array();
+    static private $failedToAutoload = array();
 
     /**
      * @return void
@@ -63,9 +63,9 @@ final class AnnotationRegistry
     static public function reset()
     {
         self::$autoloadNamespaces = array();
-        self::$loaders = array();
-        self::$loaded = array();
-        self::$unloadable = array();
+        self::$loaders            = array();
+        self::$successfullyLoaded = array();
+        self::$failedToAutoload   = array();
     }
 
     /**
@@ -127,9 +127,9 @@ final class AnnotationRegistry
             throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
         }
         // Reset our static cache now that we have a new loader to work with
-        self::$loaded = array();
-        self::$unloadable = array();
-        self::$loaders[] = $callable;
+        self::$successfullyLoaded = array();
+        self::$failedToAutoload   = array();
+        self::$loaders[]          = $callable;
     }
 
     /**
@@ -141,10 +141,10 @@ final class AnnotationRegistry
      */
     static public function loadAnnotationClass($class)
     {
-        if (isset(self::$loaded[$class])) {
+        if (isset(self::$successfullyLoaded[$class])) {
             return true;
         }
-        if (isset(self::$unloadable[$class])) {
+        if (isset(self::$failedToAutoload[$class])) {
             return false;
         }
         foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
@@ -153,14 +153,14 @@ final class AnnotationRegistry
                 if ($dirs === null) {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
-                        self::$loaded[$class] = true;
+                        self::$successfullyLoaded[$class] = true;
                         return true;
                     }
                 } else {
                     foreach((array)$dirs AS $dir) {
                         if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
                             require $dir . DIRECTORY_SEPARATOR . $file;
-                            self::$loaded[$class] = true;
+                            self::$successfullyLoaded[$class] = true;
                             return true;
                         }
                     }
@@ -170,11 +170,11 @@ final class AnnotationRegistry
 
         foreach (self::$loaders AS $loader) {
             if (call_user_func($loader, $class) === true) {
-                self::$loaded[$class] = true;
+                self::$successfullyLoaded[$class] = true;
                 return true;
             }
         }
-        self::$unloadable[$class] = true;
+        self::$failedToAutoload[$class] = true;
         return false;
     }
 }
