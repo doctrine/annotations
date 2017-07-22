@@ -34,30 +34,30 @@ final class AnnotationRegistry
      *
      * @var array
      */
-    static private $autoloadNamespaces = array();
+    static private $autoloadNamespaces = [];
 
     /**
      * A map of autoloader callables.
      *
      * @var array
      */
-    static private $loaders = array();
+    static private $loaders = [];
 
     /**
      * An array of classes which cannot be found
      *
      * @var null[] indexed by class name
      */
-    static private $failedToAutoload = array();
+    static private $failedToAutoload = [];
 
     /**
      * @return void
      */
-    static public function reset()
+    public static function reset()
     {
-        self::$autoloadNamespaces = array();
-        self::$loaders            = array();
-        self::$failedToAutoload   = array();
+        self::$autoloadNamespaces = [];
+        self::$loaders            = [];
+        self::$failedToAutoload   = [];
     }
 
     /**
@@ -67,7 +67,7 @@ final class AnnotationRegistry
      *
      * @return void
      */
-    static public function registerFile($file)
+    public static function registerFile($file)
     {
         require_once $file;
     }
@@ -82,7 +82,7 @@ final class AnnotationRegistry
      *
      * @return void
      */
-    static public function registerAutoloadNamespace($namespace, $dirs = null)
+    public static function registerAutoloadNamespace($namespace, $dirs = null)
     {
         self::$autoloadNamespaces[$namespace] = $dirs;
     }
@@ -96,9 +96,9 @@ final class AnnotationRegistry
      *
      * @return void
      */
-    static public function registerAutoloadNamespaces(array $namespaces)
+    public static function registerAutoloadNamespaces(array $namespaces)
     {
-        self::$autoloadNamespaces = array_merge(self::$autoloadNamespaces, $namespaces);
+        self::$autoloadNamespaces = \array_merge(self::$autoloadNamespaces, $namespaces);
     }
 
     /**
@@ -113,33 +113,29 @@ final class AnnotationRegistry
      *
      * @throws \InvalidArgumentException
      */
-    static public function registerLoader(callable $callable)
+    public static function registerLoader(callable $callable)
     {
         // Reset our static cache now that we have a new loader to work with
-        self::$failedToAutoload   = array();
+        self::$failedToAutoload   = [];
         self::$loaders[]          = $callable;
     }
 
     /**
      * Autoloads an annotation class silently.
-     *
-     * @param string $class
-     *
-     * @return boolean
      */
-    static public function loadAnnotationClass($class)
+    public static function loadAnnotationClass(string $class) : bool
     {
         if (\class_exists($class, false)) {
             return true;
         }
 
-        if (\array_key_exists($class, self::$failedToAutoload[$class])) {
+        if (\array_key_exists($class, self::$failedToAutoload)) {
             return false;
         }
 
         foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
-            if (strpos($class, $namespace) === 0) {
-                $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
+            if (\strpos($class, $namespace) === 0) {
+                $file = \str_replace('\\', \DIRECTORY_SEPARATOR, $class) . '.php';
                 if ($dirs === null) {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
@@ -147,8 +143,8 @@ final class AnnotationRegistry
                     }
                 } else {
                     foreach((array)$dirs AS $dir) {
-                        if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
-                            require $dir . DIRECTORY_SEPARATOR . $file;
+                        if (is_file($dir . \DIRECTORY_SEPARATOR . $file)) {
+                            require $dir . \DIRECTORY_SEPARATOR . $file;
                             return true;
                         }
                     }
@@ -157,7 +153,7 @@ final class AnnotationRegistry
         }
 
         foreach (self::$loaders AS $loader) {
-            if (call_user_func($loader, $class) === true) {
+            if ($loader($class) === true) {
                 return true;
             }
         }
