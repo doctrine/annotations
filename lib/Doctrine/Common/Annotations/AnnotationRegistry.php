@@ -19,9 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-/**
- * AnnotationRegistry.
- */
 final class AnnotationRegistry
 {
     /**
