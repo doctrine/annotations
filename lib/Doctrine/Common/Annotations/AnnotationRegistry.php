@@ -19,9 +19,6 @@
 
 namespace Doctrine\Common\Annotations;
 
-/**
- * AnnotationRegistry.
- */
 final class AnnotationRegistry
 {
     /**
@@ -32,34 +29,39 @@ final class AnnotationRegistry
      *
      * This autoloading mechanism does not utilize the PHP autoloading but implements autoloading on its own.
      *
-     * @var array
+     * @var string[][]|string[]|null[]
      */
-    static private $autoloadNamespaces = array();
+    static private $autoloadNamespaces = [];
 
     /**
      * A map of autoloader callables.
      *
-     * @var array
+     * @var callable[]
      */
-    static private $loaders = array();
+    static private $loaders = [];
 
     /**
-     * @return void
+     * An array of classes which cannot be found
+     *
+     * @var null[] indexed by class name
      */
-    static public function reset()
+    static private $failedToAutoload = [];
+
+    public static function reset() : void
     {
-        self::$autoloadNamespaces = array();
-        self::$loaders = array();
+        self::$autoloadNamespaces = [];
+        self::$loaders            = [];
+        self::$failedToAutoload   = [];
     }
 
     /**
      * Registers file.
      *
-     * @param string $file
-     *
-     * @return void
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    static public function registerFile($file)
+    public static function registerFile(string $file) : void
     {
         require_once $file;
     }
@@ -72,9 +74,11 @@ final class AnnotationRegistry
      * @param string            $namespace
      * @param string|array|null $dirs
      *
-     * @return void
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    static public function registerAutoloadNamespace($namespace, $dirs = null)
+    public static function registerAutoloadNamespace(string $namespace, $dirs = null) : void
     {
         self::$autoloadNamespaces[$namespace] = $dirs;
     }
@@ -84,13 +88,15 @@ final class AnnotationRegistry
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @param array $namespaces
+     * @param string[][]|string[]|null[] $namespaces indexed by namespace name
      *
-     * @return void
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    static public function registerAutoloadNamespaces(array $namespaces)
+    public static function registerAutoloadNamespaces(array $namespaces) : void
     {
-        self::$autoloadNamespaces = array_merge(self::$autoloadNamespaces, $namespaces);
+        self::$autoloadNamespaces = \array_merge(self::$autoloadNamespaces, $namespaces);
     }
 
     /**
@@ -99,32 +105,34 @@ final class AnnotationRegistry
      * NOTE: These class loaders HAVE to be silent when a class was not found!
      * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      *
-     * @param callable $callable
-     *
-     * @return void
-     *
-     * @throws \InvalidArgumentException
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    static public function registerLoader($callable)
+    public static function registerLoader(callable $callable) : void
     {
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
-        }
-        self::$loaders[] = $callable;
+        // Reset our static cache now that we have a new loader to work with
+        self::$failedToAutoload   = [];
+        self::$loaders[]          = $callable;
     }
 
     /**
      * Autoloads an annotation class silently.
-     *
-     * @param string $class
-     *
-     * @return boolean
      */
-    static public function loadAnnotationClass($class)
+    public static function loadAnnotationClass(string $class) : bool
     {
+        if (\class_exists($class, false)) {
+            return true;
+        }
+
+        if (\array_key_exists($class, self::$failedToAutoload)) {
+            return false;
+        }
+
         foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
-            if (strpos($class, $namespace) === 0) {
-                $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
+            if (\strpos($class, $namespace) === 0) {
+                $file = \str_replace('\\', \DIRECTORY_SEPARATOR, $class) . '.php';
+
                 if ($dirs === null) {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
@@ -132,8 +140,8 @@ final class AnnotationRegistry
                     }
                 } else {
                     foreach((array)$dirs AS $dir) {
-                        if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
-                            require $dir . DIRECTORY_SEPARATOR . $file;
+                        if (is_file($dir . \DIRECTORY_SEPARATOR . $file)) {
+                            require $dir . \DIRECTORY_SEPARATOR . $file;
                             return true;
                         }
                     }
@@ -142,10 +150,13 @@ final class AnnotationRegistry
         }
 
         foreach (self::$loaders AS $loader) {
-            if (call_user_func($loader, $class) === true) {
+            if ($loader($class) === true) {
                 return true;
             }
         }
+
+        self::$failedToAutoload[$class] = null;
+
         return false;
     }
 }

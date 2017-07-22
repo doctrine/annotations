@@ -40,13 +40,12 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @runInSeparateProcess
-     *
-     * @expectedException   \InvalidArgumentException
-     * @expectedExceptionMessage A callable is expected in AnnotationRegistry::registerLoader().
      */
     public function testRegisterLoaderNoCallable()
     {
-        AnnotationRegistry::registerLoader('test');
+        $this->expectException(\TypeError::class);
+
+        AnnotationRegistry::registerLoader('test' . random_int(10, 10000));
     }
 
     protected function setStaticField($class, $field, $value)
@@ -64,5 +63,108 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $reflection->setAccessible(true);
 
         return $reflection->getValue();
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testStopCallingLoadersIfClassIsNotFound() : void
+    {
+        AnnotationRegistry::reset();
+        $i = 0;
+        $autoLoader = function($annotation) use (&$i) {
+            $i++;
+            return false;
+        };
+        AnnotationRegistry::registerLoader($autoLoader);
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+        $this->assertEquals(1, $i, 'Autoloader should only be called once');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testStopCallingLoadersAfterClassIsFound() : void
+    {
+        $className = 'autoloadedClass' . random_int(10, 100000);
+        AnnotationRegistry::reset();
+        $i = 0;
+        $autoLoader = function($annotation) use (&$i, $className) {
+            eval('class ' . $className . ' {}');
+            $i++;
+            return true;
+        };
+        AnnotationRegistry::registerLoader($autoLoader);
+        AnnotationRegistry::loadAnnotationClass($className);
+        AnnotationRegistry::loadAnnotationClass($className);
+        AnnotationRegistry::loadAnnotationClass($className);
+        $this->assertEquals(1, $i, 'Autoloader should only be called once');
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testAddingANewLoaderClearsTheCache() : void
+    {
+        $failures         = 0;
+        $failingLoader    = function (string $annotation) use (& $failures) : bool {
+            $failures += 1;
+
+            return false;
+        };
+
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerLoader($failingLoader);
+
+        self::assertSame(0, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::registerLoader(function () {
+            return false;
+        });
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(2, $failures);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testResetClearsRegisteredAutoloaderFailures() : void
+    {
+        $failures         = 0;
+        $failingLoader    = function (string $annotation) use (& $failures) : bool {
+            $failures += 1;
+
+            return false;
+        };
+
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerLoader($failingLoader);
+
+        self::assertSame(0, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerLoader($failingLoader);
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(2, $failures);
     }
 }
