@@ -113,11 +113,8 @@ final class AnnotationRegistry
      *
      * @throws \InvalidArgumentException
      */
-    static public function registerLoader($callable)
+    static public function registerLoader(callable $callable)
     {
-        if (!is_callable($callable)) {
-            throw new \InvalidArgumentException("A callable is expected in AnnotationRegistry::registerLoader().");
-        }
         // Reset our static cache now that we have a new loader to work with
         self::$failedToAutoload   = array();
         self::$loaders[]          = $callable;

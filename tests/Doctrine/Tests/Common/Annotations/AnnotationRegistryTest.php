@@ -25,8 +25,6 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
         self::assertEmpty($this->getStaticField($this->class, 'autoloadNamespaces'));
         self::assertEmpty($this->getStaticField($this->class, 'loaders'));
-        self::assertEmpty($this->getStaticField($this->class, 'loaded'));
-        self::assertEmpty($this->getStaticField($this->class, 'unloadable'));
     }
 
     /**
@@ -68,7 +66,10 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         return $reflection->getValue();
     }
 
-    public function testStopCallingLoadersIfClassIsNotFound()
+    /**
+     * @runInSeparateProcess
+     */
+    public function testStopCallingLoadersIfClassIsNotFound() : void
     {
         AnnotationRegistry::reset();
         $i = 0;
@@ -83,29 +84,88 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, $i, 'Autoloader should only be called once');
     }
 
-    public function testStopCallingLoadersAfterClassIsFound()
+    /**
+     * @runInSeparateProcess
+     */
+    public function testStopCallingLoadersAfterClassIsFound() : void
     {
+        $className = 'autoloadedClass' . random_int(10, 100000);
         AnnotationRegistry::reset();
         $i = 0;
-        $autoLoader = function($annotation) use (&$i) {
+        $autoLoader = function($annotation) use (&$i, $className) {
+            eval('class ' . $className . ' {}');
             $i++;
             return true;
         };
         AnnotationRegistry::registerLoader($autoLoader);
-        AnnotationRegistry::loadAnnotationClass(self::class);
-        AnnotationRegistry::loadAnnotationClass(self::class);
-        AnnotationRegistry::loadAnnotationClass(self::class);
+        AnnotationRegistry::loadAnnotationClass($className);
+        AnnotationRegistry::loadAnnotationClass($className);
+        AnnotationRegistry::loadAnnotationClass($className);
         $this->assertEquals(1, $i, 'Autoloader should only be called once');
     }
 
-    public function testAddingANewLoaderClearsTheCache()
+    /**
+     * @runInSeparateProcess
+     */
+    public function testAddingANewLoaderClearsTheCache() : void
     {
+        $failures         = 0;
+        $failingLoader    = function (string $annotation) use (& $failures) : bool {
+            $failures += 1;
+
+            return false;
+        };
+
         AnnotationRegistry::reset();
-        AnnotationRegistry::registerLoader('class_exists');
-        AnnotationRegistry::loadAnnotationClass(self::class);
+        AnnotationRegistry::registerLoader($failingLoader);
+
+        self::assertSame(0, $failures);
+
         AnnotationRegistry::loadAnnotationClass('unloadableClass');
-        AnnotationRegistry::registerLoader('class_exists');
-        self::assertEmpty($this->getStaticField($this->class, 'loaded'));
-        self::assertEmpty($this->getStaticField($this->class, 'unloadable'));
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::registerLoader(function () {
+            return false;
+        });
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(2, $failures);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testResetClearsRegisteredAutoloaderFailures() : void
+    {
+        $failures         = 0;
+        $failingLoader    = function (string $annotation) use (& $failures) : bool {
+            $failures += 1;
+
+            return false;
+        };
+
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerLoader($failingLoader);
+
+        self::assertSame(0, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(1, $failures);
+
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerLoader($failingLoader);
+        AnnotationRegistry::loadAnnotationClass('unloadableClass');
+
+        self::assertSame(2, $failures);
     }
 }
