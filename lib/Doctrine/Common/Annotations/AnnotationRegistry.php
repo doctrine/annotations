@@ -112,6 +112,10 @@ final class AnnotationRegistry
      * @return void
      *
      * @throws \InvalidArgumentException
+     *
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
     public static function registerLoader(callable $callable)
     {
