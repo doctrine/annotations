@@ -63,11 +63,11 @@ final class AnnotationRegistry
     /**
      * Registers file.
      *
-     * @param string $file
-     *
-     * @return void
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    public static function registerFile($file)
+    public static function registerFile(string $file) : void
     {
         require_once $file;
     }
@@ -80,9 +80,11 @@ final class AnnotationRegistry
      * @param string            $namespace
      * @param string|array|null $dirs
      *
-     * @return void
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    public static function registerAutoloadNamespace($namespace, $dirs = null)
+    public static function registerAutoloadNamespace(string $namespace, $dirs = null) : void
     {
         self::$autoloadNamespaces[$namespace] = $dirs;
     }
@@ -92,11 +94,13 @@ final class AnnotationRegistry
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @param array $namespaces
+     * @param string[][]|string[]|null[] $namespaces indexed by namespace name
      *
-     * @return void
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     *             autoloading should be deferred to the globally registered autoloader by then. For now,
+     *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    public static function registerAutoloadNamespaces(array $namespaces)
+    public static function registerAutoloadNamespaces(array $namespaces) : void
     {
         self::$autoloadNamespaces = \array_merge(self::$autoloadNamespaces, $namespaces);
     }
@@ -107,17 +111,11 @@ final class AnnotationRegistry
      * NOTE: These class loaders HAVE to be silent when a class was not found!
      * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      *
-     * @param callable $callable
-     *
-     * @return void
-     *
-     * @throws \InvalidArgumentException
-     *
      * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
      *             autoloading should be deferred to the globally registered autoloader by then. For now,
      *             use @example AnnotationRegistry::registerLoader('class_exists')
      */
-    public static function registerLoader(callable $callable)
+    public static function registerLoader(callable $callable) : void
     {
         // Reset our static cache now that we have a new loader to work with
         self::$failedToAutoload   = [];
@@ -140,6 +138,7 @@ final class AnnotationRegistry
         foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
             if (\strpos($class, $namespace) === 0) {
                 $file = \str_replace('\\', \DIRECTORY_SEPARATOR, $class) . '.php';
+
                 if ($dirs === null) {
                     if ($path = stream_resolve_include_path($file)) {
                         require $path;
