@@ -73,7 +73,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         AnnotationRegistry::reset();
         $i = 0;
         $autoLoader = function () use (&$i) : bool {
-            $i++;
+            $i += 1;
             return false;
         };
         AnnotationRegistry::registerLoader($autoLoader);
@@ -93,7 +93,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $i = 0;
         $autoLoader = function () use (&$i, $className) : bool {
             eval('class ' . $className . ' {}');
-            $i++;
+            $i += 1;
             return true;
         };
         AnnotationRegistry::registerLoader($autoLoader);
