@@ -29,14 +29,14 @@ final class AnnotationRegistry
      *
      * This autoloading mechanism does not utilize the PHP autoloading but implements autoloading on its own.
      *
-     * @var array
+     * @var string[][]|string[]|null[]
      */
     static private $autoloadNamespaces = [];
 
     /**
      * A map of autoloader callables.
      *
-     * @var array
+     * @var callable[]
      */
     static private $loaders = [];
 
@@ -47,10 +47,7 @@ final class AnnotationRegistry
      */
     static private $failedToAutoload = [];
 
-    /**
-     * @return void
-     */
-    public static function reset()
+    public static function reset() : void
     {
         self::$autoloadNamespaces = [];
         self::$loaders            = [];
