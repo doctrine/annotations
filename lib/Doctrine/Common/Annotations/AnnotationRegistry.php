@@ -46,7 +46,7 @@ final class AnnotationRegistry
     /**
      * An array of classes which cannot be found
      *
-     * @var array
+     * @var null[] indexed by class name
      */
     static private $failedToAutoload = array();
 
@@ -133,9 +133,10 @@ final class AnnotationRegistry
             return true;
         }
 
-        if (isset(self::$failedToAutoload[$class])) {
+        if (\array_key_exists($class, self::$failedToAutoload[$class])) {
             return false;
         }
+
         foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
             if (strpos($class, $namespace) === 0) {
                 $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
@@ -160,7 +161,9 @@ final class AnnotationRegistry
                 return true;
             }
         }
-        self::$failedToAutoload[$class] = true;
+
+        self::$failedToAutoload[$class] = null;
+
         return false;
     }
 }
