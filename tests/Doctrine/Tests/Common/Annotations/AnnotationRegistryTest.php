@@ -11,7 +11,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testReset()
+    public function testReset() : void
     {
         $data = array('foo' => 'bar');
 
@@ -30,7 +30,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRegisterAutoloadNamespaces()
+    public function testRegisterAutoloadNamespaces() : void
     {
         $this->setStaticField($this->class, 'autoloadNamespaces', array('foo' => 'bar'));
 
@@ -41,7 +41,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRegisterLoaderNoCallable()
+    public function testRegisterLoaderNoCallable() : void
     {
         $this->expectException(\TypeError::class);
 
@@ -56,7 +56,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $reflection->setValue(null, $value);
     }
 
-    protected function getStaticField($class, $field)
+    protected function getStaticField($class, $field) : void
     {
         $reflection = new \ReflectionProperty($class, $field);
 
@@ -72,7 +72,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
     {
         AnnotationRegistry::reset();
         $i = 0;
-        $autoLoader = function($annotation) use (&$i) {
+        $autoLoader = function () use (&$i) : bool {
             $i++;
             return false;
         };
@@ -91,7 +91,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
         $className = 'autoloadedClass' . random_int(10, 100000);
         AnnotationRegistry::reset();
         $i = 0;
-        $autoLoader = function($annotation) use (&$i, $className) {
+        $autoLoader = function () use (&$i, $className) : bool {
             eval('class ' . $className . ' {}');
             $i++;
             return true;
@@ -109,7 +109,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
     public function testAddingANewLoaderClearsTheCache() : void
     {
         $failures         = 0;
-        $failingLoader    = function (string $annotation) use (& $failures) : bool {
+        $failingLoader    = function () use (& $failures) : bool {
             $failures += 1;
 
             return false;
@@ -128,7 +128,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
 
         self::assertSame(1, $failures);
 
-        AnnotationRegistry::registerLoader(function () {
+        AnnotationRegistry::registerLoader(function () : bool {
             return false;
         });
         AnnotationRegistry::loadAnnotationClass('unloadableClass');
@@ -142,7 +142,7 @@ class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
     public function testResetClearsRegisteredAutoloaderFailures() : void
     {
         $failures         = 0;
-        $failingLoader    = function (string $annotation) use (& $failures) : bool {
+        $failingLoader    = function () use (& $failures) : bool {
             $failures += 1;
 
             return false;
