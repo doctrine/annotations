@@ -20,13 +20,14 @@
 namespace Doctrine\Tests\Common\Annotations\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Tests for {@see \Doctrine\Common\Annotations\Annotation\Target}
  *
  * @covers \Doctrine\Common\Annotations\Annotation\Target
  */
-class TargetTest extends \PHPUnit_Framework_TestCase
+class TargetTest extends TestCase
 {
     /**
      * @group DDC-3006

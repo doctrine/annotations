@@ -4,11 +4,12 @@ namespace Doctrine\Tests\Common\Annotations\Ticket;
 
 use Doctrine\Tests\Common\Annotations\Fixtures\Controller;
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @group
  */
-class DCOM55Test extends \PHPUnit_Framework_TestCase
+class DCOM55Test extends TestCase
 {
     /**
      * @expectedException \Doctrine\Common\Annotations\AnnotationException

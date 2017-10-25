@@ -3,8 +3,9 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use PHPUnit\Framework\TestCase;
 
-class AnnotationRegistryTest extends \PHPUnit_Framework_TestCase
+class AnnotationRegistryTest extends TestCase
 {
     protected $class = AnnotationRegistry::class;
 

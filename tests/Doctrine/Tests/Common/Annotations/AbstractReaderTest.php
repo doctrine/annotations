@@ -4,11 +4,12 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\AnnotationException;
+use PHPUnit\Framework\TestCase;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
 
-abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
+abstract class AbstractReaderTest extends TestCase
 {
     public function getReflectionClass()
     {

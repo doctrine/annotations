@@ -11,8 +11,9 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants;
+use PHPUnit\Framework\TestCase;
 
-class DocParserTest extends \PHPUnit_Framework_TestCase
+class DocParserTest extends TestCase
 {
     public function testNestedArraysWithNestedAnnotation()
     {
@@ -1055,8 +1056,8 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $parser->setIgnoredAnnotationNames(array(\PHPUnit_Framework_TestCase::class => true));
-        $result = $parser->parse('@PHPUnit_Framework_TestCase');
+        $parser->setIgnoredAnnotationNames(array(\PHPUnit\Framework\TestCase::class => true));
+        $result = $parser->parse('@\PHPUnit\Framework\TestCase');
 
         self::assertEmpty($result);
     }
@@ -1065,7 +1066,7 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $result = $parser->parse('@PHPUnit_Framework_TestCase');
+        $result = $parser->parse('@\PHPUnit\Framework\TestCase');
 
         self::assertEmpty($result);
     }

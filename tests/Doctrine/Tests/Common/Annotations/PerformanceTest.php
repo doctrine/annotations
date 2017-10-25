@@ -9,13 +9,14 @@ use Doctrine\Common\Annotations\DocLexer;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\PhpParser;
 use Doctrine\Common\Annotations\AnnotationReader;
+use PHPUnit\Framework\TestCase;
 
 require_once __DIR__ . '/Fixtures/Annotation/Route.php';
 require_once __DIR__ . '/Fixtures/Annotation/Template.php';
 require_once __DIR__ . '/Fixtures/Annotation/Secure.php';
 require_once __DIR__ . '/Fixtures/SingleClassLOC1000.php';
 
-class PerformanceTest extends \PHPUnit_Framework_TestCase
+class PerformanceTest extends TestCase
 {
     /**
      * @group performance
