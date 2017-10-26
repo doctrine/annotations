@@ -1455,10 +1455,13 @@ class AnnotationExtendsAnnotationTargetAll extends AnnotationTargetAll
 {
 }
 
-/** @Annotation */
-class Name extends Annotation {
-    public $foo;
+if(!class_exists('\Doctrine\Tests\Common\Annotations\Name')) {
+    /** @Annotation */
+    class Name extends Annotation {
+        public $foo;
+    }
 }
+
 
 /** @Annotation */
 class Marker {

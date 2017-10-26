@@ -5,12 +5,14 @@ namespace Doctrine\Tests\Common\Annotations;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
 
+# ./vendor/bin/phpunit  -c phpunit.xml.dist AnnotationReaderTest tests/Doctrine/Tests/Common/Annotations/AnnotationReaderTest.php
 class AnnotationReaderTest extends AbstractReaderTest
 {
     /**
@@ -30,11 +32,13 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getMethodAnnotations($ref->getMethod('someMethod'));
         self::assertInstanceOf(Bar\Autoload::class, $annotations[0]);
 
-        $annotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
-        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
+        $traitAnnotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $traitAnnotations[0]);
+
+        self::assertTrue($annotations[0] !== $traitAnnotations[0]);
     }
 
-    public function testMethodAnnotationFromOverwrittenTrait()
+    public function testMethodAnnotationChoseTheFirstOneWhenOverwrittenTraitHappen()
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\ClassOverwritesTrait::class);
@@ -102,6 +106,21 @@ class AnnotationReaderTest extends AbstractReaderTest
      *
      * @runInSeparateProcess
      */
+    public function testMethodAnnotationIsIgnoredWithTrait()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedAtClassLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('IgnoreNamespaceTrait');
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
+    }
+
+    /**
+     * @group 45
+     *
+     * @runInSeparateProcess
+     */
     public function testPropertyAnnotationIsIgnored()
     {
         $reader = $this->getReader();
@@ -128,5 +147,12 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getClassAnnotations($ref);
 
         self::assertInstanceOf(SingleUseAnnotation::class,$annotations[0]);
+    }
+}
+
+if(!class_exists('\Doctrine\Tests\Common\Annotations\Name')) {
+    /** @Annotation */
+    class Name extends Annotation {
+        public $foo;
     }
 }

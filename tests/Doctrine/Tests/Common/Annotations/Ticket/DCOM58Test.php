@@ -5,6 +5,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
+# ./vendor/bin/phpunit  -c phpunit.xml.dist DCOM58Test tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Test.php
 //Some class named Entity in the global namespace
 include __DIR__ .'/DCOM58Entity.php';
 
@@ -16,7 +17,11 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
     public function testIssue()
     {
         $reader     = new AnnotationReader();
+
+        self::assertTrue(class_exists(\Doctrine\Common\Annotations\Annotation\IgnoreAnnotation::class), false);
+
         $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__ . '\MappedClass'));
+        $this->assertTrue(get_class($result[0]) === 'Entity'); // Global entity inside DCOM58Entity.php
 
         $classAnnotations = array_combine(
             array_map('get_class', $result),
@@ -52,7 +57,7 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(Doctrine\ORM\Entity::class, $annots[0]);
     }
 
-    public function testIssueMultipleNamespaces()
+    public function testChoseFirstOneIfHaveMultipleNamespaces()
     {
         $docblock   = '@Entity';
         $parser     = new DocParser();
@@ -73,7 +78,6 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
 
         self::assertCount(1, $annots);
         self::assertInstanceOf(\Entity::class, $annots[0]);
-        self::assertCount(1, $annots);
     }
 
 

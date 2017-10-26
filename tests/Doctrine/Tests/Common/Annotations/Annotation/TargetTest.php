@@ -17,6 +17,7 @@
  * <http://www.doctrine-project.org>.
  */
 
+# ./vendor/bin/phpunit  -c phpunit.xml.dist TargetTest tests/Doctrine/Tests/Common/Annotations/Annotation/TargetTest.php
 namespace Doctrine\Tests\Common\Annotations\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -35,13 +36,21 @@ class TargetTest extends \PHPUnit_Framework_TestCase
     {
         $target = new Target(array('value' => array('ALL')));
         self::assertEquals(Target::TARGET_ALL, $target->targets);
+        self::assertEquals(['ALL'], $target->value);
+        self::assertEquals('ALL', $target->literal);
+        self::assertTrue(is_array($target->value));
+        self::assertTrue(is_string($target->literal));
 
         $target = new Target(array('value' => array('METHOD', 'METHOD')));
         self::assertEquals(Target::TARGET_METHOD, $target->targets);
         self::assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
+        self::assertEquals(['METHOD', 'METHOD'], $target->value);
+        self::assertEquals('METHOD, METHOD', $target->literal);
 
         $target = new Target(array('value' => array('PROPERTY', 'METHOD')));
         self::assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
+        self::assertEquals(['PROPERTY', 'METHOD'], $target->value);
+        self::assertEquals('PROPERTY, METHOD', $target->literal);
     }
 }
 
