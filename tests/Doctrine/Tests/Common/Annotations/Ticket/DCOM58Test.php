@@ -73,7 +73,6 @@ class DCOM58Test extends \PHPUnit_Framework_TestCase
 
         self::assertCount(1, $annots);
         self::assertInstanceOf(\Entity::class, $annots[0]);
-        self::assertCount(1, $annots);
     }
 
 
