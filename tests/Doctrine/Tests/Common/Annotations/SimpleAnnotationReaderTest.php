@@ -12,7 +12,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testImportDetectsNotImportedAnnotation()
     {
-        parent::testImportDetectsNotImportedAnnotation();
+        self::assertEmpty(parent::testImportDetectsNotImportedAnnotation());
     }
 
     /**
@@ -21,7 +21,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testImportDetectsNonExistentAnnotation()
     {
-        parent::testImportDetectsNonExistentAnnotation();
+        self::assertEmpty(parent::testImportDetectsNonExistentAnnotation());
     }
 
     /**
@@ -30,7 +30,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
-        parent::testClassWithInvalidAnnotationTargetAtClassDocBlock();
+        self::assertInternalType('array', parent::testClassWithInvalidAnnotationTargetAtClassDocBlock());
     }
 
     /**
@@ -39,7 +39,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
-        parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock();
+        self::assertInternalType('array', parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock());
     }
 
     /**
@@ -48,7 +48,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
-        parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock();
+        self::assertInternalType('array', parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock());
     }
 
     /**
@@ -57,7 +57,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
-        parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock();
+        self::assertInternalType('array', parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock());
     }
 
     /**
@@ -66,7 +66,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testErrorWhenInvalidAnnotationIsUsed()
     {
-        parent::testErrorWhenInvalidAnnotationIsUsed();
+        self::assertEmpty(parent::testErrorWhenInvalidAnnotationIsUsed());
     }
 
     /**

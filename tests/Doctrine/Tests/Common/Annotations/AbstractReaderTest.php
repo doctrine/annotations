@@ -114,7 +114,7 @@ abstract class AbstractReaderTest extends TestCase
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
         $reader  = $this->getReader();
-        $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class));
+        return $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class));
     }
 
     public function testClassWithWithInclude()
@@ -131,7 +131,7 @@ abstract class AbstractReaderTest extends TestCase
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
         $reader  = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'foo'));
+        return $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'foo'));
     }
 
      /**
@@ -141,7 +141,7 @@ abstract class AbstractReaderTest extends TestCase
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
         $reader  = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'bar'));
+        return $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'bar'));
     }
 
      /**
@@ -151,7 +151,7 @@ abstract class AbstractReaderTest extends TestCase
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
         $reader  = $this->getReader();
-        $reader->getMethodAnnotations(new \ReflectionMethod(Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class, 'functionName'));
+        return $reader->getMethodAnnotations(new \ReflectionMethod(Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class, 'functionName'));
     }
 
     /**
@@ -296,7 +296,7 @@ abstract class AbstractReaderTest extends TestCase
     public function testImportDetectsNotImportedAnnotation()
     {
         $reader = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty(TestAnnotationNotImportedClass::class, 'field'));
+        return $reader->getPropertyAnnotations(new \ReflectionProperty(TestAnnotationNotImportedClass::class, 'field'));
     }
 
     /**
@@ -306,7 +306,7 @@ abstract class AbstractReaderTest extends TestCase
     public function testImportDetectsNonExistentAnnotation()
     {
         $reader = $this->getReader();
-        $reader->getPropertyAnnotations(new \ReflectionProperty(TestNonExistentAnnotationClass::class, 'field'));
+        return $reader->getPropertyAnnotations(new \ReflectionProperty(TestNonExistentAnnotationClass::class, 'field'));
     }
 
     public function testTopLevelAnnotation()
@@ -323,6 +323,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader = $this->getReader();
 
         $annotation = $reader->getClassAnnotation(new \ReflectionClass(new TestIgnoresNonAnnotationsClass()), Name::class);
+
         self::assertInstanceOf(Name::class, $annotation);
     }
 
@@ -381,7 +382,7 @@ abstract class AbstractReaderTest extends TestCase
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageClass::class);
-        $reader->getClassAnnotations($ref);
+        return $reader->getClassAnnotations($ref);
     }
 
     public function testInvalidAnnotationUsageButIgnoredClass()
@@ -441,7 +442,8 @@ abstract class AbstractReaderTest extends TestCase
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(DCOM106::class);
-        $reader->getClassAnnotations($ref);
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
     /**

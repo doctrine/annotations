@@ -1164,7 +1164,7 @@ DOCBLOCK;
 
         try {
             $parser = $this->createTestParser();
-            $parser->parse($docblock);
+            self::assertEmpty($parser->parse($docblock));
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
@@ -1185,7 +1185,7 @@ DOCBLOCK;
 
         try {
             $parser = $this->createTestParser();
-            $parser->parse($docblock);
+            self::assertEmpty($parser->parse($docblock));
         } catch (\Exception $e) {
             $this->fail($e->getMessage());
         }
