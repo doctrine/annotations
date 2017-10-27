@@ -9,10 +9,10 @@ use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevelWithTrait;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
 
-# ./vendor/bin/phpunit  -c phpunit.xml.dist AnnotationReaderTest tests/Doctrine/Tests/Common/Annotations/AnnotationReaderTest.php
 class AnnotationReaderTest extends AbstractReaderTest
 {
     /**
@@ -35,10 +35,10 @@ class AnnotationReaderTest extends AbstractReaderTest
         $traitAnnotations = $reader->getMethodAnnotations($ref->getMethod('traitMethod'));
         self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $traitAnnotations[0]);
 
-        self::assertTrue($annotations[0] !== $traitAnnotations[0]);
+        self::assertNotEquals($annotations[0], $traitAnnotations[0]);
     }
 
-    public function testMethodAnnotationChoseTheFirstOneWhenOverwrittenTraitHappen()
+    public function testMethodAnnotationChooseTheFirstOneWhenOverwrittenTraitHappen()
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\ClassOverwritesTrait::class);
@@ -109,7 +109,7 @@ class AnnotationReaderTest extends AbstractReaderTest
     public function testMethodAnnotationIsIgnoredWithTrait()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass(AnnotatedAtClassLevel::class);
+        $ref = new \ReflectionClass(AnnotatedAtClassLevelWithTrait::class);
 
         $reader::addGlobalIgnoredNamespace('IgnoreNamespaceTrait');
 
@@ -150,7 +150,7 @@ class AnnotationReaderTest extends AbstractReaderTest
     }
 }
 
-if(!class_exists('\Doctrine\Tests\Common\Annotations\Name')) {
+if(!class_exists(\Doctrine\Tests\Common\Annotations\Name::class)) {
     /** @Annotation */
     class Name extends Annotation {
         public $foo;

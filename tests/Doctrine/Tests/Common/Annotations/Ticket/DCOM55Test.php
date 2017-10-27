@@ -5,7 +5,6 @@ namespace Doctrine\Tests\Common\Annotations\Ticket;
 use Doctrine\Tests\Common\Annotations\Fixtures\Controller;
 use Doctrine\Common\Annotations\AnnotationReader;
 
-# ./vendor/bin/phpunit  -c phpunit.xml.dist DCOM55Test tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM55Test.php
 /**
  * @group
  */
@@ -38,7 +37,7 @@ class DCOM55Test extends \PHPUnit_Framework_TestCase
         $reader = new AnnotationReader();
         $annots = $reader->getClassAnnotations($class);
 
-        self::assertTrue(is_array($annots) && empty($annots));
+        self::assertSame([], $annots);
     }
 }
 

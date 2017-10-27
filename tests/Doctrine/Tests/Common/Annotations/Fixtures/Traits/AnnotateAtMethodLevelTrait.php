@@ -7,5 +7,6 @@ trait AnnotateAtMethodLevelTrait
     /**
      * @IgnoreNamespaceTrait\Subnamespace\Name
      */
-    public function test() {}
+    public function test() {
+    }
 }

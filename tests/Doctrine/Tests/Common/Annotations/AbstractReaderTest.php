@@ -12,7 +12,7 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 {
     public function getReflectionClass()
     {
-        return new ReflectionClass(DummyClass::class); #Tests\Common\Annotations\DummyClass
+        return new ReflectionClass(DummyClass::class);
     }
 
     public function testAnnotations()
