@@ -17,26 +17,26 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
 
     public function testAnnotations()
     {
-        $refClass = $this->getReflectionClass();
+        $class = $this->getReflectionClass();
         $reader = $this->getReader();
 
-        self::assertCount(1, $reader->getClassAnnotations($refClass));
-        self::assertInstanceOf($annotName = DummyAnnotation::class, $annot = $reader->getClassAnnotation($refClass, $annotName));
+        self::assertCount(1, $reader->getClassAnnotations($class));
+        self::assertInstanceOf($annotName = DummyAnnotation::class, $annot = $reader->getClassAnnotation($class, $annotName));
         self::assertEquals('hello', $annot->dummyValue);
 
-        $field1Prop = $refClass->getProperty('field1');
+        $field1Prop = $class->getProperty('field1');
         $propAnnots = $reader->getPropertyAnnotations($field1Prop);
         self::assertCount(1, $propAnnots);
         self::assertInstanceOf($annotName, $annot = $reader->getPropertyAnnotation($field1Prop, $annotName));
         self::assertEquals('fieldHello', $annot->dummyValue);
 
-        $getField1Method = $refClass->getMethod('getField1');
+        $getField1Method = $class->getMethod('getField1');
         $methodAnnots = $reader->getMethodAnnotations($getField1Method);
         self::assertCount(1, $methodAnnots);
         self::assertInstanceOf($annotName, $annot = $reader->getMethodAnnotation($getField1Method, $annotName));
         self::assertEquals(array(1, 2, 'three'), $annot->value);
 
-        $field2Prop = $refClass->getProperty('field2');
+        $field2Prop = $class->getProperty('field2');
         $propAnnots = $reader->getPropertyAnnotations($field2Prop);
         self::assertCount(1, $propAnnots);
         self::assertInstanceOf($annotName = DummyJoinTable::class, $joinTableAnnot = $reader->getPropertyAnnotation($field2Prop, $annotName));
@@ -49,17 +49,17 @@ abstract class AbstractReaderTest extends \PHPUnit_Framework_TestCase
         self::assertEquals('col3', $joinTableAnnot->inverseJoinColumns[0]->name);
         self::assertEquals('col4', $joinTableAnnot->inverseJoinColumns[0]->referencedColumnName);
 
-        $dummyAnnot = $reader->getMethodAnnotation($refClass->getMethod('getField1'), DummyAnnotation::class);
+        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), DummyAnnotation::class);
         self::assertEquals('', $dummyAnnot->dummyValue);
         self::assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
 
-        $dummyAnnot = $reader->getMethodAnnotation($refClass->getMethod('getField3'), DummyAnnotation::class);
+        $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField3'), DummyAnnotation::class);
         self::assertEquals('\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d', $dummyAnnot->value);
 
-        $dummyAnnot = $reader->getPropertyAnnotation($refClass->getProperty('field1'), DummyAnnotation::class);
+        $dummyAnnot = $reader->getPropertyAnnotation($class->getProperty('field1'), DummyAnnotation::class);
         self::assertEquals('fieldHello', $dummyAnnot->dummyValue);
 
-        $classAnnot = $reader->getClassAnnotation($refClass, DummyAnnotation::class);
+        $classAnnot = $reader->getClassAnnotation($class, DummyAnnotation::class);
         self::assertEquals('hello', $classAnnot->dummyValue);
     }
 
