@@ -12,7 +12,7 @@ class CachedReaderTest extends AbstractReaderTest
 {
     private $cache;
 
-    public function testIgnoresStaleCache()
+    public function testIgnoresStaleCache() :void
     {
         $cache = time() - 10;
         touch(__DIR__.'/Fixtures/Controller.php', $cache + 10);
@@ -23,7 +23,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithParentClass()
+    public function testIgnoresStaleCacheWithParentClass() :void
     {
         $cache = time() - 10;
         touch(__DIR__.'/Fixtures/ControllerWithParentClass.php', $cache - 10);
@@ -35,7 +35,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithTraits()
+    public function testIgnoresStaleCacheWithTraits() :void
     {
         $cache = time() - 10;
         touch(__DIR__.'/Fixtures/ControllerWithTrait.php', $cache - 10);
@@ -47,7 +47,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithTraitsThatUseOtherTraits()
+    public function testIgnoresStaleCacheWithTraitsThatUseOtherTraits() :void
     {
         $cache = time() - 10;
 
@@ -63,7 +63,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithInterfacesThatExtendOtherInterfaces()
+    public function testIgnoresStaleCacheWithInterfacesThatExtendOtherInterfaces() :void
     {
         $cache = time() - 10;
 
@@ -80,7 +80,7 @@ class CachedReaderTest extends AbstractReaderTest
      * @group 62
      * @group 105
      */
-    public function testUsesFreshCacheWithTraitsThatUseOtherTraits()
+    public function testUsesFreshCacheWithTraitsThatUseOtherTraits() :void
     {
         $cacheTime = time();
 
@@ -93,7 +93,7 @@ class CachedReaderTest extends AbstractReaderTest
         );
     }
 
-    protected function doTestCacheStale($className, $lastCacheModification)
+    protected function doTestCacheStale($className, $lastCacheModification) :void
     {
         $cacheKey = $className;
 
@@ -122,39 +122,42 @@ class CachedReaderTest extends AbstractReaderTest
             ->with($this->equalTo('[C]'.$cacheKey))
         ;
 
-        $reader = new CachedReader(new AnnotationReader(), $cache, true);
+        $cacheReader = new CachedReader(new AnnotationReader(), $cache, true);
         $route = new Route();
         $route->pattern = '/someprefix';
 
-        self::assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+        self::assertEquals(array($route), $cacheReader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
-    protected function doTestCacheFresh($className, $lastCacheModification)
+    protected function doTestCacheFresh($className, $lastCacheModification) :void
     {
         $cacheKey       = $className;
         $route          = new Route();
         $route->pattern = '/someprefix';
 
         /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
-        $cache = $this->createMock('Doctrine\Common\Cache\Cache');
+        $cache = $this->createMock(Cache::class);
         $cache
             ->expects($this->at(0))
             ->method('fetch')
             ->with($this->equalTo($cacheKey))
-            ->will($this->returnValue(array($route))); // Result was cached, but there was an annotation;
+            ->willReturn(array($route)); // Result was cached, but there was an annotation;
         $cache
             ->expects($this->at(1))
             ->method('fetch')
             ->with($this->equalTo('[C]' . $cacheKey))
-            ->will($this->returnValue($lastCacheModification));
+            ->willReturn($lastCacheModification);
         $cache->expects(self::never())->method('save');
 
-        $reader = new CachedReader(new AnnotationReader(), $cache, true);
+        $cacheReader = new CachedReader(new AnnotationReader(), $cache, true);
 
-        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+        $this->assertEquals(array($route), $cacheReader->getClassAnnotations(new \ReflectionClass($className)));
+
+        $cache->expects(self::never())->method('fetch');
+        $cacheReader->getClassAnnotations(new \ReflectionClass($className));
     }
 
-    protected function getReader()
+    protected function getReader() :CachedReader
     {
         $this->cache = new ArrayCache();
         return new CachedReader(new AnnotationReader(), $this->cache);

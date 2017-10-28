@@ -19,12 +19,12 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @param DocParser|null $parser
      * @return AnnotationReader
      */
-    protected function getReader(DocParser $parser = null)
+    protected function getReader(DocParser $parser = null): AnnotationReader
     {
         return new AnnotationReader($parser);
     }
 
-    public function testMethodAnnotationFromTrait()
+    public function testMethodAnnotationFromTrait() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
@@ -38,7 +38,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertNotEquals($annotations[0], $traitAnnotations[0]);
     }
 
-    public function testMethodAnnotationChooseTheFirstOneWhenOverwrittenTraitHappen()
+    public function testMethodAnnotationChooseTheFirstOneWhenOverwrittenTraitHappen() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\ClassOverwritesTrait::class);
@@ -47,7 +47,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertInstanceOf(Bar2\Autoload::class, $annotations[0]);
     }
 
-    public function testPropertyAnnotationFromTrait()
+    public function testPropertyAnnotationFromTrait() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
@@ -59,7 +59,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
-    public function testOmitNotRegisteredAnnotation()
+    public function testOmitNotRegisteredAnnotation() : void
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
@@ -76,7 +76,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      *
      * @runInSeparateProcess
      */
-    public function testClassAnnotationIsIgnored()
+    public function testClassAnnotationIsIgnored() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(AnnotatedAtClassLevel::class);
@@ -91,7 +91,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      *
      * @runInSeparateProcess
      */
-    public function testMethodAnnotationIsIgnored()
+    public function testMethodAnnotationIsIgnored() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(AnnotatedAtMethodLevel::class);
@@ -106,7 +106,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      *
      * @runInSeparateProcess
      */
-    public function testMethodAnnotationIsIgnoredWithTrait()
+    public function testMethodAnnotationIsIgnoredWithTrait() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(AnnotatedAtClassLevelWithTrait::class);
@@ -121,7 +121,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      *
      * @runInSeparateProcess
      */
-    public function testPropertyAnnotationIsIgnored()
+    public function testPropertyAnnotationIsIgnored() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(AnnotatedAtPropertyLevel::class);
@@ -131,7 +131,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
 
-    public function testClassWithFullPathUseStatement()
+    public function testClassWithFullPathUseStatement() :void
     {
         if (class_exists(SingleUseAnnotation::class, false)) {
             throw new \LogicException(
@@ -147,12 +147,5 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getClassAnnotations($ref);
 
         self::assertInstanceOf(SingleUseAnnotation::class,$annotations[0]);
-    }
-}
-
-if(!class_exists(\Doctrine\Tests\Common\Annotations\Name::class)) {
-    /** @Annotation */
-    class Name extends Annotation {
-        public $foo;
     }
 }

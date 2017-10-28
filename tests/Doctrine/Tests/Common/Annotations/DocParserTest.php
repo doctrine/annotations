@@ -1455,7 +1455,7 @@ class AnnotationExtendsAnnotationTargetAll extends AnnotationTargetAll
 {
 }
 
-if(!class_exists('\Doctrine\Tests\Common\Annotations\Name')) {
+if(!class_exists(\Doctrine\Tests\Common\Annotations\Name::class)) {
     /** @Annotation */
     class Name extends Annotation {
         public $foo;
