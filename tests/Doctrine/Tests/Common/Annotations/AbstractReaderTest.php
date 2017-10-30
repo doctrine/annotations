@@ -648,14 +648,3 @@ class Name extends Annotation
 {
     public $name;
 }
-
-namespace Doctrine\Tests\Common\Annotations;
-
-use Doctrine\Common\Annotations\Annotation;
-
-if(!class_exists(\Doctrine\Tests\Common\Annotations\Name::class, false)) {
-    /** @Annotation */
-    class Name extends Annotation {
-        public $foo;
-    }
-}

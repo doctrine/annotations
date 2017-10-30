@@ -17,7 +17,6 @@
  * <http://www.doctrine-project.org>.
  */
 
-# ./vendor/bin/phpunit  -c phpunit.xml.dist TargetTest tests/Doctrine/Tests/Common/Annotations/Annotation/TargetTest.php
 namespace Doctrine\Tests\Common\Annotations\Annotation;
 
 use Doctrine\Common\Annotations\Annotation\Target;
@@ -37,7 +36,7 @@ class TargetTest extends \PHPUnit_Framework_TestCase
         $target = new Target(array('value' => array('ALL')));
         self::assertEquals(Target::TARGET_ALL, $target->targets);
         self::assertSame(['ALL'], $target->value);
-        self::assertsame('ALL', $target->literal);
+        self::assertSame('ALL', $target->literal);
         self::assertInternalType('array', $target->value);
         self::assertInternalType('string', $target->literal);
 
