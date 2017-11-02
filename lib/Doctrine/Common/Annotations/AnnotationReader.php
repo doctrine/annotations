@@ -96,6 +96,7 @@ class AnnotationReader implements Reader
         'SuppressWarnings' => true,
         // PHPStorm
         'noinspection' => true,
+        'mixin' => true,
         // PEAR
         'package_version' => true,
         // PlantUML
