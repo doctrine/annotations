@@ -1,5 +1,20 @@
 ## Changelog
 
+### 1.5.0
+
+This release increments the minimum supported PHP version to 7.1.0.
+
+Also, HHVM official support has been dropped.
+
+Some noticeable performance improvements to annotation autoloading
+have been applied, making failed annotation autoloading less heavy
+on the filesystem access.
+
+- [133: Add @throws annotation in AnnotationReader#__construct()](https://github.com/doctrine/annotations/issues/133) thanks to @SenseException
+- [134: Require PHP 7.1, drop HHVM support](https://github.com/doctrine/annotations/issues/134) thanks to @lcobucci
+- [135: Prevent the same loader from being registered twice](https://github.com/doctrine/annotations/issues/135)  thanks to @jrjohnson
+- [137: #135 optimise multiple class load attempts in AnnotationRegistry](https://github.com/doctrine/annotations/issues/137)  thanks to @Ocramius
+
 
 ### 1.4.0
 
