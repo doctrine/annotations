@@ -9,64 +9,78 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testImportDetectsNotImportedAnnotation()
     {
-        self::assertEmpty(parent::testImportDetectsNotImportedAnnotation());
+        parent::testImportDetectsNotImportedAnnotation();
     }
 
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testImportDetectsNonExistentAnnotation()
     {
-        self::assertEmpty(parent::testImportDetectsNonExistentAnnotation());
+        parent::testImportDetectsNonExistentAnnotation();
     }
 
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
-        self::assertInternalType('array', parent::testClassWithInvalidAnnotationTargetAtClassDocBlock());
+        parent::testClassWithInvalidAnnotationTargetAtClassDocBlock();
     }
 
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
-        self::assertInternalType('array', parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock());
+        parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock();
     }
 
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
-        self::assertInternalType('array', parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock());
+        parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock();
     }
 
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
-        self::assertInternalType('array', parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock());
+        parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock();
     }
 
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testErrorWhenInvalidAnnotationIsUsed()
     {
-        self::assertEmpty(parent::testErrorWhenInvalidAnnotationIsUsed());
+        parent::testErrorWhenInvalidAnnotationIsUsed();
     }
 
     /**
