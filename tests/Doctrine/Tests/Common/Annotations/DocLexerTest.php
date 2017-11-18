@@ -3,8 +3,9 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\DocLexer;
+use PHPUnit\Framework\TestCase;
 
-class DocLexerTest extends \PHPUnit_Framework_TestCase
+class DocLexerTest extends TestCase
 {
     public function testMarkerAnnotation()
     {

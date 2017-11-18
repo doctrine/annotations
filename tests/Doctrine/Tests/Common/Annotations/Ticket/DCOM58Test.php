@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations\Ticket;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use PHPUnit\Framework\TestCase;
 
 //Some class named Entity in the global namespace
 include __DIR__ .'/DCOM58Entity.php';
@@ -11,7 +12,7 @@ include __DIR__ .'/DCOM58Entity.php';
 /**
  * @group DCOM58
  */
-class DCOM58Test extends \PHPUnit_Framework_TestCase
+class DCOM58Test extends TestCase
 {
     public function testIssue()
     {

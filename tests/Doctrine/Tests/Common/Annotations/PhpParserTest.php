@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use Doctrine\Common\Annotations\PhpParser;
 
@@ -9,7 +10,7 @@ require_once __DIR__.'/Fixtures/NonNamespacedClass.php';
 require_once __DIR__.'/Fixtures/GlobalNamespacesPerFileWithClassAsFirst.php';
 require_once __DIR__.'/Fixtures/GlobalNamespacesPerFileWithClassAsLast.php';
 
-class PhpParserTest extends \PHPUnit_Framework_TestCase
+class PhpParserTest extends TestCase
 {
     public function testParseClassWithMultipleClassesInFile()
     {

@@ -9,6 +9,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testImportDetectsNotImportedAnnotation()
     {
@@ -18,6 +20,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testImportDetectsNonExistentAnnotation()
     {
@@ -27,6 +31,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
@@ -36,6 +42,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
@@ -45,6 +53,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
@@ -54,6 +64,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
@@ -63,6 +75,8 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * Contrary to the behavior of the default annotation reader, we do just ignore
      * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
      */
     public function testErrorWhenInvalidAnnotationIsUsed()
     {
