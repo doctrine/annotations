@@ -1165,7 +1165,7 @@ DOCBLOCK;
         try {
             $parser = $this->createTestParser();
             self::assertEmpty($parser->parse($docblock));
-        } catch (\Exception $e) {
+        } catch (AnnotationException $e) {
             $this->fail($e->getMessage());
         }
     }
@@ -1186,7 +1186,7 @@ DOCBLOCK;
         try {
             $parser = $this->createTestParser();
             self::assertEmpty($parser->parse($docblock));
-        } catch (\Exception $e) {
+        } catch (AnnotationException $e) {
             $this->fail($e->getMessage());
         }
     }
