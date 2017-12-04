@@ -168,4 +168,11 @@ class AnnotationRegistryTest extends TestCase
 
         self::assertSame(2, $failures);
     }
+
+    public function testRegisterClassExistsLoaderTwiceOnlySavedOnce()
+    {
+        AnnotationRegistry::registerLoader('class_exists');
+        AnnotationRegistry::registerLoader('class_exists');
+        self::assertEquals(['class_exists'], $this->getStaticField($this->class, 'loaders'));
+    }
 }

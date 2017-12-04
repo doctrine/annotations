@@ -111,6 +111,10 @@ final class AnnotationRegistry
      */
     public static function registerLoader(callable $callable) : void
     {
+        if ($callable === 'class_exists' && self::isLastLoaderClassExists()) {
+            return;
+        }
+
         // Reset our static cache now that we have a new loader to work with
         self::$failedToAutoload   = [];
         self::$loaders[]          = $callable;
@@ -158,5 +162,15 @@ final class AnnotationRegistry
         self::$failedToAutoload[$class] = null;
 
         return false;
+    }
+
+    protected static function isLastLoaderClassExists() : bool
+    {
+        $count = count(self::$loaders);
+        if ($count === 0) {
+            return false;
+        }
+        $lastLoader = self::$loaders[$count - 1];
+        return $lastLoader === 'class_exists';
     }
 }
