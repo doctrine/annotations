@@ -168,4 +168,19 @@ class AnnotationRegistryTest extends TestCase
 
         self::assertSame(2, $failures);
     }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testRegisterLoaderIfNotExistsOnlyRegisteresSameLoaderOnce() : void
+    {
+        $className = 'autoloadedClassThatDoesNotExist';
+        AnnotationRegistry::reset();
+        $autoLoader = self::createPartialMock(\stdClass::class, ['__invoke']);
+        $autoLoader->expects($this->once())->method('__invoke');
+        AnnotationRegistry::registerUniqueLoader($autoLoader);
+        AnnotationRegistry::registerUniqueLoader($autoLoader);
+        AnnotationRegistry::loadAnnotationClass($className);
+        AnnotationRegistry::loadAnnotationClass($className);
+    }
 }
