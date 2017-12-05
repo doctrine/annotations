@@ -31,10 +31,10 @@ class FileCacheReaderTest extends AbstractReaderTest
     {
         $this->cacheDir = sys_get_temp_dir() . '/not_existed_dir_' . uniqid('', true);
 
-        self::assertFalse(is_dir($this->cacheDir));
+        self::assertDirectoryNotExists($this->cacheDir);
 
         new FileCacheReader(new AnnotationReader(), $this->cacheDir);
 
-        self::assertTrue(is_dir($this->cacheDir));
+        self::assertDirectoryExists($this->cacheDir);
     }
 }
