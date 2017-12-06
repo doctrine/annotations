@@ -117,6 +117,18 @@ final class AnnotationRegistry
     }
 
     /**
+     * Registers an autoloading callable for annotations, if it is not already registered
+     *
+     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     */
+    public static function registerUniqueLoader(callable $callable) : void
+    {
+        if ( ! in_array($callable, self::$loaders, true) ) {
+            self::registerLoader($callable);
+        }
+    }
+
+    /**
      * Autoloads an annotation class silently.
      */
     public static function loadAnnotationClass(string $class) : bool
