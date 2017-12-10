@@ -588,9 +588,7 @@ final class DocParser
     private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute)
     {
         // handle internal type declaration
-        $type = isset(self::$typeMap[$attribute->type])
-            ? self::$typeMap[$attribute->type]
-            : $attribute->type;
+        $type = self::$typeMap[$attribute->type] ?? $attribute->type;
 
         // handle the case if the property type is mixed
         if ('mixed' === $type) {

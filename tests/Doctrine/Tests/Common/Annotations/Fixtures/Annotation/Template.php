@@ -9,6 +9,6 @@ class Template
 
     public function __construct(array $values)
     {
-        $this->name = isset($values['value']) ? $values['value'] : null;
+        $this->name = $values['value'] ?? null;
     }
 }
