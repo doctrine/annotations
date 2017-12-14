@@ -22,3 +22,5 @@ require_once __DIR__ . '/../../../vendor/autoload.php';
 \Doctrine\Common\Annotations\AnnotationRegistry::registerAutoloadNamespace(
     'Doctrine\Tests\Common\Annotations\Fixtures', __DIR__ . '/../../'
 );
+
+\Doctrine\Common\Annotations\AnnotationRegistry::registerFile(__DIR__.'/Common/Annotations/Name.php');

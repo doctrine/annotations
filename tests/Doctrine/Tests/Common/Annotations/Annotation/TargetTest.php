@@ -36,13 +36,21 @@ class TargetTest extends TestCase
     {
         $target = new Target(array('value' => array('ALL')));
         self::assertEquals(Target::TARGET_ALL, $target->targets);
+        self::assertSame(['ALL'], $target->value);
+        self::assertSame('ALL', $target->literal);
+        self::assertInternalType('array', $target->value);
+        self::assertInternalType('string', $target->literal);
 
         $target = new Target(array('value' => array('METHOD', 'METHOD')));
         self::assertEquals(Target::TARGET_METHOD, $target->targets);
         self::assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
+        self::assertSame(['METHOD', 'METHOD'], $target->value);
+        self::assertSame('METHOD, METHOD', $target->literal);
 
         $target = new Target(array('value' => array('PROPERTY', 'METHOD')));
         self::assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
+        self::assertSame(['PROPERTY', 'METHOD'], $target->value);
+        self::assertSame('PROPERTY, METHOD', $target->literal);
     }
 }
 

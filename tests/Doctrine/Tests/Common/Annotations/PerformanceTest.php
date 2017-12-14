@@ -21,7 +21,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testCachedReadPerformanceWithInMemory()
+    public function testCachedReadPerformanceWithInMemory() :void
     {
         $reader = new CachedReader(new AnnotationReader(), new ArrayCache());
         $method = $this->getMethod();
@@ -38,7 +38,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testCachedReadPerformanceWithFileCache()
+    public function testCachedReadPerformanceWithFileCache() :void
     {
         $method = $this->getMethod();
 
@@ -60,7 +60,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testReadPerformance()
+    public function testReadPerformance() :void
     {
         $method = $this->getMethod();
 
@@ -77,7 +77,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testDocParsePerformance()
+    public function testDocParsePerformance() :void
     {
         $imports = array(
             'ignorephpdoc'     => 'Annotations\Annotation\IgnorePhpDoc',
@@ -115,7 +115,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testDocLexerPerformance()
+    public function testDocLexerPerformance() :void
     {
         $method = $this->getMethod();
         $methodComment = $method->getDocComment();
@@ -135,7 +135,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testPhpParserPerformanceWithShortCut()
+    public function testPhpParserPerformanceWithShortCut() :void
     {
         $class = new \ReflectionClass(Fixtures\NamespacedSingleClassLOC1000::class);
 
@@ -152,7 +152,7 @@ class PerformanceTest extends TestCase
     /**
      * @group performance
      */
-    public function testPhpParserPerformanceWithoutShortCut()
+    public function testPhpParserPerformanceWithoutShortCut() :void
     {
         $class = new \ReflectionClass(\SingleClassLOC1000::class);
 
@@ -166,12 +166,12 @@ class PerformanceTest extends TestCase
         $this->printResults('doc-parser-without-short-cut', $time, $c);
     }
 
-    private function getMethod()
+    private function getMethod() :\ReflectionMethod
     {
         return new \ReflectionMethod(Fixtures\Controller::class, 'helloAction');
     }
 
-    private function printResults($test, $time, $iterations)
+    private function printResults($test, $time, $iterations) :void
     {
         if (! $iterations) {
             throw new \InvalidArgumentException('$iterations cannot be zero.');

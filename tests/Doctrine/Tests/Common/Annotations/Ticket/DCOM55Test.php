@@ -38,7 +38,7 @@ class DCOM55Test extends TestCase
         $reader = new AnnotationReader();
         $annots = $reader->getClassAnnotations($class);
 
-        self::assertEmpty($annots);
+        self::assertSame([], $annots);
     }
 }
 

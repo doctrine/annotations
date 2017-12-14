@@ -12,7 +12,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testImportDetectsNotImportedAnnotation()
+    public function testImportDetectsNotImportedAnnotation() :void
     {
         parent::testImportDetectsNotImportedAnnotation();
     }
@@ -23,7 +23,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testImportDetectsNonExistentAnnotation()
+    public function testImportDetectsNonExistentAnnotation() :void
     {
         parent::testImportDetectsNonExistentAnnotation();
     }
@@ -34,7 +34,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtClassDocBlock() :void
     {
         parent::testClassWithInvalidAnnotationTargetAtClassDocBlock();
     }
@@ -45,7 +45,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock() :void
     {
         parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock();
     }
@@ -56,7 +56,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock() :void
     {
         parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock();
     }
@@ -67,7 +67,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock() :void
     {
         parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock();
     }
@@ -78,7 +78,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testErrorWhenInvalidAnnotationIsUsed()
+    public function testErrorWhenInvalidAnnotationIsUsed() :void
     {
         parent::testErrorWhenInvalidAnnotationIsUsed();
     }
@@ -86,7 +86,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * The SimpleAnnotationReader doens't include the @IgnoreAnnotation in the results.
      */
-    public function testInvalidAnnotationUsageButIgnoredClass()
+    public function testInvalidAnnotationUsageButIgnoredClass() :void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
@@ -95,7 +95,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         self::assertCount(1, $annots);
     }
 
-    public function testIncludeIgnoreAnnotation()
+    public function testIncludeIgnoreAnnotation() :void
     {
         $this->markTestSkipped('The simplified annotation reader would always autoload annotations');
     }
@@ -106,7 +106,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * Contrary to the behavior of the default annotation reader, @version is not ignored
      */
-    public function testInvalidAnnotationButIgnored()
+    public function testInvalidAnnotationButIgnored() :void
     {
         $reader = $this->getReader();
         $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
@@ -117,7 +117,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
-    protected function getReader()
+    protected function getReader() :SimpleAnnotationReader
     {
         $reader = new SimpleAnnotationReader();
         $reader->addNamespace(__NAMESPACE__);

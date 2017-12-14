@@ -17,7 +17,11 @@ class DCOM58Test extends TestCase
     public function testIssue()
     {
         $reader     = new AnnotationReader();
+
+        self::assertTrue(class_exists(\Doctrine\Common\Annotations\Annotation\IgnoreAnnotation::class), false);
+
         $result     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__ . '\MappedClass'));
+        self::assertInstanceOf(\Entity::class, $result[0]); // Global entity inside DCOM58Entity.php
 
         $classAnnotations = array_combine(
             array_map('get_class', $result),
@@ -53,7 +57,7 @@ class DCOM58Test extends TestCase
         self::assertInstanceOf(Doctrine\ORM\Entity::class, $annots[0]);
     }
 
-    public function testIssueMultipleNamespaces()
+    public function testChoseFirstOneIfHaveMultipleNamespaces()
     {
         $docblock   = '@Entity';
         $parser     = new DocParser();

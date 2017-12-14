@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DocLexerTest extends TestCase
 {
-    public function testMarkerAnnotation()
+    public function testMarkerAnnotation() :void
     {
         $lexer = new DocLexer;
 
@@ -17,16 +17,23 @@ class DocLexerTest extends TestCase
 
         self::assertTrue($lexer->moveNext());
         self::assertNull($lexer->token);
+        self::assertNotNull($lexer->lookahead);
         self::assertEquals('@', $lexer->lookahead['value']);
+        self::assertEquals('0', $lexer->lookahead['position']);
 
+        $oldLookAhead = $lexer->lookahead;
         self::assertTrue($lexer->moveNext());
+        self::assertSame($oldLookAhead, $lexer->token);
         self::assertEquals('@', $lexer->token['value']);
         self::assertEquals('Name', $lexer->lookahead['value']);
 
+        $oldLookAhead = $lexer->lookahead;
         self::assertFalse($lexer->moveNext());
+        self::assertSame($oldLookAhead, $lexer->token);
+        self::assertNull($lexer->lookahead);
     }
 
-    public function testScannerTokenizesDocBlockWhitConstants()
+    public function testScannerTokenizesDocBlockWhitConstants() :void
     {
         $lexer      = new DocLexer();
         $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
@@ -114,7 +121,7 @@ class DocLexerTest extends TestCase
     }
 
 
-    public function testScannerTokenizesDocBlockWhitInvalidIdentifier()
+    public function testScannerTokenizesDocBlockWhitInvalidIdentifier() :void
     {
         $lexer      = new DocLexer();
         $docblock   = '@Foo\3.42';
@@ -158,7 +165,7 @@ class DocLexerTest extends TestCase
     /**
      * @group 44
      */
-    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit()
+    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit() :void
     {
         $lexer = new DocLexer();
 
@@ -170,7 +177,7 @@ class DocLexerTest extends TestCase
     /**
      * @group 44
      */
-    public function testRecognizesDoubleQuotesEscapeSequence()
+    public function testRecognizesDoubleQuotesEscapeSequence() :void
     {
         $lexer    = new DocLexer();
         $docblock = '@Foo("""' . "\n" . '""")';

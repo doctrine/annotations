@@ -3,20 +3,22 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Annotations\FileCacheReader;
+use Doctrine\Common\Cache\FilesystemCache;
 
 class FileCacheReaderTest extends AbstractReaderTest
 {
     private $cacheDir;
 
-    protected function getReader()
+    protected function getReader() :FileCacheReader
     {
         $this->cacheDir = sys_get_temp_dir() . '/annotations_' . uniqid('', true);
         @mkdir($this->cacheDir);
         return new FileCacheReader(new AnnotationReader(), $this->cacheDir);
     }
 
-    public function tearDown()
+    public function tearDown() :void
     {
         foreach (glob($this->cacheDir.'/*.php') AS $file) {
             unlink($file);
@@ -27,7 +29,7 @@ class FileCacheReaderTest extends AbstractReaderTest
     /**
      * @group DCOM-81
      */
-    public function testAttemptToCreateAnnotationCacheDir()
+    public function testAttemptToCreateAnnotationCacheDir() :void
     {
         $this->cacheDir = sys_get_temp_dir() . '/not_existed_dir_' . uniqid('', true);
 
