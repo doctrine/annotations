@@ -11,7 +11,4 @@ parameters:
         - '#Class Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment not found#'
         - '#Instantiated class Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment not found#'
         - '#Property Doctrine\\Tests\\Common\\Annotations\\DummyClassNonAnnotationProblem::\$foo has unknown class#'
-        - '#Class Doctrine\\Tests\\Common\\Annotations\\True not found#'
-        - '#Class Doctrine\\Tests\\Common\\Annotations\\False not found#'
-        - '#Class Doctrine\\Tests\\Common\\Annotations\\Null not found#'
         - '#Call to an undefined method ReflectionClass::getUseStatements\(\)#'

@@ -1243,30 +1243,6 @@ DOCBLOCK;
         self::assertInternalType('float', $annot->value);
     }
 
-    public function testReservedKeywordsInAnnotations()
-    {
-        if (PHP_VERSION_ID >= 70000) {
-            $this->markTestSkipped('This test requires PHP 5.6 or lower.');
-        }
-        require __DIR__ . '/ReservedKeywordsClasses.php';
-
-        $parser = $this->createTestParser();
-
-        $result = $parser->parse('@Doctrine\Tests\Common\Annotations\True');
-        self::assertInstanceOf(True::class, $result[0]);
-        $result = $parser->parse('@Doctrine\Tests\Common\Annotations\False');
-        self::assertInstanceOf(False::class, $result[0]);
-        $result = $parser->parse('@Doctrine\Tests\Common\Annotations\Null');
-        self::assertInstanceOf(Null::class, $result[0]);
-
-        $result = $parser->parse('@True');
-        self::assertInstanceOf(True::class, $result[0]);
-        $result = $parser->parse('@False');
-        self::assertInstanceOf(False::class, $result[0]);
-        $result = $parser->parse('@Null');
-        self::assertInstanceOf(Null::class, $result[0]);
-    }
-
      /**
      * @expectedException \Doctrine\Common\Annotations\AnnotationException
      * @expectedExceptionMessage [Creation Error] The annotation @SomeAnnotationClassNameWithoutConstructor declared on some class does not have a property named "invalidaProperty". Available properties: data, name
