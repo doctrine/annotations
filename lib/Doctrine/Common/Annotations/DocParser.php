@@ -138,7 +138,7 @@ final class DocParser
      * @var array
      */
     private static $annotationMetadata = array(
-        'Doctrine\Common\Annotations\Annotation\Target' => array(
+        Target::class => array(
             'is_annotation'    => true,
             'has_constructor'  => true,
             'properties'       => array(),
@@ -154,7 +154,7 @@ final class DocParser
                 )
              ),
         ),
-        'Doctrine\Common\Annotations\Annotation\Attribute' => array(
+        Attribute::class => array(
             'is_annotation'    => true,
             'has_constructor'  => false,
             'targets_literal'  => 'ANNOTATION_ANNOTATION',
@@ -183,7 +183,7 @@ final class DocParser
                 )
              ),
         ),
-        'Doctrine\Common\Annotations\Annotation\Attributes' => array(
+        Attributes::class => array(
             'is_annotation'    => true,
             'has_constructor'  => false,
             'targets_literal'  => 'ANNOTATION_CLASS',
@@ -196,12 +196,12 @@ final class DocParser
                 'value' => array(
                     'type'      =>'array',
                     'required'  =>true,
-                    'array_type'=>'Doctrine\Common\Annotations\Annotation\Attribute',
+                    'array_type'=> Attribute::class,
                     'value'     =>'array<Doctrine\Common\Annotations\Annotation\Attribute>'
                 )
              ),
         ),
-        'Doctrine\Common\Annotations\Annotation\Enum' => array(
+        Enum::class => array(
             'is_annotation'    => true,
             'has_constructor'  => true,
             'targets_literal'  => 'ANNOTATION_PROPERTY',
@@ -484,10 +484,10 @@ final class DocParser
             self::$metadataParser->setIgnoreNotImportedAnnotations(true);
             self::$metadataParser->setIgnoredAnnotationNames($this->ignoredAnnotationNames);
             self::$metadataParser->setImports(array(
-                'enum'          => 'Doctrine\Common\Annotations\Annotation\Enum',
-                'target'        => 'Doctrine\Common\Annotations\Annotation\Target',
-                'attribute'     => 'Doctrine\Common\Annotations\Annotation\Attribute',
-                'attributes'    => 'Doctrine\Common\Annotations\Annotation\Attributes'
+                'enum'          => Enum::class,
+                'target'        => Target::class,
+                'attribute'     => Attribute::class,
+                'attributes'    => Attributes::class
             ));
 
             AnnotationRegistry::registerFile(__DIR__ . '/Annotation/Enum.php');

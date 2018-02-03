@@ -88,7 +88,7 @@ class CachedReaderTest extends AbstractReaderTest
         touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cacheTime - 10);
 
         $this->doTestCacheFresh(
-            'Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTrait',
+            Fixtures\ClassThatUsesTraitThatUsesAnotherTrait::class,
             $cacheTime
         );
     }
@@ -136,7 +136,7 @@ class CachedReaderTest extends AbstractReaderTest
         $route->pattern = '/someprefix';
 
         /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
-        $cache = $this->createMock('Doctrine\Common\Cache\Cache');
+        $cache = $this->createMock(Cache::class);
         $cache
             ->expects($this->at(0))
             ->method('fetch')
