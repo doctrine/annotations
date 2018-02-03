@@ -16,6 +16,9 @@ matrix:
     - php: 7.1
       env: PHPSTAN=1
 
+before_install:
+  - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
+
 before_script:
     - composer install -n
     - if [[ $PHPSTAN = 1 ]]; then composer require --dev phpstan/phpstan:^0.7; fi
