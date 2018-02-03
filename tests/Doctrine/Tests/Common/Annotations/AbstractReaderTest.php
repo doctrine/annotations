@@ -35,7 +35,7 @@ abstract class AbstractReaderTest extends TestCase
         $methodAnnots = $reader->getMethodAnnotations($getField1Method);
         self::assertCount(1, $methodAnnots);
         self::assertInstanceOf($annotName, $annot = $reader->getMethodAnnotation($getField1Method, $annotName));
-        self::assertEquals(array(1, 2, 'three'), $annot->value);
+        self::assertEquals([1, 2, 'three'], $annot->value);
 
         $field2Prop = $class->getProperty('field2');
         $propAnnots = $reader->getPropertyAnnotations($field2Prop);
@@ -52,7 +52,7 @@ abstract class AbstractReaderTest extends TestCase
 
         $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField1'), DummyAnnotation::class);
         self::assertEquals('', $dummyAnnot->dummyValue);
-        self::assertEquals(array(1, 2, 'three'), $dummyAnnot->value);
+        self::assertEquals([1, 2, 'three'], $dummyAnnot->value);
 
         $dummyAnnot = $reader->getMethodAnnotation($class->getMethod('getField3'), DummyAnnotation::class);
         self::assertEquals('\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d', $dummyAnnot->value);

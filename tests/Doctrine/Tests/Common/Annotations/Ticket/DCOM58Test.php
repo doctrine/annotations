@@ -31,9 +31,9 @@ class DCOM58Test extends TestCase
     {
         $docblock   = '@Entity';
         $parser     = new DocParser();
-        $parser->setImports(array(
+        $parser->setImports([
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping'
-        ));
+        ]);
 
         $annots     = $parser->parse($docblock);
 

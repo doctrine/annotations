@@ -43,13 +43,13 @@ final class PhpParser
         }
 
         if (false === $filename = $class->getFileName()) {
-            return array();
+            return [];
         }
 
         $content = $this->getFileContent($filename, $class->getStartLine());
 
         if (null === $content) {
-            return array();
+            return [];
         }
 
         $namespace = preg_quote($class->getNamespaceName());

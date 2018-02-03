@@ -34,14 +34,14 @@ class TargetTest extends TestCase
      */
     public function testValidMixedTargets()
     {
-        $target = new Target(array('value' => array('ALL')));
+        $target = new Target(['value' => ['ALL']]);
         self::assertEquals(Target::TARGET_ALL, $target->targets);
 
-        $target = new Target(array('value' => array('METHOD', 'METHOD')));
+        $target = new Target(['value' => ['METHOD', 'METHOD']]);
         self::assertEquals(Target::TARGET_METHOD, $target->targets);
         self::assertNotEquals(Target::TARGET_PROPERTY, $target->targets);
 
-        $target = new Target(array('value' => array('PROPERTY', 'METHOD')));
+        $target = new Target(['value' => ['PROPERTY', 'METHOD']]);
         self::assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
     }
 }

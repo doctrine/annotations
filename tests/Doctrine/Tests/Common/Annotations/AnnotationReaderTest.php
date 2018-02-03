@@ -64,7 +64,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(Fixtures\ClassWithNotRegisteredAnnotationUsed::class);
 
         $annotations = $reader->getMethodAnnotations($ref->getMethod('methodWithNotRegisteredAnnotation'));
-        self::assertEquals(array(), $annotations);
+        self::assertEquals([], $annotations);
     }
 
     /**

@@ -41,9 +41,9 @@ class AnnotationReader implements Reader
      *
      * @var array
      */
-    private static $globalImports = array(
+    private static $globalImports = [
         'ignoreannotation' => 'Doctrine\Common\Annotations\Annotation\IgnoreAnnotation',
-    );
+    ];
 
     /**
      * A list with annotations that are not causing exceptions when not resolved to an annotation class.
@@ -52,7 +52,7 @@ class AnnotationReader implements Reader
      *
      * @var array
      */
-    private static $globalIgnoredNames = array(
+    private static $globalIgnoredNames = [
         // Annotation tags
         'Annotation' => true, 'Attribute' => true, 'Attributes' => true,
         /* Can we enable this? 'Enum' => true, */
@@ -102,7 +102,7 @@ class AnnotationReader implements Reader
         'startuml' => true, 'enduml' => true,
         // Symfony 3.3 Cache Adapter
         'experimental' => true
-    );
+    ];
 
     /**
      * A list with annotations that are not causing exceptions when not resolved to an annotation class.
@@ -111,7 +111,7 @@ class AnnotationReader implements Reader
      *
      * @var array
      */
-    private static $globalIgnoredNamespaces = array();
+    private static $globalIgnoredNamespaces = [];
 
     /**
      * Add a new annotation to the globally ignored annotation names with regard to exception handling.
@@ -159,14 +159,14 @@ class AnnotationReader implements Reader
      *
      * @var array
      */
-    private $imports = array();
+    private $imports = [];
 
     /**
      * In-memory cache mechanism to store ignored annotations per class.
      *
      * @var array
      */
-    private $ignoredAnnotationNames = array();
+    private $ignoredAnnotationNames = [];
 
     /**
      * Constructor.
@@ -342,7 +342,7 @@ class AnnotationReader implements Reader
         $class = $method->getDeclaringClass();
         $classImports = $this->getClassImports($class);
 
-        $traitImports = array();
+        $traitImports = [];
 
         foreach ($class->getTraits() as $trait) {
             if ($trait->hasMethod($method->getName())
@@ -367,7 +367,7 @@ class AnnotationReader implements Reader
         $class = $property->getDeclaringClass();
         $classImports = $this->getClassImports($class);
 
-        $traitImports = array();
+        $traitImports = [];
 
         foreach ($class->getTraits() as $trait) {
             if ($trait->hasProperty($property->getName())) {
@@ -401,7 +401,7 @@ class AnnotationReader implements Reader
         $this->imports[$name] = array_merge(
             self::$globalImports,
             $this->phpParser->parseClass($class),
-            array('__NAMESPACE__' => $class->getNamespaceName())
+            ['__NAMESPACE__' => $class->getNamespaceName()]
         );
 
         $this->ignoredAnnotationNames[$name] = $ignoredAnnotationNames;
