@@ -3,7 +3,7 @@ language: php
 sudo: false
 
 cache:
-  directory:
+  directories:
     - $HOME/.composer/cache
 
 php:
