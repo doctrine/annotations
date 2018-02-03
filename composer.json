@@ -20,6 +20,9 @@
         "doctrine/cache": "1.*",
         "phpunit/phpunit": "^7.0"
     },
+    "config": {
+        "sort-packages": true
+    },
     "autoload": {
         "psr-4": { "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations" }
     },
