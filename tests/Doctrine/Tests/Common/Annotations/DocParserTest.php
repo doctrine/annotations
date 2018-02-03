@@ -308,9 +308,9 @@ DOCBLOCK;
     {
 
         $parser = new DocParser;
-        $parser->setImports(array(
+        $parser->setImports([
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations\Fixtures',
-        ));
+        ]);
         $class  = new \ReflectionClass(Fixtures\ClassWithValidAnnotationTarget::class);
 
 
@@ -387,134 +387,134 @@ DOCBLOCK;
     public function getAnnotationVarTypeProviderValid()
     {
         //({attribute name}, {attribute value})
-         return array(
+         return [
             // mixed type
-            array('mixed', '"String Value"'),
-            array('mixed', 'true'),
-            array('mixed', 'false'),
-            array('mixed', '1'),
-            array('mixed', '1.2'),
-            array('mixed', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
+            ['mixed', '"String Value"'],
+            ['mixed', 'true'],
+            ['mixed', 'false'],
+            ['mixed', '1'],
+            ['mixed', '1.2'],
+            ['mixed', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'],
 
             // boolean type
-            array('boolean', 'true'),
-            array('boolean', 'false'),
+            ['boolean', 'true'],
+            ['boolean', 'false'],
 
             // alias for internal type boolean
-            array('bool', 'true'),
-            array('bool', 'false'),
+            ['bool', 'true'],
+            ['bool', 'false'],
 
             // integer type
-            array('integer', '0'),
-            array('integer', '1'),
-            array('integer', '123456789'),
-            array('integer', '9223372036854775807'),
+            ['integer', '0'],
+            ['integer', '1'],
+            ['integer', '123456789'],
+            ['integer', '9223372036854775807'],
 
             // alias for internal type double
-            array('float', '0.1'),
-            array('float', '1.2'),
-            array('float', '123.456'),
+            ['float', '0.1'],
+            ['float', '1.2'],
+            ['float', '123.456'],
 
             // string type
-            array('string', '"String Value"'),
-            array('string', '"true"'),
-            array('string', '"123"'),
+            ['string', '"String Value"'],
+            ['string', '"true"'],
+            ['string', '"123"'],
 
               // array type
-            array('array', '{@AnnotationExtendsAnnotationTargetAll}'),
-            array('array', '{@AnnotationExtendsAnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll}'),
+            ['array', '{@AnnotationExtendsAnnotationTargetAll}'],
+            ['array', '{@AnnotationExtendsAnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll}'],
 
-            array('arrayOfIntegers', '1'),
-            array('arrayOfIntegers', '{1}'),
-            array('arrayOfIntegers', '{1,2,3,4}'),
-            array('arrayOfAnnotations', '@AnnotationExtendsAnnotationTargetAll'),
-            array('arrayOfAnnotations', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'),
-            array('arrayOfAnnotations', '{@AnnotationExtendsAnnotationTargetAll, @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'),
+            ['arrayOfIntegers', '1'],
+            ['arrayOfIntegers', '{1}'],
+            ['arrayOfIntegers', '{1,2,3,4}'],
+            ['arrayOfAnnotations', '@AnnotationExtendsAnnotationTargetAll'],
+            ['arrayOfAnnotations', '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'],
+            ['arrayOfAnnotations', '{@AnnotationExtendsAnnotationTargetAll, @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll}'],
 
             // annotation instance
-            array('annotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'),
-            array('annotation', '@AnnotationExtendsAnnotationTargetAll'),
-        );
+            ['annotation', '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll'],
+            ['annotation', '@AnnotationExtendsAnnotationTargetAll'],
+        ];
     }
 
     public function getAnnotationVarTypeProviderInvalid()
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
-         return array(
+         return [
             // boolean type
-            array('boolean','boolean','1','integer'),
-            array('boolean','boolean','1.2','double'),
-            array('boolean','boolean','"str"','string'),
-            array('boolean','boolean','{1,2,3}','array'),
-            array('boolean','boolean','@Name', 'an instance of Doctrine\Tests\Common\Annotations\Name'),
+            ['boolean','boolean','1','integer'],
+            ['boolean','boolean','1.2','double'],
+            ['boolean','boolean','"str"','string'],
+            ['boolean','boolean','{1,2,3}','array'],
+            ['boolean','boolean','@Name', 'an instance of Doctrine\Tests\Common\Annotations\Name'],
 
             // alias for internal type boolean
-            array('bool','bool', '1','integer'),
-            array('bool','bool', '1.2','double'),
-            array('bool','bool', '"str"','string'),
-            array('bool','bool', '{"str"}','array'),
+            ['bool','bool', '1','integer'],
+            ['bool','bool', '1.2','double'],
+            ['bool','bool', '"str"','string'],
+            ['bool','bool', '{"str"}','array'],
 
             // integer type
-            array('integer','integer', 'true','boolean'),
-            array('integer','integer', 'false','boolean'),
-            array('integer','integer', '1.2','double'),
-            array('integer','integer', '"str"','string'),
-            array('integer','integer', '{"str"}','array'),
-            array('integer','integer', '{1,2,3,4}','array'),
+            ['integer','integer', 'true','boolean'],
+            ['integer','integer', 'false','boolean'],
+            ['integer','integer', '1.2','double'],
+            ['integer','integer', '"str"','string'],
+            ['integer','integer', '{"str"}','array'],
+            ['integer','integer', '{1,2,3,4}','array'],
 
             // alias for internal type double
-            array('float','float', 'true','boolean'),
-            array('float','float', 'false','boolean'),
-            array('float','float', '123','integer'),
-            array('float','float', '"str"','string'),
-            array('float','float', '{"str"}','array'),
-            array('float','float', '{12.34}','array'),
-            array('float','float', '{1,2,3}','array'),
+            ['float','float', 'true','boolean'],
+            ['float','float', 'false','boolean'],
+            ['float','float', '123','integer'],
+            ['float','float', '"str"','string'],
+            ['float','float', '{"str"}','array'],
+            ['float','float', '{12.34}','array'],
+            ['float','float', '{1,2,3}','array'],
 
             // string type
-            array('string','string', 'true','boolean'),
-            array('string','string', 'false','boolean'),
-            array('string','string', '12','integer'),
-            array('string','string', '1.2','double'),
-            array('string','string', '{"str"}','array'),
-            array('string','string', '{1,2,3,4}','array'),
+            ['string','string', 'true','boolean'],
+            ['string','string', 'false','boolean'],
+            ['string','string', '12','integer'],
+            ['string','string', '1.2','double'],
+            ['string','string', '{"str"}','array'],
+            ['string','string', '{1,2,3,4}','array'],
 
              // annotation instance
-            array('annotation', AnnotationTargetAll::class, 'true','boolean'),
-            array('annotation', AnnotationTargetAll::class, 'false','boolean'),
-            array('annotation', AnnotationTargetAll::class, '12','integer'),
-            array('annotation', AnnotationTargetAll::class, '1.2','double'),
-            array('annotation', AnnotationTargetAll::class, '{"str"}','array'),
-            array('annotation', AnnotationTargetAll::class, '{1,2,3,4}','array'),
-            array('annotation', AnnotationTargetAll::class, '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'),
-        );
+            ['annotation', AnnotationTargetAll::class, 'true','boolean'],
+            ['annotation', AnnotationTargetAll::class, 'false','boolean'],
+            ['annotation', AnnotationTargetAll::class, '12','integer'],
+            ['annotation', AnnotationTargetAll::class, '1.2','double'],
+            ['annotation', AnnotationTargetAll::class, '{"str"}','array'],
+            ['annotation', AnnotationTargetAll::class, '{1,2,3,4}','array'],
+            ['annotation', AnnotationTargetAll::class, '@Name','an instance of Doctrine\Tests\Common\Annotations\Name'],
+        ];
     }
 
     public function getAnnotationVarTypeArrayProviderInvalid()
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
-         return array(
-            array('arrayOfIntegers', 'integer', 'true', 'boolean'),
-            array('arrayOfIntegers', 'integer', 'false', 'boolean'),
-            array('arrayOfIntegers', 'integer', '{true,true}', 'boolean'),
-            array('arrayOfIntegers', 'integer', '{1,true}', 'boolean'),
-            array('arrayOfIntegers', 'integer', '{1,2,1.2}', 'double'),
-            array('arrayOfIntegers', 'integer', '{1,2,"str"}', 'string'),
+         return [
+            ['arrayOfIntegers', 'integer', 'true', 'boolean'],
+            ['arrayOfIntegers', 'integer', 'false', 'boolean'],
+            ['arrayOfIntegers', 'integer', '{true,true}', 'boolean'],
+            ['arrayOfIntegers', 'integer', '{1,true}', 'boolean'],
+            ['arrayOfIntegers', 'integer', '{1,2,1.2}', 'double'],
+            ['arrayOfIntegers', 'integer', '{1,2,"str"}', 'string'],
 
-            array('arrayOfStrings', 'string', 'true', 'boolean'),
-            array('arrayOfStrings', 'string', 'false', 'boolean'),
-            array('arrayOfStrings', 'string', '{true,true}', 'boolean'),
-            array('arrayOfStrings', 'string', '{"foo",true}', 'boolean'),
-            array('arrayOfStrings', 'string', '{"foo","bar",1.2}', 'double'),
-            array('arrayOfStrings', 'string', '1', 'integer'),
+            ['arrayOfStrings', 'string', 'true', 'boolean'],
+            ['arrayOfStrings', 'string', 'false', 'boolean'],
+            ['arrayOfStrings', 'string', '{true,true}', 'boolean'],
+            ['arrayOfStrings', 'string', '{"foo",true}', 'boolean'],
+            ['arrayOfStrings', 'string', '{"foo","bar",1.2}', 'double'],
+            ['arrayOfStrings', 'string', '1', 'integer'],
 
-            array('arrayOfAnnotations', AnnotationTargetAll::class, 'true', 'boolean'),
-            array('arrayOfAnnotations', AnnotationTargetAll::class, 'false', 'boolean'),
-            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
-            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'),
-            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}', 'double'),
-            array('arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}', 'string'),
-        );
+            ['arrayOfAnnotations', AnnotationTargetAll::class, 'true', 'boolean'],
+            ['arrayOfAnnotations', AnnotationTargetAll::class, 'false', 'boolean'],
+            ['arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'],
+            ['arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,true}', 'boolean'],
+            ['arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,1.2}', 'double'],
+            ['arrayOfAnnotations', AnnotationTargetAll::class, '{@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll,@AnnotationExtendsAnnotationTargetAll,"str"}', 'string'],
+        ];
     }
 
     /**
@@ -762,96 +762,96 @@ DOCBLOCK;
 
     public function getConstantsProvider()
     {
-        $provider[] = array(
+        $provider[] = [
             '@AnnotationWithConstants(PHP_EOL)',
             PHP_EOL
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(AnnotationWithConstants::INTEGER)',
             AnnotationWithConstants::INTEGER
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants(AnnotationWithConstants::STRING)',
             AnnotationWithConstants::STRING
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::FLOAT)',
             AnnotationWithConstants::FLOAT
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(ClassWithConstants::SOME_VALUE)',
             ClassWithConstants::SOME_VALUE
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(ClassWithConstants::OTHER_KEY_)',
             ClassWithConstants::OTHER_KEY_
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(ClassWithConstants::OTHER_KEY_2)',
             ClassWithConstants::OTHER_KEY_2
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_VALUE)',
             ClassWithConstants::SOME_VALUE
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(InterfaceWithConstants::SOME_VALUE)',
             InterfaceWithConstants::SOME_VALUE
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(\Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)',
             InterfaceWithConstants::SOME_VALUE
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants({AnnotationWithConstants::STRING, AnnotationWithConstants::INTEGER, AnnotationWithConstants::FLOAT})',
-            array(AnnotationWithConstants::STRING, AnnotationWithConstants::INTEGER, AnnotationWithConstants::FLOAT)
-        );
-        $provider[] = array(
+            [AnnotationWithConstants::STRING, AnnotationWithConstants::INTEGER, AnnotationWithConstants::FLOAT]
+        ];
+        $provider[] = [
             '@AnnotationWithConstants({
                 AnnotationWithConstants::STRING = AnnotationWithConstants::INTEGER
              })',
-            array(AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER)
-        );
-        $provider[] = array(
+            [AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER]
+        ];
+        $provider[] = [
             '@AnnotationWithConstants({
                 Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
              })',
-            array(InterfaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
-        );
-        $provider[] = array(
+            [InterfaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER]
+        ];
+        $provider[] = [
             '@AnnotationWithConstants({
                 \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_KEY = AnnotationWithConstants::INTEGER
              })',
-            array(InterfaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER)
-        );
-        $provider[] = array(
+            [InterfaceWithConstants::SOME_KEY => AnnotationWithConstants::INTEGER]
+        ];
+        $provider[] = [
             '@AnnotationWithConstants({
                 AnnotationWithConstants::STRING = AnnotationWithConstants::INTEGER,
                 ClassWithConstants::SOME_KEY = ClassWithConstants::SOME_VALUE,
                 Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_KEY = InterfaceWithConstants::SOME_VALUE
              })',
-            array(
+            [
                 AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER,
                 ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
                 ClassWithConstants::SOME_KEY    => InterfaceWithConstants::SOME_VALUE
-            )
-        );
-        $provider[] = array(
+            ]
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(AnnotationWithConstants::class)',
             AnnotationWithConstants::class
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@AnnotationWithConstants({AnnotationWithConstants::class = AnnotationWithConstants::class})',
-            array(AnnotationWithConstants::class => AnnotationWithConstants::class)
-        );
-        $provider[] = array(
+            [AnnotationWithConstants::class => AnnotationWithConstants::class]
+        ];
+        $provider[] = [
             '@AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
             AnnotationWithConstants::class
-        );
-        $provider[] = array(
+        ];
+        $provider[] = [
             '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
             AnnotationWithConstants::class
-        );
+        ];
         return $provider;
     }
 
@@ -861,11 +861,11 @@ DOCBLOCK;
     public function testSupportClassConstants($docblock, $expected)
     {
         $parser = $this->createTestParser();
-        $parser->setImports(array(
+        $parser->setImports([
             'classwithconstants'        => ClassWithConstants::class,
             'interfacewithconstants'    => InterfaceWithConstants::class,
             'annotationwithconstants'   => AnnotationWithConstants::class
-        ));
+        ]);
 
         $result = $parser->parse($docblock);
         self::assertInstanceOf(AnnotationWithConstants::class, $annotation = $result[0]);
@@ -1020,7 +1020,7 @@ DOCBLOCK;
     public function testIgnoreWholeNamespaces($ignoreAnnotationName, $input)
     {
         $parser = new DocParser();
-        $parser->setIgnoredAnnotationNamespaces(array($ignoreAnnotationName => true));
+        $parser->setIgnoredAnnotationNamespaces([$ignoreAnnotationName => true]);
         $result = $parser->parse($input);
 
         self::assertEmpty($result);
@@ -1028,25 +1028,25 @@ DOCBLOCK;
 
     public function provideTestIgnoreWholeNamespaces()
     {
-        return array(
-            array('Namespace', '@Namespace'),
-            array('Namespace\\', '@Namespace'),
+        return [
+            ['Namespace', '@Namespace'],
+            ['Namespace\\', '@Namespace'],
 
-            array('Namespace', '@Namespace\Subnamespace'),
-            array('Namespace\\', '@Namespace\Subnamespace'),
+            ['Namespace', '@Namespace\Subnamespace'],
+            ['Namespace\\', '@Namespace\Subnamespace'],
 
-            array('Namespace', '@Namespace\Subnamespace\SubSubNamespace'),
-            array('Namespace\\', '@Namespace\Subnamespace\SubSubNamespace'),
+            ['Namespace', '@Namespace\Subnamespace\SubSubNamespace'],
+            ['Namespace\\', '@Namespace\Subnamespace\SubSubNamespace'],
 
-            array('Namespace\Subnamespace', '@Namespace\Subnamespace'),
-            array('Namespace\Subnamespace\\', '@Namespace\Subnamespace'),
+            ['Namespace\Subnamespace', '@Namespace\Subnamespace'],
+            ['Namespace\Subnamespace\\', '@Namespace\Subnamespace'],
 
-            array('Namespace\Subnamespace', '@Namespace\Subnamespace\SubSubNamespace'),
-            array('Namespace\Subnamespace\\', '@Namespace\Subnamespace\SubSubNamespace'),
+            ['Namespace\Subnamespace', '@Namespace\Subnamespace\SubSubNamespace'],
+            ['Namespace\Subnamespace\\', '@Namespace\Subnamespace\SubSubNamespace'],
 
-            array('Namespace\Subnamespace\SubSubNamespace', '@Namespace\Subnamespace\SubSubNamespace'),
-            array('Namespace\Subnamespace\SubSubNamespace\\', '@Namespace\Subnamespace\SubSubNamespace'),
-        );
+            ['Namespace\Subnamespace\SubSubNamespace', '@Namespace\Subnamespace\SubSubNamespace'],
+            ['Namespace\Subnamespace\SubSubNamespace\\', '@Namespace\Subnamespace\SubSubNamespace'],
+        ];
     }
 
     /**
@@ -1056,7 +1056,7 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $parser->setIgnoredAnnotationNames(array(\PHPUnit\Framework\TestCase::class => true));
+        $parser->setIgnoredAnnotationNames([\PHPUnit\Framework\TestCase::class => true]);
         $result = $parser->parse('@\PHPUnit\Framework\TestCase');
 
         self::assertEmpty($result);
@@ -1113,9 +1113,9 @@ DOCBLOCK;
 
         AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Common\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
 
-        $parser->setImports(array(
+        $parser->setImports([
             'autoload' => Fixtures\Annotation\Autoload::class,
-        ));
+        ]);
         $annotations = $parser->parse('@Autoload');
 
         self::assertCount(1, $annotations);
@@ -1126,10 +1126,10 @@ DOCBLOCK;
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
-        $parser->setImports(array(
+        $parser->setImports([
             'name' => Name::class,
             '__NAMESPACE__' => 'Doctrine\Tests\Common\Annotations',
-        ));
+        ]);
 
         return $parser;
     }
@@ -1277,7 +1277,7 @@ DOCBLOCK;
             "Bar",
         })');
         self::assertCount(1, $annots);
-        self::assertEquals(array('Foo', 'Bar'), $annots[0]->value);
+        self::assertEquals(['Foo', 'Bar'], $annots[0]->value);
     }
 
     public function testTabPrefixIsAllowed()
@@ -1309,7 +1309,7 @@ DOCBLOCK;
 
         $annots = $parser->parse('@Name({"foo": "bar"})');
         self::assertCount(1, $annots);
-        self::assertEquals(array('foo' => 'bar'), $annots[0]->value);
+        self::assertEquals(['foo' => 'bar'], $annots[0]->value);
     }
 
     /**
@@ -1331,7 +1331,7 @@ DOCBLOCK;
 
         $annots = $parser->parse('@Name({"foo": {}})');
         self::assertCount(1, $annots);
-        self::assertEquals(array('foo' => array()), $annots[0]->value);
+        self::assertEquals(['foo' => []], $annots[0]->value);
     }
 
     public function testKeyHasNumber()
@@ -1340,7 +1340,7 @@ DOCBLOCK;
         $annots = $parser->parse('@SettingsAnnotation(foo="test", bar2="test")');
 
         self::assertCount(1, $annots);
-        self::assertEquals(array('foo' => 'test', 'bar2' => 'test'), $annots[0]->settings);
+        self::assertEquals(['foo' => 'test', 'bar2' => 'test'], $annots[0]->settings);
     }
 
     /**

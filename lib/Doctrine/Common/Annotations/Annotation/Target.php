@@ -39,13 +39,13 @@ final class Target
     /**
      * @var array
      */
-    private static $map = array(
+    private static $map = [
         'ALL'        => self::TARGET_ALL,
         'CLASS'      => self::TARGET_CLASS,
         'METHOD'     => self::TARGET_METHOD,
         'PROPERTY'   => self::TARGET_PROPERTY,
         'ANNOTATION' => self::TARGET_ANNOTATION,
-    );
+    ];
 
     /**
      * @var array
@@ -79,7 +79,7 @@ final class Target
             $values['value'] = null;
         }
         if (is_string($values['value'])){
-            $values['value'] = array($values['value']);
+            $values['value'] = [$values['value']];
         }
         if (!is_array($values['value'])){
             throw new \InvalidArgumentException(

@@ -20,6 +20,6 @@ class ControllerWithTrait
      */
     public function indexAction()
     {
-        return array();
+        return [];
     }
 }

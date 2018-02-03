@@ -103,7 +103,7 @@ class CachedReaderTest extends AbstractReaderTest
             ->expects($this->at(0))
             ->method('fetch')
             ->with($this->equalTo($cacheKey))
-            ->will($this->returnValue(array())) // Result was cached, but there was no annotation
+            ->will($this->returnValue([])) // Result was cached, but there was no annotation
         ;
         $cache
             ->expects($this->at(1))
@@ -126,7 +126,7 @@ class CachedReaderTest extends AbstractReaderTest
         $route = new Route();
         $route->pattern = '/someprefix';
 
-        self::assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+        self::assertEquals([$route], $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
     protected function doTestCacheFresh($className, $lastCacheModification)
@@ -141,7 +141,7 @@ class CachedReaderTest extends AbstractReaderTest
             ->expects($this->at(0))
             ->method('fetch')
             ->with($this->equalTo($cacheKey))
-            ->will($this->returnValue(array($route))); // Result was cached, but there was an annotation;
+            ->will($this->returnValue([$route])); // Result was cached, but there was an annotation;
         $cache
             ->expects($this->at(1))
             ->method('fetch')
@@ -151,7 +151,7 @@ class CachedReaderTest extends AbstractReaderTest
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
 
-        $this->assertEquals(array($route), $reader->getClassAnnotations(new \ReflectionClass($className)));
+        $this->assertEquals([$route], $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
     protected function getReader()

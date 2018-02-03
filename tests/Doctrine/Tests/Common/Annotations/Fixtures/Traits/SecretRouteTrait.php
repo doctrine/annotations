@@ -13,6 +13,6 @@ trait SecretRouteTrait
      */
     public function secretAction()
     {
-        return array();
+        return [];
     }
 }

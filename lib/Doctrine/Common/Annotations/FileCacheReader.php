@@ -49,12 +49,12 @@ class FileCacheReader implements Reader
     /**
      * @var array
      */
-    private $loadedAnnotations = array();
+    private $loadedAnnotations = [];
 
     /**
      * @var array
      */
-    private $classNameHashes = array();
+    private $classNameHashes = [];
 
     /**
      * @var int
@@ -285,6 +285,6 @@ class FileCacheReader implements Reader
      */
     public function clearLoadedAnnotations()
     {
-        $this->loadedAnnotations = array();
+        $this->loadedAnnotations = [];
     }
 }
