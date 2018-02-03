@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<ruleset name="PHPCS Coding Standards for doctrine/coding-standards">
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="colors" />
+
+    <!-- Show progress of the run -->
+    <arg value="p"/>
+
+    <rule ref="Doctrine"/>
+
+    <file>lib</file>
+    <file>tests</file>
+</ruleset>

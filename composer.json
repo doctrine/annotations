@@ -18,6 +18,7 @@
     },
     "require-dev": {
         "doctrine/cache": "1.*",
+        "doctrine/coding-standard": "^2.1.0",
         "phpunit/phpunit": "^7.0"
     },
     "autoload": {
