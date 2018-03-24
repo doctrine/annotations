@@ -588,7 +588,9 @@ final class DocParser
     private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute)
     {
         // handle internal type declaration
-        $type = self::$typeMap[$attribute->type] ?? $attribute->type;
+        $type = isset(self::$typeMap[$attribute->type])
+            ? self::$typeMap[$attribute->type]
+            : $attribute->type;
 
         // handle the case if the property type is mixed
         if ('mixed' === $type) {
@@ -918,8 +920,12 @@ final class DocParser
     {
         $identifier = $this->Identifier();
 
-        if ( ! defined($identifier) && false !== strpos($identifier, '::') && '\\' !== $identifier[0]) {
-            list($className, $const) = explode('::', $identifier);
+        if ( ! defined($identifier) && '\\' !== $identifier[0]) {
+            if (false !== strpos($identifier, '::')) list($className, $const) = explode('::', $identifier);
+            else {
+              $className = $identifier;
+              $const = null;
+            }
 
             $pos = strpos($className, '\\');
             $alias = (false === $pos) ? $className : substr($className, 0, $pos);
@@ -932,6 +938,7 @@ final class DocParser
                         if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
                              $className = $ns.'\\'.$className;
                              $found = true;
+                             if (!$const) $const = 'class';
                              break;
                         }
                     }
@@ -942,6 +949,7 @@ final class DocParser
                     $className = (false !== $pos)
                         ? $this->imports[$loweredAlias] . substr($className, $pos)
                         : $this->imports[$loweredAlias];
+                    if (!$const) $const = 'class';
                     break;
 
                 default:
@@ -951,13 +959,14 @@ final class DocParser
                         if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
                             $className = $ns.'\\'.$className;
                             $found = true;
+                            if (!$const) $const = 'class';
                         }
                     }
                     break;
             }
 
             if ($found) {
-                 $identifier = $className . '::' . $const;
+                 $identifier = $const ? $className . '::' . $const : $className;
             }
         }
 

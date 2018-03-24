@@ -841,6 +841,10 @@ DOCBLOCK;
             AnnotationWithConstants::class
         );
         $provider[] = array(
+            '@AnnotationWithConstants(AnnotationWithConstants)',
+            AnnotationWithConstants::class
+        );
+        $provider[] = array(
             '@AnnotationWithConstants({AnnotationWithConstants::class = AnnotationWithConstants::class})',
             array(AnnotationWithConstants::class => AnnotationWithConstants::class)
         );
