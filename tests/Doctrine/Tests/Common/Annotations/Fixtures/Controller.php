@@ -17,7 +17,7 @@ class Controller
      */
     public function indexAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -26,7 +26,7 @@ class Controller
      */
     public function helloAction($name)
     {
-        return array('name' => $name);
+        return ['name' => $name];
     }
 
     /**
@@ -46,7 +46,7 @@ class Controller
             return new RedirectResponse($this->generateUrl('_demo'));
         }
 
-        return array('form' => $form);
+        return ['form' => $form];
     }
 
     /**
@@ -165,7 +165,7 @@ class Controller
     {
         $sids = new \SplObjectStorage();
         $classIds = new \SplObjectStorage();
-        $currentIds = array();
+        $currentIds = [];
         foreach ($changes[1] as $field => $new) {
             for ($i=0,$c=count($new); $i<$c; $i++) {
                 $ace = $new[$i];
@@ -224,7 +224,7 @@ class Controller
 
         $sids = new \SplObjectStorage();
         $classIds = new \SplObjectStorage();
-        $currentIds = array();
+        $currentIds = [];
         for ($i=0,$c=count($new); $i<$c; $i++) {
             $ace = $new[$i];
 
@@ -276,7 +276,7 @@ class Controller
     {
         foreach ($aces as $ace) {
             $propertyChanges = $aces->offsetGet($ace);
-            $sets = array();
+            $sets = [];
 
             if (isset($propertyChanges['mask'])) {
                 $sets[] = sprintf('mask = %d', $propertyChanges['mask'][1]);

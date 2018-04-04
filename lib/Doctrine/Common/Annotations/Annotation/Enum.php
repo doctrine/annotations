@@ -57,7 +57,7 @@ final class Enum
     public function __construct(array $values)
     {
         if ( ! isset($values['literal'])) {
-            $values['literal'] = array();
+            $values['literal'] = [];
         }
 
         foreach ($values['value'] as $var) {

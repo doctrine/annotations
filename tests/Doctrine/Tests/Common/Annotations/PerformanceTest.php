@@ -79,19 +79,19 @@ class PerformanceTest extends TestCase
      */
     public function testDocParsePerformance()
     {
-        $imports = array(
+        $imports = [
             'ignorephpdoc'     => 'Annotations\Annotation\IgnorePhpDoc',
             'ignoreannotation' => 'Annotations\Annotation\IgnoreAnnotation',
             'route'            => Fixtures\Annotation\Route::class,
             'template'         => Fixtures\Annotation\Template::class,
             '__NAMESPACE__'    => 'Doctrine\Tests\Common\Annotations\Fixtures',
-        );
-        $ignored = array(
+        ];
+        $ignored = [
             'access', 'author', 'copyright', 'deprecated', 'example', 'ignore',
             'internal', 'link', 'see', 'since', 'tutorial', 'version', 'package',
             'subpackage', 'name', 'global', 'param', 'return', 'staticvar',
             'static', 'var', 'throws', 'inheritdoc',
-        );
+        ];
 
         $method = $this->getMethod();
         $methodComment = $method->getDocComment();
