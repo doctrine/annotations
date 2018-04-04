@@ -14,7 +14,7 @@ class AnnotationRegistryTest extends TestCase
      */
     public function testReset() : void
     {
-        $data = array('foo' => 'bar');
+        $data = ['foo' => 'bar'];
 
         $this->setStaticField($this->class, 'autoloadNamespaces', $data);
         $this->setStaticField($this->class, 'loaders', $data);
@@ -33,10 +33,10 @@ class AnnotationRegistryTest extends TestCase
      */
     public function testRegisterAutoloadNamespaces() : void
     {
-        $this->setStaticField($this->class, 'autoloadNamespaces', array('foo' => 'bar'));
+        $this->setStaticField($this->class, 'autoloadNamespaces', ['foo' => 'bar']);
 
-        AnnotationRegistry::registerAutoloadNamespaces(array('test' => 'bar'));
-        self::assertSame(array('foo' => 'bar', 'test' => 'bar'), $this->getStaticField($this->class, 'autoloadNamespaces'));
+        AnnotationRegistry::registerAutoloadNamespaces(['test' => 'bar']);
+        self::assertSame(['foo' => 'bar', 'test' => 'bar'], $this->getStaticField($this->class, 'autoloadNamespaces'));
     }
 
     /**

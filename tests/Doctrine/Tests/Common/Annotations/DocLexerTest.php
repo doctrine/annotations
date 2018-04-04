@@ -31,74 +31,73 @@ class DocLexerTest extends TestCase
         $lexer      = new DocLexer();
         $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
 
-        $tokens = array (
-            array(
+        $tokens = [
+            [
                 'value'     => '@',
                 'position'  => 0,
                 'type'      => DocLexer::T_AT,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'AnnotationWithConstants',
                 'position'  => 1,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => '(',
                 'position'  => 24,
                 'type'      => DocLexer::T_OPEN_PARENTHESIS,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'PHP_EOL',
                 'position'  => 25,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => ',',
                 'position'  => 32,
                 'type'      => DocLexer::T_COMMA,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'ClassWithConstants::SOME_VALUE',
                 'position'  => 34,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => ',',
                 'position'  => 64,
                 'type'      => DocLexer::T_COMMA,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'ClassWithConstants::CONSTANT_',
                 'position'  => 66,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => ',',
                 'position'  => 95,
                 'type'      => DocLexer::T_COMMA,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'ClassWithConstants::CONST_ANT3',
                 'position'  => 97,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => ',',
                 'position'  => 127,
                 'type'      => DocLexer::T_COMMA,
-            ),
-            array(
+            ],
+            [
                 'value'     => '\\Doctrine\\Tests\\Common\\Annotations\\Fixtures\\InterfaceWithConstants::SOME_VALUE',
                 'position'  => 129,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => ')',
                 'position'  => 207,
                 'type'      => DocLexer::T_CLOSE_PARENTHESIS,
-            )
-
-        );
+            ]
+        ];
 
         $lexer->setInput($docblock);
 
@@ -119,28 +118,28 @@ class DocLexerTest extends TestCase
         $lexer      = new DocLexer();
         $docblock   = '@Foo\3.42';
 
-        $tokens = array (
-            array(
+        $tokens = [
+            [
                 'value'     => '@',
                 'position'  => 0,
                 'type'      => DocLexer::T_AT,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'Foo',
                 'position'  => 1,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => '\\',
                 'position'  => 4,
                 'type'      => DocLexer::T_NAMESPACE_SEPARATOR,
-            ),
-            array(
+            ],
+            [
                 'value'     => 3.42,
                 'position'  => 5,
                 'type'      => DocLexer::T_FLOAT,
-            )
-        );
+            ]
+        ];
 
         $lexer->setInput($docblock);
 
@@ -175,33 +174,33 @@ class DocLexerTest extends TestCase
         $lexer    = new DocLexer();
         $docblock = '@Foo("""' . "\n" . '""")';
 
-        $tokens = array (
-            array(
+        $tokens = [
+            [
                 'value'     => '@',
                 'position'  => 0,
                 'type'      => DocLexer::T_AT,
-            ),
-            array(
+            ],
+            [
                 'value'     => 'Foo',
                 'position'  => 1,
                 'type'      => DocLexer::T_IDENTIFIER,
-            ),
-            array(
+            ],
+            [
                 'value'     => '(',
                 'position'  => 4,
                 'type'      => DocLexer::T_OPEN_PARENTHESIS,
-            ),
-            array(
+            ],
+            [
                 'value'     => "\"\n\"",
                 'position'  => 5,
                 'type'      => DocLexer::T_STRING,
-            ),
-            array(
+            ],
+            [
                 'value'     => ')',
                 'position'  => 12,
                 'type'      => DocLexer::T_CLOSE_PARENTHESIS,
-            ),
-        );
+            ],
+        ];
 
         $lexer->setInput($docblock);
 

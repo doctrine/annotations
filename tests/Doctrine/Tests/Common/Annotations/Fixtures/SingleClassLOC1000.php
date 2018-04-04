@@ -27,7 +27,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -52,7 +52,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -77,7 +77,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -102,7 +102,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -127,7 +127,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -152,7 +152,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -177,7 +177,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -202,7 +202,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -228,7 +228,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -253,7 +253,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -278,7 +278,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -303,7 +303,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -328,7 +328,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -353,7 +353,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -378,7 +378,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -403,7 +403,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -428,7 +428,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -454,7 +454,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -479,7 +479,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -504,7 +504,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -529,7 +529,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -554,7 +554,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -579,7 +579,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -604,7 +604,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -629,7 +629,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -654,7 +654,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -679,7 +679,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -705,7 +705,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -730,7 +730,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -755,7 +755,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -780,7 +780,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -805,7 +805,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -830,7 +830,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -855,7 +855,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -880,7 +880,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -905,7 +905,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -930,7 +930,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -956,7 +956,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
@@ -981,7 +981,7 @@ class SingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
