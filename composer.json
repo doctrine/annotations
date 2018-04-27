@@ -24,10 +24,10 @@
         "sort-packages": true
     },
     "autoload": {
-        "psr-4": { "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations" }
+        "psr-4": { "Doctrine\\Annotations\\": "lib/Doctrine/Annotations" }
     },
     "autoload-dev": {
-        "psr-4": { "Doctrine\\Tests\\Common\\Annotations\\": "tests/Doctrine/Tests/Common/Annotations" }
+        "psr-4": { "Doctrine\\Tests\\Annotations\\": "tests/Doctrine/Tests/Annotations" }
     },
     "extra": {
         "branch-alias": {

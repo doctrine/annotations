@@ -1,5 +1,9 @@
 # Upgrade to 2.0
 
+## Namespace changed to Doctrine\Annotations
+
+Namespace of this library has been changed from `Doctrine\Common\Annotations` to `Doctrine\Annotations`.
+
 ## PHP 7.2 is now required
 
 Doctrine Annotations now requires PHP 7.2 or newer.
