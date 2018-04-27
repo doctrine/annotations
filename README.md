@@ -14,4 +14,4 @@ See the [doctrine-project website](http://docs.doctrine-project.org/projects/doc
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md).
+See [UPGRADE.md](UPGRADE.md).

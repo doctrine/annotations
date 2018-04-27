@@ -13,7 +13,7 @@
         {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"}
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "doctrine/lexer": "1.*"
     },
     "require-dev": {
