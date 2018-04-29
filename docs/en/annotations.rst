@@ -9,7 +9,6 @@ Take a look at the following code snippet:
 
 .. code-block:: php
 
-    <?php
     namespace MyProject\Entities;
 
     use Doctrine\ORM\Mapping AS ORM;
@@ -58,7 +57,6 @@ To anticipate the configuration section, making the above PHP class work with Do
 
 .. code-block:: php
 
-    <?php
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\Common\Annotations\AnnotationRegistry;
 
@@ -84,7 +82,6 @@ To use the annotations library is simple, you just need to create a new ``Annota
 
 .. code-block:: php
 
-    <?php
     $reader = new \Doctrine\Common\Annotations\AnnotationReader();
 
 This creates a simple annotation reader with no caching other than in memory (in php arrays).
@@ -95,7 +92,6 @@ You can use a file caching reader:
 
 .. code-block:: php
 
-    <?php
     use Doctrine\Common\Annotations\FileCacheReader;
     use Doctrine\Common\Annotations\AnnotationReader;
 
@@ -114,7 +110,6 @@ You can also use one of the ``Doctrine\Common\Cache\Cache`` cache implementation
 
 .. code-block:: php
 
-    <?php
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\Common\Annotations\CachedReader;
     use Doctrine\Common\Cache\ApcCache;
@@ -143,7 +138,6 @@ to be indexed by their class name you can wrap the reader in an IndexedReader:
 
 .. code-block:: php
 
-    <?php
     use Doctrine\Common\Annotations\AnnotationReader;
     use Doctrine\Common\Annotations\IndexedReader;
 
@@ -181,7 +175,6 @@ A sample loader callback could look like:
 
 .. code-block:: php
 
-    <?php
     use Doctrine\Common\Annotations\AnnotationRegistry;
     use Symfony\Component\ClassLoader\UniversalClassLoader;
 
@@ -211,7 +204,6 @@ You can disable this behavior for specific names if your docblocks do not follow
 
 .. code-block:: php
 
-    <?php
     $reader = new \Doctrine\Common\Annotations\AnnotationReader();
     AnnotationReader::addGlobalIgnoredName('foo');
 
@@ -227,6 +219,5 @@ in future versions:
 
 .. code-block:: php
 
-    <?php
     $reader = new \Doctrine\Common\Annotations\AnnotationReader();
     $reader->setEnabledPhpImports(false);
