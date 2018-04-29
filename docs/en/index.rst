@@ -52,6 +52,8 @@ class of the previous example looks like this:
 The annotation class is declared as an annotation by
 ``@Annotation``.
 
+`Read more about custom annotations.`_
+
 Reading annotations
 ===================
 
@@ -74,47 +76,15 @@ access the annotations of a class. A common one is
 A reader has multiple methods to access the annotations
 of a class.
 
-Reader API
-----------
+`Read more about handling annotations.`_
 
-Access all annotations of a class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+IDE Support
+-----------
 
-.. code-block:: php
+Some IDEs already provide support for annotations:
 
-    public function getClassAnnotations(\ReflectionClass $class);
+- Eclipse via the `Symfony2 Plugin <http://symfony.dubture.com/>`_
+- PHPStorm via the `PHP Annotations Plugin <http://plugins.jetbrains.com/plugin/7320>`_ or the `Symfony2 Plugin <http://plugins.jetbrains.com/plugin/7219>`_
 
-Access one annotation of a class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    public function getClassAnnotation(\ReflectionClass $class, $annotationName);
-
-Access all annotations of a method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    public function getMethodAnnotations(\ReflectionMethod $method);
-
-Access one annotation of a method
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    public function getMethodAnnotation(\ReflectionMethod $method, $annotationName);
-
-Access all annotations of a property
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    public function getPropertyAnnotations(\ReflectionProperty $property);
-
-Access one annotation of a property
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. code-block:: php
-
-    public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
+.. _Read more about handling annotations.: annotations.rst
+.. _Read more about custom annotations.: custom.rst
