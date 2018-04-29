@@ -6,13 +6,12 @@ in the AnnotationRegistry. Annotation classes have to contain a class-level docb
 
 .. code-block:: php
 
-    <?php
     namespace MyCompany\Annotations;
 
     /** @Annotation */
     class Bar
     {
-        //some code
+        // some code
     }
 
 Inject annotation values
@@ -24,17 +23,17 @@ if so then we will pass the value array, otherwise will try to inject values int
 
 .. code-block:: php
 
-    <?php
     namespace MyCompany\Annotations;
 
     /**
-    * @Annotation
-    *
-    * Some Annotation using a constructor
-    */
+     * @Annotation
+     *
+     * Some Annotation using a constructor
+     */
     class Bar
     {
         private $foo;
+
         public function __construct(array $values)
         {
             $this->foo = $values['foo'];
@@ -42,10 +41,10 @@ if so then we will pass the value array, otherwise will try to inject values int
     }
 
     /**
-    * @Annotation
-    *
-    * Some Annotation without a constructor
-    */
+     * @Annotation
+     *
+     * Some Annotation without a constructor
+     */
     class Foo
     {
         public $bar;
@@ -55,7 +54,7 @@ Annotation Target
 -----------------
 
 ``@Target`` indicates the kinds of class element to which an annotation type is applicable.
-Then you could define one or more targets :
+Then you could define one or more targets:
 
 -  ``CLASS`` Allowed in the class docblock
 -  ``PROPERTY`` Allowed in the property docblock
@@ -67,25 +66,24 @@ If the annotations is not allowed in the current context you got an ``Annotation
 
 .. code-block:: php
 
-    <?php
     namespace MyCompany\Annotations;
 
     /**
-    * @Annotation
-    * @Target({"METHOD","PROPERTY"})
-    */
+     * @Annotation
+     * @Target({"METHOD","PROPERTY"})
+     */
     class Bar
     {
-        //some code
+        // some code
     }
 
     /**
-    * @Annotation
-    * @Target("CLASS")
-    */
+     * @Annotation
+     * @Target("CLASS")
+     */
     class Foo
     {
-        //some code
+        // some code
     }
 
 Attribute types
@@ -99,45 +97,53 @@ If the data type not match you got an ``AnnotationException``
 
 .. code-block:: php
 
-    <?php
     namespace MyCompany\Annotations;
 
     /**
-    * @Annotation
-    * @Target({"METHOD","PROPERTY"})
-    */
+     * @Annotation
+     * @Target({"METHOD","PROPERTY"})
+     */
     class Bar
     {
         /** @var mixed */
         public $mixed;
+
         /** @var boolean */
         public $boolean;
+
         /** @var bool */
         public $bool;
+
         /** @var float */
         public $float;
+
         /** @var string */
         public $string;
+
         /** @var integer */
         public $integer;
+
         /** @var array */
         public $array;
+
         /** @var SomeAnnotationClass */
         public $annotation;
+
         /** @var array<integer> */
         public $arrayOfIntegers;
+
         /** @var array<SomeAnnotationClass> */
         public $arrayOfAnnotations;
     }
 
     /**
-    * @Annotation
-    * @Target({"METHOD","PROPERTY"})
-    * @Attributes({
-    *   @Attribute("stringProperty", type = "string"),
-    *   @Attribute("annotProperty",  type = "SomeAnnotationClass"),
-    * })
-    */
+     * @Annotation
+     * @Target({"METHOD","PROPERTY"})
+     * @Attributes({
+     *   @Attribute("stringProperty", type = "string"),
+     *   @Attribute("annotProperty",  type = "SomeAnnotationClass"),
+     * })
+     */
     class Foo
     {
         public function __construct(array $values)
@@ -145,7 +151,8 @@ If the data type not match you got an ``AnnotationException``
             $this->stringProperty = $values['stringProperty'];
             $this->annotProperty = $values['annotProperty'];
         }
-       // some code
+
+        // some code
     }
 
 Annotation Required
@@ -158,7 +165,6 @@ Declaring a required field:
 
 .. code-block:: php
 
-    <?php
     /**
      * @Annotation
      * @Target("ALL")
@@ -173,7 +179,6 @@ Usage:
 
 .. code-block:: php
 
-    <?php
     /** @Foo(requiredField="value") */
     public $direction;                  // Valid
 
@@ -189,11 +194,10 @@ Enumerated values
 - The annotation parser check the given value and throws an ``AnnotationException`` if the value not match.
 
 
-Declaring an enumerated property :
+Declaring an enumerated property:
 
 .. code-block:: php
 
-    <?php
     /**
      * @Annotation
      * @Target("ALL")
@@ -206,11 +210,10 @@ Declaring an enumerated property :
         public $value;
     }
 
-Annotation usage :
+Annotation usage:
 
 .. code-block:: php
 
-    <?php
     /** @Direction("NORTH") */
     public $direction;                  // Valid value
 
@@ -223,11 +226,10 @@ Constants
 
 The use of constants and class constants are available on the annotations parser.
 
-The following usage are allowed :
+The following usage are allowed:
 
 .. code-block:: php
 
-    <?php
     namespace MyCompany\Entity;
 
     use MyCompany\Annotations\Foo;
@@ -235,11 +237,11 @@ The following usage are allowed :
     use MyCompany\Entity\SomeClass;
 
     /**
-    * @Foo(PHP_EOL)
-    * @Bar(Bar::FOO)
-    * @Foo({SomeClass::FOO, SomeClass::BAR})
-    * @Bar({SomeClass::FOO_KEY = SomeClass::BAR_VALUE})
-    */
+     * @Foo(PHP_EOL)
+     * @Bar(Bar::FOO)
+     * @Foo({SomeClass::FOO, SomeClass::BAR})
+     * @Bar({SomeClass::FOO_KEY = SomeClass::BAR_VALUE})
+     */
     class User
     {
     }
@@ -261,7 +263,6 @@ you can now annotate other classes with your annotations:
 
 .. code-block:: php
 
-    <?php
     namespace MyCompany\Entity;
 
     use MyCompany\Annotations\Foo;
@@ -279,7 +280,6 @@ Now we can write a script to get the annotations above:
 
 .. code-block:: php
 
-    <?php
     $reflClass = new ReflectionClass('MyCompany\Entity\User');
     $classAnnotations = $reader->getClassAnnotations($reflClass);
 

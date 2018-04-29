@@ -52,7 +52,7 @@ class of the previous example looks like this:
 The annotation class is declared as an annotation by
 ``@Annotation``.
 
-`Read more about custom annotations.`_
+:ref:`Read more about custom annotations. <custom>`
 
 Reading annotations
 ===================
@@ -76,7 +76,7 @@ access the annotations of a class. A common one is
 A reader has multiple methods to access the annotations
 of a class.
 
-`Read more about handling annotations.`_
+:ref:`Read more about handling annotations. <annotations>`
 
 IDE Support
 -----------
@@ -86,5 +86,5 @@ Some IDEs already provide support for annotations:
 - Eclipse via the `Symfony2 Plugin <http://symfony.dubture.com/>`_
 - PHPStorm via the `PHP Annotations Plugin <http://plugins.jetbrains.com/plugin/7320>`_ or the `Symfony2 Plugin <http://plugins.jetbrains.com/plugin/7219>`_
 
-.. _Read more about handling annotations.: annotations.rst
-.. _Read more about custom annotations.: custom.rst
+.. _Read more about handling annotations.: annotations
+.. _Read more about custom annotations.: custom
