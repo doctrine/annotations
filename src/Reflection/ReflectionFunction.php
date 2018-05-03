@@ -24,11 +24,11 @@ namespace Doctrine\Annotations\Reflection;
 use Doctrine\Annotations\Parser\PhpParser;
 
 /**
- * Reflection Property
+ * Reflection Function
  *
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
  */
-class ReflectionProperty extends \ReflectionProperty
+class ReflectionFunction extends \ReflectionFunction
 {
     /**
      * @var \Doctrine\Annotations\Parser\PhpParser
@@ -41,20 +41,14 @@ class ReflectionProperty extends \ReflectionProperty
     private $imports;
 
     /**
-     * @var \Doctrine\Annotations\Reflection\ReflectionClass
-     */
-    private $declaringClass;
-
-    /**
      * Constructor.
      *
-     * @param string                                 $className
-     * @param string                                 $propertyName
+     * @param string                                 $functionName
      * @param \Doctrine\Annotations\Parser\PhpParser $phpParser
      */
-    public function __construct(string $className, string $propertyName, PhpParser $phpParser)
+    public function __construct(string $functionName, PhpParser $phpParser)
     {
-        parent::__construct($className, $propertyName);
+        parent::__construct($functionName);
 
         $this->phpParser = $phpParser;
     }
@@ -68,34 +62,6 @@ class ReflectionProperty extends \ReflectionProperty
             return $this->imports;
         }
 
-        $class        = $this->getDeclaringClass();
-        $classImports = $class->getImports();
-        $traitImports = [];
-
-        foreach ($class->getTraits() as $trait) {
-            if ( ! $trait->hasProperty($this->getName())) {
-                continue;
-            }
-
-            $propertyImports = $this->phpParser->parse($trait);
-            $traitImports    = array_merge($traitImports, $propertyImports);
-        }
-
-        return $this->imports = array_merge($classImports, $traitImports);
-    }
-
-    /**
-     * @return \Doctrine\Annotations\Reflection\ReflectionClass
-     */
-    public function getDeclaringClass() : ReflectionClass
-    {
-        if ($this->declaringClass !== null) {
-            return $this->declaringClass;
-        }
-
-        $className  = parent::getDeclaringClass()->name;
-        $reflection = new ReflectionClass($className, $this->phpParser);
-
-        return $this->declaringClass = $reflection;
+        return $this->imports = $this->phpParser->parse($this);
     }
 }

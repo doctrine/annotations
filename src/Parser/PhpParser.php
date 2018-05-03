@@ -23,6 +23,7 @@ namespace Doctrine\Annotations\Parser;
 
 use SplFileObject;
 use ReflectionClass;
+use ReflectionFunction;
 
 /**
  * Parses a file for namespaces/use/class declarations.
@@ -38,15 +39,39 @@ final class PhpParser
      * @param \ReflectionClass $class A <code>ReflectionClass</code> object.
      *
      * @return array A list with use statements in the form (Alias => FQN).
+     *
+     * @deprecated
      */
     public function parseClass(ReflectionClass $class) : array
     {
-        if (method_exists($class, 'getUseStatements')) {
-            return $class->getUseStatements();
+        return $this->parse($class);
+    }
+
+    /**
+     * Parses a function or class.
+     *
+     * @param \ReflectionClass|\ReflectionFunction $reflection A reflection object.
+     *
+     * @return array A list with use statements in the form (Alias => FQN).
+     *
+     * @throws \InvalidArgumentException If reflection class is not an instance of
+     *                                   ReflectionClass or ReflectionFunction
+     */
+    public function parse($reflection) : array
+    {
+        if ( ! $reflection instanceof ReflectionClass && ! $reflection instanceof ReflectionFunction) {
+            throw new \InvalidArgumentException(sprintf(
+                'Reflection must be either an instance of ReflectionClass or ReflectionFunction, got %s',
+                get_class($reflection)
+            ));
         }
 
-        $lineNumber = $class->getStartLine();
-        $filename   = $class->getFilename();
+        if (method_exists($reflection, 'getUseStatements')) {
+            return $reflection->getUseStatements();
+        }
+
+        $lineNumber = $reflection->getStartLine();
+        $filename   = $reflection->getFilename();
         $content    = ($filename !== false)
             ? $this->getFileContent($filename, $lineNumber)
             : null;
@@ -55,12 +80,12 @@ final class PhpParser
             return [];
         }
 
-        $namespace = preg_quote($class->getNamespaceName());
+        $namespace = preg_quote($reflection->getNamespaceName());
         $regex     = '/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s';
         $content   = preg_replace($regex, '\\1', $content);
         $tokenizer = new TokenParser('<?php ' . $content);
 
-        return $tokenizer->parseUseStatements($class->getNamespaceName());
+        return $tokenizer->parseUseStatements($reflection->getNamespaceName());
     }
 
     /**

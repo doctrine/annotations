@@ -22,6 +22,7 @@ declare(strict_types=1);
 namespace Doctrine\Annotations;
 
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -199,16 +200,52 @@ final class AnnotationReader implements Reader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getFunctionAnnotations(ReflectionFunction $function) : array
+    {
+        if (($docblock = $function->getDocComment()) === false) {
+            return [];
+        }
+
+        $functionName = $function->getName();
+        $namespace    = $function->getNamespaceName();
+        $reflection   = $this->reflectionFactory->getReflectionFunction($functionName);
+
+        $imports = $reflection->getImports();
+        $ignored = $this->getIgnoredAnnotationNames($function);
+        $context = new Context($function, [$namespace], $imports, $ignored);
+
+        return $this->docParser->parse($docblock, $context);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFunctionAnnotation(ReflectionFunction $function, string $annotationName)
+    {
+        $annotations = $this->getFunctionAnnotations($function);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the ignored annotations for the given class.
      *
-     * @param \ReflectionClass $class
+     * @param \ReflectionClass|\ReflectionFunction $reflection
      *
      * @return array
      */
-    private function getIgnoredAnnotationNames(ReflectionClass $class) : array
+    private function getIgnoredAnnotationNames($reflection) : array
     {
         $ignoredNames = $this->ignoredAnnotationNames->getArrayCopy();
-        $annotations  = $this->metadataParser->parseAnnotationClass($class);
+        $annotations  = $this->metadataParser->parseAnnotation($reflection);
 
         foreach ($annotations as $annotation) {
             if ( ! $annotation instanceof IgnoreAnnotation) {

@@ -81,7 +81,7 @@ class ReflectionMethod extends \ReflectionMethod
                 continue;
             }
 
-            $methodImports = $this->phpParser->parseClass($trait);
+            $methodImports = $this->phpParser->parse($trait);
             $traitImports  = array_merge($traitImports, $methodImports);
         }
 

@@ -72,7 +72,6 @@ class MetadataFactory
 
         $class       = new \ReflectionClass($className);
         $constructor = $class->getConstructor();
-        $docComment  = $class->getDocComment();
         $metadata    = new ClassMetadata();
 
         $metadata->hasConstructor = false;
@@ -83,7 +82,7 @@ class MetadataFactory
             $metadata->hasConstructor = true;
         }
 
-        $annotations = $this->parser->parseAnnotationClass($class);
+        $annotations = $this->parser->parseAnnotation($class);
         $indexed     = $this->getIndexedAnnotations($annotations);
 
         if ( ! $this->isAnnotation($class, $indexed)) {
@@ -125,8 +124,6 @@ class MetadataFactory
     /**
      * @param ReflectionClass $class
      * @param ClassMetadata   $metadata
-     *
-     * @return array
      */
     private function collectPropertiesMetadata(ReflectionClass $class, ClassMetadata $metadata)
     {

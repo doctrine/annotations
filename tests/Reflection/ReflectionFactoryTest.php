@@ -7,6 +7,7 @@ use Doctrine\AnnotationsTests\Fixtures\ClassWithAnnotationEnum;
 
 use Doctrine\Annotations\Parser\PhpParser;
 use Doctrine\Annotations\Reflection\ReflectionClass;
+use Doctrine\Annotations\Reflection\ReflectionFunction;
 use Doctrine\Annotations\Reflection\ReflectionMethod;
 use Doctrine\Annotations\Reflection\ReflectionProperty;
 use Doctrine\Annotations\Reflection\ReflectionFactory;
@@ -55,5 +56,16 @@ class ReflectionFactoryTest extends TestCase
         $this->assertInstanceOf(ReflectionProperty::CLASS, $reflection);
 
         $this->assertSame($reflection, $factory->getReflectionProperty(ClassWithAnnotationEnum::CLASS, 'foo'));
+    }
+
+    public function testGetReflectionFunction()
+    {
+        $factory    = $this->createReflectionFactory();
+        $reflection = $factory->getReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_enum_function');
+
+        $this->assertInstanceOf('\ReflectionFunction', $reflection);
+        $this->assertInstanceOf(ReflectionFunction::CLASS, $reflection);
+
+        $this->assertSame($reflection, $factory->getReflectionFunction('Doctrine\AnnotationsTests\Fixtures\annotation_enum_function'));
     }
 }

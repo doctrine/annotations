@@ -23,6 +23,7 @@ namespace Doctrine\Annotations;
 
 use Reflector;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
 use Doctrine\Annotations\Annotation\Target;
@@ -106,7 +107,7 @@ class Context
     /**
      * @param string $name
      *
-     * @return array
+     * @return bool
      */
     public function isIgnoredName($name) : bool
     {
@@ -154,6 +155,10 @@ class Context
             return Target::TARGET_PROPERTY;
         }
 
+        if ($this->reflection instanceof ReflectionFunction) {
+            return Target::TARGET_FUNCTION;
+        }
+
         throw new \RuntimeException('Unsupported target : ' . get_class($this->reflection));
     }
 
@@ -181,6 +186,13 @@ class Context
             $name    = $this->reflection->getName();
             $class   = $this->reflection->getDeclaringClass();
             $context = 'property ' . $class->getName() . '::$' . $name;
+
+            return $context;
+        }
+
+        if ($this->reflection instanceof ReflectionFunction) {
+            $name    = $this->reflection->getName();
+            $context = 'function ' . $name;
 
             return $context;
         }

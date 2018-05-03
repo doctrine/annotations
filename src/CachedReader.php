@@ -21,7 +21,9 @@ declare(strict_types=1);
 
 namespace Doctrine\Annotations;
 
+use Reflection;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -109,7 +111,7 @@ final class CachedReader implements Reader
     public function getPropertyAnnotations(ReflectionProperty $property) : array
     {
         $class     = $property->getDeclaringClass();
-        $cacheKey  = $class->getName() . '$' . $property->getName();
+        $cacheKey  = 'class-' . $class->getName() . '$' . $property->getName();
         $cacheData = $this->fetchFromCache($cacheKey, $class);
 
         if ($cacheData !== false) {
@@ -143,7 +145,7 @@ final class CachedReader implements Reader
     public function getMethodAnnotations(ReflectionMethod $method) : array
     {
         $class     = $method->getDeclaringClass();
-        $cacheKey  = $class->getName() . '#' . $method->getName();
+        $cacheKey  = 'class-' . $class->getName() . '#' . $method->getName();
         $cacheData = $this->fetchFromCache($cacheKey, $class);
 
         if ($cacheData !== false) {
@@ -172,14 +174,47 @@ final class CachedReader implements Reader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getFunctionAnnotations(ReflectionFunction $function) : array
+    {
+        $cacheKey  = 'function-' . $function->getName();
+        $cacheData = $this->fetchFromCache($cacheKey, $function);
+
+        if ($cacheData !== false) {
+            return $cacheData;
+        }
+
+        $annotations = $this->delegate->getFunctionAnnotations($function);
+
+        $this->saveToCache($cacheKey, $annotations);
+
+        return $annotations;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getFunctionAnnotation(ReflectionFunction $function, string $annotationName)
+    {
+        foreach ($this->getFunctionAnnotations($function) as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Fetches a value from the cache.
      *
-     * @param string           $rawCacheKey The cache key.
-     * @param \ReflectionClass $class       The related class.
+     * @param string                               $rawCacheKey The cache key.
+     * @param \ReflectionClass|\ReflectionFunction $reflection  The related class.
      *
      * @return mixed The cached value or false when the value is not in cache.
      */
-    private function fetchFromCache(string $rawCacheKey, \ReflectionClass $class)
+    private function fetchFromCache(string $rawCacheKey, $reflection)
     {
         $key  = $rawCacheKey . self::CACHE_SALT;
         $data = $this->cache->fetch($key);
@@ -192,7 +227,7 @@ final class CachedReader implements Reader
             return $data['value'];
         }
 
-        if ( ! $this->isCacheFresh($data['time'], $class)) {
+        if ( ! $this->isCacheFresh($data['time'], $reflection)) {
             return false;
         }
 
@@ -221,14 +256,14 @@ final class CachedReader implements Reader
     /**
      * Checks if the cache is fresh.
      *
-     * @param int              $time
-     * @param \ReflectionClass $class
+     * @param int                                  $time
+     * @param \ReflectionClass|\ReflectionFunction $reflection
      *
      * @return bool
      */
-    private function isCacheFresh(int $time, ReflectionClass $class) : bool
+    private function isCacheFresh(int $time, $reflection) : bool
     {
-        $filename  = $class->getFilename();
+        $filename  = $reflection->getFilename();
         $filemtime = (false !== $filename)
             ? filemtime($filename)
             : -1;

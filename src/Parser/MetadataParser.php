@@ -23,6 +23,7 @@ namespace Doctrine\Annotations\Parser;
 
 use Reflector;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionProperty;
 
 use Doctrine\Annotations\Context;
@@ -69,12 +70,31 @@ class MetadataParser
      * @param \ReflectionClass $class
      *
      * @return array
+     *
+     * @deprecated
      */
     public function parseAnnotationClass(ReflectionClass $class) : array
     {
-        $docblock    = $class->getDocComment();
-        $namespace   = $class->getNamespaceName();
-        $annotations = $this->parseDockblock($class, $namespace, $docblock);
+        return $this->parseAnnotation($class);
+    }
+
+    /**
+     * @param \ReflectionClass|\ReflectionFunction $reflection
+     *
+     * @return array
+     */
+    public function parseAnnotation($reflection) : array
+    {
+        if ( ! $reflection instanceof ReflectionClass && ! $reflection instanceof ReflectionFunction) {
+            throw new \InvalidArgumentException(sprintf(
+                'Reflection must be either an instance of ReflectionClass or ReflectionFunction, got %s',
+                get_class($reflection)
+            ));
+        }
+
+        $docblock    = $reflection->getDocComment();
+        $namespace   = $reflection->getNamespaceName();
+        $annotations = $this->parseDockblock($reflection, $namespace, $docblock);
 
         return $annotations;
     }
@@ -105,6 +125,8 @@ class MetadataParser
      * @param string|bool $docblock
      *
      * @return array
+     *
+     * @throws ParserException
      */
     private function parseDockblock(Reflector $reflector, $namespace, $docblock) : array
     {
