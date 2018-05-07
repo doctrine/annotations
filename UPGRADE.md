@@ -1,5 +1,10 @@
 # Upgrade to 2.0
 
+## Doctrine\Common\Annotations\SimpleAnnotationReader removed
+
+`Doctrine\Common\Annotations\SimpleAnnotationReader` has been dropped.
+Please use `Doctrine\Annotations\AnnotationReader` instead.
+
 # FileCacheReader removed
 
 `Doctrine\Common\Annotations\FileCacheReader` has been removed. Please use Doctrine Cache adapter instead.

@@ -3,7 +3,6 @@ namespace Doctrine\Tests\Annotations\Ticket;
 
 use Doctrine\Annotations\AnnotationReader;
 use Doctrine\Annotations\DocParser;
-use Doctrine\Annotations\SimpleAnnotationReader;
 use PHPUnit\Framework\TestCase;
 
 //Some class named Entity in the global namespace
@@ -75,18 +74,6 @@ class DCOM58Test extends TestCase
         self::assertCount(1, $annots);
         self::assertInstanceOf(\Entity::class, $annots[0]);
     }
-
-
-    public function testIssueSimpleAnnotationReader()
-    {
-        $reader     = new SimpleAnnotationReader();
-        $reader->addNamespace('Doctrine\Tests\Annotations\Ticket\Doctrine\ORM\Mapping');
-        $annots     = $reader->getClassAnnotations(new \ReflectionClass(__NAMESPACE__."\MappedClass"));
-
-        self::assertCount(1, $annots);
-        self::assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
-    }
-
 }
 
 /**
