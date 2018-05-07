@@ -13,7 +13,7 @@
         {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"}
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.2",
         "doctrine/lexer": "1.*"
     },
     "require-dev": {
@@ -24,14 +24,14 @@
         "sort-packages": true
     },
     "autoload": {
-        "psr-4": { "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations" }
+        "psr-4": { "Doctrine\\Annotations\\": "lib/Doctrine/Annotations" }
     },
     "autoload-dev": {
-        "psr-4": { "Doctrine\\Tests\\Common\\Annotations\\": "tests/Doctrine/Tests/Common/Annotations" }
+        "psr-4": { "Doctrine\\Tests\\Annotations\\": "tests/Doctrine/Tests/Annotations" }
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "1.7.x-dev"
+            "dev-master": "2.0.x-dev"
         }
     }
 }
