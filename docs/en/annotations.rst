@@ -57,8 +57,8 @@ To anticipate the configuration section, making the above PHP class work with Do
 
 .. code-block:: php
 
-    use Doctrine\Common\Annotations\AnnotationReader;
-    use Doctrine\Common\Annotations\AnnotationRegistry;
+    use Doctrine\Annotations\AnnotationReader;
+    use Doctrine\Annotations\AnnotationRegistry;
 
     AnnotationRegistry::registerFile("/path/to/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php");
     AnnotationRegistry::registerAutoloadNamespace("Symfony\Component\Validator\Constraint", "/path/to/symfony/src");
@@ -82,7 +82,7 @@ To use the annotations library is simple, you just need to create a new ``Annota
 
 .. code-block:: php
 
-    $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+    $reader = new \Doctrine\Annotations\AnnotationReader();
 
 This creates a simple annotation reader with no caching other than in memory (in php arrays).
 Since parsing docblocks can be expensive you should cache this process by using
@@ -92,8 +92,8 @@ You can use a file caching reader:
 
 .. code-block:: php
 
-    use Doctrine\Common\Annotations\FileCacheReader;
-    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\Annotations\FileCacheReader;
+    use Doctrine\Annotations\AnnotationReader;
 
     $reader = new FileCacheReader(
         new AnnotationReader(),
@@ -110,8 +110,8 @@ You can also use one of the ``Doctrine\Common\Cache\Cache`` cache implementation
 
 .. code-block:: php
 
-    use Doctrine\Common\Annotations\AnnotationReader;
-    use Doctrine\Common\Annotations\CachedReader;
+    use Doctrine\Annotations\AnnotationReader;
+    use Doctrine\Annotations\CachedReader;
     use Doctrine\Common\Cache\ApcCache;
 
     $reader = new CachedReader(
@@ -138,8 +138,8 @@ to be indexed by their class name you can wrap the reader in an IndexedReader:
 
 .. code-block:: php
 
-    use Doctrine\Common\Annotations\AnnotationReader;
-    use Doctrine\Common\Annotations\IndexedReader;
+    use Doctrine\Annotations\AnnotationReader;
+    use Doctrine\Annotations\IndexedReader;
 
     $reader = new IndexedReader(new AnnotationReader());
 
@@ -154,7 +154,7 @@ Registering Annotations
 
 As explained in the Introduction Doctrine Annotations uses its own autoloading mechanism to determine if a
 given annotation has a corresponding PHP class that can be autoloaded. For Annotation Autoloading you have
-to configure the ``Doctrine\Common\Annotations\AnnotationRegistry``. There are three different mechanisms
+to configure the ``Doctrine\Annotations\AnnotationRegistry``. There are three different mechanisms
 to configure annotation autoloading:
 
 -   Calling ``AnnotationRegistry#registerFile($file)`` to register a file that contains one or more Annotation classes.
@@ -175,7 +175,7 @@ A sample loader callback could look like:
 
 .. code-block:: php
 
-    use Doctrine\Common\Annotations\AnnotationRegistry;
+    use Doctrine\Annotations\AnnotationRegistry;
     use Symfony\Component\ClassLoader\UniversalClassLoader;
 
     AnnotationRegistry::registerLoader(function($class) {
@@ -204,7 +204,7 @@ You can disable this behavior for specific names if your docblocks do not follow
 
 .. code-block:: php
 
-    $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+    $reader = new \Doctrine\Annotations\AnnotationReader();
     AnnotationReader::addGlobalIgnoredName('foo');
 
 PHP Imports
@@ -219,5 +219,5 @@ in future versions:
 
 .. code-block:: php
 
-    $reader = new \Doctrine\Common\Annotations\AnnotationReader();
+    $reader = new \Doctrine\Annotations\AnnotationReader();
     $reader->setEnabledPhpImports(false);
