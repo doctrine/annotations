@@ -1,5 +1,9 @@
 # Upgrade to 2.0
 
+# FileCacheReader removed
+
+`Doctrine\Common\Annotations\FileCacheReader` has been removed. Please use Doctrine Cache adapter instead.
+
 ## Namespace changed to Doctrine\Annotations
 
 Namespace of this library has been changed from `Doctrine\Common\Annotations` to `Doctrine\Annotations`.
