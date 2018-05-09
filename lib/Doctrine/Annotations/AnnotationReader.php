@@ -170,8 +170,6 @@ class AnnotationReader implements Reader
             throw AnnotationException::optimizerPlusSaveComments();
         }
 
-        AnnotationRegistry::registerFile(__DIR__ . '/Annotation/IgnoreAnnotation.php');
-
         $this->parser = $parser ?: new DocParser();
 
         $this->preParser = new DocParser;
