@@ -11,20 +11,47 @@ cache:
     - $HOME/.composer/cache
 
 before_install:
-  - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
-  - composer self-update
+  - |
+    if [ "x$COVERAGE" != "xyes" ]; then
+      mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || true
+    fi
+  - travis_retry composer self-update
 
 install: travis_retry composer update --prefer-dist
 
+before_script:
+  - |
+    if [ "x$COVERAGE" == "xyes" ] && [[ ! $(php -m | grep -si xdebug) ]]; then
+      echo "xdebug is required for coverage"
+      exit 1
+    fi
+
 script:
-  - ./vendor/bin/phpunit
+  - |
+    if [ "x$COVERAGE" == "xyes" ]; then
+       ./vendor/bin/phpunit --coverage-clover clover.xml
+    else
+       ./vendor/bin/phpunit
+    fi
+after_script:
+  - |
+    if [ "x$COVERAGE" == "xyes" ]; then
+      wget https://github.com/scrutinizer-ci/ocular/releases/download/1.5.2/ocular.phar
+      php ocular.phar code-coverage:upload --format=php-clover clover.xml
+    fi
 
 jobs:
   allow_failures:
     - php: nightly
 
+  exclude:
+    - php: 7.2
+
   include:
+    - stage: Test
+      php: 7.2
+      env: COVERAGE=yes
+
     - stage: Lint
-      before_script:
-        - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.7
+      install: travis_retry composer require --dev --prefer-dist phpstan/phpstan:^0.7
       script: vendor/bin/phpstan analyse -l 3 -c phpstan.neon lib tests
