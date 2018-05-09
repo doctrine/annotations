@@ -1,8 +1,8 @@
 Custom Annotation Classes
 =========================
 
-If you want to define your own annotations you just have to group them in a namespace and register this namespace
-in the AnnotationRegistry. Annotation classes have to contain a class-level docblock with the text ``@Annotation``:
+If you want to define your own annotations you just have to group them in a namespace.
+Annotation classes have to contain a class-level docblock with the text ``@Annotation``:
 
 .. code-block:: php
 

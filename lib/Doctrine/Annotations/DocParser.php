@@ -430,8 +430,7 @@ final class DocParser
     }
 
     /**
-     * Attempts to check if a class exists or not. This either uses PHP autoloading mechanism
-     * or uses the {@link AnnotationRegistry} to load classes.
+     * Attempts to check if a class exists or not. This always uses PHP autoloading mechanism.
      *
      * @param string $fqcn
      *
@@ -444,7 +443,7 @@ final class DocParser
         }
 
         // final check, does this class exist?
-        return $this->classExists[$fqcn] = class_exists($fqcn) || AnnotationRegistry::loadAnnotationClass($fqcn);
+        return $this->classExists[$fqcn] = class_exists($fqcn);
     }
 
     /**

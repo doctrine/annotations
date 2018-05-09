@@ -6,7 +6,7 @@
          beStrictAboutTodoAnnotatedTests="true"
          failOnRisky="true"
          failOnWarning="true"
-         bootstrap="./tests/Doctrine/Tests/TestInit.php"
+         bootstrap="vendor/autoload.php"
 >
     <php>
         <ini name="error_reporting" value="-1" />

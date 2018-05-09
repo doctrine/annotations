@@ -5,7 +5,6 @@ namespace Doctrine\Tests\Annotations;
 use Doctrine\Annotations\Annotation;
 use Doctrine\Annotations\AnnotationException;
 use Doctrine\Annotations\DocParser;
-use Doctrine\Annotations\AnnotationRegistry;
 use Doctrine\Annotations\Annotation\Target;
 use Doctrine\Tests\Annotations\Fixtures\AnnotationTargetAll;
 use Doctrine\Tests\Annotations\Fixtures\AnnotationWithConstants;
@@ -1110,8 +1109,6 @@ DOCBLOCK;
         self::assertFalse(class_exists('Doctrine\Tests\Annotations\Fixture\Annotation\Autoload', false), 'Pre-condition: Doctrine\Tests\Annotations\Fixture\Annotation\Autoload not allowed to be loaded.');
 
         $parser = new DocParser();
-
-        AnnotationRegistry::registerAutoloadNamespace('Doctrine\Tests\Annotations\Fixtures\Annotation', __DIR__ . '/../../../../');
 
         $parser->setImports([
             'autoload' => Fixtures\Annotation\Autoload::class,
