@@ -80,25 +80,7 @@ This creates a simple annotation reader with no caching other than in memory (in
 Since parsing docblocks can be expensive you should cache this process by using
 a caching reader.
 
-You can use a file caching reader:
-
-.. code-block:: php
-
-    use Doctrine\Annotations\FileCacheReader;
-    use Doctrine\Annotations\AnnotationReader;
-
-    $reader = new FileCacheReader(
-        new AnnotationReader(),
-        "/path/to/cache",
-        $debug = true
-    );
-
-If you set the debug flag to true the cache reader will check for changes in the original files, which
-is very important during development. If you don't set it to true you have to delete the directory to clear the cache.
-This gives faster performance, however should only be used in production, because of its inconvenience
-during development.
-
-You can also use one of the ``Doctrine\Common\Cache\Cache`` cache implementations to cache the annotations:
+You can use one of the ``Doctrine\Common\Cache\Cache`` cache implementations to cache the annotations:
 
 .. code-block:: php
 
@@ -112,7 +94,7 @@ You can also use one of the ``Doctrine\Common\Cache\Cache`` cache implementation
         $debug = true
     );
 
-The debug flag is used here as well to invalidate the cache files when the PHP class with annotations changed
+The debug flag is used here to invalidate the cache files when the PHP class with annotations changed
 and should be used during development.
 
 .. warning ::
