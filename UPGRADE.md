@@ -5,7 +5,12 @@
 `Doctrine\Common\Annotations\SimpleAnnotationReader` has been dropped.
 Please use `Doctrine\Annotations\AnnotationReader` instead.
 
-# FileCacheReader removed
+## Doctrine\Common\Annotations\AnnotationRegistry removed
+
+`Doctrine\Common\Annotations\AnnotationRegistry` has been dropped.
+Annotations now rely purely on autoloading, no explicit registration is needed anymore.
+
+## Doctrine\Common\Annotations\FileCacheReader removed
 
 `Doctrine\Common\Annotations\FileCacheReader` has been removed. Please use Doctrine Cache adapter instead.
 
