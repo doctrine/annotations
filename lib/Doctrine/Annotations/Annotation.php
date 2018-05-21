@@ -15,7 +15,7 @@ class Annotation
     /**
      * Value property. Common among all derived classes.
      *
-     * @var string
+     * @var mixed
      */
     public $value;
 
