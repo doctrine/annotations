@@ -1379,11 +1379,16 @@ DOCBLOCK;
 
     }
 
+    /**
+     * Ensure annotations can be ignored when namespaces are present.
+     *
+     * DocParser should never use class_exists() on an ignored annotation,
+     * including cases where namespaces are set.
+     */
     public function testIgnoredAnnotationSkippedBeforeReflection() {
         $annotation = 'neverReflectThis';
         $parser = new DocParser();
         $parser->setIgnoredAnnotationNames([$annotation => TRUE]);
-//        $parser->setIgnoreNotImportedAnnotations(TRUE);
         $parser->addNamespace('\\Arbitrary\\Namespace');
 
         // Register our class loader which will fail if the parser tries to
