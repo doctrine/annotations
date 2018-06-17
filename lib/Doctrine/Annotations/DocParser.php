@@ -667,6 +667,9 @@ final class DocParser
             $loweredAlias = strtolower($alias);
 
             if ($this->namespaces) {
+                if (isset($this->ignoredAnnotationNames[$name])) {
+                    return false;
+                }
                 foreach ($this->namespaces as $namespace) {
                     if ($this->classExists($namespace.'\\'.$name)) {
                         $name = $namespace.'\\'.$name;
