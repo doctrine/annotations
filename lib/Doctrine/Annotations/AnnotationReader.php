@@ -162,11 +162,15 @@ class AnnotationReader implements Reader
      */
     public function __construct(DocParser $parser = null)
     {
-        if (extension_loaded('Zend Optimizer+') && (ini_get('zend_optimizerplus.save_comments') === "0" || ini_get('opcache.save_comments') === "0")) {
+        if (extension_loaded('Zend Optimizer+') &&
+            function_exists('ini_get') &&
+            (ini_get('zend_optimizerplus.save_comments') === "0" || ini_get('opcache.save_comments') === "0")) {
             throw AnnotationException::optimizerPlusSaveComments();
         }
 
-        if (extension_loaded('Zend OPcache') && ini_get('opcache.save_comments') == 0) {
+        if (extension_loaded('Zend OPcache') &&
+            function_exists('ini_get') &&
+            ini_get('opcache.save_comments') == 0) {
             throw AnnotationException::optimizerPlusSaveComments();
         }
 
