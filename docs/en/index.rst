@@ -30,7 +30,7 @@ You can install the Annotation component with composer:
 
 .. code-block::
 
-    $ composer require doctrine/annotation
+    $ composer require doctrine/annotations
 
 Create an annotation class
 ==========================
