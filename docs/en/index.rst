@@ -69,7 +69,10 @@ access the annotations of a class. A common one is
     $property = $reflectionClass->getProperty('bar');
 
     $reader = new AnnotationReader();
-    $myAnnotation = $reader->getPropertyAnnotation($property, 'bar');
+    $myAnnotation = $reader->getPropertyAnnotation(
+        $property,
+        MyAnnotation::class
+    );
 
     echo $myAnnotation->myProperty; // result: "value"
 
