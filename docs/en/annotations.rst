@@ -97,7 +97,7 @@ You can use one of the ``Doctrine\Common\Cache\Cache`` cache implementations to 
 The debug flag is used here to invalidate the cache files when the PHP class with annotations changed
 and should be used during development.
 
-.. warning ::
+.. warning::
 
     The AnnotationReader works and caches under the
     assumption that all annotations of a doc-block are processed at
