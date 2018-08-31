@@ -1,8 +1,14 @@
 {
     "name": "doctrine/annotations",
     "type": "library",
-    "description": "Docblock Annotations Parser",
-    "keywords": ["annotations", "docblock", "parser"],
+    "description": "PHP Doctrine DocBlock Annotations Parser library that lets you parse structured data out of PHP docblocks for use with other functionality.",
+    "keywords": [
+        "php",
+        "annotations",
+        "docblock",
+        "parser",
+        "comment"
+    ],
     "homepage": "http://www.doctrine-project.org",
     "license": "MIT",
     "authors": [
