@@ -427,9 +427,9 @@ class AnnotationReader implements Reader
     }
 
     /**
-     * Retrieves imports for properties.
+     * Retrieves imports for constants.
      *
-     * @param \ReflectionProperty $property
+     * @param \ReflectionClassConstant $constant
      *
      * @return array
      */
