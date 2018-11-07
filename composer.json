@@ -1,5 +1,5 @@
 {
-    "name": "doctrine/annotations",
+    "name": "yurunsoft/doctrine-annotations",
     "type": "library",
     "description": "Docblock Annotations Parser",
     "keywords": ["annotations", "docblock", "parser"],
@@ -10,7 +10,8 @@
         {"name": "Roman Borschel", "email": "roman@code-factory.org"},
         {"name": "Benjamin Eberlei", "email": "kontakt@beberlei.de"},
         {"name": "Jonathan Wage", "email": "jonwage@gmail.com"},
-        {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"}
+        {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"},
+        {"name": "Yurun", "email": "yurun@yurunsoft.com"}
     ],
     "require": {
         "php": "^7.1",

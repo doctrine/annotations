@@ -34,7 +34,8 @@ final class Target
     const TARGET_METHOD             = 2;
     const TARGET_PROPERTY           = 4;
     const TARGET_ANNOTATION         = 8;
-    const TARGET_ALL                = 15;
+    const TARGET_CONSTANT           = 16;
+    const TARGET_ALL                = 31;
 
     /**
      * @var array
@@ -45,6 +46,8 @@ final class Target
         'METHOD'     => self::TARGET_METHOD,
         'PROPERTY'   => self::TARGET_PROPERTY,
         'ANNOTATION' => self::TARGET_ANNOTATION,
+        'CONSTANT'   => self::TARGET_CONSTANT,
+        'CONST'      => self::TARGET_CONSTANT,
     );
 
     /**
