@@ -1,5 +1,5 @@
 {
-    "name": "doctrine/annotations",
+    "name": "yurunsoft/doctrine-annotations",
     "type": "library",
     "description": "PHP Doctrine DocBlock Annotations Parser library that lets you parse structured data out of PHP docblocks for use with other functionality.",
     "keywords": [
@@ -16,7 +16,8 @@
         {"name": "Roman Borschel", "email": "roman@code-factory.org"},
         {"name": "Benjamin Eberlei", "email": "kontakt@beberlei.de"},
         {"name": "Jonathan Wage", "email": "jonwage@gmail.com"},
-        {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"}
+        {"name": "Johannes Schmitt", "email": "schmittjoh@gmail.com"},
+        {"name": "Yurun", "email": "yurun@yurunsoft.com"}
     ],
     "require": {
         "php": "^7.2",
