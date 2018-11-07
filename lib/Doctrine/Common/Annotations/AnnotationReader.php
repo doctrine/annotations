@@ -444,7 +444,7 @@ class AnnotationReader implements Reader
         $traitImports = array();
 
         foreach ($class->getTraits() as $trait) {
-            if ($trait->hasProperty($constant->getName())) {
+            if ($trait->hasConstant($constant->getName())) {
                 $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
             }
         }
