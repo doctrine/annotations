@@ -308,7 +308,7 @@ class AnnotationReader implements Reader
     public function getConstantAnnotations(\ReflectionClassConstant $constant)
     {
         $class   = $constant->getDeclaringClass();
-        $context = 'constant ' . $class->getName() . "::\$" . $constant->getName();
+        $context = 'constant ' . $class->getName() . "::" . $constant->getName();
 
         $this->parser->setTarget(Target::TARGET_CONSTANT);
         $this->parser->setImports($this->getConstantImports($constant));
