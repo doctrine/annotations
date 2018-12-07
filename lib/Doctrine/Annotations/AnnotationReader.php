@@ -86,7 +86,10 @@ class AnnotationReader implements Reader
         // Symfony 3.3 Cache Adapter
         'experimental' => true,
         // Slevomat Coding Standard
-        'phpcsSuppress' => true
+        'phpcsSuppress' => true,
+        // PHP CodeSniffer
+        'codingStandardsIgnoreStart' => true,
+        'codingStandardsIgnoreEnd' => true,
     ];
 
     /**
