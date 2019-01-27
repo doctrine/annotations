@@ -30,7 +30,7 @@ You can install the Annotation component with composer:
 
 .. code-block::
 
-    $ composer require doctrine/annotations
+    $ composer require doctrine/annotations
 
 Create an annotation class
 ==========================
@@ -69,7 +69,10 @@ access the annotations of a class. A common one is
     $property = $reflectionClass->getProperty('bar');
 
     $reader = new AnnotationReader();
-    $myAnnotation = $reader->getPropertyAnnotation($property, 'bar');
+    $myAnnotation = $reader->getPropertyAnnotation(
+        $property,
+        MyAnnotation::class
+    );
 
     echo $myAnnotation->myProperty; // result: "value"
 
