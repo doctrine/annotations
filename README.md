@@ -11,6 +11,10 @@ Docblock Annotations Parser library (extracted from [Doctrine Common](https://gi
 
 See the [doctrine-project website](https://www.doctrine-project.org/projects/doctrine-annotations/en/latest/index.html).
 
+## Contributing
+
+Please always add native types where possible. [Coding Standard Guidelines.](https://www.doctrine-project.org/projects/doctrine-coding-standard/en/latest/reference/index.html#introduction)
+
 ## Changelog
 
 See [UPGRADE.md](UPGRADE.md).
