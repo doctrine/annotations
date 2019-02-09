@@ -5,7 +5,7 @@ language: php
 php:
   - 7.2
   - 7.3
-  - nightly
+  - 7.4snapshot
 
 cache:
   directories:
@@ -43,7 +43,7 @@ after_script:
 
 jobs:
   allow_failures:
-    - php: nightly
+    - php: 7.4snapshot
 
   exclude:
     - php: 7.2
