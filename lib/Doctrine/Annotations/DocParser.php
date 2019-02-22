@@ -3,10 +3,18 @@
 namespace Doctrine\Annotations;
 
 use Doctrine\Annotations\Annotation\Attribute;
+use Doctrine\Annotations\Metadata\AnnotationTarget;
+use Doctrine\Annotations\Metadata\Builder\AnnotationMetadataBuilder;
+use Doctrine\Annotations\Metadata\Builder\PropertyMetadataBuilder;
+use Doctrine\Annotations\Metadata\InternalAnnotations;
+use Doctrine\Annotations\Metadata\MetadataCollection;
+use Doctrine\Annotations\Metadata\TransientMetadataCollection;
 use ReflectionClass;
 use Doctrine\Annotations\Annotation\Enum;
 use Doctrine\Annotations\Annotation\Target;
 use Doctrine\Annotations\Annotation\Attributes;
+use function array_key_exists;
+use function array_keys;
 
 /**
  * A parser for docblock annotations.
@@ -118,93 +126,12 @@ final class DocParser
     /**
      * Hash-map for caching annotation metadata.
      *
-     * @var array
+     * @var MetadataCollection
      */
-    private static $annotationMetadata = [
-        'Doctrine\Annotations\Annotation\Target' => [
-            'is_annotation'    => true,
-            'has_constructor'  => true,
-            'properties'       => [],
-            'targets_literal'  => 'ANNOTATION_CLASS',
-            'targets'          => Target::TARGET_CLASS,
-            'default_property' => 'value',
-            'attribute_types'  => [
-                'value'  => [
-                    'required'  => false,
-                    'type'      =>'array',
-                    'array_type'=>'string',
-                    'value'     =>'array<string>'
-                ]
-             ],
-        ],
-        'Doctrine\Annotations\Annotation\Attribute' => [
-            'is_annotation'    => true,
-            'has_constructor'  => false,
-            'targets_literal'  => 'ANNOTATION_ANNOTATION',
-            'targets'          => Target::TARGET_ANNOTATION,
-            'default_property' => 'name',
-            'properties'       => [
-                'name'      => 'name',
-                'type'      => 'type',
-                'required'  => 'required'
-            ],
-            'attribute_types'  => [
-                'value'  => [
-                    'required'  => true,
-                    'type'      =>'string',
-                    'value'     =>'string'
-                ],
-                'type'  => [
-                    'required'  =>true,
-                    'type'      =>'string',
-                    'value'     =>'string'
-                ],
-                'required'  => [
-                    'required'  =>false,
-                    'type'      =>'boolean',
-                    'value'     =>'boolean'
-                ]
-             ],
-        ],
-        'Doctrine\Annotations\Annotation\Attributes' => [
-            'is_annotation'    => true,
-            'has_constructor'  => false,
-            'targets_literal'  => 'ANNOTATION_CLASS',
-            'targets'          => Target::TARGET_CLASS,
-            'default_property' => 'value',
-            'properties'       => [
-                'value' => 'value'
-            ],
-            'attribute_types'  => [
-                'value' => [
-                    'type'      =>'array',
-                    'required'  =>true,
-                    'array_type'=>'Doctrine\Annotations\Annotation\Attribute',
-                    'value'     =>'array<Doctrine\Annotations\Annotation\Attribute>'
-                ]
-             ],
-        ],
-        'Doctrine\Annotations\Annotation\Enum' => [
-            'is_annotation'    => true,
-            'has_constructor'  => true,
-            'targets_literal'  => 'ANNOTATION_PROPERTY',
-            'targets'          => Target::TARGET_PROPERTY,
-            'default_property' => 'value',
-            'properties'       => [
-                'value' => 'value'
-            ],
-            'attribute_types'  => [
-                'value' => [
-                    'type'      => 'array',
-                    'required'  => true,
-                ],
-                'literal' => [
-                    'type'      => 'array',
-                    'required'  => false,
-                ],
-             ],
-        ],
-    ];
+    private $metadata;
+
+    /** @var array<string, bool> */
+    private $nonAnnotationClasses = [];
 
     /**
      * Hash-map for handle types declaration.
@@ -224,7 +151,8 @@ final class DocParser
      */
     public function __construct()
     {
-        $this->lexer = new DocLexer;
+        $this->lexer    = new DocLexer;
+        $this->metadata = InternalAnnotations::createMetadata();
     }
 
     /**
@@ -468,85 +396,99 @@ final class DocParser
             ]);
         }
 
-        $class      = new \ReflectionClass($name);
+        $class      = new ReflectionClass($name);
         $docComment = $class->getDocComment();
 
-        // Sets default values for annotation metadata
-        $metadata = [
-            'default_property' => null,
-            'has_constructor'  => (null !== $constructor = $class->getConstructor()) && $constructor->getNumberOfParameters() > 0,
-            'properties'       => [],
-            'property_types'   => [],
-            'attribute_types'  => [],
-            'targets_literal'  => null,
-            'targets'          => Target::TARGET_ALL,
-            'is_annotation'    => false !== strpos($docComment, '@Annotation'),
-        ];
-
         // verify that the class is really meant to be an annotation
-        if ($metadata['is_annotation']) {
-            self::$metadataParser->setTarget(Target::TARGET_CLASS);
+        if (strpos($docComment, '@Annotation') === false) {
+            $this->nonAnnotationClasses[$name] = true;
+            return;
+        }
 
-            foreach (self::$metadataParser->parse($docComment, 'class @' . $name) as $annotation) {
-                if ($annotation instanceof Target) {
-                    $metadata['targets']         = $annotation->targets;
-                    $metadata['targets_literal'] = $annotation->literal;
+        $constructor       = $class->getConstructor();
+        $useConstructor    = $constructor !== null && $constructor->getNumberOfParameters() > 0;
+        $annotationBuilder = new AnnotationMetadataBuilder($name);
 
-                    continue;
-                }
+        if ($useConstructor) {
+            $annotationBuilder->withUsingConstructor();
+        }
 
-                if ($annotation instanceof Attributes) {
-                    foreach ($annotation->value as $attribute) {
-                        $this->collectAttributeTypeMetadata($metadata, $attribute);
-                    }
-                }
+        self::$metadataParser->setTarget(Target::TARGET_CLASS);
+
+        foreach (self::$metadataParser->parse($docComment, 'class @' . $name) as $annotation) {
+            if ($annotation instanceof Target) {
+                $annotationBuilder->withTarget(AnnotationTarget::fromAnnotation($annotation));
+
+                continue;
             }
 
-            // if not has a constructor will inject values into public properties
-            if (false === $metadata['has_constructor']) {
-                // collect all public properties
-                foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
-                    $metadata['properties'][$property->name] = $property->name;
+            if ($annotation instanceof Attributes) {
+                foreach ($annotation->value as $attribute) {
+                    $propertyBuilder = new PropertyMetadataBuilder($attribute->name);
 
-                    if (false === ($propertyComment = $property->getDocComment())) {
-                        continue;
-                    }
-
-                    $attribute = new Attribute();
-
-                    $attribute->required = (false !== strpos($propertyComment, '@Required'));
-                    $attribute->name     = $property->name;
-                    $attribute->type     = (false !== strpos($propertyComment, '@var') && preg_match('/@var\s+([^\s]+)/',$propertyComment, $matches))
-                        ? $matches[1]
-                        : 'mixed';
-
-                    $this->collectAttributeTypeMetadata($metadata, $attribute);
-
-                    // checks if the property has @Enum
-                    if (false !== strpos($propertyComment, '@Enum')) {
-                        $context = 'property ' . $class->name . "::\$" . $property->name;
-
-                        self::$metadataParser->setTarget(Target::TARGET_PROPERTY);
-
-                        foreach (self::$metadataParser->parse($propertyComment, $context) as $annotation) {
-                            if ( ! $annotation instanceof Enum) {
-                                continue;
-                            }
-
-                            $metadata['enum'][$property->name]['value']   = $annotation->value;
-                            $metadata['enum'][$property->name]['literal'] = ( ! empty($annotation->literal))
-                                ? $annotation->literal
-                                : $annotation->value;
-                        }
-                    }
+                    $this->collectAttributeTypeMetadata($propertyBuilder, $attribute);
+                    $annotationBuilder->withProperty($propertyBuilder->build());
                 }
-
-                // choose the first property as default property
-                $metadata['default_property'] = reset($metadata['properties']);
             }
         }
 
-        self::$annotationMetadata[$name] = $metadata;
+        if ($useConstructor) {
+            $this->metadata->add($annotationBuilder->build());
+
+            return;
+        }
+
+        // if there is no constructor we will inject values into public properties
+
+        // collect all public properties
+        foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $i => $property) {
+            $propertyBuilder = new PropertyMetadataBuilder($property->getName());
+            $propertyComment = $property->getDocComment();
+
+            if ($i === 0) {
+                $propertyBuilder->withBeingDefault();
+            }
+
+
+            if ($propertyComment === false) {
+                $annotationBuilder->withProperty($propertyBuilder->build());
+
+                continue;
+            }
+
+            $attribute           = new Attribute();
+            $attribute->required = (false !== strpos($propertyComment, '@Required'));
+            $attribute->name     = $property->name;
+            $attribute->type     = (false !== strpos($propertyComment, '@var') && preg_match('/@var\s+([^\s]+)/',$propertyComment, $matches))
+                ? $matches[1]
+                : 'mixed';
+
+            $this->collectAttributeTypeMetadata($propertyBuilder, $attribute);
+
+            // checks if the property has @Enum
+            if (false !== strpos($propertyComment, '@Enum')) {
+                $context = 'property ' . $class->name . "::\$" . $property->name;
+
+                self::$metadataParser->setTarget(Target::TARGET_PROPERTY);
+
+                foreach (self::$metadataParser->parse($propertyComment, $context) as $annotation) {
+                    if ( ! $annotation instanceof Enum) {
+                        continue;
+                    }
+
+                    $propertyBuilder = $propertyBuilder->withEnum([
+                        'value'   => $annotation->value,
+                        'literal' => ( ! empty($annotation->literal))
+                            ? $annotation->literal
+                            : $annotation->value,
+                    ]);
+                }
+            }
+
+            $annotationBuilder->withProperty($propertyBuilder->build());
+        }
+
+        $this->metadata->add($annotationBuilder->build());
     }
 
     /**
@@ -554,11 +496,11 @@ final class DocParser
      *
      * @param array     $metadata
      * @param Attribute $attribute
-     *
-     * @return void
      */
-    private function collectAttributeTypeMetadata(&$metadata, Attribute $attribute)
-    {
+    private function collectAttributeTypeMetadata(
+        PropertyMetadataBuilder $metadata,
+        Attribute $attribute
+    ) : void {
         // handle internal type declaration
         $type = self::$typeMap[$attribute->type] ?? $attribute->type;
 
@@ -567,36 +509,40 @@ final class DocParser
             return;
         }
 
-        // Evaluate type
-        switch (true) {
-            // Checks if the property has array<type>
-            case (false !== $pos = strpos($type, '<')):
-                $arrayType  = substr($type, $pos + 1, -1);
-                $type       = 'array';
-
-                if (isset(self::$typeMap[$arrayType])) {
-                    $arrayType = self::$typeMap[$arrayType];
-                }
-
-                $metadata['attribute_types'][$attribute->name]['array_type'] = $arrayType;
-                break;
-
-            // Checks if the property has type[]
-            case (false !== $pos = strrpos($type, '[')):
-                $arrayType  = substr($type, 0, $pos);
-                $type       = 'array';
-
-                if (isset(self::$typeMap[$arrayType])) {
-                    $arrayType = self::$typeMap[$arrayType];
-                }
-
-                $metadata['attribute_types'][$attribute->name]['array_type'] = $arrayType;
-                break;
+        if ($attribute->required) {
+            $metadata->withBeingRequired();
         }
 
-        $metadata['attribute_types'][$attribute->name]['type']     = $type;
-        $metadata['attribute_types'][$attribute->name]['value']    = $attribute->type;
-        $metadata['attribute_types'][$attribute->name]['required'] = $attribute->required;
+        // Evaluate type
+
+        // Checks if the property has array<type>
+        if (false !== $pos = strpos($type, '<')) {
+            $arrayType = substr($type, $pos + 1, -1);
+
+            $metadata->withType([
+                'type' => 'array',
+                'array_type' => self::$typeMap[$arrayType] ?? $arrayType,
+            ]);
+
+            return;
+        }
+
+        // Checks if the property has type[]
+         if (false !== $pos = strrpos($type, '[')) {
+            $arrayType = substr($type, 0, $pos);
+
+            $metadata->withType([
+                'type'            => 'array',
+                'array_type' => self::$typeMap[$arrayType] ?? $arrayType,
+            ]);
+
+            return;
+        }
+
+        $metadata->withType([
+            'type'  => $type,
+            'value' => $attribute->type,
+        ]);
     }
 
     /**
@@ -710,12 +656,12 @@ final class DocParser
 
 
         // collects the metadata annotation only if there is not yet
-        if ( ! isset(self::$annotationMetadata[$name])) {
+        if (! $this->metadata->has($name) && ! array_key_exists($name, $this->nonAnnotationClasses)) {
             $this->collectAnnotationMetadata($name);
         }
 
         // verify that the class is really meant to be an annotation and not just any ordinary class
-        if (self::$annotationMetadata[$name]['is_annotation'] === false) {
+        if (array_key_exists($name, $this->nonAnnotationClasses)) {
             if ($this->ignoreNotImportedAnnotations || isset($this->ignoredAnnotationNames[$originalName])) {
                 return false;
             }
@@ -728,80 +674,97 @@ final class DocParser
 
         // Next will be nested
         $this->isNestedAnnotation = true;
+        $metadata                 = $this->metadata->get($name);
 
         //if annotation does not support current target
-        if (0 === (self::$annotationMetadata[$name]['targets'] & $target) && $target) {
+        if (($metadata->getTarget()->unwrap() & $target) === 0 && $target) {
             throw AnnotationException::semanticalError(
                 sprintf('Annotation @%s is not allowed to be declared on %s. You may only use this annotation on these code elements: %s.',
-                     $originalName, $this->context, self::$annotationMetadata[$name]['targets_literal'])
+                     $originalName, $this->context, $metadata->getTarget()->describe())
             );
         }
 
         $values = $this->MethodCall();
 
-        if (isset(self::$annotationMetadata[$name]['enum'])) {
-            // checks all declared attributes
-            foreach (self::$annotationMetadata[$name]['enum'] as $property => $enum) {
-                // checks if the attribute is a valid enumerator
-                if (isset($values[$property]) && ! in_array($values[$property], $enum['value'])) {
-                    throw AnnotationException::enumeratorError($property, $name, $this->context, $enum['literal'], $values[$property]);
-                }
+        // checks all declared attributes for enums
+        foreach ($metadata->getProperties() as $property) {
+            $propertyName = $property->getName();
+            $enum         = $property->getEnum();
+
+            // checks if the attribute is a valid enumerator
+            if ($enum !== null && isset($values[$propertyName]) && ! in_array($values[$propertyName], $enum['value'])) {
+                throw AnnotationException::enumeratorError($propertyName, $name, $this->context, $enum['literal'], $values[$propertyName]);
             }
         }
 
         // checks all declared attributes
-        foreach (self::$annotationMetadata[$name]['attribute_types'] as $property => $type) {
-            if ($property === self::$annotationMetadata[$name]['default_property']
-                && !isset($values[$property]) && isset($values['value'])) {
-                $property = 'value';
+        foreach ($metadata->getProperties() as $property) {
+            $propertyName = $property->getName();
+            $valueName    = $propertyName;
+            $type         = $property->getType();
+
+            if ($property->isDefault() && !isset($values[$propertyName]) && isset($values['value'])) {
+                $valueName = 'value';
             }
 
             // handle a not given attribute or null value
-            if (!isset($values[$property])) {
-                if ($type['required']) {
-                    throw AnnotationException::requiredError($property, $originalName, $this->context, 'a(n) '.$type['value']);
+            if (! isset($values[$valueName])) {
+                if ($property->isRequired()) {
+                    throw AnnotationException::requiredError($propertyName, $originalName, $this->context, 'a(n) ' . $type['value']);
                 }
 
                 continue;
             }
 
-            if ($type['type'] === 'array') {
+            if ($type !== null && $type['type'] === 'array') {
                 // handle the case of a single value
-                if ( ! is_array($values[$property])) {
-                    $values[$property] = [$values[$property]];
+                if ( ! is_array($values[$valueName])) {
+                    $values[$valueName] = [$values[$valueName]];
                 }
 
                 // checks if the attribute has array type declaration, such as "array<string>"
                 if (isset($type['array_type'])) {
-                    foreach ($values[$property] as $item) {
+                    foreach ($values[$valueName] as $item) {
                         if (gettype($item) !== $type['array_type'] && !$item instanceof $type['array_type']) {
-                            throw AnnotationException::attributeTypeError($property, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item);
+                            throw AnnotationException::attributeTypeError($propertyName, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item);
                         }
                     }
                 }
-            } elseif (gettype($values[$property]) !== $type['type'] && !$values[$property] instanceof $type['type']) {
-                throw AnnotationException::attributeTypeError($property, $originalName, $this->context, 'a(n) '.$type['value'], $values[$property]);
+            } elseif ($type !== null && gettype($values[$valueName]) !== $type['type'] && !$values[$valueName] instanceof $type['type']) {
+                throw AnnotationException::attributeTypeError($propertyName, $originalName, $this->context, 'a(n) '.$type['value'], $values[$valueName]);
             }
         }
 
         // check if the annotation expects values via the constructor,
         // or directly injected into public properties
-        if (self::$annotationMetadata[$name]['has_constructor'] === true) {
+        if ($metadata->usesConstructor()) {
             return new $name($values);
         }
 
         $instance = new $name();
 
         foreach ($values as $property => $value) {
-            if (!isset(self::$annotationMetadata[$name]['properties'][$property])) {
+            if (! isset($metadata->getProperties()[$property])) {
                 if ('value' !== $property) {
-                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not have a property named "%s". Available properties: %s', $originalName, $this->context, $property, implode(', ', self::$annotationMetadata[$name]['properties'])));
+                    throw AnnotationException::creationError(
+                        sprintf(
+                            'The annotation @%s declared on %s does not have a property named "%s". Available properties: %s',
+                            $originalName,
+                            $this->context,
+                            $property,
+                            implode(', ', array_keys($metadata->getProperties()))
+                        )
+                    );
                 }
 
+                $defaultProperty = $metadata->getDefaultProperty();
+
                 // handle the case if the property has no annotations
-                if ( ! $property = self::$annotationMetadata[$name]['default_property']) {
+                if ($defaultProperty === null) {
                     throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)));
                 }
+
+                $property = $defaultProperty->getName();
             }
 
             $instance->{$property} = $value;

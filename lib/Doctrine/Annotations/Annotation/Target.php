@@ -2,6 +2,8 @@
 
 namespace Doctrine\Annotations\Annotation;
 
+use Doctrine\Annotations\Metadata\AnnotationTarget;
+
 /**
  * Annotation that can be used to signal to the parser
  * to check the annotation target during the parsing process.
@@ -12,11 +14,11 @@ namespace Doctrine\Annotations\Annotation;
  */
 final class Target
 {
-    const TARGET_CLASS              = 1;
-    const TARGET_METHOD             = 2;
-    const TARGET_PROPERTY           = 4;
-    const TARGET_ANNOTATION         = 8;
-    const TARGET_ALL                = 15;
+    public const TARGET_CLASS      = AnnotationTarget::TARGET_CLASS;
+    public const TARGET_METHOD     = AnnotationTarget::TARGET_METHOD;
+    public const TARGET_PROPERTY   = AnnotationTarget::TARGET_PROPERTY;
+    public const TARGET_ANNOTATION = AnnotationTarget::TARGET_ANNOTATION;
+    public const TARGET_ALL        = AnnotationTarget::TARGET_ALL;
 
     /**
      * @var array
