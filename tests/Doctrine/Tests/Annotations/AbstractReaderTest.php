@@ -2,7 +2,6 @@
 
 namespace Doctrine\Tests\Annotations;
 
-use Doctrine\Annotations\Annotation;
 use Doctrine\Annotations\AnnotationException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass, Doctrine\Annotations\AnnotationReader;
@@ -554,15 +553,16 @@ class DummyClass2 {
 }
 
 /** @Annotation */
-class DummyId extends Annotation {}
+class DummyId {}
 /** @Annotation */
-class DummyColumn extends Annotation {
+class DummyColumn {
     public $type;
 }
 /** @Annotation */
-class DummyGeneratedValue extends Annotation {}
+class DummyGeneratedValue {}
 /** @Annotation */
-class DummyAnnotation extends Annotation {
+class DummyAnnotation {
+    public $value;
     public $dummyValue;
 }
 
@@ -570,17 +570,17 @@ class DummyAnnotation extends Annotation {
  * @api
  * @Annotation
  */
-class DummyAnnotationWithIgnoredAnnotation extends Annotation {
+class DummyAnnotationWithIgnoredAnnotation {
     public $dummyValue;
 }
 
 /** @Annotation */
-class DummyJoinColumn extends Annotation {
+class DummyJoinColumn {
     public $name;
     public $referencedColumnName;
 }
 /** @Annotation */
-class DummyJoinTable extends Annotation {
+class DummyJoinTable {
     public $name;
     public $joinColumns;
     public $inverseJoinColumns;
@@ -655,20 +655,16 @@ class DCOM106
 
 namespace Doctrine\Tests\Annotations\Foo;
 
-use Doctrine\Annotations\Annotation;
-
 /** @Annotation */
-class Name extends Annotation
+class Name
 {
     public $name;
 }
 
 namespace Doctrine\Tests\Annotations\Bar;
 
-use Doctrine\Annotations\Annotation;
-
 /** @Annotation */
-class Name extends Annotation
+class Name
 {
     public $name;
 }
