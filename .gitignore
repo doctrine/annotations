@@ -1,4 +1,5 @@
-vendor/
-composer.lock
-composer.phar
-phpunit.xml
+/vendor/
+/composer.lock
+/composer.phar
+/phpbench.json
+/phpunit.xml
