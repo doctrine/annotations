@@ -27,7 +27,13 @@
         "psr-4": { "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations" }
     },
     "autoload-dev": {
-        "psr-4": { "Doctrine\\Tests\\Common\\Annotations\\": "tests/Doctrine/Tests/Common/Annotations" }
+        "psr-4": {
+            "Doctrine\\Performance\\Common\\Annotations\\": "tests/Doctrine/Performance/Common/Annotations",
+            "Doctrine\\Tests\\Common\\Annotations\\": "tests/Doctrine/Tests/Common/Annotations"
+        },
+        "files": [
+            "tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php"
+        ]
     },
     "extra": {
         "branch-alias": {
