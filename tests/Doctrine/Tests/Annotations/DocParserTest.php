@@ -2,7 +2,6 @@
 
 namespace Doctrine\Tests\Annotations;
 
-use Doctrine\Annotations\Annotation;
 use Doctrine\Annotations\AnnotationException;
 use Doctrine\Annotations\DocParser;
 use Doctrine\Annotations\Annotation\Target;
@@ -1430,7 +1429,8 @@ class AnnotationExtendsAnnotationTargetAll extends AnnotationTargetAll
 }
 
 /** @Annotation */
-class Name extends Annotation {
+class Name {
+    public $value;
     public $foo;
 }
 
@@ -1441,8 +1441,6 @@ class Marker {
 
 namespace Doctrine\Tests\Annotations\FooBar;
 
-use Doctrine\Annotations\Annotation;
-
 /** @Annotation */
-class Name extends Annotation {
+class Name {
 }

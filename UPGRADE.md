@@ -1,5 +1,28 @@
 # Upgrade to 2.0
 
+## Doctrine\Common\Annotations\Annotation removed
+
+This class served as a base annotation ancestor without adding any real benefit. It provided a default `$value` property as well as dynamically set any undefined property without issuing an exception.
+
+If you relied on existence of the `$value` property, you're advised to define it yourself.
+Before:
+```php
+/** @Annotation */
+class FooAnnotation extends Doctrine\Common\Annotations\Annotation
+{
+}
+```
+After:
+```php
+/** @Annotation */
+class FooAnnotation
+{
+    public $value;
+}
+```
+
+If you relied on setting undefined properties, you're advised to property define them, or, should this not be possible in your use case, handle undefined properties yourself using the constructor instantiation. 
+
 ## Doctrine\Common\Annotations\SimpleAnnotationReader removed
 
 `Doctrine\Common\Annotations\SimpleAnnotationReader` has been dropped.
