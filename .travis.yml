@@ -62,4 +62,4 @@ jobs:
         - travis_retry composer update --prefer-dist
         - curl -o phpbench.phar https://phpbench.github.io/phpbench/phpbench.phar
         - curl -o phpbench.phar.pubkey https://phpbench.github.io/phpbench/phpbench.phar.pubkey
-      script: php phpbench.phar
+      script: php phpbench.phar run
