@@ -23,10 +23,4 @@
             <directory suffix=".php">./lib/Doctrine/</directory>
         </whitelist>
     </filter>
-    
-    <groups>
-        <exclude>
-            <group>performance</group>
-        </exclude>
-    </groups>
 </phpunit>

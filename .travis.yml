@@ -29,3 +29,10 @@ jobs:
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.7
       script: vendor/bin/phpstan analyse -l 3 -c phpstan.neon lib tests
+
+    - stage: Benchmark
+      install:
+        - travis_retry composer update --prefer-dist
+        - curl -o phpbench.phar https://phpbench.github.io/phpbench/phpbench.phar
+        - curl -o phpbench.phar.pubkey https://phpbench.github.io/phpbench/phpbench.phar.pubkey
+      script: php phpbench.phar run
