@@ -33,6 +33,10 @@ Please use `Doctrine\Annotations\AnnotationReader` instead.
 `Doctrine\Common\Annotations\AnnotationRegistry` has been dropped.
 Annotations now rely purely on autoloading, no explicit registration is needed anymore.
 
+## Doctrine\Common\Annotations\CachedReader removed
+
+`Doctrine\Common\Annotations\CachedReader` has been removed as caching annotations themselves is marginally useful. Please cache the resulting structures constructed from annotations instead.
+
 ## Doctrine\Common\Annotations\FileCacheReader removed
 
 `Doctrine\Common\Annotations\FileCacheReader` has been removed. Please use Doctrine Cache adapter instead.
