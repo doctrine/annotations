@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Doctrine\Performance\Annotations;
 
 use Doctrine\Annotations\AnnotationReader;
-use ReflectionMethod;
 
 /**
  * @BeforeMethods({"initializeMethod", "initialize"})

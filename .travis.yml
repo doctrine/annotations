@@ -18,7 +18,9 @@ before_install:
     fi
   - travis_retry composer self-update
 
-install: travis_retry composer update --prefer-dist
+install:
+  - rm composer.lock
+  - travis_retry composer update --prefer-dist
 
 before_script:
   - |
@@ -56,6 +58,10 @@ jobs:
     - stage: Lint
       install: travis_retry composer require --dev --prefer-dist phpstan/phpstan:^0.7
       script: vendor/bin/phpstan analyse -l 3 -c phpstan.neon lib tests
+
+    - stage: Coding Standard
+      install: composer install
+      script: vendor/bin/phpcs
 
     - stage: Benchmark
       install:

@@ -7,11 +7,12 @@ namespace Doctrine\Performance\Annotations;
 use Doctrine\Annotations\DocParser;
 use Doctrine\Tests\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Tests\Annotations\Fixtures\Annotation\Template;
+use function array_fill_keys;
 
 /**
  * @BeforeMethods({"initializeMethod", "initialize"})
  */
-final class DocParsePerformanceBench
+final class DocParserPerformanceBench
 {
     use MethodInitializer;
 
@@ -24,10 +25,29 @@ final class DocParsePerformanceBench
     ];
 
     private const IGNORED = [
-        'access', 'author', 'copyright', 'deprecated', 'example', 'ignore',
-        'internal', 'link', 'see', 'since', 'tutorial', 'version', 'package',
-        'subpackage', 'name', 'global', 'param', 'return', 'staticvar',
-        'static', 'var', 'throws', 'inheritdoc',
+        'access',
+        'author',
+        'copyright',
+        'deprecated',
+        'example',
+        'ignore',
+        'internal',
+        'link',
+        'see',
+        'since',
+        'tutorial',
+        'version',
+        'package',
+        'subpackage',
+        'name',
+        'global',
+        'param',
+        'return',
+        'staticvar',
+        'static',
+        'var',
+        'throws',
+        'inheritdoc',
     ];
 
     /** @var DocParser */

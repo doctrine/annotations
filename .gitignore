@@ -1,5 +1,5 @@
 /vendor/
-/composer.lock
-/composer.phar
 /phpbench.json
+/phpcs.xml
 /phpunit.xml
+/.phpcs-cache

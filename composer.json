@@ -23,7 +23,7 @@
         "doctrine/lexer": "1.*"
     },
     "require-dev": {
-        "doctrine/coding-standard": "^4.0",
+        "doctrine/coding-standard": "6.0.x-dev",
         "phpunit/phpunit": "^7.0"
     },
     "config": {

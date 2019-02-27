@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ruleset>
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+
+     <!-- Ignore warnings, show progress of the run and show sniff names -->
+    <arg value="nps"/>
+
+    <rule ref="Doctrine"/>
+
+    <file>lib/</file>
+    <file>tests/</file>
+
+    <exclude-pattern>lib/Doctrine/Annotations/Annotation/*</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/AnnotationException.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/AnnotationReader.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/DocLexer.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/DocParser.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/IndexedReader.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/PhpParser.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/Reader.php</exclude-pattern>
+    <exclude-pattern>lib/Doctrine/Annotations/TokenParser.php</exclude-pattern>
+
+    <exclude-pattern>tests/Doctrine/Tests/DoctrineTestCase.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/Annotation/*</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/Fixtures/*</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/Ticket/*</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/AbstractReaderTest.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/AnnotationReaderTest.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/DocLexerTest.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/DocParserTest.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/DummyClass.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/PerformanceTest.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/PhpParserTest.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/TopLevelAnnotation.php</exclude-pattern>
+    <exclude-pattern>tests/Doctrine/Tests/Annotations/ReservedKeywordsClasses.php</exclude-pattern>
+
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase">
+        <exclude-pattern>lib/Doctrine/Annotations/ImplicitlyIgnoredAnnotationNames.php</exclude-pattern>
+    </rule>
+
+    <rule ref="Squiz.Arrays.ArrayDeclaration.MultiLineNotAllowed">
+        <exclude-pattern>lib/Doctrine/Annotations/ImplicitlyIgnoredAnnotationNames.php</exclude-pattern>
+    </rule>
+
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <rule ref="Squiz.Classes.ClassFileName.NoMatch">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+</ruleset>
