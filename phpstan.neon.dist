@@ -1,0 +1,37 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+
+parameters:
+    level: 3
+    paths:
+        - lib
+        - tests
+    autoload_files:
+        - %currentWorkingDirectory%/tests/Doctrine/Tests/Annotations/DocParserTest.php
+    excludes_analyse:
+        - %currentWorkingDirectory%/tests/*/Fixtures/*
+        - %currentWorkingDirectory%/tests/Doctrine/Tests/Annotations/ReservedKeywordsClasses.php
+        - %currentWorkingDirectory%/tests/Doctrine/Tests/Annotations/Ticket/DCOM58Entity.php
+        - %currentWorkingDirectory%/tests/Doctrine/Tests/DoctrineTestCase.php
+    polluteScopeWithLoopInitialAssignments: true
+    ignoreErrors:
+        -
+            message: '#^Class Doctrine_Tests_Annotations_Fixtures_ClassNoNamespaceNoComment not found\.$#'
+            path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\AbstractReaderTest.php'
+        -
+             message: '#^Instantiated class Doctrine_Tests_Annotations_Fixtures_ClassNoNamespaceNoComment not found\.$#'
+             path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\AbstractReaderTest.php'
+        -
+            message: '#^Property Doctrine\\Tests\\Annotations\\DummyClassNonAnnotationProblem::\$foo has unknown class Test as its type\.$#'
+            path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\AbstractReaderTest.php'
+        -
+            message: '#^PHPDoc tag @var has invalid value \(\): Unexpected token "\\n     ", expected TOKEN_IDENTIFIER at offset 15$#'
+            path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\AbstractReaderTest.php'
+        -
+            message: '#^Array has 2 duplicate keys with value .ClassWithConstants\.SOME_KEY. \(\\Doctrine\\Tests\\Annotations\\Fixtures\\ClassWithConstants::SOME_KEY, \\Doctrine\\Tests\\Annotations\\Fixtures\\ClassWithConstants::SOME_KEY\)\.$#'
+            path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\DocParserTest.php'
+        # bug in doctrine/lexer
+        -
+            message: '#^Call to static method PHPUnit\\Framework\\Assert::assertNull\(\) with array will always evaluate to false\.$#'
+            path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\DocLexerTest.php'
