@@ -3,7 +3,7 @@ includes:
     - vendor/phpstan/phpstan-phpunit/rules.neon
 
 parameters:
-    level: 3
+    level: 4
     paths:
         - lib
         - tests
