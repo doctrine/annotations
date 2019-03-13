@@ -56,7 +56,7 @@ class TokenParser
      * @param boolean $docCommentIsComment If TRUE then a doc comment is considered a comment and skipped.
      *                                     If FALSE then only whitespace and normal comments are skipped.
      *
-     * @return array|null The token if exists, null otherwise.
+     * @return array|string|null The token if exists, null otherwise.
      */
     public function next($docCommentIsComment = TRUE)
     {

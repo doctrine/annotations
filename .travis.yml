@@ -54,8 +54,7 @@ jobs:
       env: COVERAGE=yes
 
     - stage: Lint
-      install: travis_retry composer require --dev --prefer-dist phpstan/phpstan:^0.7
-      script: vendor/bin/phpstan analyse -l 3 -c phpstan.neon lib tests
+      script: vendor/bin/phpstan analyse
 
     - stage: Benchmark
       install:
