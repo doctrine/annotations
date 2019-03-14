@@ -5,10 +5,7 @@ declare(strict_types=1);
 namespace Doctrine\Annotations\Type;
 
 use Doctrine\Annotations\Type\Exception\CompositeTypeRequiresAtLeastTwoSubTypes;
-use function array_map;
 use function count;
-use function implode;
-use function sprintf;
 
 /**
  * @internal
@@ -37,19 +34,7 @@ final class UnionType implements CompositeType
 
     public function describe() : string
     {
-        return implode(
-            '|',
-            array_map(
-                static function (Type $subType) : string {
-                    if ($subType instanceof CompositeType) {
-                        return sprintf('(%s)', $subType->describe());
-                    }
-
-                    return $subType->describe();
-                },
-                $this->subTypes
-            )
-        );
+        return CompositeTypeDescriber::describe('|', $this->subTypes);
     }
 
     /**

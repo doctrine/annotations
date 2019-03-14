@@ -10,14 +10,6 @@ use stdClass;
 
 final class ConstantStringTypeTest extends TestCase
 {
-    public function testGetValue() : void
-    {
-        self::assertSame('', (new ConstantStringType(''))->getValue());
-        self::assertSame('Hello world', (new ConstantStringType('Hello world'))->getValue());
-        self::assertSame('Hello "world"', (new ConstantStringType('Hello "world"'))->getValue());
-        self::assertSame('\Hello \world', (new ConstantStringType('\Hello \world'))->getValue());
-    }
-
     public function testDescribe() : void
     {
         self::assertSame('""', (new ConstantStringType(''))->describe());

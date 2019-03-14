@@ -10,11 +10,6 @@ use stdClass;
 
 final class NullTypeTest extends TestCase
 {
-    public function testGetValue() : void
-    {
-        self::assertNull((new NullType())->getValue());
-    }
-
     public function testDescribe() : void
     {
         self::assertSame('null', (new NullType())->describe());

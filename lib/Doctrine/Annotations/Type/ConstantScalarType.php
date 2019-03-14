@@ -9,8 +9,4 @@ namespace Doctrine\Annotations\Type;
  */
 interface ConstantScalarType extends ScalarType, ConstantType
 {
-    /**
-     * @return bool|int|float|string|null
-     */
-    public function getValue();
 }

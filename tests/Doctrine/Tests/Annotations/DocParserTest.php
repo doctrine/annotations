@@ -704,7 +704,7 @@ DOCBLOCK;
 
     /**
      * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnum declared on property SomeClassName::invalidProperty. accept only [ONE, TWO, THREE], but got FOUR.
+     * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnum declared on property SomeClassName::invalidProperty. accept only "ONE"|"TWO"|"THREE", but got FOUR.
      */
     public function testAnnotationEnumeratorException() : void
     {
@@ -719,7 +719,7 @@ DOCBLOCK;
 
     /**
      * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnumLiteral declared on property SomeClassName::invalidProperty. accept only [AnnotationEnumLiteral::ONE, AnnotationEnumLiteral::TWO, AnnotationEnumLiteral::THREE], but got 4.
+     * @expectedExceptionMessage Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnumLiteral declared on property SomeClassName::invalidProperty. accept only 1|2|3, but got 4.
      */
     public function testAnnotationEnumeratorLiteralException() : void
     {

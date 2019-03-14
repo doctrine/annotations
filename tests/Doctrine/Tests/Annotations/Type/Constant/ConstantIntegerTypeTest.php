@@ -10,11 +10,6 @@ use stdClass;
 
 final class ConstantIntegerTypeTest extends TestCase
 {
-    public function testGetValue() : void
-    {
-        self::assertSame(123, (new ConstantIntegerType(123))->getValue());
-    }
-
     public function testDescribe() : void
     {
         self::assertSame('123', (new ConstantIntegerType(123))->describe());

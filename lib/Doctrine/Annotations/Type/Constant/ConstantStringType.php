@@ -22,11 +22,6 @@ final class ConstantStringType extends GenericStringType implements ConstantScal
         $this->value = $value;
     }
 
-    public function getValue() : string
-    {
-        return $this->value;
-    }
-
     public function describe() : string
     {
         return sprintf('"%s"', addcslashes($this->value, '\"'));

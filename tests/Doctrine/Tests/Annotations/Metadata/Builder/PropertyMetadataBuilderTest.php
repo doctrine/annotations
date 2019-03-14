@@ -5,8 +5,10 @@ declare(strict_types=1);
 namespace Doctrine\Tests\Annotations\Metadata\Builder;
 
 use Doctrine\Annotations\Metadata\Builder\PropertyMetadataBuilder;
+use Doctrine\Annotations\Type\Constant\ConstantIntegerType;
 use Doctrine\Annotations\Type\MixedType;
 use Doctrine\Annotations\Type\StringType;
+use Doctrine\Annotations\Type\UnionType;
 use PHPUnit\Framework\TestCase;
 
 final class PropertyMetadataBuilderTest extends TestCase
@@ -28,13 +30,13 @@ final class PropertyMetadataBuilderTest extends TestCase
             ->withBeingDefault()
             ->withBeingRequired()
             ->withType(new StringType())
-            ->withEnum(['value' => [1, 2, 3], 'literal' => '1, 2, 3'])
+            ->withEnum(new UnionType(new ConstantIntegerType(1), new ConstantIntegerType(2)))
             ->build();
 
         self::assertSame('foo', $metadata->getName());
         self::assertTrue($metadata->isRequired());
         self::assertInstanceOf(StringType::class, $metadata->getType());
         self::assertTrue($metadata->isDefault());
-        self::assertSame(['value' => [1, 2, 3], 'literal' => '1, 2, 3'], $metadata->getEnum());
+        self::assertSame('1|2', $metadata->getEnum()->describe());
     }
 }

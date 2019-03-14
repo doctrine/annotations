@@ -17,14 +17,6 @@ final class NullType implements ConstantScalarType
     }
 
     /**
-     * @return null
-     */
-    public function getValue()
-    {
-        return null;
-    }
-
-    /**
      * @param mixed $value
      */
     public function validate($value) : bool

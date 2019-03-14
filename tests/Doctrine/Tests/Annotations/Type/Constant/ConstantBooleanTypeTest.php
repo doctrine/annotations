@@ -10,12 +10,6 @@ use stdClass;
 
 final class ConstantBooleanTypeTest extends TestCase
 {
-    public function testGetValue() : void
-    {
-        self::assertTrue((new ConstantBooleanType(true))->getValue());
-        self::assertFalse((new ConstantBooleanType(false))->getValue());
-    }
-
     public function testDescribe() : void
     {
         self::assertSame('true', (new ConstantBooleanType(true))->describe());

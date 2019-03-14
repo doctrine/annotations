@@ -11,18 +11,30 @@ use Doctrine\Annotations\Metadata\MetadataCollection;
 use Doctrine\Annotations\Metadata\TransientMetadataCollection;
 use Doctrine\Annotations\Type\ArrayType;
 use Doctrine\Annotations\Type\BooleanType;
+use Doctrine\Annotations\Type\Constant\ConstantBooleanType;
+use Doctrine\Annotations\Type\Constant\ConstantFloatType;
+use Doctrine\Annotations\Type\Constant\ConstantIntegerType;
+use Doctrine\Annotations\Type\Constant\ConstantStringType;
 use Doctrine\Annotations\Type\FloatType;
 use Doctrine\Annotations\Type\IntegerType;
 use Doctrine\Annotations\Type\MixedType;
 use Doctrine\Annotations\Type\ObjectType;
 use Doctrine\Annotations\Type\StringType;
 use Doctrine\Annotations\Type\Type;
+use Doctrine\Annotations\Type\UnionType;
 use ReflectionClass;
 use Doctrine\Annotations\Annotation\Enum;
 use Doctrine\Annotations\Annotation\Target;
 use Doctrine\Annotations\Annotation\Attributes;
 use function array_key_exists;
 use function array_keys;
+use function array_map;
+use function array_values;
+use function count;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_string;
 
 /**
  * A parser for docblock annotations.
@@ -471,12 +483,7 @@ final class DocParser
                         continue;
                     }
 
-                    $propertyBuilder = $propertyBuilder->withEnum([
-                        'value'   => $annotation->value,
-                        'literal' => ( ! empty($annotation->literal))
-                            ? $annotation->literal
-                            : $annotation->value,
-                    ]);
+                    $propertyBuilder->withEnum($this->createEnumType($annotation->value));
                 }
             }
 
@@ -484,6 +491,33 @@ final class DocParser
         }
 
         $this->metadata->add($annotationBuilder->build());
+    }
+
+    /**
+     * @param (string|int|float|bool)[] $values
+     */
+    private function createEnumType(array $values) : Type
+    {
+        $types = array_map(static function ($value) : Type {
+            if (is_string($value)) {
+                return new ConstantStringType($value);
+            }
+            if (is_int($value)) {
+                return new ConstantIntegerType($value);
+            }
+            if (is_float($value)) {
+                return new ConstantFloatType($value);
+            }
+            if (is_bool($value)) {
+                return new ConstantBooleanType($value);
+            }
+        }, $values);
+
+        if (count($types) === 1) {
+            return array_values($types)[0];
+        }
+
+        return new UnionType(...$types);
     }
 
     /**
@@ -496,7 +530,7 @@ final class DocParser
         $type = $attribute->type;
 
         // handle the case if the property type is mixed
-        if ($type === 'mixed') {
+        if ('mixed' === $type) {
             return;
         }
 
@@ -529,6 +563,7 @@ final class DocParser
 
     private function createTypeFromName(string $name) : Type
     {
+        // allow uppercase Boolean in honor of George Boole
         if ($name === 'bool' || $name === 'boolean' || $name === 'Boolean') {
             return new BooleanType();
         }
@@ -705,8 +740,8 @@ final class DocParser
             $enum         = $property->getEnum();
 
             // checks if the attribute is a valid enumerator
-            if ($enum !== null && isset($values[$propertyName]) && ! in_array($values[$propertyName], $enum['value'])) {
-                throw AnnotationException::enumeratorError($propertyName, $name, $this->context, $enum['literal'], $values[$propertyName]);
+            if ($enum !== null && isset($values[$propertyName]) && ! $enum->validate($values[$propertyName])) {
+                throw AnnotationException::enumeratorError($propertyName, $name, $this->context, $enum->describe(), $values[$propertyName]);
             }
         }
 

@@ -10,12 +10,6 @@ use stdClass;
 
 final class ConstantFloatTypeTest extends TestCase
 {
-    public function testGetValue() : void
-    {
-        self::assertEquals(1.23, (new ConstantFloatType(1.23))->getValue(), '', 1e-5);
-        self::assertEquals(1.1111111111, (new ConstantFloatType(1.1111111111))->getValue(), '', 1e-10);
-    }
-
     public function testDescribe() : void
     {
         self::assertSame('1.230000', (new ConstantFloatType(1.23))->describe());
@@ -27,7 +21,7 @@ final class ConstantFloatTypeTest extends TestCase
         $type = new ConstantFloatType(1.1111111111);
 
         self::assertTrue($type->validate(1.1111111111));
-        self::assertTrue($type->validate(1.1111111111000000000000000000000000001));
+        self::assertTrue($type->validate(1.1111111111000009));
         self::assertFalse($type->validate(1.11111));
         self::assertFalse($type->validate('1.1111111111'));
         self::assertFalse($type->validate(1.23));

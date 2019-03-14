@@ -15,7 +15,8 @@ use function sprintf;
  */
 final class ConstantFloatType extends FloatType implements ConstantScalarType
 {
-    public const EPSILON = 1e-15;
+    /** Maximum tolerance boundary for float value accuracy. */
+    private const EPSILON = 1e-15;
 
     /** @var float */
     private $value;
@@ -23,11 +24,6 @@ final class ConstantFloatType extends FloatType implements ConstantScalarType
     public function __construct(float $value)
     {
         $this->value = $value;
-    }
-
-    public function getValue() : float
-    {
-        return $this->value;
     }
 
     public function describe() : string
@@ -40,6 +36,7 @@ final class ConstantFloatType extends FloatType implements ConstantScalarType
      */
     public function validate($value) : bool
     {
+        // Due to IEEE 754 float representation, comparisons are inaccurate so we need some level of tolerance.
         return is_float($value) && abs($value - $this->value) < self::EPSILON;
     }
 }

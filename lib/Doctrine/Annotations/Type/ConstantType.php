@@ -9,8 +9,4 @@ namespace Doctrine\Annotations\Type;
  */
 interface ConstantType extends Type
 {
-    /**
-     * @return mixed
-     */
-    public function getValue();
 }

@@ -7,7 +7,6 @@ namespace Doctrine\Tests\Annotations\Type;
 use Doctrine\Annotations\Type\MixedType;
 use Doctrine\Annotations\Type\Type;
 use stdClass;
-use function fopen;
 
 final class MixedTypeTest extends TypeTest
 {
@@ -22,7 +21,7 @@ final class MixedTypeTest extends TypeTest
     }
 
     /**
-     * @return mixed[]
+     * @return mixed[][]
      */
     public function validValidateValuesProvider() : iterable
     {
@@ -36,10 +35,10 @@ final class MixedTypeTest extends TypeTest
     }
 
     /**
-     * @return resource[][]
+     * @return mixed[][]
      */
     public function invalidValidateValuesProvider() : iterable
     {
-        yield [fopen('php://temp', 'r')];
+        yield from [];
     }
 }

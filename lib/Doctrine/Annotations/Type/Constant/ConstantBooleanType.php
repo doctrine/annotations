@@ -20,11 +20,6 @@ final class ConstantBooleanType extends BooleanType implements ConstantScalarTyp
         $this->value = $value;
     }
 
-    public function getValue() : bool
-    {
-        return $this->value;
-    }
-
     public function describe() : string
     {
         if ($this->value === true) {

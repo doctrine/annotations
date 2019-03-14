@@ -25,7 +25,7 @@ final class PropertyMetadataBuilder
     /** @var bool */
     private $default = false;
 
-    /** @var array<string, array<int|float|string|bool>|string>|null */
+    /** @var Type|null */
     private $enum;
 
     public function __construct(string $name)
@@ -55,10 +55,7 @@ final class PropertyMetadataBuilder
         return $this;
     }
 
-    /**
-     * @param array<string, array<int|float|string|bool>|string> $enum
-     */
-    public function withEnum(array $enum) : self
+    public function withEnum(Type $enum) : self
     {
         $this->enum = $enum;
 
