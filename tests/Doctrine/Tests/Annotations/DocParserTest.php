@@ -440,11 +440,11 @@ DOCBLOCK;
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return [
             // boolean type
-            ['boolean','boolean','1','integer'],
-            ['boolean','boolean','1.2','double'],
-            ['boolean','boolean','"str"','string'],
-            ['boolean','boolean','{1,2,3}','array'],
-            ['boolean','boolean','@Name', 'an instance of Doctrine\Tests\Annotations\Name'],
+            ['boolean','bool','1','integer'],
+            ['boolean','bool','1.2','double'],
+            ['boolean','bool','"str"','string'],
+            ['boolean','bool','{1,2,3}','array'],
+            ['boolean','bool','@Name', 'an instance of Doctrine\Tests\Annotations\Name'],
 
             // alias for internal type boolean
             ['bool','bool', '1','integer'],
@@ -453,12 +453,12 @@ DOCBLOCK;
             ['bool','bool', '{"str"}','array'],
 
             // integer type
-            ['integer','integer', 'true','boolean'],
-            ['integer','integer', 'false','boolean'],
-            ['integer','integer', '1.2','double'],
-            ['integer','integer', '"str"','string'],
-            ['integer','integer', '{"str"}','array'],
-            ['integer','integer', '{1,2,3,4}','array'],
+            ['integer','int', 'true','boolean'],
+            ['integer','int', 'false','boolean'],
+            ['integer','int', '1.2','double'],
+            ['integer','int', '"str"','string'],
+            ['integer','int', '{"str"}','array'],
+            ['integer','int', '{1,2,3,4}','array'],
 
             // alias for internal type double
             ['float','float', 'true','boolean'],
@@ -492,12 +492,12 @@ DOCBLOCK;
     {
          //({attribute name}, {type declared type}, {attribute value} , {given type or class})
          return [
-            ['arrayOfIntegers', 'integer', 'true', 'boolean'],
-            ['arrayOfIntegers', 'integer', 'false', 'boolean'],
-            ['arrayOfIntegers', 'integer', '{true,true}', 'boolean'],
-            ['arrayOfIntegers', 'integer', '{1,true}', 'boolean'],
-            ['arrayOfIntegers', 'integer', '{1,2,1.2}', 'double'],
-            ['arrayOfIntegers', 'integer', '{1,2,"str"}', 'string'],
+            ['arrayOfIntegers', 'int', 'true', 'boolean'],
+            ['arrayOfIntegers', 'int', 'false', 'boolean'],
+            ['arrayOfIntegers', 'int', '{true,true}', 'boolean'],
+            ['arrayOfIntegers', 'int', '{1,true}', 'boolean'],
+            ['arrayOfIntegers', 'int', '{1,2,1.2}', 'double'],
+            ['arrayOfIntegers', 'int', '{1,2,"str"}', 'string'],
 
             ['arrayOfStrings', 'string', 'true', 'boolean'],
             ['arrayOfStrings', 'string', 'false', 'boolean'],

@@ -7,6 +7,8 @@ namespace Doctrine\Tests\Annotations\Metadata\Builder;
 use Doctrine\Annotations\Metadata\AnnotationTarget;
 use Doctrine\Annotations\Metadata\Builder\AnnotationMetadataBuilder;
 use Doctrine\Annotations\Metadata\PropertyMetadata;
+use Doctrine\Annotations\Type\BooleanType;
+use Doctrine\Annotations\Type\StringType;
 use PHPUnit\Framework\TestCase;
 
 final class AnnotationMetadataBuilderTest extends TestCase
@@ -24,8 +26,8 @@ final class AnnotationMetadataBuilderTest extends TestCase
 
     public function testBuilding() : void
     {
-        $propertyA = new PropertyMetadata('a', ['type' => 'string'], true, true);
-        $propertyB = new PropertyMetadata('b', ['type' => 'boolean']);
+        $propertyA = new PropertyMetadata('a', new StringType(), true, true);
+        $propertyB = new PropertyMetadata('b', new BooleanType());
 
         $metadata = (new AnnotationMetadataBuilder('Foo'))
             ->withTarget(AnnotationTarget::class())

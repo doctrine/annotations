@@ -9,6 +9,14 @@ use Doctrine\Annotations\Metadata\Builder\PropertyMetadataBuilder;
 use Doctrine\Annotations\Metadata\InternalAnnotations;
 use Doctrine\Annotations\Metadata\MetadataCollection;
 use Doctrine\Annotations\Metadata\TransientMetadataCollection;
+use Doctrine\Annotations\Type\ArrayType;
+use Doctrine\Annotations\Type\BooleanType;
+use Doctrine\Annotations\Type\FloatType;
+use Doctrine\Annotations\Type\IntegerType;
+use Doctrine\Annotations\Type\MixedType;
+use Doctrine\Annotations\Type\ObjectType;
+use Doctrine\Annotations\Type\StringType;
+use Doctrine\Annotations\Type\Type;
 use ReflectionClass;
 use Doctrine\Annotations\Annotation\Enum;
 use Doctrine\Annotations\Annotation\Target;
@@ -132,19 +140,6 @@ final class DocParser
 
     /** @var array<string, bool> */
     private $nonAnnotationClasses = [];
-
-    /**
-     * Hash-map for handle types declaration.
-     *
-     * @var array
-     */
-    private static $typeMap = [
-        'float'     => 'double',
-        'bool'      => 'boolean',
-        // allow uppercase Boolean in honor of George Boole
-        'Boolean'   => 'boolean',
-        'int'       => 'integer',
-    ];
 
     /**
      * Constructs a new DocParser.
@@ -498,11 +493,10 @@ final class DocParser
         PropertyMetadataBuilder $metadata,
         Attribute $attribute
     ) : void {
-        // handle internal type declaration
-        $type = self::$typeMap[$attribute->type] ?? $attribute->type;
+        $type = $attribute->type;
 
         // handle the case if the property type is mixed
-        if ('mixed' === $type) {
+        if ($type === 'mixed') {
             return;
         }
 
@@ -516,10 +510,7 @@ final class DocParser
         if (false !== $pos = strpos($type, '<')) {
             $arrayType = substr($type, $pos + 1, -1);
 
-            $metadata->withType([
-                'type' => 'array',
-                'array_type' => self::$typeMap[$arrayType] ?? $arrayType,
-            ]);
+            $metadata->withType(new ArrayType(new MixedType(), $this->createTypeFromName($arrayType)));
 
             return;
         }
@@ -528,18 +519,36 @@ final class DocParser
          if (false !== $pos = strrpos($type, '[')) {
             $arrayType = substr($type, 0, $pos);
 
-            $metadata->withType([
-                'type'            => 'array',
-                'array_type' => self::$typeMap[$arrayType] ?? $arrayType,
-            ]);
+            $metadata->withType(new ArrayType(new MixedType(), $this->createTypeFromName($arrayType)));
 
             return;
         }
 
-        $metadata->withType([
-            'type'  => $type,
-            'value' => $attribute->type,
-        ]);
+        $metadata->withType($this->createTypeFromName($attribute->type));
+    }
+
+    private function createTypeFromName(string $name) : Type
+    {
+        if ($name === 'bool' || $name === 'boolean' || $name === 'Boolean') {
+            return new BooleanType();
+        }
+        if ($name === 'int' || $name === 'integer') {
+            return new IntegerType();
+        }
+        if ($name === 'float' || $name === 'double') {
+            return new FloatType();
+        }
+        if ($name === 'string') {
+            return new StringType();
+        }
+        if ($name === 'array') {
+            return new ArrayType(new MixedType(), new MixedType());
+        }
+        if ($name === 'object') {
+            return new ObjectType(null);
+        }
+
+        return new ObjectType($name);
     }
 
     /**
@@ -714,28 +723,35 @@ final class DocParser
             // handle a not given attribute or null value
             if (! isset($values[$valueName])) {
                 if ($property->isRequired()) {
-                    throw AnnotationException::requiredError($propertyName, $originalName, $this->context, 'a(n) ' . $type['value']);
+                    throw AnnotationException::requiredError($propertyName, $originalName, $this->context, 'a(n) ' . $type->describe());
                 }
 
                 continue;
             }
 
-            if ($type !== null && $type['type'] === 'array') {
+            if ($type instanceof ArrayType) {
                 // handle the case of a single value
                 if ( ! is_array($values[$valueName])) {
                     $values[$valueName] = [$values[$valueName]];
                 }
 
-                // checks if the attribute has array type declaration, such as "array<string>"
-                if (isset($type['array_type'])) {
-                    foreach ($values[$valueName] as $item) {
-                        if (gettype($item) !== $type['array_type'] && !$item instanceof $type['array_type']) {
-                            throw AnnotationException::attributeTypeError($propertyName, $originalName, $this->context, 'either a(n) '.$type['array_type'].', or an array of '.$type['array_type'].'s', $item);
+                $valueType = $type->getValueType();
+
+                if (! $type->validate($values[$valueName])) {
+                    $firstInvalidValue = (static function (array $values) use ($valueType) {
+                        foreach ($values as $value) {
+                            if ($valueType->validate($value)) {
+                                continue;
+                            }
+
+                            return $value;
                         }
-                    }
+                    })($values[$valueName]);
+
+                    throw AnnotationException::attributeTypeError($propertyName, $originalName, $this->context, 'either a(n) ' . $type->getValueType()->describe() . ', or an array of ' . $type->getValueType()->describe() . 's', $firstInvalidValue);
                 }
-            } elseif ($type !== null && gettype($values[$valueName]) !== $type['type'] && !$values[$valueName] instanceof $type['type']) {
-                throw AnnotationException::attributeTypeError($propertyName, $originalName, $this->context, 'a(n) '.$type['value'], $values[$valueName]);
+            } elseif (! $type->validate($values[$valueName])) {
+                throw AnnotationException::attributeTypeError($propertyName, $originalName, $this->context, 'a(n) '.$type->describe(), $values[$valueName]);
             }
         }
 

@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Doctrine\Annotations\Metadata\Builder;
 
 use Doctrine\Annotations\Metadata\PropertyMetadata;
+use Doctrine\Annotations\Type\MixedType;
+use Doctrine\Annotations\Type\Type;
 
 /**
  * @internal
@@ -14,7 +16,7 @@ final class PropertyMetadataBuilder
     /** @var string */
     private $name;
 
-    /** @var string[]|null */
+    /** @var Type */
     private $type;
 
     /** @var bool */
@@ -29,12 +31,10 @@ final class PropertyMetadataBuilder
     public function __construct(string $name)
     {
         $this->name = $name;
+        $this->type = new MixedType();
     }
 
-    /**
-     * @param string[] $type
-     */
-    public function withType(array $type) : self
+    public function withType(Type $type) : self
     {
         $this->type = $type;
 
