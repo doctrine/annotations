@@ -1,5 +1,21 @@
 ## Changelog
 
+### 1.6.1
+
+This release fixes an issue in which annotations such as `@foo-bar`
+and `@foo-` were incorrectly recognised as valid, and both erroneously
+parsed as `@foo`.
+
+Any annotation with `@name-*` format will now silently be ignored,
+allowing vendor-specific annotations to be prefixed with the tool
+name.
+
+Total issues resolved: **3**
+
+- [165: Update the composer branch alias](https://github.com/doctrine/annotations/pull/165) thanks to @mikeSimonson
+- [209: Change Annotation::value typehint to mixed](https://github.com/doctrine/annotations/pull/209) thanks to @malarzm
+- [257: Skip parsing annotations containing dashes, such as `@Foo-bar`, or `@Foo-`](https://github.com/doctrine/annotations/pull/257) thanks to @Ocramius
+
 ### 1.6.0
 
 This release brings a new endpoint that make sure that you can't shoot yourself in the foot by calling ```registerLoader``` multiple times and a few tests improvements.
