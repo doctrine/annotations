@@ -23,7 +23,7 @@ final class PropertyMetadataBuilder
     /** @var bool */
     private $default = false;
 
-    /** @var array<int|float|string|bool>|null */
+    /** @var array<string, array<int|float|string|bool>|string>|null */
     private $enum;
 
     public function __construct(string $name)
@@ -56,7 +56,7 @@ final class PropertyMetadataBuilder
     }
 
     /**
-     * @param array<int|float|string|bool>|null $enum
+     * @param array<string, array<int|float|string|bool>|string> $enum
      */
     public function withEnum(array $enum) : self
     {

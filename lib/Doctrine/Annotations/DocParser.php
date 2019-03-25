@@ -493,9 +493,6 @@ final class DocParser
 
     /**
      * Collects parsing metadata for a given attribute.
-     *
-     * @param array     $metadata
-     * @param Attribute $attribute
      */
     private function collectAttributeTypeMetadata(
         PropertyMetadataBuilder $metadata,
