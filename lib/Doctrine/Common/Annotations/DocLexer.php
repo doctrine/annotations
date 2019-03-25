@@ -101,8 +101,6 @@ final class DocLexer extends AbstractLexer
      */
     protected function getType(&$value)
     {
-        $type = self::T_NONE;
-
         if ($value[0] === '"') {
             $value = str_replace('""', '"', substr($value, 1, strlen($value) - 2));
 
@@ -129,6 +127,6 @@ final class DocLexer extends AbstractLexer
                 ? self::T_FLOAT : self::T_INTEGER;
         }
 
-        return $type;
+        return self::T_NONE;
     }
 }
