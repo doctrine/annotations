@@ -26,7 +26,7 @@ class ClassWithValidAnnotationTarget
     /**
      * @AnnotationTargetPropertyMethod("Some data",name="Some name")
      */
-    public function someFunction()
+    public function someFunction() : void
     {
 
     }

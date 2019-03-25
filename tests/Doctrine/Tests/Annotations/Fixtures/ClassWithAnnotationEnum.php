@@ -14,7 +14,7 @@ class ClassWithAnnotationEnum
     /**
      * @AnnotationEnum("TWO")
      */
-    public function bar(){}
+    public function bar() : void{}
 
 
     /**
@@ -25,5 +25,5 @@ class ClassWithAnnotationEnum
     /**
      * @AnnotationEnum(5)
      */
-    public function invalidMethod(){}
+    public function invalidMethod() : void{}
 }

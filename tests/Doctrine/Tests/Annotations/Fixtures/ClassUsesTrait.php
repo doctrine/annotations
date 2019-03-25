@@ -15,7 +15,7 @@ class ClassUsesTrait {
     /**
      * @Autoload
      */
-    public function someMethod()
+    public function someMethod() : void
     {
 
     }

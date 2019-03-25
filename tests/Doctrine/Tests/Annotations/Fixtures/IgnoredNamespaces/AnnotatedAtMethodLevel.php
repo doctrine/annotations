@@ -7,5 +7,5 @@ class AnnotatedAtMethodLevel
     /**
      * @SomeMethodAnnotationNamespace\Subnamespace\Name
      */
-    public function test() {}
+    public function test() : void {}
 }
