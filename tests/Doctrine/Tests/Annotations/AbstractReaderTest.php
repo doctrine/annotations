@@ -483,7 +483,7 @@ abstract class AbstractReaderTest extends TestCase
         $reflection = new \ReflectionClass(Fixtures\ClassWithAnnotationConstantReferenceWithDashes::class);
 
         $this->expectExceptionMessage(
-            '[Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_CLOSE_PARENTHESIS, got \'-\' at'
+            '[Syntax Error] Expected Doctrine\Annotations\DocLexer::T_CLOSE_PARENTHESIS, got \'-\' at'
             . ' position 14 in class ' . Fixtures\ClassWithAnnotationConstantReferenceWithDashes::class . '.'
         );
 

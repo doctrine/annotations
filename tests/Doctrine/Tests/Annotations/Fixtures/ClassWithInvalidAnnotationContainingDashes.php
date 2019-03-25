@@ -1,6 +1,6 @@
 <?php
 
-namespace Doctrine\Tests\Common\Annotations\Fixtures;
+namespace Doctrine\Tests\Annotations\Fixtures;
 
 /**
  * @please-do-not-parse-me
