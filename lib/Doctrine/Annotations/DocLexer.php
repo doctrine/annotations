@@ -62,7 +62,7 @@ final class DocLexer extends AbstractLexer
     ];
 
     /**
-     * Whether the token next token starts immediately, of if there were
+     * Whether the next token starts immediately, or if there were
      * non-captured symbols before that
      */
     public function nextTokenIsAdjacent() : bool
