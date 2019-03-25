@@ -293,4 +293,20 @@ class DocLexerTest extends TestCase
 
         self::assertEquals($expectedTokens, $actualTokens);
     }
+
+    public function testTokenAdjacency()
+    {
+        $lexer    = new DocLexer();
+
+        $lexer->setInput('-- -');
+
+        self::assertTrue($lexer->nextTokenIsAdjacent());
+        self::assertTrue($lexer->moveNext());
+        self::assertTrue($lexer->nextTokenIsAdjacent());
+        self::assertTrue($lexer->moveNext());
+        self::assertTrue($lexer->nextTokenIsAdjacent());
+        self::assertTrue($lexer->moveNext());
+        self::assertFalse($lexer->nextTokenIsAdjacent());
+        self::assertFalse($lexer->moveNext());
+    }
 }
