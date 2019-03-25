@@ -466,6 +466,30 @@ abstract class AbstractReaderTest extends TestCase
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
+    public function testWillSkipAnnotationsContainingDashes()
+    {
+        self::assertEmpty(
+            $this
+                ->getReader()
+                ->getClassAnnotations(new \ReflectionClass(
+                    Fixtures\ClassWithInvalidAnnotationContainingDashes::class
+                ))
+        );
+    }
+
+    public function testWillFailOnAnnotationConstantReferenceContainingDashes()
+    {
+        $reader     = $this->getReader();
+        $reflection = new \ReflectionClass(Fixtures\ClassWithAnnotationConstantReferenceWithDashes::class);
+
+        $this->expectExceptionMessage(
+            '[Syntax Error] Expected Doctrine\Common\Annotations\DocLexer::T_CLOSE_PARENTHESIS, got \'-\' at'
+            . ' position 14 in class ' . Fixtures\ClassWithAnnotationConstantReferenceWithDashes::class . '.'
+        );
+
+        $reader->getClassAnnotations($reflection);
+    }
+
     /**
      * @return AnnotationReader
      */
