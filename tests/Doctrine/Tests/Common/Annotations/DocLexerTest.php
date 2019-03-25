@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DocLexerTest extends TestCase
 {
-    public function testMarkerAnnotation()
+    public function testMarkerAnnotation() : void
     {
         $lexer = new DocLexer;
 
@@ -26,7 +26,7 @@ class DocLexerTest extends TestCase
         self::assertFalse($lexer->moveNext());
     }
 
-    public function testScannerTokenizesDocBlockWhitConstants()
+    public function testScannerTokenizesDocBlockWhitConstants() : void
     {
         $lexer      = new DocLexer();
         $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
@@ -114,7 +114,7 @@ class DocLexerTest extends TestCase
     }
 
 
-    public function testScannerTokenizesDocBlockWhitInvalidIdentifier()
+    public function testScannerTokenizesDocBlockWhitInvalidIdentifier() : void
     {
         $lexer      = new DocLexer();
         $docblock   = '@Foo\3.42';
@@ -158,7 +158,7 @@ class DocLexerTest extends TestCase
     /**
      * @group 44
      */
-    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit()
+    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit() : void
     {
         $lexer = new DocLexer();
 
@@ -170,7 +170,7 @@ class DocLexerTest extends TestCase
     /**
      * @group 44
      */
-    public function testRecognizesDoubleQuotesEscapeSequence()
+    public function testRecognizesDoubleQuotesEscapeSequence() : void
     {
         $lexer    = new DocLexer();
         $docblock = '@Foo("""' . "\n" . '""")';
@@ -213,6 +213,100 @@ class DocLexerTest extends TestCase
             self::assertEquals($expected['position'], $lookahead['position']);
         }
 
+        self::assertFalse($lexer->moveNext());
+    }
+
+    public function testDoesNotRecognizeFullAnnotationWithDashInIt() : void
+    {
+        $this->expectDocblockTokens(
+            '@foo-bar--',
+            [
+                [
+                    'value'     => '@',
+                    'position'  => 0,
+                    'type'      => DocLexer::T_AT,
+                ],
+                [
+                    'value'     => 'foo',
+                    'position'  => 1,
+                    'type'      => DocLexer::T_IDENTIFIER,
+                ],
+                [
+                    'value'     => '-',
+                    'position'  => 4,
+                    'type'      => DocLexer::T_MINUS,
+                ],
+                [
+                    'value'     => 'bar',
+                    'position'  => 5,
+                    'type'      => DocLexer::T_IDENTIFIER,
+                ],
+                [
+                    'value'     => '-',
+                    'position'  => 8,
+                    'type'      => DocLexer::T_MINUS,
+                ],
+                [
+                    'value'     => '-',
+                    'position'  => 9,
+                    'type'      => DocLexer::T_MINUS,
+                ],
+            ]
+        );
+    }
+
+    public function testRecognizesNegativeNumbers() : void
+    {
+        $this->expectDocblockTokens(
+            '-12.34 -56',
+            [
+                [
+                    'value'     => '-12.34',
+                    'position'  => 0,
+                    'type'      => DocLexer::T_FLOAT,
+                ],
+                [
+                    'value'     => '-56',
+                    'position'  => 7,
+                    'type'      => DocLexer::T_INTEGER,
+                ]
+            ]
+        );
+    }
+
+    private function expectDocblockTokens(string $docBlock, array $expectedTokens) : void
+    {
+        $lexer    = new DocLexer();
+        $lexer->setInput($docBlock);
+
+        $actualTokens = [];
+
+        while ($lexer->moveNext()) {
+            $lookahead = $lexer->lookahead;
+
+            $actualTokens[] = [
+                'value' => $lookahead['value'],
+                'type' => $lookahead['type'],
+                'position' => $lookahead['position'],
+            ];
+        }
+
+        self::assertEquals($expectedTokens, $actualTokens);
+    }
+
+    public function testTokenAdjacency() : void
+    {
+        $lexer    = new DocLexer();
+
+        $lexer->setInput('-- -');
+
+        self::assertTrue($lexer->nextTokenIsAdjacent());
+        self::assertTrue($lexer->moveNext());
+        self::assertTrue($lexer->nextTokenIsAdjacent());
+        self::assertTrue($lexer->moveNext());
+        self::assertTrue($lexer->nextTokenIsAdjacent());
+        self::assertTrue($lexer->moveNext());
+        self::assertFalse($lexer->nextTokenIsAdjacent());
         self::assertFalse($lexer->moveNext());
     }
 }

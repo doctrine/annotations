@@ -686,6 +686,13 @@ final class DocParser
         // check if we have an annotation
         $name = $this->Identifier();
 
+        if ($this->lexer->isNextToken(DocLexer::T_MINUS)
+            && $this->lexer->nextTokenIsAdjacent()
+        ) {
+            // Annotations with dashes, such as "@foo-" or "@foo-bar", are to be discarded
+            return false;
+        }
+
         // only process names which are not fully qualified, yet
         // fully qualified names must start with a \
         $originalName = $name;
