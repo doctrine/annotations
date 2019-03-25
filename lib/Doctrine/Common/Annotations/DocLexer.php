@@ -51,6 +51,7 @@ final class DocLexer extends AbstractLexer
     const T_TRUE                = 110;
     const T_NULL                = 111;
     const T_COLON               = 112;
+    const T_MINUS               = 113;
 
     /**
      * @var array
@@ -64,6 +65,7 @@ final class DocLexer extends AbstractLexer
         '}'  => self::T_CLOSE_CURLY_BRACES,
         '='  => self::T_EQUALS,
         ':'  => self::T_COLON,
+        '-'  => self::T_MINUS,
         '\\' => self::T_NAMESPACE_SEPARATOR
     );
 

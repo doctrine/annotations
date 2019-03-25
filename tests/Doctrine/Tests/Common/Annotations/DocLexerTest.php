@@ -215,4 +215,83 @@ class DocLexerTest extends TestCase
 
         self::assertFalse($lexer->moveNext());
     }
+
+    public function testDoesNotRecognizeFullAnnotationWithDashInIt()
+    {
+        $this->expectDocblockTokens(
+            '@foo-bar--',
+            [
+                [
+                    'value'     => '@',
+                    'position'  => 0,
+                    'type'      => DocLexer::T_AT,
+                ],
+                [
+                    'value'     => 'foo',
+                    'position'  => 1,
+                    'type'      => DocLexer::T_IDENTIFIER,
+                ],
+                [
+                    'value'     => '-',
+                    'position'  => 4,
+                    'type'      => DocLexer::T_MINUS,
+                ],
+                [
+                    'value'     => 'bar',
+                    'position'  => 5,
+                    'type'      => DocLexer::T_IDENTIFIER,
+                ],
+                [
+                    'value'     => '-',
+                    'position'  => 8,
+                    'type'      => DocLexer::T_MINUS,
+                ],
+                [
+                    'value'     => '-',
+                    'position'  => 9,
+                    'type'      => DocLexer::T_MINUS,
+                ],
+            ]
+        );
+    }
+
+    public function testRecognizesNegativeNumbers()
+    {
+        $this->expectDocblockTokens(
+            '-12.34 -56',
+            [
+                [
+                    'value'     => '-12.34',
+                    'position'  => 0,
+                    'type'      => DocLexer::T_FLOAT,
+                ],
+                [
+                    'value'     => '-56',
+                    'position'  => 7,
+                    'type'      => DocLexer::T_INTEGER,
+                ]
+            ]
+        );
+    }
+
+    /** @return void */
+    private function expectDocblockTokens(string $docBlock, array $expectedTokens)
+    {
+        $lexer    = new DocLexer();
+        $lexer->setInput($docBlock);
+
+        $actualTokens = [];
+
+        while ($lexer->moveNext()) {
+            $lookahead = $lexer->lookahead;
+
+            $actualTokens[] = [
+                'value' => $lookahead['value'],
+                'type' => $lookahead['type'],
+                'position' => $lookahead['position'],
+            ];
+        }
+
+        self::assertEquals($expectedTokens, $actualTokens);
+    }
 }
