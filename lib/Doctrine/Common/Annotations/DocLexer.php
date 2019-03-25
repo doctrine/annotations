@@ -45,6 +45,7 @@ final class DocLexer extends AbstractLexer
     const T_COMMA               = 104;
     const T_EQUALS              = 105;
     const T_FALSE               = 106;
+    /** @deprecated if you are looking for an identifier, use T_IDENTIFIER directly instead */
     const T_NAMESPACE_SEPARATOR = 107;
     const T_OPEN_CURLY_BRACES   = 108;
     const T_OPEN_PARENTHESIS    = 109;
@@ -82,8 +83,13 @@ final class DocLexer extends AbstractLexer
     protected function getCatchablePatterns()
     {
         return [
-            '[a-z_\\\][a-z0-9_\:\\\]*[a-z_][a-z0-9_]*',
+            // Identifier
+            '[\\\\]{0,1}[a-z_][a-z0-9_]*(?:\\\\[a-z_][a-z0-9_]*)*(?:::[a-z_][a-z0-9_]*)*',
+
+            // Number
             '(?:[+-]?[0-9]+(?:[\.][0-9]+)*)(?:[eE][+-]?[0-9]+)?',
+
+            // String enclosed in ""
             '"(?:""|[^"])*+"',
         ];
     }
@@ -93,7 +99,16 @@ final class DocLexer extends AbstractLexer
      */
     protected function getNonCatchablePatterns()
     {
-        return ['\s+', '\*+', '(.)'];
+        return [
+            // We ignore whitespace
+            '\s+',
+
+            // We ignore * (used to start docBlock comment lines)
+            '\*+',
+
+            // Any other character that wasn't ignored before is to be collected and trashed
+            '(.)'
+        ];
     }
 
     /**

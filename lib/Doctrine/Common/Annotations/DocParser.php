@@ -651,7 +651,7 @@ final class DocParser
             // make sure the @ is followed by either a namespace separator, or
             // an identifier token
             if ((null === $peek = $this->lexer->glimpse())
-                || (DocLexer::T_NAMESPACE_SEPARATOR !== $peek['type'] && !in_array($peek['type'], self::$classIdentifiers, true))
+                || !in_array($peek['type'], self::$classIdentifiers, true)
                 || $peek['position'] !== $this->lexer->lookahead['position'] + 1) {
                 $this->lexer->moveNext();
                 continue;
@@ -988,18 +988,7 @@ final class DocParser
 
         $this->lexer->moveNext();
 
-        $className = $this->lexer->token['value'];
-
-        while ($this->lexer->lookahead['position'] === ($this->lexer->token['position'] + strlen($this->lexer->token['value']))
-                && $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)) {
-
-            $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
-            $this->matchAny(self::$classIdentifiers);
-
-            $className .= '\\' . $this->lexer->token['value'];
-        }
-
-        return $className;
+        return $this->lexer->token['value'];
     }
 
     /**
