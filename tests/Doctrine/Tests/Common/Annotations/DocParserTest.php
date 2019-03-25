@@ -852,7 +852,7 @@ DOCBLOCK;
             '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants(Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants::class)',
             AnnotationWithConstants::class
         ];
-        return $provider;
+        return array_combine(array_column($provider, 0), $provider);
     }
 
     /**
@@ -1380,6 +1380,23 @@ DOCBLOCK;
 
         self::assertCount(1, $result);
 
+    }
+
+    public function testWillNotParseAnnotationSucceededByAnImmediateDash()
+    {
+        $parser = $this->createTestParser();
+
+        self::assertEmpty($parser->parse('@SomeAnnotationClassNameWithoutConstructorAndProperties-'));
+    }
+
+    public function testWillParseAnnotationSucceededByANonImmediateDash()
+    {
+        $result = $this
+            ->createTestParser()
+            ->parse('@SomeAnnotationClassNameWithoutConstructorAndProperties -');
+
+        self::assertCount(1, $result);
+        self::assertInstanceOf(SomeAnnotationClassNameWithoutConstructorAndProperties::class, $result[0]);
     }
 }
 
