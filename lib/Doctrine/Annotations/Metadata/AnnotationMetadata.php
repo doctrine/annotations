@@ -32,9 +32,6 @@ final class AnnotationMetadata
     /** @var PropertyMetadata|null */
     private $defaultProperty;
 
-    /**
-     * @param PropertyMetadata[] $properties
-     */
     public function __construct(
         string $name,
         AnnotationTarget $target,

@@ -67,7 +67,7 @@ final class PropertyMetadata
     }
 
     /**
-     * @return array<int|float|string|bool>|null
+     * @return array<string, array|int|float|string|bool>|null
      */
     public function getEnum() : ?array
     {
