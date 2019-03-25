@@ -7,7 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 class DocLexerTest extends TestCase
 {
-    public function testMarkerAnnotation()
+    public function testMarkerAnnotation() : void
     {
         $lexer = new DocLexer;
 
@@ -26,7 +26,7 @@ class DocLexerTest extends TestCase
         self::assertFalse($lexer->moveNext());
     }
 
-    public function testScannerTokenizesDocBlockWhitConstants()
+    public function testScannerTokenizesDocBlockWhitConstants() : void
     {
         $lexer      = new DocLexer();
         $docblock   = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
@@ -114,7 +114,7 @@ class DocLexerTest extends TestCase
     }
 
 
-    public function testScannerTokenizesDocBlockWhitInvalidIdentifier()
+    public function testScannerTokenizesDocBlockWhitInvalidIdentifier() : void
     {
         $lexer      = new DocLexer();
         $docblock   = '@Foo\3.42';
@@ -158,7 +158,7 @@ class DocLexerTest extends TestCase
     /**
      * @group 44
      */
-    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit()
+    public function testWithinDoubleQuotesVeryVeryLongStringWillNotOverflowPregSplitStackLimit() : void
     {
         $lexer = new DocLexer();
 
@@ -170,7 +170,7 @@ class DocLexerTest extends TestCase
     /**
      * @group 44
      */
-    public function testRecognizesDoubleQuotesEscapeSequence()
+    public function testRecognizesDoubleQuotesEscapeSequence() : void
     {
         $lexer    = new DocLexer();
         $docblock = '@Foo("""' . "\n" . '""")';
@@ -216,7 +216,7 @@ class DocLexerTest extends TestCase
         self::assertFalse($lexer->moveNext());
     }
 
-    public function testDoesNotRecognizeFullAnnotationWithDashInIt()
+    public function testDoesNotRecognizeFullAnnotationWithDashInIt() : void
     {
         $this->expectDocblockTokens(
             '@foo-bar--',
@@ -255,7 +255,7 @@ class DocLexerTest extends TestCase
         );
     }
 
-    public function testRecognizesNegativeNumbers()
+    public function testRecognizesNegativeNumbers() : void
     {
         $this->expectDocblockTokens(
             '-12.34 -56',
@@ -274,8 +274,7 @@ class DocLexerTest extends TestCase
         );
     }
 
-    /** @return void */
-    private function expectDocblockTokens(string $docBlock, array $expectedTokens)
+    private function expectDocblockTokens(string $docBlock, array $expectedTokens) : void
     {
         $lexer    = new DocLexer();
         $lexer->setInput($docBlock);
@@ -295,7 +294,7 @@ class DocLexerTest extends TestCase
         self::assertEquals($expectedTokens, $actualTokens);
     }
 
-    public function testTokenAdjacency()
+    public function testTokenAdjacency() : void
     {
         $lexer    = new DocLexer();
 
