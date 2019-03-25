@@ -62,6 +62,17 @@ final class DocLexer extends AbstractLexer
     ];
 
     /**
+     * Whether the token next token starts immediately, of if there were
+     * non-captured symbols before that
+     */
+    public function nextTokenIsAdjacent() : bool
+    {
+        return $this->token === null
+            || ($this->lookahead !== null
+                && ($this->lookahead['position'] - $this->token['position']) === strlen($this->token['value']));
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getCatchablePatterns()
