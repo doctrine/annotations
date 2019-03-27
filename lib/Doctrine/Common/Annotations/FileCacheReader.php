@@ -169,6 +169,41 @@ class FileCacheReader implements Reader
     /**
      * {@inheritDoc}
      */
+    public function getConstantAnnotations(\ReflectionClassConstant $constant)
+    {
+        $class = $constant->getDeclaringClass();
+        if ( ! isset($this->classNameHashes[$class->name])) {
+            $this->classNameHashes[$class->name] = sha1($class->name);
+        }
+        $key = $this->classNameHashes[$class->name].'::'.$constant->getName();
+
+        if (isset($this->loadedAnnotations[$key])) {
+            return $this->loadedAnnotations[$key];
+        }
+
+        $path = $this->dir.'/'.strtr($key, '\\', '-').'.cache.php';
+        if (!is_file($path)) {
+            $annot = $this->reader->getConstantAnnotations($constant);
+            $this->saveCacheFile($path, $annot);
+            return $this->loadedAnnotations[$key] = $annot;
+        }
+
+        if ($this->debug
+            && (false !== $filename = $class->getFilename())
+            && filemtime($path) < filemtime($filename)) {
+            @unlink($path);
+
+            $annot = $this->reader->getConstantAnnotations($constant);
+            $this->saveCacheFile($path, $annot);
+            return $this->loadedAnnotations[$key] = $annot;
+        }
+
+        return $this->loadedAnnotations[$key] = include $path;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getMethodAnnotations(ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
@@ -293,6 +328,22 @@ EXCEPTION
     public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
     {
         $annotations = $this->getPropertyAnnotations($property);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(\ReflectionClassConstant $constant, $annotationName)
+    {
+        $annotations = $this->getConstantAnnotations($constant);
 
         foreach ($annotations as $annotation) {
             if ($annotation instanceof $annotationName) {

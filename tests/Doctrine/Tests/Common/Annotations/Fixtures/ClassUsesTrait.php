@@ -17,10 +17,17 @@ class ClassUsesTrait
     /**
      * @Autoload
      */
-    public function someMethod(): void
+    const SOME_CONSTANT = "foo";
+
+    /**
+     * @Autoload
+     */
+    public function someMethod()
     {
+
     }
 }
+
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 

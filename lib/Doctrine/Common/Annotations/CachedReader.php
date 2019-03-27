@@ -116,6 +116,41 @@ final class CachedReader implements Reader
     /**
      * {@inheritDoc}
      */
+    public function getConstantAnnotations(\ReflectionClassConstant $constant)
+    {
+        $class = $constant->getDeclaringClass();
+        $cacheKey = $class->getName().'::'.$constant->getName();
+
+        if (isset($this->loadedAnnotations[$cacheKey])) {
+            return $this->loadedAnnotations[$cacheKey];
+        }
+
+        $annots = $this->fetchFromCache($cacheKey, $class);
+        if ($annots === false) {
+            $annots = $this->delegate->getConstantAnnotations($constant);
+            $this->saveToCache($cacheKey, $annots);
+        }
+
+        return $this->loadedAnnotations[$cacheKey] = $annots;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(\ReflectionClassConstant $constant, $annotationName)
+    {
+        foreach ($this->getConstantAnnotations($constant) as $annot) {
+            if ($annot instanceof $annotationName) {
+                return $annot;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getMethodAnnotations(ReflectionMethod $method)
     {
         $class    = $method->getDeclaringClass();
