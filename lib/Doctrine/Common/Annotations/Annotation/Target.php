@@ -38,7 +38,6 @@ final class Target
         'FUNCTION'   => self::TARGET_FUNCTION,
         'ANNOTATION' => self::TARGET_ANNOTATION,
         'CONSTANT'   => self::TARGET_CONSTANT,
-        'CONST'      => self::TARGET_CONSTANT,
     ];
 
     /** @phpstan-var list<string> */
