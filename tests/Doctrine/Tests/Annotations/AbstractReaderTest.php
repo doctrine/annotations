@@ -24,6 +24,12 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf($annotName = DummyAnnotation::class, $annot = $reader->getClassAnnotation($class, $annotName));
         self::assertEquals('hello', $annot->dummyValue);
 
+        $constant = $class->getReflectionConstant('SOME_CONSTANT');
+        $constAnnots = $reader->getConstantAnnotations($constant);
+        self::assertCount(1, $constAnnots);
+        self::assertInstanceOf($annotName, $annot = $reader->getConstantAnnotation($constant, $annotName));
+        self::assertEquals('constantHello', $annot->dummyValue);
+
         $field1Prop = $class->getProperty('field1');
         $propAnnots = $reader->getPropertyAnnotations($field1Prop);
         self::assertCount(1, $propAnnots);

@@ -20,6 +20,13 @@ use Doctrine\Tests\Annotations\DummyJoinColumn;
 class DummyClass
 {
     /**
+     * A nice constant.
+     *
+     * @DummyAnnotation(dummyValue="constantHello")
+     */
+    const SOME_CONSTANT = "foo";
+
+    /**
      * A nice property.
      *
      * @var mixed

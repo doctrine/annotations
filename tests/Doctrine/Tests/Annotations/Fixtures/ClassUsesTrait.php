@@ -15,6 +15,11 @@ class ClassUsesTrait {
     /**
      * @Autoload
      */
+    const SOME_CONSTANT = "foo";
+
+    /**
+     * @Autoload
+     */
     public function someMethod()
     {
 

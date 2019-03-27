@@ -10,6 +10,7 @@ use Doctrine\Tests\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
+use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtConstantLevel;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -53,6 +54,15 @@ class AnnotationReaderTest extends AbstractReaderTest
 
         $annotations = $reader->getPropertyAnnotations($ref->getProperty('traitProperty'));
         self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
+    }
+
+    public function testConstantAnnotation()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(Fixtures\ClassUsesTrait::class);
+
+        $annotations = $reader->getConstantAnnotations($ref->getReflectionConstant('SOME_CONSTANT'));
+        self::assertInstanceOf(Bar\Autoload::class, $annotations[0]);
     }
 
     public function testOmitNotRegisteredAnnotation()
@@ -110,6 +120,21 @@ class AnnotationReaderTest extends AbstractReaderTest
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
 
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+    }
+
+    /**
+     * @group 45
+     *
+     * @runInSeparateProcess
+     */
+    public function testConstantAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedAtConstantLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomeConstantAnnotationNamespace');
+
+        self::assertEmpty($reader->getConstantAnnotations($ref->getReflectionConstant('SOME_CONSTANT')));
     }
 
     public function testClassWithFullPathUseStatement()
