@@ -408,6 +408,30 @@ abstract class AbstractReaderTest extends TestCase
         self::assertEmpty($reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
+    public function testGloballyIgnoredAnnotationNotIgnored() : void
+    {
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
+
+        $active = true;
+
+        $testLoader = static function (string $className) use (&$active): bool {
+            if ($active && $className === 'since') {
+                throw new \InvalidArgumentException('Globally ignored annotation names should never be passed to an autoloader.');
+            }
+
+            return false;
+        };
+
+        \Doctrine\Common\Annotations\AnnotationRegistry::registerLoader($testLoader);
+
+        try {
+            self::assertNotNull($reader->getClassAnnotations($class));
+        } finally {
+            $active = false;
+        }
+    }
+
     public function testAnnotationEnumeratorException()
     {
         $reader     = $this->getReader();
