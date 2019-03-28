@@ -75,7 +75,10 @@ class SimpleAnnotationReader implements Reader
      */
     public function getConstantAnnotations(\ReflectionClassConstant $constant)
     {
-        return $this->parser->parse($constant->getDocComment(), 'constant '.$constant->getDeclaringClass()->name.'::'.$constant->getName());
+        return $this->parser->parse(
+            $constant->getDocComment(),
+            'constant '.$constant->getDeclaringClass()->name.'::'.$constant->getName()
+        );
     }
 
     /**
