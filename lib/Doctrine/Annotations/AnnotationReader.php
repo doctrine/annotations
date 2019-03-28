@@ -16,8 +16,9 @@ use ReflectionProperty;
  * @author  Jonathan Wage <jonwage@gmail.com>
  * @author  Roman Borschel <roman@code-factory.org>
  * @author  Johannes M. Schmitt <schmittjoh@gmail.com>
+ * @author  Josef Kufner <josef@kufner.cz>
  */
-class AnnotationReader implements Reader, ReaderWithConstantsAnnotations
+class AnnotationReader implements Reader
 {
     /**
      * Global map for imports.

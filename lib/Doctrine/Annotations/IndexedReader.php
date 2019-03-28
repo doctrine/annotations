@@ -7,7 +7,7 @@ namespace Doctrine\Annotations;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class IndexedReader implements Reader, ReaderWithConstantsAnnotations
+class IndexedReader implements Reader
 {
     /**
      * @var Reader
