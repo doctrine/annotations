@@ -10,7 +10,7 @@ class ClassOverwritesTrait {
     /**
      * @Autoload
      */
-    public function traitMethod()
+    public function traitMethod() : void
     {
 
     }

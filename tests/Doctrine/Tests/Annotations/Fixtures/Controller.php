@@ -55,7 +55,7 @@ class Controller
      * @param ObjectIdentityInterface $oid
      * @return void
      */
-    private function createObjectIdentity(ObjectIdentityInterface $oid)
+    private function createObjectIdentity(ObjectIdentityInterface $oid) : void
     {
         $classId = $this->createOrRetrieveClassId($oid->getType());
 
@@ -107,7 +107,7 @@ class Controller
      * @param integer $oidPK
      * @return void
      */
-    private function deleteAccessControlEntries($oidPK)
+    private function deleteAccessControlEntries($oidPK) : void
     {
         $this->connection->executeQuery($this->getDeleteAccessControlEntriesSql($oidPK));
     }
@@ -118,7 +118,7 @@ class Controller
      * @param integer $pk
      * @return void
      */
-    private function deleteObjectIdentity($pk)
+    private function deleteObjectIdentity($pk) : void
     {
         $this->connection->executeQuery($this->getDeleteObjectIdentitySql($pk));
     }
@@ -129,7 +129,7 @@ class Controller
      * @param integer $pk
      * @return void
      */
-    private function deleteObjectIdentityRelations($pk)
+    private function deleteObjectIdentityRelations($pk) : void
     {
         $this->connection->executeQuery($this->getDeleteObjectIdentityRelationsSql($pk));
     }
@@ -140,7 +140,7 @@ class Controller
      * @param AclInterface $acl
      * @return void
      */
-    private function regenerateAncestorRelations(AclInterface $acl)
+    private function regenerateAncestorRelations(AclInterface $acl) : void
     {
         $pk = $acl->getId();
         $this->connection->executeQuery($this->getDeleteObjectIdentityRelationsSql($pk));
@@ -161,7 +161,7 @@ class Controller
      * @param array $changes
      * @return void
      */
-    private function updateFieldAceProperty($name, array $changes)
+    private function updateFieldAceProperty($name, array $changes) : void
     {
         $sids = new \SplObjectStorage();
         $classIds = new \SplObjectStorage();
@@ -218,7 +218,7 @@ class Controller
      * @param array $changes
      * @return void
      */
-    private function updateAceProperty($name, array $changes)
+    private function updateAceProperty($name, array $changes) : void
     {
         list($old, $new) = $changes;
 
@@ -272,7 +272,7 @@ class Controller
      * @param \SplObjectStorage $aces
      * @return void
      */
-    private function updateAces(\SplObjectStorage $aces)
+    private function updateAces(\SplObjectStorage $aces) : void
     {
         foreach ($aces as $ace) {
             $propertyChanges = $aces->offsetGet($ace);

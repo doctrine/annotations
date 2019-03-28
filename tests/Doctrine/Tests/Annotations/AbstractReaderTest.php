@@ -15,7 +15,7 @@ abstract class AbstractReaderTest extends TestCase
         return new ReflectionClass(DummyClass::class);
     }
 
-    public function testAnnotations()
+    public function testAnnotations() : void
     {
         $class = $this->getReflectionClass();
         $reader = $this->getReader();
@@ -63,7 +63,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertEquals('hello', $classAnnot->dummyValue);
     }
 
-    public function testAnnotationsWithValidTargets()
+    public function testAnnotationsWithValidTargets() : void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithValidAnnotationTarget::class);
@@ -74,7 +74,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('nested')));
     }
 
-    public function testAnnotationsWithVarType()
+    public function testAnnotationsWithVarType() : void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
@@ -86,7 +86,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(Fixtures\AnnotationTargetAll::class, $barAnnot[0]->annotation);
     }
 
-    public function testAtInDescription()
+    public function testAtInDescription() : void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAtInDescriptionAndAnnotation::class);
@@ -98,7 +98,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(Fixtures\AnnotationTargetPropertyMethod::class, $barAnnot[0]);
     }
 
-    public function testClassWithWithDanglingComma()
+    public function testClassWithWithDanglingComma() : void
     {
         $reader = $this->getReader();
         $annots = $reader->getClassAnnotations(new \ReflectionClass(DummyClassWithDanglingComma::class));
@@ -110,13 +110,13 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetPropertyMethod is not allowed to be declared on class Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass. You may only use this annotation on these code elements: METHOD, PROPERTY
      */
-    public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtClassDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class));
     }
 
-    public function testClassWithWithInclude()
+    public function testClassWithWithInclude() : void
     {
         $reader = $this->getReader();
         $annots = $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithRequire::class));
@@ -127,7 +127,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo. You may only use this annotation on these code elements: CLASS
      */
-    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'foo'));
@@ -137,7 +137,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetAnnotation is not allowed to be declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar. You may only use this annotation on these code elements: ANNOTATION
      */
-    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'bar'));
@@ -147,7 +147,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on method Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName(). You may only use this annotation on these code elements: CLASS
      */
-    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod(Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class, 'functionName'));
@@ -157,7 +157,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
-    public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock()
+    public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class));
@@ -167,7 +167,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
-    public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock()
+    public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class,'foo'));
@@ -177,7 +177,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
      */
-    public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock()
+    public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock() : void
     {
         $reader  = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class,'bar'));
@@ -187,7 +187,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage [Type Error] Attribute "string" of @AnnotationWithVarType declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty expects a(n) string, but got integer.
      */
-    public function testClassWithPropertyInvalidVarTypeError()
+    public function testClassWithPropertyInvalidVarTypeError() : void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
@@ -199,7 +199,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage [Type Error] Attribute "annotation" of @AnnotationWithVarType declared on method Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationWithVarType::invalidMethod() expects a(n) \Doctrine\Tests\Annotations\Fixtures\AnnotationTargetAll, but got an instance of Doctrine\Tests\Annotations\Fixtures\AnnotationTargetAnnotation.
      */
-    public function testClassWithMethodInvalidVarTypeError()
+    public function testClassWithMethodInvalidVarTypeError() : void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
@@ -211,7 +211,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in class Doctrine\Tests\Annotations\DummyClassSyntaxError.
      */
-    public function testClassSyntaxErrorContext()
+    public function testClassSyntaxErrorContext() : void
     {
         $reader = $this->getReader();
         $reader->getClassAnnotations(new \ReflectionClass(DummyClassSyntaxError::class));
@@ -221,7 +221,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in method Doctrine\Tests\Annotations\DummyClassMethodSyntaxError::foo().
      */
-    public function testMethodSyntaxErrorContext()
+    public function testMethodSyntaxErrorContext() : void
     {
         $reader = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod(DummyClassMethodSyntaxError::class, 'foo'));
@@ -231,7 +231,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in property Doctrine\Tests\Annotations\DummyClassPropertySyntaxError::$foo.
      */
-    public function testPropertySyntaxErrorContext()
+    public function testPropertySyntaxErrorContext() : void
     {
         $reader = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(DummyClassPropertySyntaxError::class, 'foo'));
@@ -240,14 +240,14 @@ abstract class AbstractReaderTest extends TestCase
     /**
      * @group regression
      */
-    public function testMultipleAnnotationsOnSameLine()
+    public function testMultipleAnnotationsOnSameLine() : void
     {
         $reader = $this->getReader();
         $annots = $reader->getPropertyAnnotations(new \ReflectionProperty(DummyClass2::class, 'id'));
         self::assertCount(3, $annots);
     }
 
-    public function testNonAnnotationProblem()
+    public function testNonAnnotationProblem() : void
     {
         $reader = $this->getReader();
 
@@ -255,7 +255,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf($name, $annot);
     }
 
-    public function testIncludeIgnoreAnnotation()
+    public function testIncludeIgnoreAnnotation() : void
     {
         $reader = $this->getReader();
 
@@ -263,7 +263,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertFalse(class_exists(Fixtures\IgnoreAnnotationClass::class, false));
     }
 
-    public function testImportWithConcreteAnnotation()
+    public function testImportWithConcreteAnnotation() : void
     {
         $reader = $this->getReader();
         $property = new \ReflectionProperty(TestImportWithConcreteAnnotation::class, 'field');
@@ -272,7 +272,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertNotNull($reader->getPropertyAnnotation($property, DummyAnnotation::class));
     }
 
-    public function testImportWithInheritance()
+    public function testImportWithInheritance() : void
     {
         $reader = $this->getReader();
 
@@ -292,7 +292,7 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation "@NameFoo" in property Doctrine\Tests\Annotations\TestAnnotationNotImportedClass::$field was never imported.
      */
-    public function testImportDetectsNotImportedAnnotation()
+    public function testImportDetectsNotImportedAnnotation() : void
     {
         $reader = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(TestAnnotationNotImportedClass::class, 'field'));
@@ -302,13 +302,13 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage The annotation "@Foo\Bar\Name" in property Doctrine\Tests\Annotations\TestNonExistentAnnotationClass::$field was never imported.
      */
-    public function testImportDetectsNonExistentAnnotation()
+    public function testImportDetectsNonExistentAnnotation() : void
     {
         $reader = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(TestNonExistentAnnotationClass::class, 'field'));
     }
 
-    public function testTopLevelAnnotation()
+    public function testTopLevelAnnotation() : void
     {
         $reader = $this->getReader();
         $annotations = $reader->getPropertyAnnotations(new \ReflectionProperty(TestTopLevelAnnotationClass::class, 'field'));
@@ -317,7 +317,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(\TopLevelAnnotation::class, reset($annotations));
     }
 
-    public function testIgnoresAnnotationsNotPrefixedWithWhitespace()
+    public function testIgnoresAnnotationsNotPrefixedWithWhitespace() : void
     {
         $reader = $this->getReader();
 
@@ -336,7 +336,7 @@ abstract class AbstractReaderTest extends TestCase
      * considers to own comments. If this is a class then any later calls to getDocComment() for that class will have
      * undesirable effects. *sigh*
      */
-    public function testResetsPhpParserAfterUse()
+    public function testResetsPhpParserAfterUse() : void
     {
         // If someone has already included our main test fixture this test is invalid. It's important that our require
         // causes this file to be parsed and compiled at a certain point.
@@ -376,14 +376,14 @@ abstract class AbstractReaderTest extends TestCase
      * @expectedException \Doctrine\Annotations\AnnotationException
      * @expectedExceptionMessage The class "Doctrine\Tests\Annotations\Fixtures\NoAnnotation" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\Tests\Annotations\Fixtures\NoAnnotation". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class Doctrine\Tests\Annotations\Fixtures\InvalidAnnotationUsageClass.
      */
-    public function testErrorWhenInvalidAnnotationIsUsed()
+    public function testErrorWhenInvalidAnnotationIsUsed() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageClass::class);
         $reader->getClassAnnotations($ref);
     }
 
-    public function testInvalidAnnotationUsageButIgnoredClass()
+    public function testInvalidAnnotationUsageButIgnoredClass() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
@@ -396,7 +396,7 @@ abstract class AbstractReaderTest extends TestCase
      * @group DDC-1660
      * @group regression
      */
-    public function testInvalidAnnotationButIgnored()
+    public function testInvalidAnnotationButIgnored() : void
     {
         $reader = $this->getReader();
         $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
@@ -429,7 +429,7 @@ abstract class AbstractReaderTest extends TestCase
         }
     }
 
-    public function testAnnotationEnumeratorException()
+    public function testAnnotationEnumeratorException() : void
     {
         $reader     = $this->getReader();
         $class      = new \ReflectionClass(Fixtures\ClassWithAnnotationEnum::class);
@@ -458,7 +458,7 @@ abstract class AbstractReaderTest extends TestCase
     /**
      * @group DCOM-106
      */
-    public function testIgnoreFixMeAndUpperCaseToDo()
+    public function testIgnoreFixMeAndUpperCaseToDo() : void
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(DCOM106::class);
@@ -466,7 +466,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
-    public function testWillSkipAnnotationsContainingDashes()
+    public function testWillSkipAnnotationsContainingDashes() : void
     {
         self::assertEmpty(
             $this
@@ -477,7 +477,7 @@ abstract class AbstractReaderTest extends TestCase
         );
     }
 
-    public function testWillFailOnAnnotationConstantReferenceContainingDashes()
+    public function testWillFailOnAnnotationConstantReferenceContainingDashes() : void
     {
         $reader     = $this->getReader();
         $reflection = new \ReflectionClass(Fixtures\ClassWithAnnotationConstantReferenceWithDashes::class);
@@ -630,7 +630,7 @@ class DummyClassMethodSyntaxError
     /**
      * @DummyAnnotation(@)
      */
-    public function foo()
+    public function foo() : void
     {
 
     }

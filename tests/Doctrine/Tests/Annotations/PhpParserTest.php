@@ -12,7 +12,7 @@ require_once __DIR__.'/Fixtures/GlobalNamespacesPerFileWithClassAsLast.php';
 
 class PhpParserTest extends TestCase
 {
-    public function testParseClassWithMultipleClassesInFile()
+    public function testParseClassWithMultipleClassesInFile() : void
     {
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\MultipleClassesInFile');
         $parser = new PhpParser();
@@ -23,7 +23,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testParseClassWithMultipleImportsInUseStatement()
+    public function testParseClassWithMultipleImportsInUseStatement() : void
     {
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\MultipleImportsInUseStatement');
         $parser = new PhpParser();
@@ -37,7 +37,7 @@ class PhpParserTest extends TestCase
     /**
      * @requires PHP 7.0
      */
-    public function testParseClassWithGroupUseStatement()
+    public function testParseClassWithGroupUseStatement() : void
     {
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\GroupUseStatement');
         $parser = new PhpParser();
@@ -49,13 +49,13 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testParseClassWhenNotUserDefined()
+    public function testParseClassWhenNotUserDefined() : void
     {
         $parser = new PhpParser();
         self::assertEquals([], $parser->parseClass(new \ReflectionClass(\stdClass::class)));
     }
 
-    public function testClassFileDoesNotExist()
+    public function testClassFileDoesNotExist() : void
     {
         /* @var $class ReflectionClass|\PHPUnit_Framework_MockObject_MockObject */
         $class = $this->getMockBuilder(ReflectionClass::class)
@@ -69,7 +69,7 @@ class PhpParserTest extends TestCase
         self::assertEquals([], $parser->parseClass($class));
     }
 
-    public function testParseClassWhenClassIsNotNamespaced()
+    public function testParseClassWhenClassIsNotNamespaced() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(\AnnotationsTestsFixturesNonNamespacedClass::class);
@@ -80,7 +80,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testParseClassWhenClassIsInterface()
+    public function testParseClassWhenClassIsInterface() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\TestInterface');
@@ -90,7 +90,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testClassWithFullyQualifiedUseStatements()
+    public function testClassWithFullyQualifiedUseStatements() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassWithFullyQualifiedUseStatements');
@@ -102,7 +102,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testNamespaceAndClassCommentedOut()
+    public function testNamespaceAndClassCommentedOut() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceAndClassCommentedOut');
@@ -113,7 +113,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
 	}
 
-    public function testEqualNamespacesPerFileWithClassAsFirst()
+    public function testEqualNamespacesPerFileWithClassAsFirst() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\EqualNamespacesPerFileWithClassAsFirst');
@@ -124,7 +124,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testEqualNamespacesPerFileWithClassAsLast()
+    public function testEqualNamespacesPerFileWithClassAsLast() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\EqualNamespacesPerFileWithClassAsLast');
@@ -135,7 +135,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testDifferentNamespacesPerFileWithClassAsFirst()
+    public function testDifferentNamespacesPerFileWithClassAsFirst() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\DifferentNamespacesPerFileWithClassAsFirst');
@@ -145,7 +145,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testDifferentNamespacesPerFileWithClassAsLast()
+    public function testDifferentNamespacesPerFileWithClassAsLast() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\DifferentNamespacesPerFileWithClassAsLast');
@@ -155,7 +155,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testGlobalNamespacesPerFileWithClassAsFirst()
+    public function testGlobalNamespacesPerFileWithClassAsFirst() : void
     {
         $parser = new PhpParser();
         $class = new \ReflectionClass(\GlobalNamespacesPerFileWithClassAsFirst::class);
@@ -166,7 +166,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testGlobalNamespacesPerFileWithClassAsLast()
+    public function testGlobalNamespacesPerFileWithClassAsLast() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(\GlobalNamespacesPerFileWithClassAsLast::class);
@@ -177,7 +177,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testNamespaceWithClosureDeclaration()
+    public function testNamespaceWithClosureDeclaration() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceWithClosureDeclaration');
@@ -189,7 +189,7 @@ class PhpParserTest extends TestCase
         ], $parser->parseClass($class));
     }
 
-    public function testIfPointerResetsOnMultipleParsingTries()
+    public function testIfPointerResetsOnMultipleParsingTries() : void
     {
         $parser = new PhpParser();
         $class = new ReflectionClass(__NAMESPACE__ . '\Fixtures\NamespaceWithClosureDeclaration');
@@ -211,7 +211,7 @@ class PhpParserTest extends TestCase
      * @group DCOM-97
      * @group regression
      */
-    public function testClassWithClosure()
+    public function testClassWithClosure() : void
     {
         $parser = new PhpParser();
         $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\ClassWithClosure');
