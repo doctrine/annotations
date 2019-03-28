@@ -19,16 +19,19 @@ final class AnnotationTarget
     public const TARGET_METHOD     = 2;
     public const TARGET_PROPERTY   = 4;
     public const TARGET_ANNOTATION = 8;
+    public const TARGET_CONSTANT   = 16;
     public const TARGET_ALL        = self::TARGET_CLASS
         | self::TARGET_METHOD
         | self::TARGET_PROPERTY
-        | self::TARGET_ANNOTATION;
+        | self::TARGET_ANNOTATION
+        | self::TARGET_CONSTANT;
 
     private const LABELS = [
         self::TARGET_CLASS      => 'CLASS',
         self::TARGET_METHOD     => 'METHOD',
         self::TARGET_PROPERTY   => 'PROPERTY',
         self::TARGET_ANNOTATION => 'ANNOTATION',
+        self::TARGET_CONSTANT   => 'CONSTANT',
         self::TARGET_ALL        => 'ALL',
     ];
 
@@ -67,6 +70,11 @@ final class AnnotationTarget
         return new self(self::TARGET_ANNOTATION);
     }
 
+    public static function constant() : self
+    {
+        return new self(self::TARGET_CONSTANT);
+    }
+
     public static function all() : self
     {
         return new self(self::TARGET_ALL);
@@ -100,6 +108,11 @@ final class AnnotationTarget
     public function targetsAnnotation() : bool
     {
         return ($this->target & self::TARGET_ANNOTATION) === self::TARGET_ANNOTATION;
+    }
+
+    public function targetsConstant() : bool
+    {
+        return ($this->target & self::TARGET_CONSTANT) === self::TARGET_CONSTANT;
     }
 
     public function describe() : string

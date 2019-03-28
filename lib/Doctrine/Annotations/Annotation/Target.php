@@ -18,8 +18,8 @@ final class Target
     public const TARGET_METHOD     = AnnotationTarget::TARGET_METHOD;
     public const TARGET_PROPERTY   = AnnotationTarget::TARGET_PROPERTY;
     public const TARGET_ANNOTATION = AnnotationTarget::TARGET_ANNOTATION;
+    public const TARGET_CONSTANT   = AnnotationTarget::TARGET_CONSTANT;
     public const TARGET_ALL        = AnnotationTarget::TARGET_ALL;
-
     /**
      * @var array
      */
@@ -29,6 +29,7 @@ final class Target
         'METHOD'     => self::TARGET_METHOD,
         'PROPERTY'   => self::TARGET_PROPERTY,
         'ANNOTATION' => self::TARGET_ANNOTATION,
+        'CONSTANT'   => self::TARGET_CONSTANT,
     ];
 
     /**
