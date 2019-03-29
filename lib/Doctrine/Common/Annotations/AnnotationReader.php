@@ -17,7 +17,7 @@ use function ini_get;
 /**
  * A reader for docblock annotations.
  */
-class AnnotationReader implements Reader
+class AnnotationReader implements Reader, ReaderWithConstantsAnnotations
 {
     /**
      * Global map for imports.

@@ -14,7 +14,7 @@ use ReflectionProperty;
  *
  * @deprecated Deprecated in favour of using AnnotationReader
  */
-class SimpleAnnotationReader implements Reader
+class SimpleAnnotationReader implements Reader, ReaderWithConstantsAnnotations
 {
     /** @var DocParser */
     private $parser;

@@ -12,7 +12,7 @@ use function get_class;
 /**
  * Allows the reader to be used in-place of Doctrine's reader.
  */
-class IndexedReader implements Reader
+class IndexedReader implements Reader, ReaderWithConstantsAnnotations
 {
     /** @var Reader */
     private $delegate;

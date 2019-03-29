@@ -17,7 +17,7 @@ use function time;
 /**
  * A cache aware annotation reader.
  */
-final class CachedReader implements Reader
+final class CachedReader implements Reader, ReaderWithConstantsAnnotations
 {
     /** @var Reader */
     private $delegate;

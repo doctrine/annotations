@@ -35,7 +35,7 @@ use function var_export;
  *             in version 2.0.0 of doctrine/annotations. Please use the
  *             {@see \Doctrine\Common\Annotations\CachedReader} instead.
  */
-class FileCacheReader implements Reader
+class FileCacheReader implements Reader, ReaderWithConstantsAnnotations
 {
     /** @var Reader */
     private $reader;
