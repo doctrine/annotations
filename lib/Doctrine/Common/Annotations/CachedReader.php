@@ -116,7 +116,7 @@ final class CachedReader implements Reader, ReaderWithConstantsAnnotations
     /**
      * {@inheritDoc}
      */
-    public function getConstantAnnotations(\ReflectionClassConstant $constant)
+    public function getConstantAnnotations(\ReflectionClassConstant $constant): array
     {
         $class = $constant->getDeclaringClass();
         $cacheKey = $class->getName().'::'.$constant->getName();

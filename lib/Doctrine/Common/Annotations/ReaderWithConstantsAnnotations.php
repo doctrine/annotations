@@ -33,9 +33,9 @@ interface ReaderWithConstantsAnnotations extends Reader
      * @param \ReflectionClassConstant $constant The ReflectionClassConstant of the constant
      *                                           from which the annotations should be read.
      *
-     * @return array An array of Annotations.
+     * @return object[] An array of Annotations.
      */
-    function getConstantAnnotations(\ReflectionClassConstant $constant);
+    function getConstantAnnotations(\ReflectionClassConstant $constant): array;
 
     /**
      * Gets a constant annotation.
