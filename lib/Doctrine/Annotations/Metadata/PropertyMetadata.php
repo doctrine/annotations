@@ -22,12 +22,12 @@ final class PropertyMetadata
     /** @var bool */
     private $default;
 
-    /** @var array<int|float|string|bool>|null */
+    /** @var array<string, array<int|float|string|bool>|string>|null */
     private $enum;
 
     /**
      * @param array<string, string>             $type
-     * @param array<int|float|string|bool>|null $enum
+     * @param array<string, array<int|float|string|bool>|string>|null $enum
      */
     public function __construct(
         string $name,
@@ -67,7 +67,7 @@ final class PropertyMetadata
     }
 
     /**
-     * @return array<int|float|string|bool>|null
+     * @return array<string, array<int|float|string|bool>|string>|null
      */
     public function getEnum() : ?array
     {
