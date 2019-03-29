@@ -226,7 +226,7 @@ class AnnotationReader implements Reader
     /**
      * {@inheritDoc}
      */
-    public function getConstantAnnotations(\ReflectionClassConstant $constant)
+    public function getConstantAnnotations(\ReflectionClassConstant $constant): array
     {
         $class   = $constant->getDeclaringClass();
         $context = 'constant ' . $class->getName() . "::" . $constant->getName();
@@ -336,9 +336,9 @@ class AnnotationReader implements Reader
     /**
      * Retrieves imports for constants.
      *
-     * @return array
+     * @return object[]
      */
-    private function getConstantImports(\ReflectionClassConstant $constant)
+    private function getConstantImports(\ReflectionClassConstant $constant): array
     {
         $class = $constant->getDeclaringClass();
         $classImports = $this->getClassImports($class);
