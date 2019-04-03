@@ -141,19 +141,19 @@ class AnnotationException extends \Exception
      * @param string $attributeName
      * @param string $annotationName
      * @param string $context
-     * @param array  $available
+     * @param string $expected
      * @param mixed  $given
      *
      * @return AnnotationException
      */
-    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given)
+    public static function enumeratorError($attributeName, $annotationName, $context, $expected, $given)
     {
         return new self(sprintf(
-            '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
+            '[Enum Error] Attribute "%s" of @%s declared on %s accept only %s, but got %s.',
             $attributeName, 
             $annotationName,
             $context,
-            implode(', ', $available),
+            $expected,
             is_object($given) ? get_class($given) : $given
         ));
     }

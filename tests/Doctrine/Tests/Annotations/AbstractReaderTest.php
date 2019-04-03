@@ -444,14 +444,14 @@ abstract class AbstractReaderTest extends TestCase
             $reader->getPropertyAnnotations($class->getProperty('invalidProperty'));
             $this->fail();
         } catch (AnnotationException $exc) {
-            self::assertEquals('[Enum Error] Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnum declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationEnum::$invalidProperty accept only [ONE, TWO, THREE], but got FOUR.', $exc->getMessage());
+            self::assertEquals('[Enum Error] Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnum declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationEnum::$invalidProperty accept only "ONE"|"TWO"|"THREE", but got FOUR.', $exc->getMessage());
         }
 
         try {
             $reader->getMethodAnnotations($class->getMethod('invalidMethod'));
             $this->fail();
         } catch (AnnotationException $exc) {
-            self::assertEquals('[Enum Error] Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnum declared on method Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationEnum::invalidMethod() accept only [ONE, TWO, THREE], but got 5.', $exc->getMessage());
+            self::assertEquals('[Enum Error] Attribute "value" of @Doctrine\Tests\Annotations\Fixtures\AnnotationEnum declared on method Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationEnum::invalidMethod() accept only "ONE"|"TWO"|"THREE", but got 5.', $exc->getMessage());
         }
     }
 

@@ -8,6 +8,7 @@ use Doctrine\Annotations\Metadata\AnnotationMetadata;
 use Doctrine\Annotations\Metadata\AnnotationTarget;
 use Doctrine\Annotations\Metadata\Exception\TooManyDefaultProperties;
 use Doctrine\Annotations\Metadata\PropertyMetadata;
+use Doctrine\Annotations\Type\StringType;
 use PHPUnit\Framework\TestCase;
 
 final class AnnotationMetadataTest extends TestCase
@@ -25,13 +26,13 @@ final class AnnotationMetadataTest extends TestCase
             false,
             new PropertyMetadata(
                 'a',
-                ['type' => 'string'],
+                new StringType(),
                 true,
                 true
             ),
             new PropertyMetadata(
                 'b',
-                ['type' => 'string'],
+                new StringType(),
                 true,
                 true
             )

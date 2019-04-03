@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Doctrine\Annotations\Metadata;
 
+use Doctrine\Annotations\Type\Type;
+
 /**
  * Property metadata represents information about the definition of a single property of an annotation, it's name,
  * accepted types, whether it's required and whether it's default.
@@ -13,7 +15,7 @@ final class PropertyMetadata
     /** @var string */
     private $name;
 
-    /** @var array<string, string>|null */
+    /** @var Type */
     private $type;
 
     /** @var bool */
@@ -22,19 +24,15 @@ final class PropertyMetadata
     /** @var bool */
     private $default;
 
-    /** @var array<string, array<int|float|string|bool>|string>|null */
+    /** @var Type|null */
     private $enum;
 
-    /**
-     * @param array<string, string>             $type
-     * @param array<string, array<int|float|string|bool>|string>|null $enum
-     */
     public function __construct(
         string $name,
-        ?array $type,
+        Type $type,
         bool $required = false,
         bool $default = false,
-        ?array $enum = null
+        ?Type $enum = null
     ) {
         $this->name     = $name;
         $this->type     = $type;
@@ -53,10 +51,7 @@ final class PropertyMetadata
         return $this->required;
     }
 
-    /**
-     * @return array<string, string>|null
-     */
-    public function getType() : ?array
+    public function getType() : Type
     {
         return $this->type;
     }
@@ -66,10 +61,7 @@ final class PropertyMetadata
         return $this->default;
     }
 
-    /**
-     * @return array<string, array<int|float|string|bool>|string>|null
-     */
-    public function getEnum() : ?array
+    public function getEnum() : ?Type
     {
         return $this->enum;
     }

@@ -8,6 +8,11 @@ use Doctrine\Annotations\Annotation\Attribute;
 use Doctrine\Annotations\Annotation\Attributes;
 use Doctrine\Annotations\Annotation\Enum;
 use Doctrine\Annotations\Annotation\Target;
+use Doctrine\Annotations\Type\ArrayType;
+use Doctrine\Annotations\Type\BooleanType;
+use Doctrine\Annotations\Type\MixedType;
+use Doctrine\Annotations\Type\ObjectType;
+use Doctrine\Annotations\Type\StringType;
 
 /**
  * Internal meta-annotations exposed by the Annotations library to declare custom user-land annotations.
@@ -25,18 +30,18 @@ final class InternalAnnotations
                 false,
                 new PropertyMetadata(
                     'name',
-                    ['type' => 'string'],
+                    new StringType(),
                     true,
                     true
                 ),
                 new PropertyMetadata(
                     'type',
-                    ['type' => 'string'],
+                    new StringType(),
                     true
                 ),
                 new PropertyMetadata(
                     'required',
-                    ['type' => 'boolean']
+                    new BooleanType()
                 )
             ),
             new AnnotationMetadata(
@@ -45,11 +50,7 @@ final class InternalAnnotations
                 false,
                 new PropertyMetadata(
                     'value',
-                    [
-                        'type'       => 'array',
-                        'array_type' =>Attribute::class,
-                        'value'      =>'array<' . Attribute::class . '>',
-                    ],
+                    new ArrayType(new MixedType(), new ObjectType(Attribute::class)),
                     true,
                     true
                 )
@@ -60,13 +61,13 @@ final class InternalAnnotations
                 true,
                 new PropertyMetadata(
                     'value',
-                    ['type' => 'array'],
+                    new ArrayType(new MixedType(), new MixedType()),
                     true,
                     true
                 ),
                 new PropertyMetadata(
                     'literal',
-                    ['type' => 'array']
+                    new ArrayType(new MixedType(), new MixedType())
                 )
             ),
             new AnnotationMetadata(
@@ -75,11 +76,7 @@ final class InternalAnnotations
                 true,
                 new PropertyMetadata(
                     'value',
-                    [
-                        'type'      =>'array',
-                        'array_type'=>'string',
-                        'value'     =>'array<string>',
-                    ],
+                    new ArrayType(new MixedType(), new StringType()),
                     false,
                     true
                 )
