@@ -163,7 +163,7 @@ class DocLexerTest extends TestCase
 
         $lexer->setInput('"' . str_repeat('.', 20240) . '"');
 
-        self::assertInternalType('array', $lexer->glimpse());
+        self::assertIsArray($lexer->glimpse());
     }
 
     /**

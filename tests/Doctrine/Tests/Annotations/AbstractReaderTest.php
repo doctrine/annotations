@@ -5,6 +5,7 @@ namespace Doctrine\Tests\Annotations;
 use Doctrine\Annotations\AnnotationException;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass, Doctrine\Annotations\AnnotationReader;
+use function sprintf;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
 
@@ -82,7 +83,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $fooAnnot = $reader->getPropertyAnnotations($class->getProperty('foo')));
         self::assertCount(1, $barAnnot = $reader->getMethodAnnotations($class->getMethod('bar')));
 
-        self::assertInternalType('string',  $fooAnnot[0]->string);
+        self::assertIsString($fooAnnot[0]->string);
         self::assertInstanceOf(Fixtures\AnnotationTargetAll::class, $barAnnot[0]->annotation);
     }
 
@@ -106,12 +107,16 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $annots);
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetPropertyMethod is not allowed to be declared on class Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtClass. You may only use this annotation on these code elements: METHOD, PROPERTY
-     */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Semantical Error] Annotation @AnnotationTargetPropertyMethod is not allowed to be declared on class %s. You may only use this annotation on these code elements: METHOD, PROPERTY',
+                Fixtures\ClassWithInvalidAnnotationTargetAtClass::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class));
     }
@@ -123,116 +128,163 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $annots);
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$foo. You may only use this annotation on these code elements: CLASS
-     */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on property %s::$foo. You may only use this annotation on these code elements: CLASS',
+                Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'foo'));
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetAnnotation is not allowed to be declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtProperty::$bar. You may only use this annotation on these code elements: ANNOTATION
-     */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Semantical Error] Annotation @AnnotationTargetAnnotation is not allowed to be declared on property %s::$bar. You may only use this annotation on these code elements: ANNOTATION',
+                Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'bar'));
     }
 
-     /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on method Doctrine\Tests\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtMethod::functionName(). You may only use this annotation on these code elements: CLASS
-     */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on method %s::functionName(). You may only use this annotation on these code elements: CLASS',
+                Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod(Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class, 'functionName'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
-     */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                "Expected namespace separator or identifier, got ')' at position 24 in class @%s.",
+                Fixtures\AnnotationWithTargetSyntaxError::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getClassAnnotations(new \ReflectionClass(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
-     */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                "Expected namespace separator or identifier, got ')' at position 24 in class @%s.",
+                Fixtures\AnnotationWithTargetSyntaxError::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class,'foo'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 24 in class @Doctrine\Tests\Annotations\Fixtures\AnnotationWithTargetSyntaxError.
-     */
     public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                "Expected namespace separator or identifier, got ')' at position 24 in class @%s.",
+                Fixtures\AnnotationWithTargetSyntaxError::class
+            )
+        );
+
         $reader  = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class,'bar'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Type Error] Attribute "string" of @AnnotationWithVarType declared on property Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationWithVarType::$invalidProperty expects a(n) string, but got integer.
-     */
     public function testClassWithPropertyInvalidVarTypeError() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Type Error] Attribute "string" of @AnnotationWithVarType declared on property %s::$invalidProperty expects a(n) string, but got integer.',
+                Fixtures\ClassWithAnnotationWithVarType::class
+            )
+        );
+
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
 
         $reader->getPropertyAnnotations($class->getProperty('invalidProperty'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Type Error] Attribute "annotation" of @AnnotationWithVarType declared on method Doctrine\Tests\Annotations\Fixtures\ClassWithAnnotationWithVarType::invalidMethod() expects a(n) \Doctrine\Tests\Annotations\Fixtures\AnnotationTargetAll, but got an instance of Doctrine\Tests\Annotations\Fixtures\AnnotationTargetAnnotation.
-     */
     public function testClassWithMethodInvalidVarTypeError() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Type Error] Attribute "annotation" of @AnnotationWithVarType declared on method %s::invalidMethod() expects a(n) \%s, but got an instance of %s.',
+                Fixtures\ClassWithAnnotationWithVarType::class,
+                Fixtures\AnnotationTargetAll::class,
+                Fixtures\AnnotationTargetAnnotation::class
+                )
+
+        );
+
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
 
         $reader->getMethodAnnotations($class->getMethod('invalidMethod'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in class Doctrine\Tests\Annotations\DummyClassSyntaxError.
-     */
     public function testClassSyntaxErrorContext() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                "Expected namespace separator or identifier, got ')' at position 18 in class %s.",
+                DummyClassSyntaxError::class
+            )
+        );
+
         $reader = $this->getReader();
         $reader->getClassAnnotations(new \ReflectionClass(DummyClassSyntaxError::class));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in method Doctrine\Tests\Annotations\DummyClassMethodSyntaxError::foo().
-     */
     public function testMethodSyntaxErrorContext() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                "Expected namespace separator or identifier, got ')' at position 18 in method %s::foo().",
+                DummyClassMethodSyntaxError::class
+            )
+        );
+
         $reader = $this->getReader();
         $reader->getMethodAnnotations(new \ReflectionMethod(DummyClassMethodSyntaxError::class, 'foo'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage Expected namespace separator or identifier, got ')' at position 18 in property Doctrine\Tests\Annotations\DummyClassPropertySyntaxError::$foo.
-     */
     public function testPropertySyntaxErrorContext() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'Expected namespace separator or identifier, got \')\' at position 18 in property %s::$foo.',
+                DummyClassPropertySyntaxError::class
+            )
+        );
+
         $reader = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(DummyClassPropertySyntaxError::class, 'foo'));
     }
@@ -288,22 +340,30 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(Bar\Name::class, reset($parentAnnotations));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage The annotation "@NameFoo" in property Doctrine\Tests\Annotations\TestAnnotationNotImportedClass::$field was never imported.
-     */
     public function testImportDetectsNotImportedAnnotation() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The annotation "@NameFoo" in property %s::$field was never imported.',
+                TestAnnotationNotImportedClass::class
+            )
+        );
+
         $reader = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(TestAnnotationNotImportedClass::class, 'field'));
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage The annotation "@Foo\Bar\Name" in property Doctrine\Tests\Annotations\TestNonExistentAnnotationClass::$field was never imported.
-     */
     public function testImportDetectsNonExistentAnnotation() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The annotation "@Foo\Bar\Name" in property %s::$field was never imported.',
+                TestNonExistentAnnotationClass::class
+            )
+        );
+
         $reader = $this->getReader();
         $reader->getPropertyAnnotations(new \ReflectionProperty(TestNonExistentAnnotationClass::class, 'field'));
     }
@@ -372,12 +432,18 @@ abstract class AbstractReaderTest extends TestCase
         self::assertEmpty($annotations);
     }
 
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage The class "Doctrine\Tests\Annotations\Fixtures\NoAnnotation" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\Tests\Annotations\Fixtures\NoAnnotation". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class Doctrine\Tests\Annotations\Fixtures\InvalidAnnotationUsageClass.
-     */
     public function testErrorWhenInvalidAnnotationIsUsed() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                'The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotation") to the _class_ doc comment of class %s.',
+                Fixtures\NoAnnotation::class,
+                Fixtures\NoAnnotation::class,
+                Fixtures\InvalidAnnotationUsageClass::class
+            )
+        );
+
         $reader = $this->getReader();
         $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageClass::class);
         $reader->getClassAnnotations($ref);

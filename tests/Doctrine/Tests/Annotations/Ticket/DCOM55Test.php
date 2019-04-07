@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Annotations\Ticket;
 
+use Doctrine\Annotations\AnnotationException;
 use Doctrine\Tests\Annotations\Fixtures\Controller;
 use Doctrine\Annotations\AnnotationReader;
 use PHPUnit\Framework\TestCase;
@@ -11,12 +12,18 @@ use PHPUnit\Framework\TestCase;
  */
 class DCOM55Test extends TestCase
 {
-    /**
-     * @expectedException \Doctrine\Annotations\AnnotationException
-     * @expectedExceptionMessage [Semantical Error] The class "Doctrine\Tests\Annotations\Fixtures\Controller" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "Doctrine\Tests\Annotations\Fixtures\Controller". If it is indeed no annotation, then you need to add @IgnoreAnnotation("Controller") to the _class_ doc comment of class Doctrine\Tests\Annotations\Ticket\Dummy.
-     */
     public function testIssue() : void
     {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            sprintf(
+                '[Semantical Error] The class "%s" is not annotated with @Annotation. Are you sure this class can be used as annotation? If so, then you need to add @Annotation to the _class_ doc comment of "%s". If it is indeed no annotation, then you need to add @IgnoreAnnotation("Controller") to the _class_ doc comment of class %s.',
+                Controller::class,
+                Controller::class,
+                Dummy::class
+            )
+        );
+
         $class = new \ReflectionClass(__NAMESPACE__ . '\\Dummy');
         $reader = new AnnotationReader();
         $reader->getClassAnnotations($class);
