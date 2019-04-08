@@ -26,7 +26,7 @@
         "doctrine/coding-standard": "^4.0",
         "phpstan/phpstan": "^0.11",
         "phpstan/phpstan-phpunit": "^0.11",
-        "phpunit/phpunit": "^7.0"
+        "phpunit/phpunit": "^8.1"
     },
     "config": {
         "sort-packages": true
