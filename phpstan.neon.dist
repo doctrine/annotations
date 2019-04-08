@@ -11,7 +11,6 @@ parameters:
         - %currentWorkingDirectory%/tests/Doctrine/Tests/Annotations/DocParserTest.php
     excludes_analyse:
         - %currentWorkingDirectory%/tests/*/Fixtures/*
-        - %currentWorkingDirectory%/tests/Doctrine/Tests/Annotations/ReservedKeywordsClasses.php
         - %currentWorkingDirectory%/tests/Doctrine/Tests/Annotations/Ticket/DCOM58Entity.php
         - %currentWorkingDirectory%/tests/Doctrine/Tests/DoctrineTestCase.php
     polluteScopeWithLoopInitialAssignments: true
