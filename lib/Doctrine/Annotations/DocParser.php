@@ -799,8 +799,13 @@ final class DocParser
         $instance = new $name();
 
         foreach ($values as $property => $value) {
-            if (! isset($metadata->getProperties()[$property])) {
-                if ('value' !== $property) {
+            if (isset($metadata->getProperties()[$property])) {
+                $instance->{$property} = $value;
+                continue;
+            }
+
+            if ('value' !== $property) {
+                if ($metadata->getProperties()) {
                     throw AnnotationException::creationError(
                         sprintf(
                             'The annotation @%s declared on %s does not have a property named "%s". Available properties: %s',
@@ -812,17 +817,24 @@ final class DocParser
                     );
                 }
 
-                $defaultProperty = $metadata->getDefaultProperty();
-
-                // handle the case if the property has no annotations
-                if ($defaultProperty === null) {
-                    throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)));
-                }
-
-                $property = $defaultProperty->getName();
+                throw AnnotationException::creationError(
+                    sprintf(
+                        'The annotation @%s declared on %s does not have any properties.',
+                        $originalName,
+                        $this->context
+                    )
+                );
             }
 
-            $instance->{$property} = $value;
+            $defaultProperty = $metadata->getDefaultProperty();
+
+            // handle the case if the property has no annotations
+            if ($defaultProperty === null) {
+                throw AnnotationException::creationError(sprintf('The annotation @%s declared on %s does not accept any values, but got %s.', $originalName, $this->context, json_encode($values)));
+            }
+
+            $instance->{$defaultProperty->getName()} = $value;
+
         }
 
         return $instance;
