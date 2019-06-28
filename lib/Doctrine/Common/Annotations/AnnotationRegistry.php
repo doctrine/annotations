@@ -166,6 +166,10 @@ final class AnnotationRegistry
                 return true;
             }
         }
+        
+        if (self::$loaders === [] && self::$autoloadNamespaces === [] && \class_exists($class)) {
+            return true;
+        }
 
         self::$failedToAutoload[$class] = null;
 
