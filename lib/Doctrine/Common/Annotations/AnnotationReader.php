@@ -101,7 +101,9 @@ class AnnotationReader implements Reader
         // PlantUML
         'startuml' => true, 'enduml' => true,
         // Symfony 3.3 Cache Adapter
-        'experimental' => true
+        'experimental' => true,
+        // Slevomat Coding Standard
+        'phpcsSuppress' => true
     ];
 
     /**
