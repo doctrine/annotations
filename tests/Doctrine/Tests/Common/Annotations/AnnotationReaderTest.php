@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
@@ -128,5 +129,13 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getClassAnnotations($ref);
 
         self::assertInstanceOf(SingleUseAnnotation::class,$annotations[0]);
+    }
+
+    public function testPhpCsSuppressAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithPhpCsSuppressAnnotation::class);
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('foo')));
     }
 }
