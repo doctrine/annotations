@@ -197,6 +197,7 @@ class AnnotationReader implements Reader
 
         $this->preParser->setImports(self::$globalImports);
         $this->preParser->setIgnoreNotImportedAnnotations(true);
+        $this->preParser->setIgnoredAnnotationNames(self::$globalIgnoredNames);
 
         $this->phpParser = new PhpParser;
     }
