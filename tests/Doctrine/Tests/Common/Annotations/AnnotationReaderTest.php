@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPCodeSnifferAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
@@ -155,5 +156,13 @@ class AnnotationReaderTest extends AbstractReaderTest
         } finally {
             spl_autoload_unregister($testLoader);
         }
+    }
+
+    public function testPHPCodeSnifferAnnotationsAreIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithPHPCodeSnifferAnnotation::class);
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
     }
 }
