@@ -30,7 +30,3 @@ parameters:
         -
             message: '#^Array has 2 duplicate keys with value .ClassWithConstants\.SOME_KEY. \(\\Doctrine\\Tests\\Annotations\\Fixtures\\ClassWithConstants::SOME_KEY, \\Doctrine\\Tests\\Annotations\\Fixtures\\ClassWithConstants::SOME_KEY\)\.$#'
             path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\DocParserTest.php'
-        # bug in doctrine/lexer
-        -
-            message: '#^Call to static method PHPUnit\\Framework\\Assert::assertNull\(\) with array will always evaluate to false\.$#'
-            path: '%currentWorkingDirectory%/tests\Doctrine\Tests\Annotations\DocLexerTest.php'
