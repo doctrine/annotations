@@ -144,11 +144,10 @@ class AnnotationReaderTest extends AbstractReaderTest
     {
         $reader = $this->getReader();
         $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
-        $testLoader = static function (string $className) : bool {
+        $testLoader = static function (string $className) : void {
             if ($className === 'since') {
                 throw new \InvalidArgumentException('Globally ignored annotation names should never be passed to an autoloader.');
             }
-            return false;
         };
         spl_autoload_register($testLoader, true, true);
         try {
