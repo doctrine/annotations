@@ -6,6 +6,7 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4snapshot
   - nightly
 
 cache:
@@ -26,10 +27,6 @@ jobs:
     - php: nightly
 
   include:
-    - stage: Test
-      php: 7.4snapshot
-      install: travis_retry composer require --dev phpunit/phpunit:^7.5@dev
-
     - stage: Lint
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.7
