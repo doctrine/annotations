@@ -11,7 +11,7 @@ use Doctrine\Tests\Annotations\Fixtures\Annotation\Template;
 /**
  * @BeforeMethods({"initializeMethod", "initialize"})
  */
-final class DocParsePerformanceBench
+final class DocParserPerformanceBench
 {
     use MethodInitializer;
 

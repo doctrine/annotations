@@ -10,6 +10,8 @@ use Doctrine\Tests\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
+use Doctrine\Tests\Annotations\Fixtures\ClassWithPHPCodeSnifferAnnotation;
+use Doctrine\Tests\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -128,5 +130,39 @@ class AnnotationReaderTest extends AbstractReaderTest
         $annotations = $reader->getClassAnnotations($ref);
 
         self::assertInstanceOf(SingleUseAnnotation::class,$annotations[0]);
+    }
+
+    public function testPhpCsSuppressAnnotationIsIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithPhpCsSuppressAnnotation::class);
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('foo')));
+    }
+
+    public function testGloballyIgnoredAnnotationNotIgnored() : void
+    {
+        $reader = $this->getReader();
+        $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
+        $testLoader = static function (string $className) : bool {
+            if ($className === 'since') {
+                throw new \InvalidArgumentException('Globally ignored annotation names should never be passed to an autoloader.');
+            }
+            return false;
+        };
+        spl_autoload_register($testLoader, true, true);
+        try {
+            self::assertEmpty($reader->getClassAnnotations($class));
+        } finally {
+            spl_autoload_unregister($testLoader);
+        }
+    }
+
+    public function testPHPCodeSnifferAnnotationsAreIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithPHPCodeSnifferAnnotation::class);
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
     }
 }

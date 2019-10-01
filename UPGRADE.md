@@ -84,6 +84,38 @@ Total issues resolved: **7**
 
 Thanks to everyone involved in this release.
 
+### 1.6.1
+
+This release fixes an issue in which annotations such as `@foo-bar`
+and `@foo-` were incorrectly recognised as valid, and both erroneously
+parsed as `@foo`.
+
+Any annotation with `@name-*` format will now silently be ignored,
+allowing vendor-specific annotations to be prefixed with the tool
+name.
+
+Total issues resolved: **3**
+
+- [165: Update the composer branch alias](https://github.com/doctrine/annotations/pull/165) thanks to @mikeSimonson
+- [209: Change Annotation::value typehint to mixed](https://github.com/doctrine/annotations/pull/209) thanks to @malarzm
+- [257: Skip parsing annotations containing dashes, such as `@Foo-bar`, or `@Foo-`](https://github.com/doctrine/annotations/pull/257) thanks to @Ocramius
+
+### 1.6.0
+
+This release brings a new endpoint that make sure that you can't shoot yourself in the foot by calling ```registerLoader``` multiple times and a few tests improvements.
+
+Total issues resolved: **7**
+
+- [145: Memory leak in AnnotationRegistry::registerLoader() when called multiple times](https://github.com/doctrine/annotations/issues/145) thanks to @TriAnMan
+- [146: Import error on @experimental Annotation](https://github.com/doctrine/annotations/issues/146) thanks to @aturki
+- [147: Ignoring @experimental annotation used by Symfony 3.3 CacheAdapter](https://github.com/doctrine/annotations/pull/147) thanks to @aturki
+- [151: Remove duplicate code in `DCOM58Test`](https://github.com/doctrine/annotations/pull/151) thanks to @tuanphpvn
+- [161: Prevent loading class&#95;exists multiple times](https://github.com/doctrine/annotations/pull/161) thanks to @jrjohnson
+- [162: Add registerUniqueLoader to AnnotationRegistry](https://github.com/doctrine/annotations/pull/162) thanks to @jrjohnson
+- [163: Use assertDirectoryExists and assertDirectoryNotExists](https://github.com/doctrine/annotations/pull/163) thanks to @carusogabriel
+
+Thanks to everyone involved in this release.
+
 ### 1.5.0
 
 This release increments the minimum supported PHP version to 7.1.0.
