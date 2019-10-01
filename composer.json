@@ -18,7 +18,7 @@
     },
     "require-dev": {
         "doctrine/cache": "1.*",
-        "phpunit/phpunit": "^7.5@dev"
+        "phpunit/phpunit": "^7.5"
     },
     "config": {
         "sort-packages": true
