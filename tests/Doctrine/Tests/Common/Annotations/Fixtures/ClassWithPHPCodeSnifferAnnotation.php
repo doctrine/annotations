@@ -1,0 +1,11 @@
+<?php
+
+namespace Doctrine\Tests\Common\Annotations\Fixtures;
+
+/**
+ * @codingStandardsIgnoreStart
+ * @codingStandardsIgnoreEnd
+ */
+class ClassWithPHPCodeSnifferAnnotation
+{
+}

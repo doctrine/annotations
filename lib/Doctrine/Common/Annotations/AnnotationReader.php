@@ -104,6 +104,9 @@ class AnnotationReader implements Reader
         'experimental' => true,
         // Slevomat Coding Standard
         'phpcsSuppress' => true,
+        // PHP CodeSniffer
+        'codingStandardsIgnoreStart' => true,
+        'codingStandardsIgnoreEnd' => true,
     ];
 
     /**
