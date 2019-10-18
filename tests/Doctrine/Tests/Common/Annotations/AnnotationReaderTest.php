@@ -18,6 +18,7 @@ use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedWithAl
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
+use ReflectionFunction;
 
 use function class_exists;
 use function spl_autoload_register;
@@ -274,5 +275,24 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref    = new ReflectionClass(ClassWithImportedIgnoredAnnotation::class);
 
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('something')));
+    }
+
+    public function testFunctionsAnnotation(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionFunction('Doctrine\Tests\Common\Annotations\Fixtures\foo');
+
+        $annotations = $reader->getFunctionAnnotations($ref);
+        self::assertCount(1, $annotations);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
+    }
+
+    public function testFunctionAnnotation(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionFunction('Doctrine\Tests\Common\Annotations\Fixtures\foo');
+
+        $annotation = $reader->getFunctionAnnotation($ref, Fixtures\Annotation\Autoload::class);
+        self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotation);
     }
 }

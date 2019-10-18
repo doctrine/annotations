@@ -108,7 +108,8 @@ type is applicable. Then you could define one or more targets:
 -  ``CLASS`` Allowed in class docblocks
 -  ``PROPERTY`` Allowed in property docblocks
 -  ``METHOD`` Allowed in the method docblocks
--  ``ALL`` Allowed in class, property and method docblocks
+-  ``FUNCTION`` Allowed in function dockblocks
+-  ``ALL`` Allowed in class, property, method and function docblocks
 -  ``ANNOTATION`` Allowed inside other annotations
 
 If the annotations is not allowed in the current context, an
@@ -397,3 +398,17 @@ Access one annotation of a property
 .. code-block:: php
 
     public function getPropertyAnnotation(\ReflectionProperty $property, $annotationName);
+
+Access all annotations of a function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: php
+
+    public function getFunctionAnnotations(\ReflectionFunction $property);
+
+Access one annotation of a function
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: php
+
+    public function getFunctionAnnotation(\ReflectionFunction $property, $annotationName);

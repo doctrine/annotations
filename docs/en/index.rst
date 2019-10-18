@@ -2,7 +2,7 @@ Introduction
 ============
 
 Doctrine Annotations allows to implement custom annotation
-functionality for PHP classes.
+functionality for PHP classes and functions.
 
 .. code-block:: php
 
@@ -55,7 +55,7 @@ The annotation class is declared as an annotation by ``@Annotation``.
 Reading annotations
 ===================
 
-The access to the annotations happens by reflection of the class
+The access to the annotations happens by reflection of the class or function
 containing them. There are multiple reader-classes implementing the
 ``Doctrine\Common\Annotations\Reader`` interface, that can access the
 annotations of a class. A common one is
@@ -84,7 +84,8 @@ Note that ``AnnotationRegistry::registerLoader('class_exists')`` only works
 if you already have an autoloader configured (i.e. composer autoloader).
 Otherwise, :ref:`please take a look to the other annotation autoload mechanisms <annotations>`.
 
-A reader has multiple methods to access the annotations of a class.
+A reader has multiple methods to access the annotations of a class or
+function.
 
 :ref:`Read more about handling annotations. <annotations>`
 

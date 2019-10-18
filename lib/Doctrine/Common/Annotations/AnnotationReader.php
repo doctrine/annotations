@@ -5,6 +5,7 @@ namespace Doctrine\Common\Annotations;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -89,14 +90,14 @@ class AnnotationReader implements Reader
     /**
      * In-memory cache mechanism to store imported annotations per class.
      *
-     * @var array<string, array<string, class-string>>
+     * @psalm-var array<'class'|'function', array<string, array<string, class-string>>>
      */
     private $imports = [];
 
     /**
      * In-memory cache mechanism to store ignored annotations per class.
      *
-     * @var array<string, array<string, true>>
+     * @psalm-var array<'class'|'function', array<string, array<string, true>>>
      */
     private $ignoredAnnotationNames = [];
 
@@ -138,7 +139,7 @@ class AnnotationReader implements Reader
     public function getClassAnnotations(ReflectionClass $class)
     {
         $this->parser->setTarget(Target::TARGET_CLASS);
-        $this->parser->setImports($this->getClassImports($class));
+        $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
         $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
 
@@ -226,37 +227,80 @@ class AnnotationReader implements Reader
     }
 
     /**
-     * Returns the ignored annotations for the given class.
+     * Gets the annotations applied to a function.
      *
-     * @return array<string, true>
+     * @phpstan-return list<object> An array of Annotations.
      */
-    private function getIgnoredAnnotationNames(ReflectionClass $class)
+    public function getFunctionAnnotations(ReflectionFunction $function): array
     {
-        $name = $class->getName();
-        if (isset($this->ignoredAnnotationNames[$name])) {
-            return $this->ignoredAnnotationNames[$name];
-        }
+        $context = 'function ' . $function->getName();
 
-        $this->collectParsingMetadata($class);
+        $this->parser->setTarget(Target::TARGET_FUNCTION);
+        $this->parser->setImports($this->getImports($function));
+        $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($function));
+        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
 
-        return $this->ignoredAnnotationNames[$name];
+        return $this->parser->parse($function->getDocComment(), $context);
     }
 
     /**
-     * Retrieves imports.
+     * Gets a function annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
+     */
+    public function getFunctionAnnotation(ReflectionFunction $function, string $annotationName)
+    {
+        $annotations = $this->getFunctionAnnotations($function);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the ignored annotations for the given class or function.
+     *
+     * @param ReflectionClass|ReflectionFunction $reflection
+     *
+     * @return array<string, true>
+     */
+    private function getIgnoredAnnotationNames($reflection): array
+    {
+        $type = $reflection instanceof ReflectionClass ? 'class' : 'function';
+        $name = $reflection->getName();
+
+        if (isset($this->ignoredAnnotationNames[$type][$name])) {
+            return $this->ignoredAnnotationNames[$type][$name];
+        }
+
+        $this->collectParsingMetadata($reflection);
+
+        return $this->ignoredAnnotationNames[$type][$name];
+    }
+
+    /**
+     * Retrieves imports for a class or a function.
+     *
+     * @param ReflectionClass|ReflectionFunction $reflection
      *
      * @return array<string, class-string>
      */
-    private function getClassImports(ReflectionClass $class)
+    private function getImports($reflection): array
     {
-        $name = $class->getName();
-        if (isset($this->imports[$name])) {
-            return $this->imports[$name];
+        $type = $reflection instanceof ReflectionClass ? 'class' : 'function';
+        $name = $reflection->getName();
+
+        if (isset($this->imports[$type][$name])) {
+            return $this->imports[$type][$name];
         }
 
-        $this->collectParsingMetadata($class);
+        $this->collectParsingMetadata($reflection);
 
-        return $this->imports[$name];
+        return $this->imports[$type][$name];
     }
 
     /**
@@ -267,7 +311,7 @@ class AnnotationReader implements Reader
     private function getMethodImports(ReflectionMethod $method)
     {
         $class        = $method->getDeclaringClass();
-        $classImports = $this->getClassImports($class);
+        $classImports = $this->getImports($class);
 
         $traitImports = [];
 
@@ -279,7 +323,7 @@ class AnnotationReader implements Reader
                 continue;
             }
 
-            $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
+            $traitImports = array_merge($traitImports, $this->phpParser->parseUseStatements($trait));
         }
 
         return array_merge($classImports, $traitImports);
@@ -293,7 +337,7 @@ class AnnotationReader implements Reader
     private function getPropertyImports(ReflectionProperty $property)
     {
         $class        = $property->getDeclaringClass();
-        $classImports = $this->getClassImports($class);
+        $classImports = $this->getImports($class);
 
         $traitImports = [];
 
@@ -302,19 +346,24 @@ class AnnotationReader implements Reader
                 continue;
             }
 
-            $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
+            $traitImports = array_merge($traitImports, $this->phpParser->parseUseStatements($trait));
         }
 
         return array_merge($classImports, $traitImports);
     }
 
     /**
-     * Collects parsing metadata for a given class.
+     * Collects parsing metadata for a given class or function.
+     *
+     * @param ReflectionClass|ReflectionFunction $reflection
      */
-    private function collectParsingMetadata(ReflectionClass $class)
+    private function collectParsingMetadata($reflection): void
     {
+        $type = $reflection instanceof ReflectionClass ? 'class' : 'function';
+        $name = $reflection->getName();
+
         $ignoredAnnotationNames = self::$globalIgnoredNames;
-        $annotations            = $this->preParser->parse($class->getDocComment(), 'class ' . $class->name);
+        $annotations            = $this->preParser->parse($reflection->getDocComment(), $type . ' ' . $name);
 
         foreach ($annotations as $annotation) {
             if (! ($annotation instanceof IgnoreAnnotation)) {
@@ -326,17 +375,15 @@ class AnnotationReader implements Reader
             }
         }
 
-        $name = $class->getName();
-
-        $this->imports[$name] = array_merge(
+        $this->imports[$type][$name] = array_merge(
             self::$globalImports,
-            $this->phpParser->parseClass($class),
+            $this->phpParser->parseUseStatements($reflection),
             [
-                '__NAMESPACE__' => $class->getNamespaceName(),
+                '__NAMESPACE__' => $reflection->getNamespaceName(),
                 'self' => $name,
             ]
         );
 
-        $this->ignoredAnnotationNames[$name] = $ignoredAnnotationNames;
+        $this->ignoredAnnotationNames[$type][$name] = $ignoredAnnotationNames;
     }
 }

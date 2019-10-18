@@ -35,6 +35,7 @@
             "Doctrine\\Tests\\Common\\Annotations\\": "tests/Doctrine/Tests/Common/Annotations"
         },
         "files": [
+            "tests/Doctrine/Tests/Common/Annotations/Fixtures/functions.php",
             "tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php"
         ]
     },

@@ -1074,7 +1074,7 @@ DOCBLOCK;
         $parser->setTarget(Target::TARGET_CLASS);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, ANNOTATION]'
+            'Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, ANNOTATION]'
         );
         $parser->parse($docblock, $context);
     }

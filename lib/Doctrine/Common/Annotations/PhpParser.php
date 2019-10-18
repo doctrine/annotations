@@ -3,6 +3,7 @@
 namespace Doctrine\Common\Annotations;
 
 use ReflectionClass;
+use ReflectionFunction;
 use SplFileObject;
 
 use function is_file;
@@ -18,33 +19,47 @@ final class PhpParser
     /**
      * Parses a class.
      *
+     * @deprecated use parseUseStatements instead
+     *
      * @param ReflectionClass $class A <code>ReflectionClass</code> object.
      *
      * @return array<string, class-string> A list with use statements in the form (Alias => FQN).
      */
     public function parseClass(ReflectionClass $class)
     {
-        if (method_exists($class, 'getUseStatements')) {
-            return $class->getUseStatements();
+        return $this->parseUseStatements($class);
+    }
+
+    /**
+     * Parse a class or function for use statements.
+     *
+     * @param ReflectionClass|ReflectionFunction $reflection
+     *
+     * @psalm-return array<string, string> a list with use statements in the form (Alias => FQN).
+     */
+    public function parseUseStatements($reflection): array
+    {
+        if (method_exists($reflection, 'getUseStatements')) {
+            return $reflection->getUseStatements();
         }
 
-        $filename = $class->getFileName();
+        $filename = $reflection->getFileName();
 
         if ($filename === false) {
             return [];
         }
 
-        $content = $this->getFileContent($filename, $class->getStartLine());
+        $content = $this->getFileContent($filename, $reflection->getStartLine());
 
         if ($content === null) {
             return [];
         }
 
-        $namespace = preg_quote($class->getNamespaceName());
+        $namespace = preg_quote($reflection->getNamespaceName());
         $content   = preg_replace('/^.*?(\bnamespace\s+' . $namespace . '\s*[;{].*)$/s', '\\1', $content);
         $tokenizer = new TokenParser('<?php ' . $content);
 
-        return $tokenizer->parseUseStatements($class->getNamespaceName());
+        return $tokenizer->parseUseStatements($reflection->getNamespaceName());
     }
 
     /**
