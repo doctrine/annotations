@@ -1398,6 +1398,14 @@ DOCBLOCK;
         self::assertCount(1, $result);
         self::assertInstanceOf(SomeAnnotationClassNameWithoutConstructorAndProperties::class, $result[0]);
     }
+
+    public function testMultiByteAnnotationLocaleTR()
+    {
+        setlocale(LC_ALL, 'tr_TR.utf8', 'tr_TR');
+
+        self::assertCount(1, $this->createTestParser()->parse('@Doctrine\Tests\Common\Annotations\Id'));
+    }
+
 }
 
 /** @Annotation */
@@ -1451,6 +1459,11 @@ class AnnotationExtendsAnnotationTargetAll extends AnnotationTargetAll
 
 /** @Annotation */
 class Name extends Annotation {
+    public $foo;
+}
+
+/** @Annotation */
+class Id extends Annotation {
     public $foo;
 }
 

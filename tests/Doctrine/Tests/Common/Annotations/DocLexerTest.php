@@ -308,4 +308,26 @@ class DocLexerTest extends TestCase
         self::assertFalse($lexer->nextTokenIsAdjacent());
         self::assertFalse($lexer->moveNext());
     }
+
+    public function testMarkerAnnotationLocaleTr() : void
+    {
+        setlocale(LC_ALL, 'tr_TR.utf8', 'tr_TR');
+
+        $lexer = new DocLexer;
+
+        $lexer->setInput('@ODM\Id');
+        self::assertNull($lexer->token);
+        self::assertNull($lexer->lookahead);
+
+        self::assertTrue($lexer->moveNext());
+        self::assertNull($lexer->token);
+        self::assertEquals('@', $lexer->lookahead['value']);
+
+        self::assertTrue($lexer->moveNext());
+        self::assertEquals('@', $lexer->token['value']);
+        self::assertEquals('ODM\Id', $lexer->lookahead['value']);
+
+        self::assertFalse($lexer->moveNext());
+    }
+
 }

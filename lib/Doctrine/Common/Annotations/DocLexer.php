@@ -112,6 +112,14 @@ final class DocLexer extends AbstractLexer
     /**
      * {@inheritdoc}
      */
+    protected function getModifiers()
+    {
+        return parent::getModifiers() . 'u';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     protected function getType(&$value)
     {
         $type = self::T_NONE;
