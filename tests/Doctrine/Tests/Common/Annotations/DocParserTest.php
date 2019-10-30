@@ -15,6 +15,13 @@ use PHPUnit\Framework\TestCase;
 
 class DocParserTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown() {
+        setlocale(LC_ALL, null);
+    }
+
     public function testNestedArraysWithNestedAnnotation()
     {
         $parser = $this->createTestParser();
@@ -1404,8 +1411,6 @@ DOCBLOCK;
         setlocale(LC_ALL, 'tr_TR.utf8', 'tr_TR');
 
         self::assertCount(1, $this->createTestParser()->parse('@Doctrine\Tests\Common\Annotations\Id'));
-
-        setlocale(LC_ALL, null);
     }
 
 }

@@ -7,6 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 class DocLexerTest extends TestCase
 {
+    /**
+     * {@inheritdoc}
+     */
+    protected function tearDown() {
+        setlocale(LC_ALL, null);
+    }
+
     public function testMarkerAnnotation() : void
     {
         $lexer = new DocLexer;
@@ -328,8 +335,6 @@ class DocLexerTest extends TestCase
         self::assertEquals('ODM\Id', $lexer->lookahead['value']);
 
         self::assertFalse($lexer->moveNext());
-
-        setlocale(LC_ALL, null);
     }
 
 }
