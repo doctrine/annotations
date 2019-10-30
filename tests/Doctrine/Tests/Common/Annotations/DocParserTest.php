@@ -1404,6 +1404,8 @@ DOCBLOCK;
         setlocale(LC_ALL, 'tr_TR.utf8', 'tr_TR');
 
         self::assertCount(1, $this->createTestParser()->parse('@Doctrine\Tests\Common\Annotations\Id'));
+
+        setlocale(LC_ALL, null);
     }
 
 }

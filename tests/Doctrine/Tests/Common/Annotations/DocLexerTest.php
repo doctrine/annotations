@@ -328,6 +328,8 @@ class DocLexerTest extends TestCase
         self::assertEquals('ODM\Id', $lexer->lookahead['value']);
 
         self::assertFalse($lexer->moveNext());
+
+        setlocale(LC_ALL, null);
     }
 
 }
