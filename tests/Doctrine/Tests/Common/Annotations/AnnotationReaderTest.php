@@ -165,4 +165,13 @@ class AnnotationReaderTest extends AbstractReaderTest
 
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
+
+    public function testPassContextInAnnotationConstructor()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(Fixtures\ClassWithInvalidAnnotationValue::class);
+
+        $this->expectExceptionMessage('Invalid default value for "@AnnotWithContext" annotation in class Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationValue');
+        $reader->getClassAnnotations($ref);
+    }
 }
