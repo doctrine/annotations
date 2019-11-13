@@ -1267,6 +1267,19 @@ DOCBLOCK;
         $this->createTestParser()->parse($docblock, 'some class');
     }
 
+    public function testSetValuesExceptionWhenNotAvailableProperties()
+    {
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage('[Creation Error] The annotation @SomeAnnotationClassNameWithoutConstructorAndProperties declared on some class does not have any properties');
+
+        $docblock = <<<DOCBLOCK
+/**
+ * @SomeAnnotationClassNameWithoutConstructorAndProperties(invalidProperty = "Some val")
+ */
+DOCBLOCK;
+        $this->createTestParser()->parse($docblock, 'some class');
+    }
+
     public function testInvalidIdentifierInAnnotation() : void
     {
         $this->expectException(AnnotationException::class);
