@@ -214,7 +214,7 @@ final class CachedReader implements Reader
      */
     private function isCacheFresh($cacheKey, ReflectionClass $class)
     {
-        if (null === $lastModification = $this->getLastModification($class)) {
+        if (0 === $lastModification = $this->getLastModification($class)) {
             return true;
         }
 
@@ -231,12 +231,16 @@ final class CachedReader implements Reader
         $filename = $class->getFileName();
         $parent   = $class->getParentClass();
 
-        return max(array_merge(
+        $lastModification =  max(array_merge(
             [$filename ? filemtime($filename) : 0],
             array_map([$this, 'getTraitLastModificationTime'], $class->getTraits()),
             array_map([$this, 'getLastModification'], $class->getInterfaces()),
             $parent ? [$this->getLastModification($parent)] : []
         ));
+
+        assert($lastModification !== false);
+
+        return $lastModification;
     }
 
     /**
@@ -246,9 +250,13 @@ final class CachedReader implements Reader
     {
         $fileName = $reflectionTrait->getFileName();
 
-        return max(array_merge(
+        $lastModificationTime = max(array_merge(
             [$fileName ? filemtime($fileName) : 0],
             array_map([$this, 'getTraitLastModificationTime'], $reflectionTrait->getTraits())
         ));
+
+        assert($lastModificationTime !== false);
+
+        return $lastModificationTime;
     }
 }
