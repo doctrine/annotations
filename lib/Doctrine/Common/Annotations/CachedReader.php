@@ -51,11 +51,7 @@ final class CachedReader implements Reader
     private $loadedAnnotations = [];
 
     /**
-     * Constructor.
-     *
-     * @param Reader $reader
-     * @param Cache  $cache
-     * @param bool   $debug
+     * @param bool $debug
      */
     public function __construct(Reader $reader, Cache $cache, $debug = false)
     {
@@ -178,8 +174,7 @@ final class CachedReader implements Reader
     /**
      * Fetches a value from the cache.
      *
-     * @param string          $cacheKey The cache key.
-     * @param ReflectionClass $class    The related class.
+     * @param string $cacheKey The cache key.
      *
      * @return mixed The cached value or false when the value is not in cache.
      */
@@ -213,8 +208,7 @@ final class CachedReader implements Reader
     /**
      * Checks if the cache is fresh.
      *
-     * @param string           $cacheKey
-     * @param ReflectionClass $class
+     * @param string $cacheKey
      *
      * @return boolean
      */
@@ -230,7 +224,6 @@ final class CachedReader implements Reader
     /**
      * Returns the time the class was last modified, testing traits and parents
      *
-     * @param ReflectionClass $class
      * @return int
      */
     private function getLastModification(ReflectionClass $class)
@@ -247,7 +240,6 @@ final class CachedReader implements Reader
     }
 
     /**
-     * @param ReflectionClass $reflectionTrait
      * @return int
      */
     private function getTraitLastModificationTime(ReflectionClass $reflectionTrait)
