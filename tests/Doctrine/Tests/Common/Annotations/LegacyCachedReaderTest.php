@@ -2,16 +2,14 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Cache\Adapter\PHPArray\ArrayCachePool;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ArrayCache;
-use Psr\SimpleCache\CacheInterface;
 
-class CachedReaderTest extends AbstractReaderTest
+class LegacyCachedReaderTest extends AbstractReaderTest
 {
     private $cache;
 
@@ -100,34 +98,34 @@ class CachedReaderTest extends AbstractReaderTest
     {
         $cacheKey = strtr($className, '\\', '.');
 
-        /* @var $cache CacheInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $cache = $this->createMock(CacheInterface::class);
+        /* @var $cache CacheProvider|\PHPUnit_Framework_MockObject_MockObject */
+        $cache = $this->createMock(CacheProvider::class);
         $cache
             ->expects($this->at(0))
-            ->method('get')
+            ->method('fetch')
             ->with($this->equalTo($cacheKey))
             ->will($this->returnValue([])) // Result was cached, but there was no annotation
         ;
         $cache
             ->expects($this->at(1))
-            ->method('get')
+            ->method('fetch')
             ->with($this->equalTo('[C]'.$cacheKey))
             ->will($this->returnValue($lastCacheModification))
         ;
         $cache
             ->expects($this->at(2))
-            ->method('set')
+            ->method('save')
             ->with($this->equalTo($cacheKey))
             ->willReturn(true)
         ;
         $cache
             ->expects($this->at(3))
-            ->method('set')
+            ->method('save')
             ->with($this->equalTo('[C]'.$cacheKey))
             ->willReturn(true)
         ;
 
-        $reader = CachedReader::fromPsr16Cache(new AnnotationReader(), $cache, true);
+        $reader = new CachedReader(new AnnotationReader(), $cache, true);
         $route = new Route();
         $route->pattern = '/someprefix';
 
@@ -140,28 +138,28 @@ class CachedReaderTest extends AbstractReaderTest
         $route          = new Route();
         $route->pattern = '/someprefix';
 
-        /* @var $cache CacheInterface|\PHPUnit_Framework_MockObject_MockObject */
-        $cache = $this->createMock(CacheInterface::class);
+        /* @var $cache CacheProvider|\PHPUnit_Framework_MockObject_MockObject */
+        $cache = $this->createMock(CacheProvider::class);
         $cache
             ->expects($this->at(0))
-            ->method('get')
+            ->method('fetch')
             ->with($this->equalTo($cacheKey))
             ->will($this->returnValue([$route])); // Result was cached, but there was an annotation;
         $cache
             ->expects($this->at(1))
-            ->method('get')
+            ->method('fetch')
             ->with($this->equalTo('[C]' . $cacheKey))
             ->will($this->returnValue($lastCacheModification));
-        $cache->expects(self::never())->method('set');
+        $cache->expects(self::never())->method('save');
 
-        $reader = CachedReader::fromPsr16Cache(new AnnotationReader(), $cache, true);
+        $reader = new CachedReader(new AnnotationReader(), $cache, true);
 
         $this->assertEquals([$route], $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
     protected function getReader()
     {
-        $this->cache = new ArrayCachePool();
-        return CachedReader::fromPsr16Cache(new AnnotationReader(), $this->cache);
+        $this->cache = new ArrayCache();
+        return new CachedReader(new AnnotationReader(), $this->cache);
     }
 }

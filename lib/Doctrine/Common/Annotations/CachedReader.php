@@ -20,7 +20,9 @@
 namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Cache\Cache;
+use Psr\SimpleCache\CacheInterface;
 use ReflectionClass;
+use Roave\DoctrineSimpleCache\SimpleCacheAdapter;
 
 /**
  * A cache aware annotation reader.
@@ -36,7 +38,7 @@ final class CachedReader implements Reader
     private $delegate;
 
     /**
-     * @var Cache
+     * @var CacheInterface
      */
     private $cache;
 
@@ -51,13 +53,35 @@ final class CachedReader implements Reader
     private $loadedAnnotations = [];
 
     /**
-     * @param bool $debug
+     * @deprecated use fromPsr16Cache instead
+     *
+     * @param Cache|CacheInterface $cache
+     * @param bool                 $debug
      */
-    public function __construct(Reader $reader, Cache $cache, $debug = false)
+    public function __construct(Reader $reader, $cache, $debug = false)
     {
+        if ($cache instanceof Cache) {
+            @trigger_error(sprintf(
+                'Passing a %s instance to %s is deprecated since doctrine/annotations 1.9 and will not be possible anymore in 2.0. Please pass a %s instance',
+                Cache::class,
+                __METHOD__,
+                CacheInterface::class
+            ), E_USER_DEPRECATED);
+            $cache = new SimpleCacheAdapter($cache);
+        }
         $this->delegate = $reader;
-        $this->cache = $cache;
+        $this->cache = (static function (CacheInterface $cache): CacheInterface {
+            return $cache;
+        })($cache);
         $this->debug = (boolean) $debug;
+    }
+
+    public static function fromPsr16Cache(
+        Reader $reader,
+        CacheInterface $cache,
+        $debug = false
+    ): self {
+        return new self($reader, $cache, $debug);
     }
 
     /**
@@ -65,7 +89,7 @@ final class CachedReader implements Reader
      */
     public function getClassAnnotations(ReflectionClass $class)
     {
-        $cacheKey = $class->getName();
+        $cacheKey = strtr($class->getName(), '\\', '.');
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
@@ -99,7 +123,7 @@ final class CachedReader implements Reader
     public function getPropertyAnnotations(\ReflectionProperty $property)
     {
         $class = $property->getDeclaringClass();
-        $cacheKey = $class->getName().'$'.$property->getName();
+        $cacheKey = strtr($class->getName(), '\\', '.').'$'.$property->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
@@ -133,7 +157,7 @@ final class CachedReader implements Reader
     public function getMethodAnnotations(\ReflectionMethod $method)
     {
         $class = $method->getDeclaringClass();
-        $cacheKey = $class->getName().'#'.$method->getName();
+        $cacheKey = strtr($class->getName(), '\\', '.').'#'.$method->getName();
 
         if (isset($this->loadedAnnotations[$cacheKey])) {
             return $this->loadedAnnotations[$cacheKey];
@@ -174,13 +198,13 @@ final class CachedReader implements Reader
     /**
      * Fetches a value from the cache.
      *
-     * @param string $cacheKey The cache key.
+     * @param string $cacheKey A valid PSR-16 cache key.
      *
      * @return mixed The cached value or false when the value is not in cache.
      */
     private function fetchFromCache($cacheKey, ReflectionClass $class)
     {
-        if (($data = $this->cache->fetch($cacheKey)) !== false) {
+        if (($data = $this->cache->get($cacheKey, false)) !== false) {
             if (!$this->debug || $this->isCacheFresh($cacheKey, $class)) {
                 return $data;
             }
@@ -192,23 +216,24 @@ final class CachedReader implements Reader
     /**
      * Saves a value to the cache.
      *
-     * @param string $cacheKey The cache key.
+     * @param string $cacheKey A valid PSR-16 cache key.
      * @param mixed  $value    The value.
      *
      * @return void
      */
     private function saveToCache($cacheKey, $value)
     {
-        $this->cache->save($cacheKey, $value);
+        $this->cache->set($cacheKey, $value);
         if ($this->debug) {
-            $this->cache->save('[C]'.$cacheKey, time());
+            $this->cache->set('[C]'.$cacheKey, time());
         }
     }
 
     /**
      * Checks if the cache is fresh.
      *
-     * @param string $cacheKey
+     * @param string $cacheKey should already be sanitized to be compatible
+     *                         with PSR
      *
      * @return boolean
      */
@@ -219,7 +244,7 @@ final class CachedReader implements Reader
             return true;
         }
 
-        return $this->cache->fetch('[C]'.$cacheKey) >= $lastModification;
+        return $this->cache->get('[C]'.$cacheKey) >= $lastModification;
     }
 
     /**

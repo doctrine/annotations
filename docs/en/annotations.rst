@@ -107,7 +107,22 @@ is very important during development. If you don't set it to true you have to de
 This gives faster performance, however should only be used in production, because of its inconvenience
 during development.
 
-You can also use one of the ``Doctrine\Common\Cache\Cache`` cache implementations to cache the annotations:
+You can use a PSR-16 cache implementation to cache the annotations:
+
+.. code-block:: php
+
+    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\Common\Annotations\CachedReader;
+
+    $reader = CachedReader::fromPsr16Cache(
+        new AnnotationReader(),
+        new Psr16CacheImplementation(),
+        $debug = true
+    );
+
+You can also use one of the ``Doctrine\Common\Cache\Cache`` cache
+implementations to cache the annotations, but please note that doing so
+is deprecated:
 
 .. code-block:: php
 
