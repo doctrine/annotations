@@ -214,7 +214,8 @@ final class CachedReader implements Reader
      */
     private function isCacheFresh($cacheKey, ReflectionClass $class)
     {
-        if (0 === $lastModification = $this->getLastModification($class)) {
+        $lastModification = $this->getLastModification($class);
+        if ($lastModification === 0) {
             return true;
         }
 
