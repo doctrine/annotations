@@ -88,7 +88,8 @@ This creates a simple annotation reader with no caching other than in memory (in
 Since parsing docblocks can be expensive you should cache this process by using
 a caching reader.
 
-You can use a file caching reader:
+You can use a file caching reader, but please note it is deprecated to
+do so:
 
 .. code-block:: php
 
