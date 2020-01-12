@@ -52,4 +52,12 @@ class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotat
     {
         return $this->bar;
     }
+
+    /**
+     * @Template("@foo.html.twig")
+     */
+    public function twigTemplateFunctionName()
+    {
+
+    }
 }
