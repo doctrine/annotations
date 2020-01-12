@@ -20,11 +20,24 @@ class ClassWithPHPStanExtendsAnnotationsGeneric
 
 /**
  * @template T
+ */
+trait GenericPHPStanTrait
+{
+
+}
+
+/**
+ * @template T
  * @implements WithPHPStanExtendsAnnotationsInterface<int>
  * @extends ClassWithPHPStanExtendsAnnotationsGeneric<int>
  */
 class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotationsGeneric implements WithPHPStanExtendsAnnotationsInterface
 {
+    /**
+     * @use GenericPHPStanTrait<T>
+     */
+    use GenericPHPStanTrait;
+
     /**
      * @var array<T>
      */

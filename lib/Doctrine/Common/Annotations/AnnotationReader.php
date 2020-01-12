@@ -108,7 +108,7 @@ class AnnotationReader implements Reader
         'codingStandardsIgnoreStart' => true,
         'codingStandardsIgnoreEnd' => true,
         // PHPStan
-        'template' => true, 'implements' => true, 'extends' => true,
+        'template' => true, 'implements' => true, 'extends' => true, 'use' => true,
     ];
 
     /**
