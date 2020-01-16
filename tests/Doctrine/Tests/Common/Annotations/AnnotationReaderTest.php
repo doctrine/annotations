@@ -12,6 +12,7 @@ use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -164,5 +165,19 @@ class AnnotationReaderTest extends AbstractReaderTest
         $ref = new \ReflectionClass(ClassWithPHPCodeSnifferAnnotation::class);
 
         self::assertEmpty($reader->getClassAnnotations($ref));
+    }
+
+    public function testPHPStanGenericsAnnotationsAreIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithPHPStanGenericsAnnotations::class);
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('bar')));
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('foo')));
+
+        $this->expectException('\Doctrine\Common\Annotations\AnnotationException');
+        $this->expectExceptionMessage('[Semantical Error] The annotation "@Template" in method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations::twigTemplateFunctionName() was never imported.');
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('twigTemplateFunctionName')));
     }
 }
