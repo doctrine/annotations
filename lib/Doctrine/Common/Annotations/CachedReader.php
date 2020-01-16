@@ -51,6 +51,11 @@ final class CachedReader implements Reader
     private $loadedAnnotations = [];
 
     /**
+     * @var int[]
+     */
+    private $loadedFilemtimes = [];
+
+    /**
      * @param bool $debug
      */
     public function __construct(Reader $reader, Cache $cache, $debug = false)
@@ -169,6 +174,7 @@ final class CachedReader implements Reader
     public function clearLoadedAnnotations()
     {
         $this->loadedAnnotations = [];
+        $this->loadedFilemtimes = [];
     }
 
     /**
@@ -230,6 +236,11 @@ final class CachedReader implements Reader
     private function getLastModification(ReflectionClass $class)
     {
         $filename = $class->getFileName();
+
+        if (isset($this->loadedFilemtimes[$filename])) {
+            return $this->loadedFilemtimes[$filename];
+        }
+
         $parent   = $class->getParentClass();
 
         $lastModification =  max(array_merge(
@@ -241,7 +252,7 @@ final class CachedReader implements Reader
 
         assert($lastModification !== false);
 
-        return $lastModification;
+        return $this->loadedFilemtimes[$filename] = $lastModification;
     }
 
     /**
@@ -251,6 +262,10 @@ final class CachedReader implements Reader
     {
         $fileName = $reflectionTrait->getFileName();
 
+        if (isset($this->loadedFilemtimes[$fileName])) {
+            return $this->loadedFilemtimes[$fileName];
+        }
+
         $lastModificationTime = max(array_merge(
             [$fileName ? filemtime($fileName) : 0],
             array_map([$this, 'getTraitLastModificationTime'], $reflectionTrait->getTraits())
@@ -258,6 +273,6 @@ final class CachedReader implements Reader
 
         assert($lastModificationTime !== false);
 
-        return $lastModificationTime;
+        return $this->loadedFilemtimes[$fileName] = $lastModificationTime;
     }
 }
