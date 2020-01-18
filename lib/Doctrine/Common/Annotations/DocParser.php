@@ -736,6 +736,10 @@ final class DocParser
         $name = ltrim($name,'\\');
 
         if ( ! $this->classExists($name)) {
+            if ($this->isIgnoredAnnotation($name)) {
+                return false;
+            }
+
             throw AnnotationException::semanticalError(sprintf('The annotation "@%s" in %s does not exist, or could not be auto-loaded.', $name, $this->context));
         }
 

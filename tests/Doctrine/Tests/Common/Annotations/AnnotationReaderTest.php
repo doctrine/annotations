@@ -12,6 +12,7 @@ use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevelWithUseStatement;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -108,6 +109,21 @@ class AnnotationReaderTest extends AbstractReaderTest
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(AnnotatedAtPropertyLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+    }
+
+    /**
+     * @group 45
+     *
+     * @runInSeparateProcess
+     */
+    public function testPropertyAnnotationWithUseStatementIsIgnored() : void
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedAtPropertyLevelWithUseStatement::class);
 
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
 
