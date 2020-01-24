@@ -59,9 +59,9 @@ guess that the ORM Mapping, Assert Validation and the fully qualified
 annotation can just be loaded using
 the defined PHP autoloaders. This is not the case however: For error
 handling reasons every check for class existence inside the
-AnnotationReader sets the second parameter $autoload
+``AnnotationReader`` sets the second parameter $autoload
 of ``class_exists($name, $autoload)`` to false. To work flawlessly the
-AnnotationReader requires silent autoloaders which many autoloaders are
+``AnnotationReader`` requires silent autoloaders which many autoloaders are
 not. Silent autoloading is NOT part of the `PSR-0 specification
 <https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md>`_
 for autoloading.
@@ -95,11 +95,12 @@ Doctrine saves all its annotations in a single file, that is why
 ``AnnotationRegistry#registerAutoloadNamespace`` which creates a PSR-0
 compatible loading mechanism for class to file names.
 
-In the third block, we create the actual AnnotationReader instance. Note
-that we also add "dummy" to the global list of annotations for which we
-do not throw exceptions. Setting this is necessary in our example case,
-otherwise ``@dummy`` would trigger an exception to be thrown during the
-parsing of the docblock of ``MyProject\Entities\User#id``.
+In the third block, we create the actual ``AnnotationReader`` instance.
+Note that we also add ``dummy`` to the global list of annotations for
+which we do not throw exceptions. Setting this is necessary in our
+example case, otherwise ``@dummy`` would trigger an exception to be
+thrown during the parsing of the docblock of
+``MyProject\Entities\User#id``.
 
 Setup and Configuration
 -----------------------
@@ -128,10 +129,10 @@ You can use a file caching reader:
         $debug = true
     );
 
-If you set the debug flag to true the cache reader will check for
-changes in the original files, which is very important during
-development. If you don't set it to true you have to delete the
-directory to clear the cache.  This gives faster performance, however
+If you set the ``debug`` flag to ``true`` the cache reader will check
+for changes in the original files, which is very important during
+development. If you don't set it to ``true`` you have to delete the
+directory to clear the cache. This gives faster performance, however
 should only be used in production, because of its inconvenience during
 development.
 
@@ -150,13 +151,13 @@ implementations to cache the annotations:
         $debug = true
     );
 
-The debug flag is used here as well to invalidate the cache files when
-the PHP class with annotations changed and should be used during
+The ``debug`` flag is used here as well to invalidate the cache files
+when the PHP class with annotations changed and should be used during
 development.
 
 .. warning ::
 
-    The AnnotationReader works and caches under the
+    The ``AnnotationReader`` works and caches under the
     assumption that all annotations of a doc-block are processed at
     once. That means that annotation classes that do not exist and
     aren't loaded and cannot be autoloaded (using the
@@ -166,7 +167,7 @@ development.
 
 By default the annotation reader returns a list of annotations with
 numeric indexes. If you want your annotations to be indexed by their
-class name you can wrap the reader in an IndexedReader:
+class name you can wrap the reader in an ``IndexedReader``:
 
 .. code-block:: php
 
@@ -197,14 +198,14 @@ different mechanisms to configure annotation autoloading:
 - Calling ``AnnotationRegistry#registerNamespace($namespace, $dirs =
   null)`` to register that the given namespace contains annotations and
   that their base directory is located at the given $dirs or in the
-  include path if NULL is passed. The given directories should *NOT* be
-  the directory where classes of the namespace are in, but the base
+  include path if ``NULL`` is passed. The given directories should *NOT*
+  be the directory where classes of the namespace are in, but the base
   directory of the root namespace. The AnnotationRegistry uses a
   namespace to directory separator approach to resolve the correct path.
 - Calling ``AnnotationRegistry#registerLoader($callable)`` to register
   an autoloader callback. The callback accepts the class as first and
-  only parameter and has to return true if the corresponding file was
-  found and included.
+  only parameter and has to return ``true`` if the corresponding file
+  was found and included.
 
 .. note::
 
@@ -236,12 +237,12 @@ A sample loader callback could look like:
 Ignoring missing exceptions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default an exception is thrown from the AnnotationReader if an
+By default an exception is thrown from the ``AnnotationReader`` if an
 annotation was found that:
 
-- Is not part of the blacklist of ignored "documentation annotations".
-- Was not imported through a use statement
-- Is not a fully qualified class that exists
+- is not part of the blacklist of ignored "documentation annotations";
+- was not imported through a use statement;
+- is not a fully qualified class that exists.
 
 You can disable this behavior for specific names if your docblocks do
 not follow strict requirements:
