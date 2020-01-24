@@ -65,8 +65,8 @@ type is applicable. Then you could define one or more targets:
 -  ``ALL`` Allowed in class, property and method docblocks
 -  ``ANNOTATION`` Allowed inside other annotations
 
-If the annotations is not allowed in the current context you got an
-``AnnotationException``
+If the annotations is not allowed in the current context, an
+``AnnotationException`` is thrown.
 
 .. code-block:: php
 
