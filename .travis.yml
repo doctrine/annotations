@@ -1,12 +1,12 @@
-dist: trusty
-sudo: false
+dist: xenial
+
 language: php
 
 php:
   - 7.1
   - 7.2
   - 7.3
-  - 7.4snapshot
+  - 7.4
   - nightly
 
 cache:
@@ -15,9 +15,10 @@ cache:
 
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
-  - composer self-update
 
-install: travis_retry composer update --prefer-dist
+install:
+  - if [[ $TRAVIS_PHP_VERSION = nightly ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
+  - travis_retry composer update --prefer-dist $COMPOSER_FLAGS
 
 script:
   - ./vendor/bin/phpunit
