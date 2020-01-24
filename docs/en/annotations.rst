@@ -178,15 +178,15 @@ class name you can wrap the reader in an ``IndexedReader``:
 
 .. warning::
 
-    You should never wrap the indexed reader inside a cached reader only
-    the other way around. This way you can re-use the cache with indexed
-    or numeric keys, otherwise your code may experience failures due to
-    caching in an numerical or indexed format.
+    You should never wrap the indexed reader inside a cached reader,
+    only the other way around. This way you can re-use the cache with
+    indexed or numeric keys, otherwise your code may experience failures
+    due to caching in an numerical or indexed format.
 
 Registering Annotations
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-As explained in the Introduction Doctrine Annotations uses its own
+As explained in the Introduction, Doctrine Annotations uses its own
 autoloading mechanism to determine if a given annotation has a
 corresponding PHP class that can be autoloaded. For Annotation
 Autoloading you have to configure the
