@@ -1,7 +1,7 @@
 Introduction
 ============
 
-Doctrine Annotations offers to implement custom annotation
+Doctrine Annotations allows to implement custom annotation
 functionality for PHP classes.
 
 .. code-block:: php
