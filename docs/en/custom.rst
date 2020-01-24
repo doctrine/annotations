@@ -1,8 +1,10 @@
 Custom Annotation Classes
 =========================
 
-If you want to define your own annotations you just have to group them in a namespace and register this namespace
-in the AnnotationRegistry. Annotation classes have to contain a class-level docblock with the text ``@Annotation``:
+If you want to define your own annotations you just have to group them
+in a namespace and register this namespace in the AnnotationRegistry.
+Annotation classes have to contain a class-level docblock with the text
+``@Annotation``:
 
 .. code-block:: php
 
@@ -18,7 +20,8 @@ Inject annotation values
 ------------------------
 
 The annotation parser check if the annotation constructor has arguments,
-if so then we will pass the value array, otherwise will try to inject values into public properties directly:
+if so then we will pass the value array, otherwise will try to inject
+values into public properties directly:
 
 
 .. code-block:: php
@@ -53,8 +56,8 @@ if so then we will pass the value array, otherwise will try to inject values int
 Annotation Target
 -----------------
 
-``@Target`` indicates the kinds of class element to which an annotation type is applicable.
-Then you could define one or more targets:
+``@Target`` indicates the kinds of class element to which an annotation
+type is applicable.  Then you could define one or more targets:
 
 -  ``CLASS`` Allowed in the class docblock
 -  ``PROPERTY`` Allowed in the property docblock
@@ -62,7 +65,8 @@ Then you could define one or more targets:
 -  ``ALL`` Allowed in the class, property and method docblock
 -  ``ANNOTATION`` Allowed inside other annotations
 
-If the annotations is not allowed in the current context you got an ``AnnotationException``
+If the annotations is not allowed in the current context you got an
+``AnnotationException``
 
 .. code-block:: php
 
@@ -89,9 +93,10 @@ If the annotations is not allowed in the current context you got an ``Annotation
 Attribute types
 ---------------
 
-Annotation parser check the given parameters using the phpdoc annotation ``@var``,
-The data type could be validated using the ``@var`` annotation on the annotation properties
-or using the annotations ``@Attributes`` and ``@Attribute``.
+Annotation parser check the given parameters using the phpdoc annotation
+``@var``, The data type could be validated using the ``@var`` annotation
+on the annotation properties or using the annotations ``@Attributes``
+and ``@Attribute``.
 
 If the data type not match you got an ``AnnotationException``
 
@@ -158,8 +163,9 @@ If the data type not match you got an ``AnnotationException``
 Annotation Required
 -------------------
 
-``@Required`` indicates that the field must be specified when the annotation is used.
-If it is not used you get an ``AnnotationException`` stating that this value can not be null.
+``@Required`` indicates that the field must be specified when the
+annotation is used. If it is not used you get an ``AnnotationException``
+stating that this value can not be null.
 
 Declaring a required field:
 
@@ -189,9 +195,12 @@ Usage:
 Enumerated values
 -----------------
 
-- An annotation property marked with ``@Enum`` is a field that accept a fixed set of scalar values.
-- You should use ``@Enum`` fields any time you need to represent fixed values.
-- The annotation parser check the given value and throws an ``AnnotationException`` if the value not match.
+- An annotation property marked with ``@Enum`` is a field that accept a
+  fixed set of scalar values.
+- You should use ``@Enum`` fields any time you need to represent fixed
+  values.
+- The annotation parser check the given value and throws an
+  ``AnnotationException`` if the value not match.
 
 
 Declaring an enumerated property:
@@ -224,7 +233,8 @@ Annotation usage:
 Constants
 ---------
 
-The use of constants and class constants are available on the annotations parser.
+The use of constants and class constants are available on the
+annotations parser.
 
 The following usage are allowed:
 
@@ -251,8 +261,9 @@ Be careful with constants and the cache !
 
 .. note::
 
-    The cached reader will not re-evaluate each time an annotation is loaded from cache.
-    When a constant is changed the cache must be cleaned.
+    The cached reader will not re-evaluate each time an annotation is
+    loaded from cache. When a constant is changed the cache must be
+    cleaned.
 
 
 Usage
@@ -291,8 +302,8 @@ Now we can write a script to get the annotations above:
         }
     }
 
-You have a complete API for retrieving annotation class instances
-from a class, property or method docblock:
+You have a complete API for retrieving annotation class instances from a
+class, property or method docblock:
 
 
 Reader API
