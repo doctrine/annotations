@@ -257,7 +257,7 @@ PHP Imports
 
 By default the annotation reader parses the use-statement of a php file
 to gain access to the import rules and register them for the annotation
-processing. Only if you are using PHP Imports you can validate the
+processing. Only if you are using PHP Imports can you validate the
 correct usage of annotations and throw exceptions if you misspelled an
 annotation. This mechanism is enabled by default.
 
