@@ -225,7 +225,7 @@ A sample loader callback could look like:
         $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
 
         if (file_exists("/my/base/path/" . $file)) {
-            // file exists makes sure that the loader fails silently
+            // file_exists() makes sure that the loader fails silently
             require "/my/base/path/" . $file;
         }
     });
