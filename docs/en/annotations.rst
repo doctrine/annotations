@@ -186,15 +186,15 @@ class name you can wrap the reader in an ``IndexedReader``:
 Registering Annotations
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-As explained in the Introduction, Doctrine Annotations uses its own
+As explained in the introduction, Doctrine Annotations uses its own
 autoloading mechanism to determine if a given annotation has a
-corresponding PHP class that can be autoloaded. For Annotation
-Autoloading you have to configure the
+corresponding PHP class that can be autoloaded. For annotation
+autoloading you have to configure the
 ``Doctrine\Common\Annotations\AnnotationRegistry``. There are three
 different mechanisms to configure annotation autoloading:
 
 - Calling ``AnnotationRegistry#registerFile($file)`` to register a file
-  that contains one or more Annotation classes.
+  that contains one or more annotation classes.
 - Calling ``AnnotationRegistry#registerNamespace($namespace, $dirs =
   null)`` to register that the given namespace contains annotations and
   that their base directory is located at the given $dirs or in the
