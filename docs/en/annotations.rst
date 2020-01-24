@@ -181,7 +181,7 @@ class name you can wrap the reader in an ``IndexedReader``:
     You should never wrap the indexed reader inside a cached reader,
     only the other way around. This way you can re-use the cache with
     indexed or numeric keys, otherwise your code may experience failures
-    due to caching in an numerical or indexed format.
+    due to caching in a numerical or indexed format.
 
 Registering Annotations
 ~~~~~~~~~~~~~~~~~~~~~~~
