@@ -308,4 +308,58 @@ class DocLexerTest extends TestCase
         self::assertFalse($lexer->nextTokenIsAdjacent());
         self::assertFalse($lexer->moveNext());
     }
+
+    /**
+     * @group 44
+     */
+    public function testIgnoresDoubleQuotesInIrrelevantContent()
+    {
+        $lexer    = new DocLexer();
+        $docblock = '@Foo " @Bar " @Baz';
+
+        $tokens = array (
+            array(
+                'value'     => '@',
+                'position'  => 0,
+                'type'      => DocLexer::T_AT,
+            ),
+            array(
+                'value'     => 'Foo',
+                'position'  => 1,
+                'type'      => DocLexer::T_IDENTIFIER,
+            ),
+            array(
+                'value'     => '@',
+                'position'  => 7,
+                'type'      => DocLexer::T_AT,
+            ),
+            array(
+                'value'     => 'Bar',
+                'position'  => 8,
+                'type'      => DocLexer::T_IDENTIFIER,
+            ),
+            array(
+                'value'     => '@',
+                'position'  => 14,
+                'type'      => DocLexer::T_AT,
+            ),
+            array(
+                'value'     => 'Baz',
+                'position'  => 15,
+                'type'      => DocLexer::T_IDENTIFIER,
+            ),
+        );
+
+        $lexer->setInput($docblock);
+
+        foreach ($tokens as $expected) {
+            $lexer->moveNext();
+            $lookahead = $lexer->lookahead;
+            self::assertEquals($expected['value'],    $lookahead['value']);
+            self::assertEquals($expected['type'],     $lookahead['type']);
+            self::assertEquals($expected['position'], $lookahead['position']);
+        }
+
+        self::assertFalse($lexer->moveNext());
+    }
 }
