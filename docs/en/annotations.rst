@@ -90,16 +90,16 @@ with Doctrine Annotations requires this setup:
 
 The second block with the annotation registry calls registers all the
 three different annotation namespaces that are used.
-Doctrine saves all its annotations in a single file, that is why
-``AnnotationRegistry#registerFile`` is used in contrast to
+Doctrine Annotations saves all its annotations in a single file, that is
+why ``AnnotationRegistry#registerFile`` is used in contrast to
 ``AnnotationRegistry#registerAutoloadNamespace`` which creates a PSR-0
 compatible loading mechanism for class to file names.
 
 In the third block, we create the actual ``AnnotationReader`` instance.
-Note that we also add ``dummy`` to the global list of annotations for
-which we do not throw exceptions. Setting this is necessary in our
-example case, otherwise ``@dummy`` would trigger an exception to be
-thrown during the parsing of the docblock of
+Note that we also add ``dummy`` to the global list of ignored
+annotations for which we do not throw exceptions. Setting this is
+necessary in our example case, otherwise ``@dummy`` would trigger an
+exception to be thrown during the parsing of the docblock of
 ``MyProject\Entities\User#id``.
 
 Setup and Configuration
