@@ -20,7 +20,7 @@ Inject annotation values
 ------------------------
 
 The annotation parser checks if the annotation constructor has arguments,
-if so then we will pass the value array, otherwise we will try to inject
+if so then it will pass the value array, otherwise it will try to inject
 values into public properties directly:
 
 
