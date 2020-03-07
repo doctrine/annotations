@@ -63,6 +63,12 @@ annotations of a class. A common one is
 
 .. code-block:: php
 
+    use Doctrine\Common\Annotations\AnnotationReader;
+    use Doctrine\Common\Annotations\AnnotationRegistry;
+
+    // Deprecated and will be removed in 2.0 but currently needed
+    AnnotationRegistry::registerLoader('class_exists');
+
     $reflectionClass = new ReflectionClass(Foo::class);
     $property = $reflectionClass->getProperty('bar');
 
@@ -72,6 +78,13 @@ annotations of a class. A common one is
     echo $myAnnotation->myProperty; // result: "value"
 
 A reader has multiple methods to access the annotations of a class.
+
+Note that ``AnnotationRegistry::registerLoader('class_exists')`` only works
+if you already have an autoloader configured (i.e. composer autoloader).
+Otherwise, :ref:`please take a look to the other annotation autoload mechanisms <annotations>`.
+
+A reader has multiple methods to access the annotations
+of a class.
 
 :ref:`Read more about handling annotations. <annotations>`
 
