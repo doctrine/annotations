@@ -21,6 +21,10 @@
             "branchName": "1.8",
             "slug": "1.8",
             "current": true,
+            "aliases": [
+                "current",
+                "stable"
+            ],
             "maintained": true
         },
         {
@@ -33,10 +37,6 @@
             "name": "1.6",
             "branchName": "1.6",
             "slug": "1.6",
-            "aliases": [
-                "current",
-                "stable"
-            ],
             "maintained": false
         }
     ]
