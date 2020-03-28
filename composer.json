@@ -14,6 +14,7 @@
     ],
     "require": {
         "php": "^7.1",
+        "ext-tokenizer": "*",
         "doctrine/lexer": "1.*"
     },
     "require-dev": {
