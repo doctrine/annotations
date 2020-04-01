@@ -47,6 +47,13 @@ final class AnnotationRegistry
      */
     static private $failedToAutoload = [];
 
+    /**
+     * Whenever registerFile() was used. Disables use of standard autoloader.
+     *
+     * @var bool
+     */
+    static private $registerFileUsed = false;
+
     public static function reset() : void
     {
         self::$autoloadNamespaces = [];
@@ -63,6 +70,8 @@ final class AnnotationRegistry
      */
     public static function registerFile(string $file) : void
     {
+        self::$registerFileUsed = true;
+
         require_once $file;
     }
 
@@ -166,8 +175,8 @@ final class AnnotationRegistry
                 return true;
             }
         }
-        
-        if (self::$loaders === [] && self::$autoloadNamespaces === [] && \class_exists($class)) {
+
+        if (self::$loaders === [] && self::$autoloadNamespaces === [] && self::$registerFileUsed === false && \class_exists($class)) {
             return true;
         }
 
