@@ -9,10 +9,11 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPCodeSnifferAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClassLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
-use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations;
+use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedWithAlias;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -109,6 +110,21 @@ class AnnotationReaderTest extends AbstractReaderTest
     {
         $reader = $this->getReader();
         $ref = new \ReflectionClass(AnnotatedAtPropertyLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+    }
+
+    /**
+     * @group 244
+     *
+     * @runInSeparateProcess
+     */
+    public function testAnnotationWithAliasIsIgnored(): void
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(AnnotatedWithAlias::class);
 
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
 

@@ -710,10 +710,11 @@ final class DocParser
                     }
                 }
             } elseif (isset($this->imports[$loweredAlias])) {
-                $found = true;
-                $name  = (false !== $pos)
-                    ? $this->imports[$loweredAlias] . substr($name, $pos)
-                    : $this->imports[$loweredAlias];
+                $namespace = ltrim($this->imports[$loweredAlias], '\\');
+                $name = (false !== $pos)
+                    ? $namespace . substr($name, $pos)
+                    : $namespace;
+                $found = $this->classExists($name);
             } elseif ( ! isset($this->ignoredAnnotationNames[$name])
                 && isset($this->imports['__NAMESPACE__'])
                 && $this->classExists($this->imports['__NAMESPACE__'] . '\\' . $name)
@@ -968,10 +969,14 @@ final class DocParser
             }
         }
 
-        // checks if identifier ends with ::class, \strlen('::class') === 7
-        $classPos = stripos($identifier, '::class');
-        if ($classPos === strlen($identifier) - 7) {
-            return substr($identifier, 0, $classPos);
+        /**
+         * Checks if identifier ends with ::class and remove the leading backslash if it exists.
+         */
+        if ($this->identifierEndsWithClassConstant($identifier) && ! $this->identifierStartsWithBackslash($identifier)) {
+            return substr($identifier, 0, $this->getClassConstantPositionInIdentifier($identifier));
+        }
+        if ($this->identifierEndsWithClassConstant($identifier) && $this->identifierStartsWithBackslash($identifier)) {
+            return substr($identifier, 1, $this->getClassConstantPositionInIdentifier($identifier) - 1);
         }
 
         if (!defined($identifier)) {
@@ -979,6 +984,24 @@ final class DocParser
         }
 
         return constant($identifier);
+    }
+
+    private function identifierStartsWithBackslash(string $identifier) : bool
+    {
+        return '\\' === $identifier[0];
+    }
+
+    private function identifierEndsWithClassConstant(string $identifier) : bool
+    {
+        return $this->getClassConstantPositionInIdentifier($identifier) === strlen($identifier) - strlen('::class');
+    }
+
+    /**
+     * @return int|false
+     */
+    private function getClassConstantPositionInIdentifier(string $identifier)
+    {
+        return stripos($identifier, '::class');
     }
 
     /**
