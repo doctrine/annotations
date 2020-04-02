@@ -64,9 +64,7 @@ final class AnnotationRegistry
     /**
      * Registers file.
      *
-     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
-     *             autoloading should be deferred to the globally registered autoloader by then. For now,
-     *             use @example AnnotationRegistry::registerLoader('class_exists')
+     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerFile(string $file) : void
     {
@@ -83,9 +81,7 @@ final class AnnotationRegistry
      * @param string            $namespace
      * @param string|array|null $dirs
      *
-     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
-     *             autoloading should be deferred to the globally registered autoloader by then. For now,
-     *             use @example AnnotationRegistry::registerLoader('class_exists')
+     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerAutoloadNamespace(string $namespace, $dirs = null) : void
     {
@@ -99,9 +95,7 @@ final class AnnotationRegistry
      *
      * @param string[][]|string[]|null[] $namespaces indexed by namespace name
      *
-     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
-     *             autoloading should be deferred to the globally registered autoloader by then. For now,
-     *             use @example AnnotationRegistry::registerLoader('class_exists')
+     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerAutoloadNamespaces(array $namespaces) : void
     {
@@ -114,9 +108,7 @@ final class AnnotationRegistry
      * NOTE: These class loaders HAVE to be silent when a class was not found!
      * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      *
-     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
-     *             autoloading should be deferred to the globally registered autoloader by then. For now,
-     *             use @example AnnotationRegistry::registerLoader('class_exists')
+     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerLoader(callable $callable) : void
     {
@@ -128,7 +120,7 @@ final class AnnotationRegistry
     /**
      * Registers an autoloading callable for annotations, if it is not already registered
      *
-     * @deprecated this method is deprecated and will be removed in doctrine/annotations 2.0
+     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerUniqueLoader(callable $callable) : void
     {
