@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithImportedIgnoredAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPCodeSnifferAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPhpCsSuppressAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations;
@@ -195,5 +196,13 @@ class AnnotationReaderTest extends AbstractReaderTest
         $this->expectException('\Doctrine\Common\Annotations\AnnotationException');
         $this->expectExceptionMessage('[Semantical Error] The annotation "@Template" in method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations::twigTemplateFunctionName() was never imported.');
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('twigTemplateFunctionName')));
+    }
+
+    public function testImportedIgnoredAnnotationIsStillIgnored()
+    {
+        $reader = $this->getReader();
+        $ref = new \ReflectionClass(ClassWithImportedIgnoredAnnotation::class);
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('something')));
     }
 }
