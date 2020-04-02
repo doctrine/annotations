@@ -3,6 +3,9 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationRegistry;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\CanBeAutoLoaded;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\LoadedUsingRegisterFile;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\ShouldNeverBeLoaded;
 use PHPUnit\Framework\TestCase;
 
 class AnnotationRegistryTest extends TestCase
@@ -182,5 +185,27 @@ class AnnotationRegistryTest extends TestCase
         AnnotationRegistry::registerUniqueLoader($autoLoader);
         AnnotationRegistry::loadAnnotationClass($className);
         AnnotationRegistry::loadAnnotationClass($className);
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testClassExistsFallback() : void
+    {
+        AnnotationRegistry::reset();
+
+        self::assertTrue(AnnotationRegistry::loadAnnotationClass(CanBeAutoLoaded::class));
+    }
+
+    /**
+     * @runInSeparateProcess
+     */
+    public function testClassExistsFallbackNotUsedWhenRegisterFileUsed() : void
+    {
+        AnnotationRegistry::reset();
+        AnnotationRegistry::registerFile(__DIR__ . '/Fixtures/Annotation/LoadedUsingRegisterFile.php');
+
+        self::assertTrue(AnnotationRegistry::loadAnnotationClass(LoadedUsingRegisterFile::class));
+        self::assertFalse(AnnotationRegistry::loadAnnotationClass(ShouldNeverBeLoaded::class));
     }
 }
