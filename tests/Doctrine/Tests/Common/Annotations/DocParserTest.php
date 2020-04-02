@@ -1055,7 +1055,6 @@ DOCBLOCK;
     public function testNotAnAnnotationClassIsIgnoredWithoutWarning()
     {
         $parser = new DocParser();
-        $parser->setIgnoreNotImportedAnnotations(true);
         $parser->setIgnoredAnnotationNames([\PHPUnit\Framework\TestCase::class => true]);
         $result = $parser->parse('@\PHPUnit\Framework\TestCase');
 
