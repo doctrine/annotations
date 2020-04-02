@@ -59,6 +59,7 @@ final class AnnotationRegistry
         self::$autoloadNamespaces = [];
         self::$loaders            = [];
         self::$failedToAutoload   = [];
+        self::$registerFileUsed   = false;
     }
 
     /**
