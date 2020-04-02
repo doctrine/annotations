@@ -752,7 +752,7 @@ final class DocParser
 
         // verify that the class is really meant to be an annotation and not just any ordinary class
         if (self::$annotationMetadata[$name]['is_annotation'] === false) {
-            if ($this->isIgnoredAnnotation($name)) {
+            if ($this->isIgnoredAnnotation($originalName) || $this->isIgnoredAnnotation($name)) {
                 return false;
             }
 
