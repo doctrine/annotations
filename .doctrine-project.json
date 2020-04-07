@@ -6,11 +6,8 @@
     "versions": [
         {
             "name": "1.11",
-            "branchName": "1.11",
-            "slug": "1.11",
-            "aliases": [
-                "latest"
-            ],
+            "branchName": "master",
+            "slug": "latest",
             "upcoming": true
         },
         {
@@ -28,9 +25,6 @@
             "name": "1.9",
             "branchName": "1.9",
             "slug": "1.9",
-            "aliases": [
-                "latest"
-            ],
             "maintained": false
         },
         {
