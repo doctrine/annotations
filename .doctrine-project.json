@@ -12,7 +12,7 @@
         },
         {
             "name": "1.10",
-            "branchName": "1.10",
+            "branchName": "1.10.x",
             "slug": "1.10",
             "aliases": [
                 "current",
@@ -23,7 +23,7 @@
         },
         {
             "name": "1.9",
-            "branchName": "1.9",
+            "branchName": "1.9.x",
             "slug": "1.9",
             "maintained": false
         },
