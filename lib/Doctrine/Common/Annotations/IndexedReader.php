@@ -86,6 +86,27 @@ class IndexedReader implements Reader, ReaderWithConstantsAnnotations
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(\ReflectionClassConstant $constant): array
+    {
+        $annotations = [];
+        foreach ($this->delegate->getConstantAnnotations($constant) as $annot) {
+            $annotations[get_class($annot)] = $annot;
+        }
+
+        return $annotations;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(\ReflectionClassConstant $constant, $annotation)
+    {
+        return $this->delegate->getConstantAnnotation($constant, $annotation);
+    }
+
+    /**
      * Proxies all methods to the delegate.
      *
      * @param string  $method
