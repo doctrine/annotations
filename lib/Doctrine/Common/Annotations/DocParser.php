@@ -937,7 +937,7 @@ final class DocParser
             switch (true) {
                 case !empty ($this->namespaces):
                     foreach ($this->namespaces as $ns) {
-                        if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
+                        if ($this->classExists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
                              $className = $ns.'\\'.$className;
                              $found = true;
                              break;
@@ -956,7 +956,7 @@ final class DocParser
                     if(isset($this->imports['__NAMESPACE__'])) {
                         $ns = $this->imports['__NAMESPACE__'];
 
-                        if (class_exists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
+                        if ($this->classExists($ns.'\\'.$className) || interface_exists($ns.'\\'.$className)) {
                             $className = $ns.'\\'.$className;
                             $found = true;
                         }
