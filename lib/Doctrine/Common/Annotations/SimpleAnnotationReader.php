@@ -11,6 +11,7 @@ namespace Doctrine\Common\Annotations;
  * @since  2.2
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  * @author Fabio B. Silva <fabio.bat.silva@gmail.com>
+ * @deprecated Deprecated in favour of using AnnotationReader
  */
 class SimpleAnnotationReader implements Reader
 {
