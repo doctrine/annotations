@@ -13,7 +13,7 @@ Take a look at the following code snippet:
     namespace MyProject\Entities;
 
     use Doctrine\ORM\Mapping AS ORM;
-    use Symfony\Component\Validation\Constraints AS Assert;
+    use Symfony\Component\Validator\Constraints AS Assert;
 
     /**
      * @author Benjamin Eberlei
