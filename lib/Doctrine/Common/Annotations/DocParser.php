@@ -395,7 +395,7 @@ final class DocParser
     private function match(int $token): bool
     {
         if ( ! $this->lexer->isNextToken($token) ) {
-            $this->syntaxError($this->lexer->getLiteral($token));
+            throw $this->syntaxError($this->lexer->getLiteral($token));
         }
 
         return $this->lexer->moveNext();
@@ -412,7 +412,7 @@ final class DocParser
     private function matchAny(array $tokens): bool
     {
         if ( ! $this->lexer->isNextTokenAny($tokens)) {
-            $this->syntaxError(implode(' or ', array_map([$this->lexer, 'getLiteral'], $tokens)));
+            throw $this->syntaxError(implode(' or ', array_map([$this->lexer, 'getLiteral'], $tokens)));
         }
 
         return $this->lexer->moveNext();
@@ -423,11 +423,8 @@ final class DocParser
      *
      * @param string     $expected Expected string.
      * @param array|null $token    Optional token.
-     *
-     * @return void
-     * @throws AnnotationException
      */
-    private function syntaxError(string $expected, ?array $token = null): void
+    private function syntaxError(string $expected, ?array $token = null): AnnotationException
     {
         if ($token === null) {
             $token = $this->lexer->lookahead;
@@ -444,7 +441,7 @@ final class DocParser
 
         $message .= '.';
 
-        throw AnnotationException::syntaxError($message);
+        return AnnotationException::syntaxError($message);
     }
 
     /**
@@ -888,7 +885,7 @@ final class DocParser
             $value = $this->Value();
 
             if ( ! is_object($value) && ! is_array($value)) {
-                $this->syntaxError('Value', $token);
+                throw $this->syntaxError('Value', $token);
             }
 
             $values[] = $value;
@@ -1011,7 +1008,7 @@ final class DocParser
     {
         // check if we have an annotation
         if ( ! $this->lexer->isNextTokenAny(self::$classIdentifiers)) {
-            $this->syntaxError('namespace separator or identifier');
+            throw $this->syntaxError('namespace separator or identifier');
         }
 
         $this->lexer->moveNext();
@@ -1097,7 +1094,7 @@ final class DocParser
                 return null;
 
             default:
-                $this->syntaxError('PlainValue');
+                throw $this->syntaxError('PlainValue');
         }
     }
 
