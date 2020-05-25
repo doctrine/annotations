@@ -7,7 +7,6 @@ php:
   - 7.2
   - 7.3
   - 7.4
-  - nightly
 
 cache:
   directories:
@@ -26,6 +25,11 @@ jobs:
     - php: nightly
 
   include:
+    - stage: Test
+      php: nightly
+      before_install:
+        - composer config platform.php 7.4.99
+
     - stage: Lint
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.7
