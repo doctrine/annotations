@@ -16,9 +16,7 @@ cache:
 before_install:
   - mv ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini{,.disabled} || echo "xdebug not available"
 
-install:
-  - if [[ $TRAVIS_PHP_VERSION = nightly ]]; then export COMPOSER_FLAGS="--ignore-platform-reqs"; fi
-  - travis_retry composer update --prefer-dist $COMPOSER_FLAGS
+install: travis_retry composer update --prefer-dist
 
 script:
   - ./vendor/bin/phpunit
