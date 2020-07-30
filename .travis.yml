@@ -41,3 +41,4 @@ jobs:
         - curl -o phpbench.phar https://phpbench.github.io/phpbench/phpbench.phar
         - curl -o phpbench.phar.pubkey https://phpbench.github.io/phpbench/phpbench.phar.pubkey
       script: php phpbench.phar run
+      php: 7.4
