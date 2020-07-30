@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
 class SimpleAnnotationReaderTest extends AbstractReaderTest
@@ -117,7 +118,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
-    protected function getReader()
+    protected function getReader(): Reader
     {
         $reader = new SimpleAnnotationReader();
         $reader->addNamespace(__NAMESPACE__);

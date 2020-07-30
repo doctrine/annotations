@@ -4,12 +4,13 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\FileCacheReader;
+use Doctrine\Common\Annotations\Reader;
 
 class FileCacheReaderTest extends AbstractReaderTest
 {
     private $cacheDir;
 
-    protected function getReader()
+    protected function getReader(): Reader
     {
         $this->cacheDir = sys_get_temp_dir() . '/annotations_' . uniqid('', true);
         @mkdir($this->cacheDir);
