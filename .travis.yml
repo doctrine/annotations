@@ -34,6 +34,7 @@ jobs:
       before_script:
         - travis_retry composer require --dev --prefer-dist --prefer-stable phpstan/phpstan:^0.12.20
       script: vendor/bin/phpstan analyse -l 3 -c phpstan.neon lib tests
+      php: 7.4
 
     - stage: Benchmark
       install:
