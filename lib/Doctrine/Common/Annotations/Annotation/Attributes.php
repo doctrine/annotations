@@ -31,7 +31,7 @@ namespace Doctrine\Common\Annotations\Annotation;
 final class Attributes
 {
     /**
-     * @var array<Doctrine\Common\Annotations\Annotation\Attribute>
+     * @var array<Attribute>
      */
     public $value;
 }
