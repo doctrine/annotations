@@ -828,12 +828,12 @@ DOCBLOCK;
             '@AnnotationWithConstants({
                 AnnotationWithConstants::STRING = AnnotationWithConstants::INTEGER,
                 ClassWithConstants::SOME_KEY = ClassWithConstants::SOME_VALUE,
-                Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants::SOME_KEY = InterfaceWithConstants::SOME_VALUE
+                Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_KEY = InterfaceWithConstants::SOME_VALUE
              })',
             [
                 AnnotationWithConstants::STRING => AnnotationWithConstants::INTEGER,
                 ClassWithConstants::SOME_KEY    => ClassWithConstants::SOME_VALUE,
-                ClassWithConstants::SOME_KEY    => InterfaceWithConstants::SOME_VALUE
+                InterfaceWithConstants::SOME_KEY    => InterfaceWithConstants::SOME_VALUE
             ]
         ];
         $provider[] = [

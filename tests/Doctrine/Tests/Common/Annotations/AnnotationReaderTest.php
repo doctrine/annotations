@@ -5,6 +5,7 @@ namespace Doctrine\Tests\Common\Annotations;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithImportedIgnoredAnnotation;
@@ -19,10 +20,9 @@ use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedWithAl
 class AnnotationReaderTest extends AbstractReaderTest
 {
     /**
-     * @param DocParser|null $parser
      * @return AnnotationReader
      */
-    protected function getReader(DocParser $parser = null)
+    protected function getReader(DocParser $parser = null): Reader
     {
         return new AnnotationReader($parser);
     }

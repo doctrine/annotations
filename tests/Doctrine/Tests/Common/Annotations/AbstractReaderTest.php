@@ -4,6 +4,7 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\AnnotationException;
+use Doctrine\Common\Annotations\Reader;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass, Doctrine\Common\Annotations\AnnotationReader;
 
@@ -469,10 +470,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getClassAnnotations($reflection);
     }
 
-    /**
-     * @return AnnotationReader
-     */
-    abstract protected function getReader();
+    abstract protected function getReader(): Reader;
 }
 
 /**

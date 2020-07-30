@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Common\Annotations\AnnotationReader;
@@ -283,7 +284,7 @@ class CachedReaderTest extends AbstractReaderTest
         $this->assertEquals([$route], $reader->getClassAnnotations(new \ReflectionClass($className)));
     }
 
-    protected function getReader()
+    protected function getReader(): Reader
     {
         $this->cache = new ArrayCache();
         return new CachedReader(new AnnotationReader(), $this->cache);
