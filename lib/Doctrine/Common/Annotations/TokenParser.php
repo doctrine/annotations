@@ -99,7 +99,11 @@ class TokenParser
      */
     public function parseUseStatement()
     {
+        return \PHP_VERSION_ID >=80000 ? $this->parseUseStatementV8() : $this->parseUseStatementV7();
+    }
 
+    private function parseUseStatementV7(): array
+    {
         $groupRoot = '';
         $class = '';
         $alias = '';
@@ -115,6 +119,52 @@ class TokenParser
             } else if ($token[0] === T_AS) {
                 $explicitAlias = true;
                 $alias = '';
+            } else if ($token === ',') {
+                $statements[strtolower($alias)] = $groupRoot . $class;
+                $class = '';
+                $alias = '';
+                $explicitAlias = false;
+            } else if ($token === ';') {
+                $statements[strtolower($alias)] = $groupRoot . $class;
+                break;
+            } else if ($token === '{' ) {
+                $groupRoot = $class;
+                $class = '';
+            } else if ($token === '}' ) {
+                continue;
+            } else {
+                break;
+            }
+        }
+
+        return $statements;
+    }
+
+    private function parseUseStatementV8(): array
+    {
+        $groupRoot = '';
+        $class = '';
+        $alias = '';
+        $statements = [];
+        $explicitAlias = false;
+        while (($token = $this->next())) {
+            $isNameToken = $token[0] === T_STRING || $token[0] === T_NS_SEPARATOR;
+
+            if ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED) {
+                $class .= $token[1];
+
+                $classSplit = explode('\\', $token[1]);
+                $alias = $classSplit[count($classSplit) - 1];
+            } else if($token[0] === T_NS_SEPARATOR) {
+                $class .= '\\';
+            } else if ($token[0] === T_AS) {
+                $explicitAlias = true;
+                $alias = '';
+            } else if ($isNameToken && !$explicitAlias) {
+                $class = $token[1];
+                $alias = $token[1];
+            } else if ($isNameToken && $explicitAlias) {
+                $alias = $token[1];
             } else if ($token === ',') {
                 $statements[strtolower($alias)] = $groupRoot . $class;
                 $class = '';
@@ -172,7 +222,7 @@ class TokenParser
     public function parseNamespace()
     {
         $name = '';
-        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR)) {
+        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR || (\PHP_VERSION_ID >=80000 && $token[0] === T_NAME_QUALIFIED))) {
             $name .= $token[1];
         }
 
