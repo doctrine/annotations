@@ -29,6 +29,7 @@ jobs:
       php: nightly
       before_install:
         - composer config platform.php 7.4.99
+        - composer config minimum-stability dev
 
     - stage: Lint
       before_script:
