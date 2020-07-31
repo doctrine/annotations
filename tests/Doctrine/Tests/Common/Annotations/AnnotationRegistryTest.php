@@ -179,7 +179,7 @@ class AnnotationRegistryTest extends TestCase
     {
         $className = 'autoloadedClassThatDoesNotExist';
         AnnotationRegistry::reset();
-        $autoLoader = self::createPartialMock(\stdClass::class, ['__invoke']);
+        $autoLoader = self::createPartialMock(Autoloader::class, ['__invoke']);
         $autoLoader->expects($this->once())->method('__invoke');
         AnnotationRegistry::registerUniqueLoader($autoLoader);
         AnnotationRegistry::registerUniqueLoader($autoLoader);
@@ -207,5 +207,12 @@ class AnnotationRegistryTest extends TestCase
 
         self::assertTrue(AnnotationRegistry::loadAnnotationClass(LoadedUsingRegisterFile::class));
         self::assertFalse(AnnotationRegistry::loadAnnotationClass(ShouldNeverBeLoaded::class));
+    }
+}
+
+class Autoloader
+{
+    public function __invoke(): void
+    {
     }
 }

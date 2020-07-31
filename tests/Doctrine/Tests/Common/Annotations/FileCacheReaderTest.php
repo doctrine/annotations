@@ -17,7 +17,7 @@ class FileCacheReaderTest extends AbstractReaderTest
         return new FileCacheReader(new AnnotationReader(), $this->cacheDir);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         foreach (glob($this->cacheDir.'/*.php') AS $file) {
             unlink($file);
@@ -32,7 +32,11 @@ class FileCacheReaderTest extends AbstractReaderTest
     {
         $this->cacheDir = sys_get_temp_dir() . '/not_existed_dir_' . uniqid('', true);
 
-        self::assertDirectoryNotExists($this->cacheDir);
+        if (method_exists($this, 'assertDirectoryDoesNotExist')) {
+            self::assertDirectoryDoesNotExist($this->cacheDir);
+        } else {
+            self::assertDirectoryNotExists($this->cacheDir);
+        }
 
         new FileCacheReader(new AnnotationReader(), $this->cacheDir);
 
