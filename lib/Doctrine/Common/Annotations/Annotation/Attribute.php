@@ -41,7 +41,7 @@ final class Attribute
     public $type;
 
     /**
-     * @var boolean
+     * @var bool
      */
     public $required = false;
 }
