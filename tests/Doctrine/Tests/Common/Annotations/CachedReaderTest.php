@@ -2,14 +2,20 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\Cache;
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\Cache;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTraitWithMethods;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionClass;
+use ReflectionMethod;
+
+use function assert;
+use function time;
+use function touch;
 
 class CachedReaderTest extends AbstractReaderTest
 {
@@ -18,7 +24,7 @@ class CachedReaderTest extends AbstractReaderTest
     public function testIgnoresStaleCache()
     {
         $cache = time() - 10;
-        touch(__DIR__.'/Fixtures/Controller.php', $cache + 10);
+        touch(__DIR__ . '/Fixtures/Controller.php', $cache + 10);
 
         $this->doTestCacheStale(Fixtures\Controller::class, $cache);
     }
@@ -29,8 +35,8 @@ class CachedReaderTest extends AbstractReaderTest
     public function testIgnoresStaleCacheWithParentClass()
     {
         $cache = time() - 10;
-        touch(__DIR__.'/Fixtures/ControllerWithParentClass.php', $cache - 10);
-        touch(__DIR__.'/Fixtures/AbstractController.php', $cache + 10);
+        touch(__DIR__ . '/Fixtures/ControllerWithParentClass.php', $cache - 10);
+        touch(__DIR__ . '/Fixtures/AbstractController.php', $cache + 10);
 
         $this->doTestCacheStale(Fixtures\ControllerWithParentClass::class, $cache);
     }
@@ -41,8 +47,8 @@ class CachedReaderTest extends AbstractReaderTest
     public function testIgnoresStaleCacheWithTraits()
     {
         $cache = time() - 10;
-        touch(__DIR__.'/Fixtures/ControllerWithTrait.php', $cache - 10);
-        touch(__DIR__.'/Fixtures/Traits/SecretRouteTrait.php', $cache + 10);
+        touch(__DIR__ . '/Fixtures/ControllerWithTrait.php', $cache - 10);
+        touch(__DIR__ . '/Fixtures/Traits/SecretRouteTrait.php', $cache + 10);
 
         $this->doTestCacheStale(Fixtures\ControllerWithTrait::class, $cache);
     }
@@ -99,7 +105,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testPurgeLoadedAnnotations() : void
+    public function testPurgeLoadedAnnotations(): void
     {
         $cache = time() - 10;
 
@@ -111,13 +117,13 @@ class CachedReaderTest extends AbstractReaderTest
             $cache
         );
 
-        $classReader = new \ReflectionClass(CachedReader::class);
+        $classReader = new ReflectionClass(CachedReader::class);
 
-        $loadedAnnotationsProperty = $classReader->getProperty("loadedAnnotations");
+        $loadedAnnotationsProperty = $classReader->getProperty('loadedAnnotations');
         $loadedAnnotationsProperty->setAccessible(true);
         $this->assertCount(1, $loadedAnnotationsProperty->getValue($reader));
 
-        $loadedFilemtimesProperty = $classReader->getProperty("loadedFilemtimes");
+        $loadedFilemtimesProperty = $classReader->getProperty('loadedFilemtimes');
         $loadedFilemtimesProperty->setAccessible(true);
         $this->assertCount(3, $loadedFilemtimesProperty->getValue($reader));
 
@@ -140,7 +146,7 @@ class CachedReaderTest extends AbstractReaderTest
      * @group 62
      * @group 105
      */
-    public function testAvoidCallingFilemtimeTooMuch() : void
+    public function testAvoidCallingFilemtimeTooMuch(): void
     {
         $className = ClassThatUsesTraitThatUsesAnotherTraitWithMethods::class;
         $cacheKey  = $className;
@@ -154,8 +160,8 @@ class CachedReaderTest extends AbstractReaderTest
         $route2          = new Route();
         $route2->pattern = '/someotherprefix';
 
-        /* @var $cache Cache|MockObject */
         $cache = $this->createMock('Doctrine\Common\Cache\Cache');
+        assert($cache instanceof Cache || $cache instanceof MockObject);
 
         $cache
             ->expects($this->exactly(6))
@@ -188,57 +194,53 @@ class CachedReaderTest extends AbstractReaderTest
             ->method('save')
             ->withConsecutive(
                 [$this->equalTo($cacheKeyMethod2)],
-                [$this->equalTo('[C]'.$cacheKeyMethod2)]
-            )
-        ;
+                [$this->equalTo('[C]' . $cacheKeyMethod2)]
+            );
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
 
         touch(__DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTraitWithMethods.php', $cacheTime - 20);
         touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cacheTime - 20);
-        $this->assertEquals([$route1], $reader->getMethodAnnotations(new \ReflectionMethod($className, 'method1')));
+        $this->assertEquals([$route1], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method1')));
 
         // only filemtime changes, but not cleared => no change
         touch(__DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTrait.php', $cacheTime + 5);
         touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cacheTime + 5);
-        $this->assertEquals([$route2], $reader->getMethodAnnotations(new \ReflectionMethod($className, 'method2')));
+        $this->assertEquals([$route2], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method2')));
 
         $reader->clearLoadedAnnotations();
-        $this->assertEquals([$route2], $reader->getMethodAnnotations(new \ReflectionMethod($className, 'method2')));
+        $this->assertEquals([$route2], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method2')));
     }
 
-    protected function doTestCacheStale($className, $lastCacheModification) : CachedReader
+    protected function doTestCacheStale($className, $lastCacheModification): CachedReader
     {
         $cacheKey = $className;
 
-        /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
         $cache = $this->createMock(Cache::class);
         $cache
             ->expects($this->exactly(2))
             ->method('fetch')
             ->withConsecutive(
                 [$this->equalTo($cacheKey)],
-                [$this->equalTo('[C]'.$cacheKey)]
+                [$this->equalTo('[C]' . $cacheKey)]
             )
             ->willReturnOnConsecutiveCalls(
                 [], // Result was cached, but there was no annotation
                 $lastCacheModification
-            )
-        ;
+            );
         $cache
             ->expects($this->exactly(2))
             ->method('save')
             ->withConsecutive(
                 [$this->equalTo($cacheKey)],
-                [$this->equalTo('[C]'.$cacheKey)]
-            )
-        ;
+                [$this->equalTo('[C]' . $cacheKey)]
+            );
 
-        $reader = new CachedReader(new AnnotationReader(), $cache, true);
-        $route = new Route();
+        $reader         = new CachedReader(new AnnotationReader(), $cache, true);
+        $route          = new Route();
         $route->pattern = '/someprefix';
 
-        self::assertEquals([$route], $reader->getClassAnnotations(new \ReflectionClass($className)));
+        self::assertEquals([$route], $reader->getClassAnnotations(new ReflectionClass($className)));
 
         return $reader;
     }
@@ -249,7 +251,6 @@ class CachedReaderTest extends AbstractReaderTest
         $route          = new Route();
         $route->pattern = '/someprefix';
 
-        /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
         $cache = $this->createMock('Doctrine\Common\Cache\Cache');
         $cache
             ->expects($this->exactly(2))
@@ -266,12 +267,13 @@ class CachedReaderTest extends AbstractReaderTest
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
 
-        $this->assertEquals([$route], $reader->getClassAnnotations(new \ReflectionClass($className)));
+        $this->assertEquals([$route], $reader->getClassAnnotations(new ReflectionClass($className)));
     }
 
     protected function getReader(): Reader
     {
         $this->cache = new ArrayCache();
+
         return new CachedReader(new AnnotationReader(), $this->cache);
     }
 }

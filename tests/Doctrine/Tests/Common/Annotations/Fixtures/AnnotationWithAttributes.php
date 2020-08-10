@@ -2,6 +2,8 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
+
 /**
  * @Annotation
  * @Target("ALL")
@@ -21,8 +23,7 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 final class AnnotationWithAttributes
 {
-
-    public final function __construct(array $data)
+    final public function __construct(array $data)
     {
         foreach ($data as $key => $value) {
             $this->$key = $value;
@@ -95,7 +96,7 @@ final class AnnotationWithAttributes
     }
 
     /**
-     * @return \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
+     * @return AnnotationTargetAll
      */
     public function getAnnotation()
     {
@@ -125,5 +126,4 @@ final class AnnotationWithAttributes
     {
         return $this->arrayOfAnnotations;
     }
-
 }

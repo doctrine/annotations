@@ -45,4 +45,3 @@ class TargetTest extends TestCase
         self::assertEquals(Target::TARGET_METHOD | Target::TARGET_PROPERTY, $target->targets);
     }
 }
-

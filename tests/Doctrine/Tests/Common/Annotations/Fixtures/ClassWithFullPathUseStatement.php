@@ -13,5 +13,4 @@ use \Doctrine\Tests\Common\Annotations\Fixtures\Annotation as Annotations;
  */
 class ClassWithFullPathUseStatement
 {
-
 }

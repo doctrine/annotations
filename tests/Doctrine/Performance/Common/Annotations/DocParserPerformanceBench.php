@@ -8,6 +8,8 @@ use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
 
+use function array_fill_keys;
+
 /**
  * @BeforeMethods({"initializeMethod", "initialize"})
  */
@@ -33,7 +35,7 @@ final class DocParserPerformanceBench
     /** @var DocParser */
     private $parser;
 
-    public function initialize() : void
+    public function initialize(): void
     {
         $this->parser = new DocParser();
 
@@ -46,7 +48,7 @@ final class DocParserPerformanceBench
      * @Revs(200)
      * @Iterations(5)
      */
-    public function benchMethodParsing() : void
+    public function benchMethodParsing(): void
     {
         $this->parser->parse($this->methodDocBlock);
     }
@@ -55,7 +57,7 @@ final class DocParserPerformanceBench
      * @Revs(200)
      * @Iterations(5)
      */
-    public function benchClassParsing() : void
+    public function benchClassParsing(): void
     {
         $this->parser->parse($this->classDocBlock);
     }

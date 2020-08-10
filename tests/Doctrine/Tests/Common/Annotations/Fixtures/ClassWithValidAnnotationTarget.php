@@ -2,8 +2,8 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod;
 
 /**
@@ -11,16 +11,11 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod;
  */
 class ClassWithValidAnnotationTarget
 {
-
-    /**
-     * @AnnotationTargetPropertyMethod("Some data")
-     */
+    /** @AnnotationTargetPropertyMethod("Some data") */
     public $foo;
 
 
-    /**
-     * @AnnotationTargetAll("Some data",name="Some name")
-     */
+    /** @AnnotationTargetAll("Some data",name="Some name") */
     public $name;
 
     /**
@@ -28,13 +23,8 @@ class ClassWithValidAnnotationTarget
      */
     public function someFunction()
     {
-
     }
 
-
-    /**
-     * @AnnotationTargetAll(@AnnotationTargetAnnotation)
-     */
+    /** @AnnotationTargetAll(@AnnotationTargetAnnotation) */
     public $nested;
-
 }

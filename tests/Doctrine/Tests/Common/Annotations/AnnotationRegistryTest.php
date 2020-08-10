@@ -7,6 +7,10 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\CanBeAutoLoaded;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\LoadedUsingRegisterFile;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\ShouldNeverBeLoaded;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
+use TypeError;
+
+use function random_int;
 
 class AnnotationRegistryTest extends TestCase
 {
@@ -15,7 +19,7 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testReset() : void
+    public function testReset(): void
     {
         $data = ['foo' => 'bar'];
 
@@ -34,7 +38,7 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRegisterAutoloadNamespaces() : void
+    public function testRegisterAutoloadNamespaces(): void
     {
         $this->setStaticField($this->class, 'autoloadNamespaces', ['foo' => 'bar']);
 
@@ -45,16 +49,16 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRegisterLoaderNoCallable() : void
+    public function testRegisterLoaderNoCallable(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
 
         AnnotationRegistry::registerLoader('test' . random_int(10, 10000));
     }
 
     protected function setStaticField($class, $field, $value)
     {
-        $reflection = new \ReflectionProperty($class, $field);
+        $reflection = new ReflectionProperty($class, $field);
 
         $reflection->setAccessible(true);
         $reflection->setValue(null, $value);
@@ -62,7 +66,7 @@ class AnnotationRegistryTest extends TestCase
 
     protected function getStaticField($class, $field)
     {
-        $reflection = new \ReflectionProperty($class, $field);
+        $reflection = new ReflectionProperty($class, $field);
 
         $reflection->setAccessible(true);
 
@@ -72,12 +76,13 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testStopCallingLoadersIfClassIsNotFound() : void
+    public function testStopCallingLoadersIfClassIsNotFound(): void
     {
         AnnotationRegistry::reset();
-        $i = 0;
-        $autoLoader = function () use (&$i) : bool {
+        $i          = 0;
+        $autoLoader = static function () use (&$i): bool {
             $i += 1;
+
             return false;
         };
         AnnotationRegistry::registerLoader($autoLoader);
@@ -90,14 +95,15 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testStopCallingLoadersAfterClassIsFound() : void
+    public function testStopCallingLoadersAfterClassIsFound(): void
     {
         $className = 'autoloadedClass' . random_int(10, 100000);
         AnnotationRegistry::reset();
-        $i = 0;
-        $autoLoader = function () use (&$i, $className) : bool {
+        $i          = 0;
+        $autoLoader = static function () use (&$i, $className): bool {
             eval('class ' . $className . ' {}');
             $i += 1;
+
             return true;
         };
         AnnotationRegistry::registerLoader($autoLoader);
@@ -110,10 +116,10 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testAddingANewLoaderClearsTheCache() : void
+    public function testAddingANewLoaderClearsTheCache(): void
     {
-        $failures         = 0;
-        $failingLoader    = function () use (& $failures) : bool {
+        $failures      = 0;
+        $failingLoader = static function () use (&$failures): bool {
             $failures += 1;
 
             return false;
@@ -132,7 +138,7 @@ class AnnotationRegistryTest extends TestCase
 
         self::assertSame(1, $failures);
 
-        AnnotationRegistry::registerLoader(function () : bool {
+        AnnotationRegistry::registerLoader(static function (): bool {
             return false;
         });
         AnnotationRegistry::loadAnnotationClass('unloadableClass');
@@ -143,10 +149,10 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testResetClearsRegisteredAutoloaderFailures() : void
+    public function testResetClearsRegisteredAutoloaderFailures(): void
     {
-        $failures         = 0;
-        $failingLoader    = function () use (& $failures) : bool {
+        $failures      = 0;
+        $failingLoader = static function () use (&$failures): bool {
             $failures += 1;
 
             return false;
@@ -175,7 +181,7 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testRegisterLoaderIfNotExistsOnlyRegisteresSameLoaderOnce() : void
+    public function testRegisterLoaderIfNotExistsOnlyRegisteresSameLoaderOnce(): void
     {
         $className = 'autoloadedClassThatDoesNotExist';
         AnnotationRegistry::reset();
@@ -190,7 +196,7 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testClassExistsFallback() : void
+    public function testClassExistsFallback(): void
     {
         AnnotationRegistry::reset();
 
@@ -200,7 +206,7 @@ class AnnotationRegistryTest extends TestCase
     /**
      * @runInSeparateProcess
      */
-    public function testClassExistsFallbackNotUsedWhenRegisterFileUsed() : void
+    public function testClassExistsFallbackNotUsedWhenRegisterFileUsed(): void
     {
         AnnotationRegistry::reset();
         AnnotationRegistry::registerFile(__DIR__ . '/Fixtures/Annotation/LoadedUsingRegisterFile.php');

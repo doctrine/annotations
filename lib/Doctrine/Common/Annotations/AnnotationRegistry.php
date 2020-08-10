@@ -19,6 +19,17 @@
 
 namespace Doctrine\Common\Annotations;
 
+use function array_key_exists;
+use function array_merge;
+use function class_exists;
+use function in_array;
+use function is_file;
+use function str_replace;
+use function stream_resolve_include_path;
+use function strpos;
+
+use const DIRECTORY_SEPARATOR;
+
 final class AnnotationRegistry
 {
     /**
@@ -31,30 +42,30 @@ final class AnnotationRegistry
      *
      * @var string[][]|string[]|null[]
      */
-    static private $autoloadNamespaces = [];
+    private static $autoloadNamespaces = [];
 
     /**
      * A map of autoloader callables.
      *
      * @var callable[]
      */
-    static private $loaders = [];
+    private static $loaders = [];
 
     /**
      * An array of classes which cannot be found
      *
      * @var null[] indexed by class name
      */
-    static private $failedToAutoload = [];
+    private static $failedToAutoload = [];
 
     /**
      * Whenever registerFile() was used. Disables use of standard autoloader.
      *
      * @var bool
      */
-    static private $registerFileUsed = false;
+    private static $registerFileUsed = false;
 
-    public static function reset() : void
+    public static function reset(): void
     {
         self::$autoloadNamespaces = [];
         self::$loaders            = [];
@@ -67,7 +78,7 @@ final class AnnotationRegistry
      *
      * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
-    public static function registerFile(string $file) : void
+    public static function registerFile(string $file): void
     {
         self::$registerFileUsed = true;
 
@@ -79,12 +90,11 @@ final class AnnotationRegistry
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @param string            $namespace
-     * @param string|array|null $dirs
-     *
      * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     *
+     * @param string|array|null $dirs
      */
-    public static function registerAutoloadNamespace(string $namespace, $dirs = null) : void
+    public static function registerAutoloadNamespace(string $namespace, $dirs = null): void
     {
         self::$autoloadNamespaces[$namespace] = $dirs;
     }
@@ -94,13 +104,13 @@ final class AnnotationRegistry
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @param string[][]|string[]|null[] $namespaces indexed by namespace name
-     *
      * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     *
+     * @param string[][]|string[]|null[] $namespaces indexed by namespace name
      */
-    public static function registerAutoloadNamespaces(array $namespaces) : void
+    public static function registerAutoloadNamespaces(array $namespaces): void
     {
-        self::$autoloadNamespaces = \array_merge(self::$autoloadNamespaces, $namespaces);
+        self::$autoloadNamespaces = array_merge(self::$autoloadNamespaces, $namespaces);
     }
 
     /**
@@ -111,11 +121,11 @@ final class AnnotationRegistry
      *
      * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
-    public static function registerLoader(callable $callable) : void
+    public static function registerLoader(callable $callable): void
     {
         // Reset our static cache now that we have a new loader to work with
-        self::$failedToAutoload   = [];
-        self::$loaders[]          = $callable;
+        self::$failedToAutoload = [];
+        self::$loaders[]        = $callable;
     }
 
     /**
@@ -123,53 +133,59 @@ final class AnnotationRegistry
      *
      * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
-    public static function registerUniqueLoader(callable $callable) : void
+    public static function registerUniqueLoader(callable $callable): void
     {
-        if ( ! in_array($callable, self::$loaders, true) ) {
-            self::registerLoader($callable);
+        if (in_array($callable, self::$loaders, true)) {
+            return;
         }
+
+        self::registerLoader($callable);
     }
 
     /**
      * Autoloads an annotation class silently.
      */
-    public static function loadAnnotationClass(string $class) : bool
+    public static function loadAnnotationClass(string $class): bool
     {
-        if (\class_exists($class, false)) {
+        if (class_exists($class, false)) {
             return true;
         }
 
-        if (\array_key_exists($class, self::$failedToAutoload)) {
+        if (array_key_exists($class, self::$failedToAutoload)) {
             return false;
         }
 
-        foreach (self::$autoloadNamespaces AS $namespace => $dirs) {
-            if (\strpos($class, $namespace) === 0) {
-                $file = \str_replace('\\', \DIRECTORY_SEPARATOR, $class) . '.php';
+        foreach (self::$autoloadNamespaces as $namespace => $dirs) {
+            if (strpos($class, $namespace) !== 0) {
+                continue;
+            }
 
-                if ($dirs === null) {
-                    if ($path = stream_resolve_include_path($file)) {
-                        require $path;
+            $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+
+            if ($dirs === null) {
+                if ($path = stream_resolve_include_path($file)) {
+                    require $path;
+
+                    return true;
+                }
+            } else {
+                foreach ((array) $dirs as $dir) {
+                    if (is_file($dir . DIRECTORY_SEPARATOR . $file)) {
+                        require $dir . DIRECTORY_SEPARATOR . $file;
+
                         return true;
-                    }
-                } else {
-                    foreach((array) $dirs AS $dir) {
-                        if (is_file($dir . \DIRECTORY_SEPARATOR . $file)) {
-                            require $dir . \DIRECTORY_SEPARATOR . $file;
-                            return true;
-                        }
                     }
                 }
             }
         }
 
-        foreach (self::$loaders AS $loader) {
+        foreach (self::$loaders as $loader) {
             if ($loader($class) === true) {
                 return true;
             }
         }
 
-        if (self::$loaders === [] && self::$autoloadNamespaces === [] && self::$registerFileUsed === false && \class_exists($class)) {
+        if (self::$loaders === [] && self::$autoloadNamespaces === [] && self::$registerFileUsed === false && class_exists($class)) {
             return true;
         }
 

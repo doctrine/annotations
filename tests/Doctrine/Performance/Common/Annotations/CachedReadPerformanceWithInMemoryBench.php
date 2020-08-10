@@ -21,7 +21,7 @@ final class CachedReadPerformanceWithInMemoryBench
     /** @var ReflectionMethod */
     private $method;
 
-    public function initialize() : void
+    public function initialize(): void
     {
         $this->reader = new CachedReader(new AnnotationReader(), new ArrayCache());
         $this->method = new ReflectionMethod(Controller::class, 'helloAction');
@@ -31,7 +31,7 @@ final class CachedReadPerformanceWithInMemoryBench
      * @Revs(500)
      * @Iterations(5)
      */
-    public function bench() : void
+    public function bench(): void
     {
         $this->reader->getMethodAnnotations($this->method);
     }

@@ -4,6 +4,9 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use ReflectionClass;
+
+use function class_exists;
 
 class SimpleAnnotationReaderTest extends AbstractReaderTest
 {
@@ -97,7 +100,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testInvalidAnnotationUsageButIgnoredClass()
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
+        $ref    = new ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
         $annots = $reader->getClassAnnotations($ref);
 
         self::assertCount(1, $annots);
@@ -117,7 +120,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testInvalidAnnotationButIgnored()
     {
         $reader = $this->getReader();
-        $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
+        $class  = new ReflectionClass(Fixtures\ClassDDC1660::class);
 
         self::assertTrue(class_exists(Fixtures\Annotation\Version::class));
         self::assertCount(1, $reader->getClassAnnotations($class));

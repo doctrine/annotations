@@ -6,6 +6,14 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\FileCacheReader;
 use Doctrine\Common\Annotations\Reader;
 
+use function glob;
+use function method_exists;
+use function mkdir;
+use function rmdir;
+use function sys_get_temp_dir;
+use function uniqid;
+use function unlink;
+
 class FileCacheReaderTest extends AbstractReaderTest
 {
     private $cacheDir;
@@ -14,14 +22,16 @@ class FileCacheReaderTest extends AbstractReaderTest
     {
         $this->cacheDir = sys_get_temp_dir() . '/annotations_' . uniqid('', true);
         @mkdir($this->cacheDir);
+
         return new FileCacheReader(new AnnotationReader(), $this->cacheDir);
     }
 
     public function tearDown(): void
     {
-        foreach (glob($this->cacheDir.'/*.php') AS $file) {
+        foreach (glob($this->cacheDir . '/*.php') as $file) {
             unlink($file);
         }
+
         rmdir($this->cacheDir);
     }
 

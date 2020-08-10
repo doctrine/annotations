@@ -10,4 +10,4 @@ parameters:
         - '#Property Doctrine\\Tests\\Common\\Annotations\\DummyClassNonAnnotationProblem::\$foo has unknown class#'
 
         # That tag is empty on purpose
-        - '#PHPDoc tag @var has invalid value \(\)\: Unexpected token "\\n     ", expected type at offset 15#'
+        - '#PHPDoc tag @var has invalid value \(\)\: Unexpected token "\*/", expected type at offset 9#'
