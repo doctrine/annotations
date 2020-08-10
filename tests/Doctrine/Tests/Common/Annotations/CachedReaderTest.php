@@ -157,53 +157,39 @@ class CachedReaderTest extends AbstractReaderTest
         /* @var $cache Cache|MockObject */
         $cache = $this->createMock('Doctrine\Common\Cache\Cache');
 
-        // first pass => cache ok for method 1
-        // we load annotations AND filemtimes for this file
         $cache
-            ->expects($this->at(0))
+            ->expects($this->exactly(6))
             ->method('fetch')
-            ->with($this->equalTo($cacheKeyMethod1))
-            ->will($this->returnValue([$route1])); // Result was cached, but there was an annotation;
-        $cache
-            ->expects($this->at(1))
-            ->method('fetch')
-            ->with($this->equalTo('[C]' . $cacheKeyMethod1))
-            ->will($this->returnValue($cacheTime));
+            ->withConsecutive(
+                // first pass => cache ok for method 1
+                // we load annotations AND filemtimes for this file
+                [$this->equalTo($cacheKeyMethod1)],
+                [$this->equalTo('[C]' . $cacheKeyMethod1)],
+                // second pass => cache ok for method 2
+                // filemtime is seen as fresh even if it's not
+                [$this->equalTo($cacheKeyMethod2)],
+                [$this->equalTo('[C]' . $cacheKeyMethod2)],
+                // third pass => cache stale for method 2
+                // filemtime is seen as not fresh => we save
+                [$this->equalTo($cacheKeyMethod2)],
+                [$this->equalTo('[C]' . $cacheKeyMethod2)]
+            )
+            ->willReturnOnConsecutiveCalls(
+                [$route1], // Result was cached, but there was an annotation;
+                $cacheTime,
+                [$route2], // Result was cached, but there was an annotation;
+                $cacheTime,
+                [$route2], // Result was cached, but there was an annotation;
+                $cacheTime
+            );
 
-        // second pass => cache ok for method 2
-        // filemtime is seen as fresh even if it's not
         $cache
-            ->expects($this->at(2))
-            ->method('fetch')
-            ->with($this->equalTo($cacheKeyMethod2))
-            ->will($this->returnValue([$route2])); // Result was cached, but there was an annotation;
-        $cache
-            ->expects($this->at(3))
-            ->method('fetch')
-            ->with($this->equalTo('[C]' . $cacheKeyMethod2))
-            ->will($this->returnValue($cacheTime));
-
-        // third pass => cache stale for method 2
-        // filemtime is seen as not fresh => we save
-        $cache
-            ->expects($this->at(4))
-            ->method('fetch')
-            ->with($this->equalTo($cacheKeyMethod2))
-            ->will($this->returnValue([$route2])); // Result was cached, but there was an annotation;
-        $cache
-            ->expects($this->at(5))
-            ->method('fetch')
-            ->with($this->equalTo('[C]' . $cacheKeyMethod2))
-            ->will($this->returnValue($cacheTime));
-        $cache
-            ->expects($this->at(6))
+            ->expects($this->exactly(2))
             ->method('save')
-            ->with($this->equalTo($cacheKeyMethod2))
-        ;
-        $cache
-            ->expects($this->at(7))
-            ->method('save')
-            ->with($this->equalTo('[C]'.$cacheKeyMethod2))
+            ->withConsecutive(
+                [$this->equalTo($cacheKeyMethod2)],
+                [$this->equalTo('[C]'.$cacheKeyMethod2)]
+            )
         ;
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
@@ -228,26 +214,24 @@ class CachedReaderTest extends AbstractReaderTest
         /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
         $cache = $this->createMock(Cache::class);
         $cache
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('fetch')
-            ->with($this->equalTo($cacheKey))
-            ->will($this->returnValue([])) // Result was cached, but there was no annotation
+            ->withConsecutive(
+                [$this->equalTo($cacheKey)],
+                [$this->equalTo('[C]'.$cacheKey)]
+            )
+            ->willReturnOnConsecutiveCalls(
+                [], // Result was cached, but there was no annotation
+                $lastCacheModification
+            )
         ;
         $cache
-            ->expects($this->at(1))
-            ->method('fetch')
-            ->with($this->equalTo('[C]'.$cacheKey))
-            ->will($this->returnValue($lastCacheModification))
-        ;
-        $cache
-            ->expects($this->at(2))
+            ->expects($this->exactly(2))
             ->method('save')
-            ->with($this->equalTo($cacheKey))
-        ;
-        $cache
-            ->expects($this->at(3))
-            ->method('save')
-            ->with($this->equalTo('[C]'.$cacheKey))
+            ->withConsecutive(
+                [$this->equalTo($cacheKey)],
+                [$this->equalTo('[C]'.$cacheKey)]
+            )
         ;
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
@@ -268,15 +252,16 @@ class CachedReaderTest extends AbstractReaderTest
         /* @var $cache Cache|\PHPUnit_Framework_MockObject_MockObject */
         $cache = $this->createMock('Doctrine\Common\Cache\Cache');
         $cache
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('fetch')
-            ->with($this->equalTo($cacheKey))
-            ->will($this->returnValue([$route])); // Result was cached, but there was an annotation;
-        $cache
-            ->expects($this->at(1))
-            ->method('fetch')
-            ->with($this->equalTo('[C]' . $cacheKey))
-            ->will($this->returnValue($lastCacheModification));
+            ->withConsecutive(
+                [$this->equalTo($cacheKey)],
+                [$this->equalTo('[C]' . $cacheKey)]
+            )
+            ->willReturnOnConsecutiveCalls(
+                [$route],
+                $lastCacheModification
+            );
         $cache->expects(self::never())->method('save');
 
         $reader = new CachedReader(new AnnotationReader(), $cache, true);
