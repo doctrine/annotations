@@ -179,7 +179,10 @@ class TokenParser
     public function parseNamespace()
     {
         $name = '';
-        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR || (\PHP_VERSION_ID >= 80000 && ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)))) {
+        while (($token = $this->next()) && ($token[0] === T_STRING || $token[0] === T_NS_SEPARATOR || (
+            \PHP_VERSION_ID >= 80000 &&
+            ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
+        ))) {
             $name .= $token[1];
         }
 
