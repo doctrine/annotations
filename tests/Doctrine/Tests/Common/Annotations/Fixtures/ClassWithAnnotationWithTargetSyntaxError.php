@@ -9,13 +9,13 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError;
  */
 class ClassWithAnnotationWithTargetSyntaxError
 {
-    /**
-     * @AnnotationWithTargetSyntaxError()
-     */
+    /** @AnnotationWithTargetSyntaxError() */
     public $foo;
 
     /**
      * @AnnotationWithTargetSyntaxError()
      */
-    public function bar(){}
+    public function bar(): void
+    {
+    }
 }

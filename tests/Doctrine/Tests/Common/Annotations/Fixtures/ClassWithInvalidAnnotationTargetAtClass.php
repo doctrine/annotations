@@ -9,9 +9,6 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetPropertyMethod;
  */
 class ClassWithInvalidAnnotationTargetAtClass
 {
-
-    /**
-     * @AnnotationTargetPropertyMethod("Bar")
-     */
+    /** @AnnotationTargetPropertyMethod("Bar") */
     public $foo;
 }

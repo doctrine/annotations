@@ -19,16 +19,18 @@
 
 namespace Doctrine\Common\Annotations;
 
+use Exception;
+
+use function get_class;
+use function gettype;
+use function implode;
+use function is_object;
+use function sprintf;
+
 /**
  * Description of AnnotationException
- *
- * @since  2.0
- * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author Jonathan Wage <jonwage@gmail.com>
- * @author Roman Borschel <roman@code-factory.org>
  */
-class AnnotationException extends \Exception
+class AnnotationException extends Exception
 {
     /**
      * Creates a new AnnotationException describing a Syntax error.
@@ -58,8 +60,6 @@ class AnnotationException extends \Exception
      * Creates a new AnnotationException describing an error which occurred during
      * the creation of the annotation.
      *
-     * @since 2.2
-     *
      * @param string $message
      *
      * @return AnnotationException
@@ -72,8 +72,6 @@ class AnnotationException extends \Exception
     /**
      * Creates a new AnnotationException describing a type error.
      *
-     * @since 1.1
-     *
      * @param string $message
      *
      * @return AnnotationException
@@ -85,8 +83,6 @@ class AnnotationException extends \Exception
 
     /**
      * Creates a new AnnotationException describing a constant semantical error.
-     *
-     * @since 2.3
      *
      * @param string $identifier
      * @param string $context
@@ -104,8 +100,6 @@ class AnnotationException extends \Exception
 
     /**
      * Creates a new AnnotationException describing an type error of an attribute.
-     *
-     * @since 2.2
      *
      * @param string $attributeName
      * @param string $annotationName
@@ -130,8 +124,6 @@ class AnnotationException extends \Exception
     /**
      * Creates a new AnnotationException describing an required error of an attribute.
      *
-     * @since 2.2
-     *
      * @param string $attributeName
      * @param string $annotationName
      * @param string $context
@@ -153,8 +145,6 @@ class AnnotationException extends \Exception
     /**
      * Creates a new AnnotationException describing a invalid enummerator.
      *
-     * @since 2.4
-     *
      * @param string $attributeName
      * @param string $annotationName
      * @param string $context
@@ -167,7 +157,7 @@ class AnnotationException extends \Exception
     {
         return new self(sprintf(
             '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
-            $attributeName, 
+            $attributeName,
             $annotationName,
             $context,
             implode(', ', $available),
@@ -181,7 +171,7 @@ class AnnotationException extends \Exception
     public static function optimizerPlusSaveComments()
     {
         return new self(
-            "You have to enable opcache.save_comments=1 or zend_optimizerplus.save_comments=1."
+            'You have to enable opcache.save_comments=1 or zend_optimizerplus.save_comments=1.'
         );
     }
 
@@ -191,7 +181,7 @@ class AnnotationException extends \Exception
     public static function optimizerPlusLoadComments()
     {
         return new self(
-            "You have to enable opcache.load_comments=1 or zend_optimizerplus.load_comments=1."
+            'You have to enable opcache.load_comments=1 or zend_optimizerplus.load_comments=1.'
         );
     }
 }

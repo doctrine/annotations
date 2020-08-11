@@ -3,3 +3,4 @@
 /composer.phar
 /phpbench.json
 /phpunit.xml
+/.phpcs-cache

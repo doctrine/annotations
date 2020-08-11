@@ -12,14 +12,14 @@ class ClassThatUsesTraitThatUsesAnotherTraitWithMethods
     /**
      * @Route("/someprefix")
      */
-    public function method1()
+    public function method1(): void
     {
     }
 
     /**
      * @Route("/someotherprefix")
      */
-    public function method2()
+    public function method2(): void
     {
     }
 }

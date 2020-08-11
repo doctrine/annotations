@@ -3,10 +3,16 @@
 namespace Doctrine\Tests\Common\Annotations;
 
 /** @Annotation */
-class True {}
+class True
+{
+}
 
 /** @Annotation */
-class False {}
+class False
+{
+}
 
 /** @Annotation */
-class Null {}
+class Null
+{
+}

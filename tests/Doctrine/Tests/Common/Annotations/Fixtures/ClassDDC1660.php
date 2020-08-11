@@ -8,7 +8,6 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 class ClassDDC1660
 {
-
     /**
      * @var     string
      * @since   2.0
@@ -18,7 +17,9 @@ class ClassDDC1660
 
     /**
      * @param   string
+     *
      * @return  string
+     *
      * @since   2.0
      * @version 1
      */
@@ -26,5 +27,4 @@ class ClassDDC1660
     {
         return null;
     }
-
 }

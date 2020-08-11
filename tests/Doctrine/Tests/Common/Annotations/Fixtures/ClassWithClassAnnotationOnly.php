@@ -9,5 +9,4 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetClass;
  */
 class ClassWithClassAnnotationOnly
 {
-
 }

@@ -2,18 +2,21 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use BadMethodCallException;
 use Doctrine\Common\Annotations\Annotation;
 use PHPUnit\Framework\TestCase;
 
+use function sprintf;
+
 final class AnnotationTest extends TestCase
 {
-    public function testMagicGetThrowsBadMethodCallException()
+    public function testMagicGetThrowsBadMethodCallException(): void
     {
         $name = 'foo';
 
         $annotation = new Annotation([]);
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(sprintf(
             "Unknown property '%s' on annotation '%s'.",
             $name,
@@ -23,13 +26,13 @@ final class AnnotationTest extends TestCase
         $annotation->{$name};
     }
 
-    public function testMagicSetThrowsBadMethodCallException()
+    public function testMagicSetThrowsBadMethodCallException(): void
     {
         $name = 'foo';
 
         $annotation = new Annotation([]);
 
-        $this->expectException(\BadMethodCallException::class);
+        $this->expectException(BadMethodCallException::class);
         $this->expectExceptionMessage(sprintf(
             "Unknown property '%s' on annotation '%s'.",
             $name,

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<ruleset
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd"
+>
+    <arg name="basepath" value="."/>
+    <arg name="extensions" value="php"/>
+    <arg name="parallel" value="80"/>
+    <arg name="cache" value=".phpcs-cache"/>
+    <arg name="colors"/>
+
+    <!-- Show progress of the run and show sniff names -->
+    <arg value="ps"/>
+
+    <file>lib</file>
+    <file>tests</file>
+
+    <rule ref="Doctrine">
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingNativeTypeHint"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming"/>
+        <exclude name="SlevomatCodingStandard.Classes.SuperfluousTraitNaming.SuperfluousSuffix"/>
+        <exclude name="SlevomatCodingStandard.Classes.DisallowLateStaticBindingForConstants.DisallowedLateStaticBindingForConstant"/>
+        <exclude name="SlevomatCodingStandard.ControlStructures.ControlStructureSpacing.IncorrectLinesCountAfterLastControlStructure"/>
+
+        <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+        <!-- https://github.com/slevomat/coding-standard/issues/867 -->
+        <exclude name="SlevomatCodingStandard.ControlStructures.JumpStatementsSpacing.IncorrectLinesCountAfterLastControlStructure"/>
+        <!-- See https://github.com/squizlabs/PHP_CodeSniffer/issues/2937 -->
+        <exclude name="Squiz.Arrays.ArrayDeclaration.ValueNoNewline"/>
+        <exclude name="Squiz.NamingConventions.ValidVariableName.PublicHasUnderscore"/>
+    </rule>
+
+    <!-- Disable the rules that will require PHP 7.4 -->
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint">
+        <properties>
+            <property name="enableNativeTypeHint" value="false"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash.UseStartsWithBackslash">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR12.Files.ImportStatement.LeadingSlash">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints.UsedLongTypeHint">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace.UseFromSameNamespace">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash.UseStartsWithBackslash">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing.IncorrectLinesCountBetweenSameTypeOfUse">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine.MultipleUsesPerLine">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+
+    <!-- https://github.com/slevomat/coding-standard/issues/1066 -->
+    <rule ref="SlevomatCodingStandard.PHP.UselessParentheses">
+        <exclude-pattern>*/lib/Doctrine/Common/Annotations/DocParser.php</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/PhpParserTest.php</exclude-pattern>
+    </rule>
+
+    <!-- https://github.com/slevomat/coding-standard/issues/1067 -->
+    <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit.UselessElse">
+        <exclude-pattern>*/lib/Doctrine/Common/Annotations/TokenParser.php</exclude-pattern>
+    </rule>
+</ruleset>

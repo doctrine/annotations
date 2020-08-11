@@ -8,13 +8,12 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 final class AnnotationEnum
 {
-    const ONE   = 'ONE';
-    const TWO   = 'TWO';
-    const THREE = 'THREE';
+    public const ONE   = 'ONE';
+    public const TWO   = 'TWO';
+    public const THREE = 'THREE';
 
     /**
      * @var mixed
-     *
      * @Enum({"ONE","TWO","THREE"})
      */
     public $value;

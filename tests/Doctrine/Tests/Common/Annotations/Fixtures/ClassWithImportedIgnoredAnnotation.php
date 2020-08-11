@@ -9,7 +9,7 @@ class ClassWithImportedIgnoredAnnotation
     /**
      * @param string $foo
      */
-    public function something($foo)
+    public function something($foo): void
     {
     }
 }

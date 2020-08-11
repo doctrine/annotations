@@ -16,7 +16,7 @@ final class ReadPerformanceBench
     /** @var AnnotationReader */
     private $reader;
 
-    public function initialize() : void
+    public function initialize(): void
     {
         $this->reader = new AnnotationReader();
     }
@@ -25,7 +25,7 @@ final class ReadPerformanceBench
      * @Revs(500)
      * @Iterations(5)
      */
-    public function bench() : void
+    public function bench(): void
     {
         $this->reader->getMethodAnnotations($this->method);
     }

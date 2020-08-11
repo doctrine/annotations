@@ -18,7 +18,7 @@ trait MethodInitializer
     /** @var string */
     private $classDocBlock;
 
-    public function initializeMethod() : void
+    public function initializeMethod(): void
     {
         $this->method         = new ReflectionMethod(Controller::class, 'helloAction');
         $this->methodDocBlock = $this->method->getDocComment();

@@ -2,7 +2,6 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-
 /**
  * @Annotation
  * @Target("METHOD")

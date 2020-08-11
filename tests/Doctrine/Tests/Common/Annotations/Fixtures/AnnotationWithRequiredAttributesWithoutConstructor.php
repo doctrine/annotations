@@ -8,7 +8,6 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 final class AnnotationWithRequiredAttributesWithoutConstructor
 {
-
     /**
      * @Required
      * @var string
@@ -20,5 +19,4 @@ final class AnnotationWithRequiredAttributesWithoutConstructor
      * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation
      */
     public $annot;
-
 }

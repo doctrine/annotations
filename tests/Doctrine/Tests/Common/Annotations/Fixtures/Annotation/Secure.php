@@ -2,6 +2,8 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures\Annotation;
 
+use function is_string;
+
 /** @Annotation */
 class Secure
 {
