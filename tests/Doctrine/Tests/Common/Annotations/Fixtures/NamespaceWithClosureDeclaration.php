@@ -7,7 +7,7 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
 
 $var = 1;
-static function () {
+static function (): void {
 };
 
 class NamespaceWithClosureDeclaration

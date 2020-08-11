@@ -19,7 +19,7 @@ include __DIR__ . '/DCOM58Entity.php';
  */
 class DCOM58Test extends TestCase
 {
-    public function testIssue()
+    public function testIssue(): void
     {
         $reader = new AnnotationReader();
         $result = $reader->getClassAnnotations(new ReflectionClass(__NAMESPACE__ . '\MappedClass'));
@@ -32,7 +32,7 @@ class DCOM58Test extends TestCase
         self::assertArrayNotHasKey('', $classAnnotations, 'Class "xxx" is not a valid entity or mapped super class.');
     }
 
-    public function testIssueGlobalNamespace()
+    public function testIssueGlobalNamespace(): void
     {
         $docblock = '@Entity';
         $parser   = new DocParser();
@@ -44,7 +44,7 @@ class DCOM58Test extends TestCase
         self::assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
-    public function testIssueNamespaces()
+    public function testIssueNamespaces(): void
     {
         $docblock = '@Entity';
         $parser   = new DocParser();
@@ -56,7 +56,7 @@ class DCOM58Test extends TestCase
         self::assertInstanceOf(Doctrine\ORM\Entity::class, $annots[0]);
     }
 
-    public function testIssueMultipleNamespaces()
+    public function testIssueMultipleNamespaces(): void
     {
         $docblock = '@Entity';
         $parser   = new DocParser();
@@ -69,7 +69,7 @@ class DCOM58Test extends TestCase
         self::assertInstanceOf(Doctrine\ORM\Mapping\Entity::class, $annots[0]);
     }
 
-    public function testIssueWithNamespacesOrImports()
+    public function testIssueWithNamespacesOrImports(): void
     {
         $docblock = '@Entity';
         $parser   = new DocParser();
@@ -79,7 +79,7 @@ class DCOM58Test extends TestCase
         self::assertInstanceOf(\Entity::class, $annots[0]);
     }
 
-    public function testIssueSimpleAnnotationReader()
+    public function testIssueSimpleAnnotationReader(): void
     {
         $reader = new SimpleAnnotationReader();
         $reader->addNamespace('Doctrine\Tests\Common\Annotations\Ticket\Doctrine\ORM\Mapping');

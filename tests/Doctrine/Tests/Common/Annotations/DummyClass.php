@@ -45,7 +45,7 @@ class DummyClass
      *
      * @DummyAnnotation("\d{4}-[01]\d-[0-3]\d [0-2]\d:[0-5]\d:[0-5]\d")
      */
-    public function getField3()
+    public function getField3(): void
     {
     }
 }

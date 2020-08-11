@@ -10,7 +10,7 @@ use function sprintf;
 
 final class AnnotationTest extends TestCase
 {
-    public function testMagicGetThrowsBadMethodCallException()
+    public function testMagicGetThrowsBadMethodCallException(): void
     {
         $name = 'foo';
 
@@ -26,7 +26,7 @@ final class AnnotationTest extends TestCase
         $annotation->{$name};
     }
 
-    public function testMagicSetThrowsBadMethodCallException()
+    public function testMagicSetThrowsBadMethodCallException(): void
     {
         $name = 'foo';
 

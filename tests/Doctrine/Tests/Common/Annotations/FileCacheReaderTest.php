@@ -38,7 +38,7 @@ class FileCacheReaderTest extends AbstractReaderTest
     /**
      * @group DCOM-81
      */
-    public function testAttemptToCreateAnnotationCacheDir()
+    public function testAttemptToCreateAnnotationCacheDir(): void
     {
         $this->cacheDir = sys_get_temp_dir() . '/not_existed_dir_' . uniqid('', true);
 

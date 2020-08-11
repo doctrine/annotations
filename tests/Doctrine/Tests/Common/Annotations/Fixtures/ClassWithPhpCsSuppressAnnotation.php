@@ -7,7 +7,7 @@ class ClassWithPhpCsSuppressAnnotation
     /**
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingParameterTypeHint
      */
-    public function foo($parameterWithoutTypehint)
+    public function foo($parameterWithoutTypehint): void
     {
     }
 }

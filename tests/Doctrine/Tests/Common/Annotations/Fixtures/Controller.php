@@ -51,10 +51,8 @@ class Controller
 
     /**
      * Creates the ACL for the passed object identity
-     *
-     * @return void
      */
-    private function createObjectIdentity(ObjectIdentityInterface $oid)
+    private function createObjectIdentity(ObjectIdentityInterface $oid): void
     {
         $classId = $this->createOrRetrieveClassId($oid->getType());
 
@@ -104,10 +102,8 @@ class Controller
      * Deletes all ACEs for the given object identity primary key.
      *
      * @param integer $oidPK
-     *
-     * @return void
      */
-    private function deleteAccessControlEntries($oidPK)
+    private function deleteAccessControlEntries($oidPK): void
     {
         $this->connection->executeQuery($this->getDeleteAccessControlEntriesSql($oidPK));
     }
@@ -116,10 +112,8 @@ class Controller
      * Deletes the object identity from the database.
      *
      * @param integer $pk
-     *
-     * @return void
      */
-    private function deleteObjectIdentity($pk)
+    private function deleteObjectIdentity($pk): void
     {
         $this->connection->executeQuery($this->getDeleteObjectIdentitySql($pk));
     }
@@ -128,20 +122,16 @@ class Controller
      * Deletes all entries from the relations table from the database.
      *
      * @param integer $pk
-     *
-     * @return void
      */
-    private function deleteObjectIdentityRelations($pk)
+    private function deleteObjectIdentityRelations($pk): void
     {
         $this->connection->executeQuery($this->getDeleteObjectIdentityRelationsSql($pk));
     }
 
     /**
      * This regenerates the ancestor table which is used for fast read access.
-     *
-     * @return void
      */
-    private function regenerateAncestorRelations(AclInterface $acl)
+    private function regenerateAncestorRelations(AclInterface $acl): void
     {
         $pk = $acl->getId();
         $this->connection->executeQuery($this->getDeleteObjectIdentityRelationsSql($pk));
@@ -160,10 +150,8 @@ class Controller
      *
      * @param string $name
      * @param array  $changes
-     *
-     * @return void
      */
-    private function updateFieldAceProperty($name, array $changes)
+    private function updateFieldAceProperty($name, array $changes): void
     {
         $sids       = new \SplObjectStorage();
         $classIds   = new \SplObjectStorage();
@@ -220,10 +208,8 @@ class Controller
      *
      * @param string $name
      * @param array  $changes
-     *
-     * @return void
      */
-    private function updateAceProperty($name, array $changes)
+    private function updateAceProperty($name, array $changes): void
     {
         [$old, $new] = $changes;
 
@@ -275,10 +261,8 @@ class Controller
 
     /**
      * Persists the changes which were made to ACEs to the database.
-     *
-     * @return void
      */
-    private function updateAces(\SplObjectStorage $aces)
+    private function updateAces(\SplObjectStorage $aces): void
     {
         foreach ($aces as $ace) {
             $propertyChanges = $aces->offsetGet($ace);

@@ -21,7 +21,7 @@ class CachedReaderTest extends AbstractReaderTest
 {
     private $cache;
 
-    public function testIgnoresStaleCache()
+    public function testIgnoresStaleCache(): void
     {
         $cache = time() - 10;
         touch(__DIR__ . '/Fixtures/Controller.php', $cache + 10);
@@ -32,7 +32,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithParentClass()
+    public function testIgnoresStaleCacheWithParentClass(): void
     {
         $cache = time() - 10;
         touch(__DIR__ . '/Fixtures/ControllerWithParentClass.php', $cache - 10);
@@ -44,7 +44,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithTraits()
+    public function testIgnoresStaleCacheWithTraits(): void
     {
         $cache = time() - 10;
         touch(__DIR__ . '/Fixtures/ControllerWithTrait.php', $cache - 10);
@@ -56,7 +56,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithTraitsThatUseOtherTraits()
+    public function testIgnoresStaleCacheWithTraitsThatUseOtherTraits(): void
     {
         $cache = time() - 10;
 
@@ -72,7 +72,7 @@ class CachedReaderTest extends AbstractReaderTest
     /**
      * @group 62
      */
-    public function testIgnoresStaleCacheWithInterfacesThatExtendOtherInterfaces()
+    public function testIgnoresStaleCacheWithInterfacesThatExtendOtherInterfaces(): void
     {
         $cache = time() - 10;
 
@@ -89,7 +89,7 @@ class CachedReaderTest extends AbstractReaderTest
      * @group 62
      * @group 105
      */
-    public function testUsesFreshCacheWithTraitsThatUseOtherTraits()
+    public function testUsesFreshCacheWithTraitsThatUseOtherTraits(): void
     {
         $cacheTime = time();
 
@@ -245,7 +245,7 @@ class CachedReaderTest extends AbstractReaderTest
         return $reader;
     }
 
-    protected function doTestCacheFresh($className, $lastCacheModification)
+    protected function doTestCacheFresh($className, $lastCacheModification): void
     {
         $cacheKey       = $className;
         $route          = new Route();

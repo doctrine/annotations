@@ -56,7 +56,7 @@ class AnnotationRegistryTest extends TestCase
         AnnotationRegistry::registerLoader('test' . random_int(10, 10000));
     }
 
-    protected function setStaticField($class, $field, $value)
+    protected function setStaticField($class, $field, $value): void
     {
         $reflection = new ReflectionProperty($class, $field);
 

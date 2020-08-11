@@ -15,7 +15,7 @@ class ClassWithAnnotationWithTargetSyntaxError
     /**
      * @AnnotationWithTargetSyntaxError()
      */
-    public function bar()
+    public function bar(): void
     {
     }
 }

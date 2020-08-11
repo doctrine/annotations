@@ -12,7 +12,7 @@ trait TraitWithAnnotatedMethod
     /**
      * @Autoload
      */
-    public function traitMethod()
+    public function traitMethod(): void
     {
     }
 }

@@ -33,7 +33,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         return new AnnotationReader($parser);
     }
 
-    public function testMethodAnnotationFromTrait()
+    public function testMethodAnnotationFromTrait(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(Fixtures\ClassUsesTrait::class);
@@ -45,7 +45,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
-    public function testMethodAnnotationFromOverwrittenTrait()
+    public function testMethodAnnotationFromOverwrittenTrait(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(Fixtures\ClassOverwritesTrait::class);
@@ -54,7 +54,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertInstanceOf(Bar2\Autoload::class, $annotations[0]);
     }
 
-    public function testPropertyAnnotationFromTrait()
+    public function testPropertyAnnotationFromTrait(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(Fixtures\ClassUsesTrait::class);
@@ -66,7 +66,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotations[0]);
     }
 
-    public function testOmitNotRegisteredAnnotation()
+    public function testOmitNotRegisteredAnnotation(): void
     {
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
@@ -82,7 +82,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 45
      * @runInSeparateProcess
      */
-    public function testClassAnnotationIsIgnored()
+    public function testClassAnnotationIsIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedAtClassLevel::class);
@@ -96,7 +96,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 45
      * @runInSeparateProcess
      */
-    public function testMethodAnnotationIsIgnored()
+    public function testMethodAnnotationIsIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedAtMethodLevel::class);
@@ -110,7 +110,7 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 45
      * @runInSeparateProcess
      */
-    public function testPropertyAnnotationIsIgnored()
+    public function testPropertyAnnotationIsIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedAtPropertyLevel::class);
@@ -134,7 +134,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
 
-    public function testClassWithFullPathUseStatement()
+    public function testClassWithFullPathUseStatement(): void
     {
         if (class_exists(SingleUseAnnotation::class, false)) {
             throw new LogicException(
@@ -152,7 +152,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertInstanceOf(SingleUseAnnotation::class, $annotations[0]);
     }
 
-    public function testPhpCsSuppressAnnotationIsIgnored()
+    public function testPhpCsSuppressAnnotationIsIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(ClassWithPhpCsSuppressAnnotation::class);
@@ -179,7 +179,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         }
     }
 
-    public function testPHPCodeSnifferAnnotationsAreIgnored()
+    public function testPHPCodeSnifferAnnotationsAreIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(ClassWithPHPCodeSnifferAnnotation::class);
@@ -187,7 +187,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
-    public function testPHPStanGenericsAnnotationsAreIgnored()
+    public function testPHPStanGenericsAnnotationsAreIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(ClassWithPHPStanGenericsAnnotations::class);
@@ -201,7 +201,7 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('twigTemplateFunctionName')));
     }
 
-    public function testImportedIgnoredAnnotationIsStillIgnored()
+    public function testImportedIgnoredAnnotationIsStillIgnored(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(ClassWithImportedIgnoredAnnotation::class);

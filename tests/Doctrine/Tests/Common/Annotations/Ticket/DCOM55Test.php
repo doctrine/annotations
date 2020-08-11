@@ -13,7 +13,7 @@ use ReflectionClass;
  */
 class DCOM55Test extends TestCase
 {
-    public function testIssue()
+    public function testIssue(): void
     {
         $class  = new ReflectionClass(__NAMESPACE__ . '\\Dummy');
         $reader = new AnnotationReader();
@@ -22,7 +22,7 @@ class DCOM55Test extends TestCase
         $reader->getClassAnnotations($class);
     }
 
-    public function testAnnotation()
+    public function testAnnotation(): void
     {
         $class  = new ReflectionClass(__NAMESPACE__ . '\\DCOM55Consumer');
         $reader = new AnnotationReader();
@@ -32,7 +32,7 @@ class DCOM55Test extends TestCase
         self::assertInstanceOf(__NAMESPACE__ . '\\DCOM55Annotation', $annots[0]);
     }
 
-    public function testParseAnnotationDocblocks()
+    public function testParseAnnotationDocblocks(): void
     {
         $class  = new ReflectionClass(__NAMESPACE__ . '\\DCOM55Annotation');
         $reader = new AnnotationReader();

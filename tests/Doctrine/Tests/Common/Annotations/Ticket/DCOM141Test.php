@@ -11,7 +11,7 @@ use ReflectionClass;
  */
 class DCOM141Test extends TestCase
 {
-    public function testAnnotationPrefixed()
+    public function testAnnotationPrefixed(): void
     {
         $class  = new ReflectionClass(DCOM141ConsumerPrefixed::class);
         $reader = new AnnotationReader();
@@ -22,7 +22,7 @@ class DCOM141Test extends TestCase
         self::assertEquals('SimpleXMLElement', $annots[0]->classPath);
     }
 
-    public function testAnnotationNotPrefixed()
+    public function testAnnotationNotPrefixed(): void
     {
         $class  = new ReflectionClass(DCOM141ConsumerNotPrefixed::class);
         $reader = new AnnotationReader();

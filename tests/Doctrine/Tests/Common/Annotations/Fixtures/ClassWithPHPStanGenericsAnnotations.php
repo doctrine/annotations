@@ -51,7 +51,7 @@ class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotat
     /**
      * @Template("@foo.html.twig")
      */
-    public function twigTemplateFunctionName()
+    public function twigTemplateFunctionName(): void
     {
     }
 }

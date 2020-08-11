@@ -33,7 +33,7 @@ abstract class AbstractReaderTest extends TestCase
         return new ReflectionClass(DummyClass::class);
     }
 
-    public function testAnnotations()
+    public function testAnnotations(): void
     {
         $class  = $this->getReflectionClass();
         $reader = $this->getReader();
@@ -81,7 +81,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertEquals('hello', $classAnnot->dummyValue);
     }
 
-    public function testAnnotationsWithValidTargets()
+    public function testAnnotationsWithValidTargets(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithValidAnnotationTarget::class);
@@ -92,7 +92,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('nested')));
     }
 
-    public function testAnnotationsWithVarType()
+    public function testAnnotationsWithVarType(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
@@ -104,7 +104,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(Fixtures\AnnotationTargetAll::class, $barAnnot[0]->annotation);
     }
 
-    public function testAtInDescription()
+    public function testAtInDescription(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAtInDescriptionAndAnnotation::class);
@@ -116,7 +116,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(Fixtures\AnnotationTargetPropertyMethod::class, $barAnnot[0]);
     }
 
-    public function testClassWithWithDanglingComma()
+    public function testClassWithWithDanglingComma(): void
     {
         $reader = $this->getReader();
         $annots = $reader->getClassAnnotations(new ReflectionClass(DummyClassWithDanglingComma::class));
@@ -124,7 +124,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $annots);
     }
 
-    public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtClassDocBlock(): void
     {
         $reader = $this->getReader();
         if ($this->expectException) {
@@ -135,14 +135,14 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getClassAnnotations(new ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class));
     }
 
-    public function testClassWithWithInclude()
+    public function testClassWithWithInclude(): void
     {
         $reader = $this->getReader();
         $annots = $reader->getClassAnnotations(new ReflectionClass(Fixtures\ClassWithRequire::class));
         self::assertCount(1, $annots);
     }
 
-    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock(): void
     {
         $reader = $this->getReader();
         if ($this->expectException) {
@@ -153,7 +153,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getPropertyAnnotations(new ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'foo'));
     }
 
-    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock(): void
     {
         $reader = $this->getReader();
         if ($this->expectException) {
@@ -164,7 +164,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getPropertyAnnotations(new ReflectionProperty(Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class, 'bar'));
     }
 
-    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock(): void
     {
         $reader = $this->getReader();
         if ($this->expectException) {
@@ -175,7 +175,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getMethodAnnotations(new ReflectionMethod(Fixtures\ClassWithInvalidAnnotationTargetAtMethod::class, 'functionName'));
     }
 
-    public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock()
+    public function testClassWithAnnotationWithTargetSyntaxErrorAtClassDocBlock(): void
     {
         $reader = $this->getReader();
         $this->expectException(AnnotationException::class);
@@ -183,7 +183,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getClassAnnotations(new ReflectionClass(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class));
     }
 
-    public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock()
+    public function testClassWithAnnotationWithTargetSyntaxErrorAtPropertyDocBlock(): void
     {
         $reader = $this->getReader();
         $this->expectException(AnnotationException::class);
@@ -191,7 +191,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getPropertyAnnotations(new ReflectionProperty(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class, 'foo'));
     }
 
-    public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock()
+    public function testClassWithAnnotationWithTargetSyntaxErrorAtMethodDocBlock(): void
     {
         $reader = $this->getReader();
         $this->expectException(AnnotationException::class);
@@ -199,7 +199,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getMethodAnnotations(new ReflectionMethod(Fixtures\ClassWithAnnotationWithTargetSyntaxError::class, 'bar'));
     }
 
-    public function testClassWithPropertyInvalidVarTypeError()
+    public function testClassWithPropertyInvalidVarTypeError(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
@@ -209,7 +209,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getPropertyAnnotations($class->getProperty('invalidProperty'));
     }
 
-    public function testClassWithMethodInvalidVarTypeError()
+    public function testClassWithMethodInvalidVarTypeError(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationWithVarType::class);
@@ -219,7 +219,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getMethodAnnotations($class->getMethod('invalidMethod'));
     }
 
-    public function testClassSyntaxErrorContext()
+    public function testClassSyntaxErrorContext(): void
     {
         $reader = $this->getReader();
         $this->expectException(AnnotationException::class);
@@ -227,7 +227,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getClassAnnotations(new ReflectionClass(DummyClassSyntaxError::class));
     }
 
-    public function testMethodSyntaxErrorContext()
+    public function testMethodSyntaxErrorContext(): void
     {
         $reader = $this->getReader();
         $this->expectException(AnnotationException::class);
@@ -235,7 +235,7 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getMethodAnnotations(new ReflectionMethod(DummyClassMethodSyntaxError::class, 'foo'));
     }
 
-    public function testPropertySyntaxErrorContext()
+    public function testPropertySyntaxErrorContext(): void
     {
         $reader = $this->getReader();
         $this->expectException(AnnotationException::class);
@@ -249,14 +249,14 @@ EOT
     /**
      * @group regression
      */
-    public function testMultipleAnnotationsOnSameLine()
+    public function testMultipleAnnotationsOnSameLine(): void
     {
         $reader = $this->getReader();
         $annots = $reader->getPropertyAnnotations(new ReflectionProperty(DummyClass2::class, 'id'));
         self::assertCount(3, $annots);
     }
 
-    public function testNonAnnotationProblem()
+    public function testNonAnnotationProblem(): void
     {
         $reader = $this->getReader();
 
@@ -264,7 +264,7 @@ EOT
         self::assertInstanceOf($name, $annot);
     }
 
-    public function testIncludeIgnoreAnnotation()
+    public function testIncludeIgnoreAnnotation(): void
     {
         $reader = $this->getReader();
 
@@ -272,7 +272,7 @@ EOT
         self::assertFalse(class_exists(Fixtures\IgnoreAnnotationClass::class, false));
     }
 
-    public function testImportWithConcreteAnnotation()
+    public function testImportWithConcreteAnnotation(): void
     {
         $reader      = $this->getReader();
         $property    = new ReflectionProperty(TestImportWithConcreteAnnotation::class, 'field');
@@ -281,7 +281,7 @@ EOT
         self::assertNotNull($reader->getPropertyAnnotation($property, DummyAnnotation::class));
     }
 
-    public function testImportWithInheritance()
+    public function testImportWithInheritance(): void
     {
         $reader = $this->getReader();
 
@@ -297,7 +297,7 @@ EOT
         self::assertInstanceOf(Bar\Name::class, reset($parentAnnotations));
     }
 
-    public function testImportDetectsNotImportedAnnotation()
+    public function testImportDetectsNotImportedAnnotation(): void
     {
         $reader = $this->getReader();
         if ($this->expectException) {
@@ -308,7 +308,7 @@ EOT
         $reader->getPropertyAnnotations(new ReflectionProperty(TestAnnotationNotImportedClass::class, 'field'));
     }
 
-    public function testImportDetectsNonExistentAnnotation()
+    public function testImportDetectsNonExistentAnnotation(): void
     {
         $reader = $this->getReader();
         if ($this->expectException) {
@@ -319,7 +319,7 @@ EOT
         $reader->getPropertyAnnotations(new ReflectionProperty(TestNonExistentAnnotationClass::class, 'field'));
     }
 
-    public function testTopLevelAnnotation()
+    public function testTopLevelAnnotation(): void
     {
         $reader      = $this->getReader();
         $annotations = $reader->getPropertyAnnotations(new ReflectionProperty(TestTopLevelAnnotationClass::class, 'field'));
@@ -328,7 +328,7 @@ EOT
         self::assertInstanceOf(TopLevelAnnotation::class, reset($annotations));
     }
 
-    public function testIgnoresAnnotationsNotPrefixedWithWhitespace()
+    public function testIgnoresAnnotationsNotPrefixedWithWhitespace(): void
     {
         $reader = $this->getReader();
 
@@ -347,7 +347,7 @@ EOT
      * considers to own comments. If this is a class then any later calls to getDocComment() for that class will have
      * undesirable effects. *sigh*
      */
-    public function testResetsPhpParserAfterUse()
+    public function testResetsPhpParserAfterUse(): void
     {
         // If someone has already included our main test fixture this test is invalid. It's important that our require
         // causes this file to be parsed and compiled at a certain point.
@@ -383,7 +383,7 @@ EOT
         self::assertEmpty($annotations);
     }
 
-    public function testErrorWhenInvalidAnnotationIsUsed()
+    public function testErrorWhenInvalidAnnotationIsUsed(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(Fixtures\InvalidAnnotationUsageClass::class);
@@ -395,7 +395,7 @@ EOT
         $reader->getClassAnnotations($ref);
     }
 
-    public function testInvalidAnnotationUsageButIgnoredClass()
+    public function testInvalidAnnotationUsageButIgnoredClass(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
@@ -408,7 +408,7 @@ EOT
      * @group DDC-1660
      * @group regression
      */
-    public function testInvalidAnnotationButIgnored()
+    public function testInvalidAnnotationButIgnored(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassDDC1660::class);
@@ -419,7 +419,7 @@ EOT
         self::assertEmpty($reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
-    public function testAnnotationEnumeratorException()
+    public function testAnnotationEnumeratorException(): void
     {
         $reader = $this->getReader();
         $class  = new ReflectionClass(Fixtures\ClassWithAnnotationEnum::class);
@@ -448,7 +448,7 @@ EOT
     /**
      * @group DCOM-106
      */
-    public function testIgnoreFixMeAndUpperCaseToDo()
+    public function testIgnoreFixMeAndUpperCaseToDo(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(DCOM106::class);
@@ -456,7 +456,7 @@ EOT
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
 
-    public function testWillSkipAnnotationsContainingDashes()
+    public function testWillSkipAnnotationsContainingDashes(): void
     {
         self::assertEmpty(
             $this
@@ -467,7 +467,7 @@ EOT
         );
     }
 
-    public function testWillFailOnAnnotationConstantReferenceContainingDashes()
+    public function testWillFailOnAnnotationConstantReferenceContainingDashes(): void
     {
         $reader     = $this->getReader();
         $reflection = new ReflectionClass(Fixtures\ClassWithAnnotationConstantReferenceWithDashes::class);
@@ -607,7 +607,7 @@ class DummyClassMethodSyntaxError
     /**
      * @DummyAnnotation(@)
      */
-    public function foo()
+    public function foo(): void
     {
     }
 }

@@ -14,7 +14,7 @@ class ClassWithAnnotationWithVarType
     /**
      * @AnnotationWithVarType(annotation = @AnnotationTargetAll)
      */
-    public function bar()
+    public function bar(): void
     {
     }
 
@@ -24,7 +24,7 @@ class ClassWithAnnotationWithVarType
     /**
      * @AnnotationWithVarType(annotation = @AnnotationTargetAnnotation)
      */
-    public function invalidMethod()
+    public function invalidMethod(): void
     {
     }
 }
