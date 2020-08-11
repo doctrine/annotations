@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
 
 class SimpleAnnotationReaderTest extends AbstractReaderTest
@@ -14,6 +15,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testImportDetectsNotImportedAnnotation()
     {
+        $this->ignoreIssues();
         parent::testImportDetectsNotImportedAnnotation();
     }
 
@@ -25,6 +27,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testImportDetectsNonExistentAnnotation()
     {
+        $this->ignoreIssues();
         parent::testImportDetectsNonExistentAnnotation();
     }
 
@@ -36,6 +39,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
     {
+        $this->ignoreIssues();
         parent::testClassWithInvalidAnnotationTargetAtClassDocBlock();
     }
 
@@ -47,6 +51,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
     {
+        $this->ignoreIssues();
         parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock();
     }
 
@@ -58,6 +63,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
     {
+        $this->ignoreIssues();
         parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock();
     }
 
@@ -69,6 +75,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
     {
+        $this->ignoreIssues();
         parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock();
     }
 
@@ -80,6 +87,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      */
     public function testErrorWhenInvalidAnnotationIsUsed()
     {
+        $this->ignoreIssues();
         parent::testErrorWhenInvalidAnnotationIsUsed();
     }
 
@@ -117,7 +125,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
     }
 
-    protected function getReader()
+    protected function getReader(): Reader
     {
         $reader = new SimpleAnnotationReader();
         $reader->addNamespace(__NAMESPACE__);

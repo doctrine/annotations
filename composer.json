@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "doctrine/cache": "1.*",
-        "phpunit/phpunit": "^7.5"
+        "phpstan/phpstan": "^0.12.20",
+        "phpunit/phpunit": "^7.5 || ^9.1.5"
     },
     "config": {
         "sort-packages": true
