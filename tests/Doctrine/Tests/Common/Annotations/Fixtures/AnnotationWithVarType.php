@@ -8,60 +8,36 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 final class AnnotationWithVarType
 {
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     public $mixed;
 
-    /**
-     * @var boolean
-     */
+    /** @var boolean */
     public $boolean;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     public $bool;
 
-    /**
-     * @var float
-     */
+    /** @var float */
     public $float;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $string;
 
-    /**
-     * @var integer
-     */
+    /** @var integer */
     public $integer;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $array;
 
-    /**
-     * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll
-     */
+    /** @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll */
     public $annotation;
 
-    /**
-     * @var array<integer>
-     */
+    /** @var array<integer> */
     public $arrayOfIntegers;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     public $arrayOfStrings;
 
-    /**
-     * @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll[]
-     */
+    /** @var \Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll[] */
     public $arrayOfAnnotations;
-
 }

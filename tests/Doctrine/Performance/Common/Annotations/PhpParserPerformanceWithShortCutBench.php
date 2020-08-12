@@ -19,7 +19,7 @@ final class PhpParserPerformanceWithShortCutBench
     /** @var PhpParser */
     private $parser;
 
-    public function initialize() : void
+    public function initialize(): void
     {
         $this->class  = new ReflectionClass(NamespacedSingleClassLOC1000::class);
         $this->parser = new PhpParser();
@@ -29,7 +29,7 @@ final class PhpParserPerformanceWithShortCutBench
      * @Revs(500)
      * @Iterations(5)
      */
-    public function bench() : void
+    public function bench(): void
     {
         $this->parser->parseClass($this->class);
     }

@@ -4,23 +4,20 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
 use Doctrine\Tests\Common\Annotations\Bar\Autoload;
 
-class ClassUsesTrait {
+class ClassUsesTrait
+{
     use TraitWithAnnotatedMethod;
 
-    /**
-     * @Autoload
-     */
+    /** @Autoload */
     public $aProperty;
 
     /**
      * @Autoload
      */
-    public function someMethod()
+    public function someMethod(): void
     {
-
     }
 }
-
 
 namespace Doctrine\Tests\Common\Annotations\Bar;
 

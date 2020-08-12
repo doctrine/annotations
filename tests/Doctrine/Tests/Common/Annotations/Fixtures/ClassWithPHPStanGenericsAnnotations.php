@@ -7,7 +7,6 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 interface WithPHPStanExtendsAnnotationsInterface
 {
-
 }
 
 /**
@@ -15,7 +14,6 @@ interface WithPHPStanExtendsAnnotationsInterface
  */
 class ClassWithPHPStanExtendsAnnotationsGeneric
 {
-
 }
 
 /**
@@ -23,7 +21,6 @@ class ClassWithPHPStanExtendsAnnotationsGeneric
  */
 trait GenericPHPStanTrait
 {
-
 }
 
 /**
@@ -38,9 +35,7 @@ class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotat
      */
     use GenericPHPStanTrait;
 
-    /**
-     * @var array<T>
-     */
+    /** @var array<T> */
     private $bar;
 
     /**
@@ -56,8 +51,7 @@ class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotat
     /**
      * @Template("@foo.html.twig")
      */
-    public function twigTemplateFunctionName()
+    public function twigTemplateFunctionName(): void
     {
-
     }
 }

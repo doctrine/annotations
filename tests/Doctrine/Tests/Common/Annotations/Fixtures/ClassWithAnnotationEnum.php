@@ -6,24 +6,23 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnum;
 
 class ClassWithAnnotationEnum
 {
-    /**
-     * @AnnotationEnum(AnnotationEnum::ONE)
-     */
+    /** @AnnotationEnum(AnnotationEnum::ONE) */
     public $foo;
 
     /**
      * @AnnotationEnum("TWO")
      */
-    public function bar(){}
+    public function bar(): void
+    {
+    }
 
-
-    /**
-     * @AnnotationEnum("FOUR")
-     */
+    /** @AnnotationEnum("FOUR") */
     public $invalidProperty;
 
     /**
      * @AnnotationEnum(5)
      */
-    public function invalidMethod(){}
+    public function invalidMethod(): void
+    {
+    }
 }

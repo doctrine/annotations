@@ -10,7 +10,6 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation;
  */
 final class ClassWithClosure
 {
-
     /**
      * @AnnotationTargetAll(@AnnotationTargetAnnotation)
      * @var string
@@ -18,14 +17,13 @@ final class ClassWithClosure
     public $value;
 
     /**
-     * @AnnotationTargetAll(@AnnotationTargetAnnotation)
-     *
-     * @param   \Closure $callback
      * @return  \Closure
+     *
+     * @AnnotationTargetAll(@AnnotationTargetAnnotation)
      */
     public function methodName(\Closure $callback)
     {
-        return function() use ($callback) {
+        return static function () use ($callback) {
             return $callback;
         };
     }
@@ -34,18 +32,19 @@ final class ClassWithClosure
      * @param   integer $year
      * @param   integer $month
      * @param   integer $day
+     *
      * @return  \Doctrine\Common\Collections\ArrayCollection
      */
-    public function getEventsForDate($year, $month, $day){
-        $extractEvents  = null; // check if date of item is inside day given
-        $extractEvents  = $this->events->filter(function ($item) use ($year, $month, $day) {
-            $leftDate   = new \DateTime($year.'-'.$month.'-'.$day.' 00:00');
-            $rigthDate  = new \DateTime($year.'-'.$month.'-'.$day.' +1 day 00:00');
-            return ( ( $leftDate <= $item->getDateStart() ) && ( $item->getDateStart() < $rigthDate ) );
+    public function getEventsForDate($year, $month, $day)
+    {
+        $extractEvents = null; // check if date of item is inside day given
+        $extractEvents = $this->events->filter(static function ($item) use ($year, $month, $day) {
+            $leftDate  = new \DateTime($year . '-' . $month . '-' . $day . ' 00:00');
+            $rigthDate = new \DateTime($year . '-' . $month . '-' . $day . ' +1 day 00:00');
 
-            }
-        );
+            return ( $leftDate <= $item->getDateStart() ) && ( $item->getDateStart() < $rigthDate );
+        });
+
         return $extractEvents;
     }
-
 }

@@ -4,6 +4,9 @@ namespace Doctrine\Tests\Common\Annotations;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\Annotations\SimpleAnnotationReader;
+use ReflectionClass;
+
+use function class_exists;
 
 class SimpleAnnotationReaderTest extends AbstractReaderTest
 {
@@ -13,7 +16,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testImportDetectsNotImportedAnnotation()
+    public function testImportDetectsNotImportedAnnotation(): void
     {
         $this->ignoreIssues();
         parent::testImportDetectsNotImportedAnnotation();
@@ -25,7 +28,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testImportDetectsNonExistentAnnotation()
+    public function testImportDetectsNonExistentAnnotation(): void
     {
         $this->ignoreIssues();
         parent::testImportDetectsNonExistentAnnotation();
@@ -37,7 +40,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidAnnotationTargetAtClassDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtClassDocBlock(): void
     {
         $this->ignoreIssues();
         parent::testClassWithInvalidAnnotationTargetAtClassDocBlock();
@@ -49,7 +52,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock(): void
     {
         $this->ignoreIssues();
         parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock();
@@ -61,7 +64,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock()
+    public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock(): void
     {
         $this->ignoreIssues();
         parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock();
@@ -73,7 +76,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock()
+    public function testClassWithInvalidAnnotationTargetAtMethodDocBlock(): void
     {
         $this->ignoreIssues();
         parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock();
@@ -85,7 +88,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * @doesNotPerformAssertions
      */
-    public function testErrorWhenInvalidAnnotationIsUsed()
+    public function testErrorWhenInvalidAnnotationIsUsed(): void
     {
         $this->ignoreIssues();
         parent::testErrorWhenInvalidAnnotationIsUsed();
@@ -94,16 +97,16 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     /**
      * The SimpleAnnotationReader doens't include the @IgnoreAnnotation in the results.
      */
-    public function testInvalidAnnotationUsageButIgnoredClass()
+    public function testInvalidAnnotationUsageButIgnoredClass(): void
     {
         $reader = $this->getReader();
-        $ref = new \ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
+        $ref    = new ReflectionClass(Fixtures\InvalidAnnotationUsageButIgnoredClass::class);
         $annots = $reader->getClassAnnotations($ref);
 
         self::assertCount(1, $annots);
     }
 
-    public function testIncludeIgnoreAnnotation()
+    public function testIncludeIgnoreAnnotation(): void
     {
         $this->markTestSkipped('The simplified annotation reader would always autoload annotations');
     }
@@ -114,10 +117,10 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
      *
      * Contrary to the behavior of the default annotation reader, @version is not ignored
      */
-    public function testInvalidAnnotationButIgnored()
+    public function testInvalidAnnotationButIgnored(): void
     {
         $reader = $this->getReader();
-        $class  = new \ReflectionClass(Fixtures\ClassDDC1660::class);
+        $class  = new ReflectionClass(Fixtures\ClassDDC1660::class);
 
         self::assertTrue(class_exists(Fixtures\Annotation\Version::class));
         self::assertCount(1, $reader->getClassAnnotations($class));

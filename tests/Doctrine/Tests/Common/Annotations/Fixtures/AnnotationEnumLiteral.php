@@ -10,13 +10,12 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumLiteral as SelfEnum
  */
 final class AnnotationEnumLiteral
 {
-    const ONE   = 1;
-    const TWO   = 2;
-    const THREE = 3;
+    public const ONE   = 1;
+    public const TWO   = 2;
+    public const THREE = 3;
 
     /**
      * @var mixed
-     *
      * @Enum(
      *      value = {
      *          1,

@@ -28,7 +28,7 @@ class ClassWithAtInDescriptionAndAnnotation
      *     "email3": "@example.com"
      * }
      *
-     *@AnnotationTargetPropertyMethod("Bar")
+     * @AnnotationTargetPropertyMethod("Bar")
      */
     public $bar;
 }

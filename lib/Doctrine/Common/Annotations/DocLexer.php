@@ -4,41 +4,42 @@ namespace Doctrine\Common\Annotations;
 
 use Doctrine\Common\Lexer\AbstractLexer;
 
+use function ctype_alpha;
+use function is_numeric;
+use function str_replace;
+use function stripos;
+use function strlen;
+use function strpos;
+use function strtolower;
+use function substr;
+
 /**
  * Simple lexer for docblock annotations.
- *
- * @author Benjamin Eberlei <kontakt@beberlei.de>
- * @author Guilherme Blanco <guilhermeblanco@hotmail.com>
- * @author Jonathan Wage <jonwage@gmail.com>
- * @author Roman Borschel <roman@code-factory.org>
- * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 final class DocLexer extends AbstractLexer
 {
-    const T_NONE                = 1;
-    const T_INTEGER             = 2;
-    const T_STRING              = 3;
-    const T_FLOAT               = 4;
+    public const T_NONE    = 1;
+    public const T_INTEGER = 2;
+    public const T_STRING  = 3;
+    public const T_FLOAT   = 4;
 
     // All tokens that are also identifiers should be >= 100
-    const T_IDENTIFIER          = 100;
-    const T_AT                  = 101;
-    const T_CLOSE_CURLY_BRACES  = 102;
-    const T_CLOSE_PARENTHESIS   = 103;
-    const T_COMMA               = 104;
-    const T_EQUALS              = 105;
-    const T_FALSE               = 106;
-    const T_NAMESPACE_SEPARATOR = 107;
-    const T_OPEN_CURLY_BRACES   = 108;
-    const T_OPEN_PARENTHESIS    = 109;
-    const T_TRUE                = 110;
-    const T_NULL                = 111;
-    const T_COLON               = 112;
-    const T_MINUS               = 113;
+    public const T_IDENTIFIER          = 100;
+    public const T_AT                  = 101;
+    public const T_CLOSE_CURLY_BRACES  = 102;
+    public const T_CLOSE_PARENTHESIS   = 103;
+    public const T_COMMA               = 104;
+    public const T_EQUALS              = 105;
+    public const T_FALSE               = 106;
+    public const T_NAMESPACE_SEPARATOR = 107;
+    public const T_OPEN_CURLY_BRACES   = 108;
+    public const T_OPEN_PARENTHESIS    = 109;
+    public const T_TRUE                = 110;
+    public const T_NULL                = 111;
+    public const T_COLON               = 112;
+    public const T_MINUS               = 113;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $noCase = [
         '@'  => self::T_AT,
         ','  => self::T_COMMA,
@@ -49,23 +50,21 @@ final class DocLexer extends AbstractLexer
         '='  => self::T_EQUALS,
         ':'  => self::T_COLON,
         '-'  => self::T_MINUS,
-        '\\' => self::T_NAMESPACE_SEPARATOR
+        '\\' => self::T_NAMESPACE_SEPARATOR,
     ];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $withCase = [
         'true'  => self::T_TRUE,
         'false' => self::T_FALSE,
-        'null'  => self::T_NULL
+        'null'  => self::T_NULL,
     ];
 
     /**
      * Whether the next token starts immediately, or if there were
      * non-captured symbols before that
      */
-    public function nextTokenIsAdjacent() : bool
+    public function nextTokenIsAdjacent(): bool
     {
         return $this->token === null
             || ($this->lookahead !== null
@@ -121,7 +120,7 @@ final class DocLexer extends AbstractLexer
 
         // Checking numeric value
         if (is_numeric($value)) {
-            return (strpos($value, '.') !== false || stripos($value, 'e') !== false)
+            return strpos($value, '.') !== false || stripos($value, 'e') !== false
                 ? self::T_FLOAT : self::T_INTEGER;
         }
 

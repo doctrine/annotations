@@ -118,35 +118,25 @@ final class ImplicitlyIgnoredAnnotationNames
         'uses'                           => true,
     ];
 
-    private const PhpCheckStyle = [
-        'SuppressWarnings' => true,
-    ];
+    private const PhpCheckStyle = ['SuppressWarnings' => true];
 
-    private const PhpStorm = [
-        'noinspection' => true,
-    ];
+    private const PhpStorm = ['noinspection' => true];
 
-    private const PEAR = [
-        'package_version' => true,
-    ];
+    private const PEAR = ['package_version' => true];
 
     private const PlainUML = [
         'startuml' => true,
         'enduml'   => true,
     ];
 
-    private const Symfony = [
-        'experimental' => true,
-    ];
+    private const Symfony = ['experimental' => true];
 
     private const PhpCodeSniffer = [
         'codingStandardsIgnoreStart' => true,
         'codingStandardsIgnoreEnd'   => true,
     ];
 
-    private const SlevomatCodingStandard = [
-        'phpcsSuppress' => true,
-    ];
+    private const SlevomatCodingStandard = ['phpcsSuppress' => true];
 
     private const PhpStan = [
         'extends' => true,

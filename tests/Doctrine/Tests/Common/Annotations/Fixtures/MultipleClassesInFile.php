@@ -2,8 +2,12 @@
 
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
-use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Secure;
 
-class AnotherClass { }
-class MultipleClassesInFile { }
+class AnotherClass
+{
+}
+class MultipleClassesInFile
+{
+}

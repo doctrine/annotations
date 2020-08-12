@@ -16,7 +16,7 @@ final class DocLexerPerformanceBench
     /** @var DocLexer */
     private $lexer;
 
-    public function initialize() : void
+    public function initialize(): void
     {
         $this->lexer = new DocLexer();
     }
@@ -25,7 +25,7 @@ final class DocLexerPerformanceBench
      * @Revs(500)
      * @Iterations(5)
      */
-    public function benchMethod() : void
+    public function benchMethod(): void
     {
         $this->lexer->setInput($this->methodDocBlock);
     }
@@ -34,7 +34,7 @@ final class DocLexerPerformanceBench
      * @Revs(500)
      * @Iterations(5)
      */
-    public function benchClass() : void
+    public function benchClass(): void
     {
         $this->lexer->setInput($this->classDocBlock);
     }

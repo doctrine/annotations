@@ -8,13 +8,10 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 final class AnnotationWithConstants
 {
+    public const INTEGER = 1;
+    public const FLOAT   = 1.2;
+    public const STRING  = '1.2.3';
 
-    const INTEGER = 1;
-    const FLOAT   = 1.2;
-    const STRING  = '1.2.3';
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     public $value;
 }

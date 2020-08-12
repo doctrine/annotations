@@ -3,14 +3,14 @@
 namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
 /**
- * Class ClassWithNotRegisteredAnnotationUsed
  * @package Doctrine\Tests\Common\Annotations\Fixtures
  */
 class ClassWithNotRegisteredAnnotationUsed
 {
     /**
-     * @notRegisteredCustomAnnotation
      * @return bool
+     *
+     * @notRegisteredCustomAnnotation
      */
     public function methodWithNotRegisteredAnnotation()
     {

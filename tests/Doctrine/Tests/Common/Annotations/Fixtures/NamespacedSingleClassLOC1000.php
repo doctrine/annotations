@@ -4,15 +4,15 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
 
 class NamespacedSingleClassLOC1000
 {
-    const TEST1 = 1234567890;
-    const TEST2 = 1234567890;
-    const TEST3 = 1234567890;
-    const TEST4 = 1234567890;
-    const TEST5 = 1234567890;
-    const TEST6 = 1234567890;
-    const TEST7 = 1234567890;
-    const TEST8 = 1234567890;
-    const TEST9 = 1234567890;
+    public const TEST1 = 1234567890;
+    public const TEST2 = 1234567890;
+    public const TEST3 = 1234567890;
+    public const TEST4 = 1234567890;
+    public const TEST5 = 1234567890;
+    public const TEST6 = 1234567890;
+    public const TEST7 = 1234567890;
+    public const TEST8 = 1234567890;
+    public const TEST9 = 1234567890;
 
     private $test1 = null;
     private $test2 = null;
@@ -34,15 +34,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -59,15 +59,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -84,15 +84,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -109,15 +109,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -134,15 +134,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -159,15 +159,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -184,15 +184,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -209,20 +209,19 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
         return $val;
-
     }
 
     public function test9()
@@ -235,15 +234,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -260,15 +259,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -285,15 +284,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -310,15 +309,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -335,15 +334,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -360,15 +359,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -385,15 +384,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -410,15 +409,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -435,20 +434,19 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
         return $val;
-
     }
 
     public function test18()
@@ -461,15 +459,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -486,15 +484,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -511,15 +509,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -536,15 +534,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -561,15 +559,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -586,15 +584,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -611,15 +609,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -636,15 +634,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -661,15 +659,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -686,20 +684,19 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
         return $val;
-
     }
 
     public function test28()
@@ -712,15 +709,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -732,20 +729,20 @@ class NamespacedSingleClassLOC1000
         echo $this->test1;
         echo $this->test2;
         echo $this->test3;
-        $array =[1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+        $array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
         foreach ($array as $key => $value) {
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -762,15 +759,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -787,15 +784,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -812,15 +809,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -837,15 +834,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -862,15 +859,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -887,15 +884,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -912,15 +909,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -937,20 +934,19 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
         return $val;
-
     }
 
     public function test38()
@@ -963,15 +959,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
@@ -988,15 +984,15 @@ class NamespacedSingleClassLOC1000
             echo $key . ' => ' . $value;
         }
 
-        $val = (string)self::TEST1;
-        $val .= (string)self::TEST2;
-        $val .= (string)self::TEST3;
-        $val .= (string)self::TEST4;
-        $val .= (string)self::TEST5;
-        $val .= (string)self::TEST6;
-        $val .= (string)self::TEST7;
-        $val .= (string)self::TEST8;
-        $val .= (string)self::TEST9;
+        $val  = (string) self::TEST1;
+        $val .= (string) self::TEST2;
+        $val .= (string) self::TEST3;
+        $val .= (string) self::TEST4;
+        $val .= (string) self::TEST5;
+        $val .= (string) self::TEST6;
+        $val .= (string) self::TEST7;
+        $val .= (string) self::TEST8;
+        $val .= (string) self::TEST9;
 
         strtolower($val);
 
