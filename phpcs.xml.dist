@@ -79,9 +79,4 @@
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/PhpParserTest.php</exclude-pattern>
     </rule>
-
-    <!-- https://github.com/slevomat/coding-standard/issues/1067 -->
-    <rule ref="SlevomatCodingStandard.ControlStructures.EarlyExit.UselessElse">
-        <exclude-pattern>*/lib/Doctrine/Common/Annotations/TokenParser.php</exclude-pattern>
-    </rule>
 </ruleset>
