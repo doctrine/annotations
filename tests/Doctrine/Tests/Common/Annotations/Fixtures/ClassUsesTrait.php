@@ -8,7 +8,10 @@ class ClassUsesTrait
 {
     use TraitWithAnnotatedMethod;
 
-    /** @Autoload */
+    /**
+     * @var mixed
+     * @Autoload
+     */
     public $aProperty;
 
     /**

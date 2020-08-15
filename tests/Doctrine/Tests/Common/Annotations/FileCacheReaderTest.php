@@ -16,6 +16,7 @@ use function unlink;
 
 class FileCacheReaderTest extends AbstractReaderTest
 {
+    /** @var string */
     private $cacheDir;
 
     protected function getReader(): Reader

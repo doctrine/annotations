@@ -12,10 +12,12 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
 class ControllerWithParentClass extends AbstractController
 {
     /**
+     * @return mixed[]
+     *
      * @Route("/", name="_demo")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         return [];
     }

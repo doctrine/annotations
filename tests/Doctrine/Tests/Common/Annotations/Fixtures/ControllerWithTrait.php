@@ -15,10 +15,12 @@ class ControllerWithTrait
     use SecretRouteTrait;
 
     /**
+     * @return mixed[]
+     *
      * @Route("/", name="_demo")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         return [];
     }

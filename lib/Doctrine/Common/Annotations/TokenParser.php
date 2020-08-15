@@ -43,7 +43,7 @@ class TokenParser
     /**
      * The token list.
      *
-     * @var array
+     * @var list<mixed[]>
      */
     private $tokens;
 
@@ -86,7 +86,7 @@ class TokenParser
      * @param bool $docCommentIsComment If TRUE then a doc comment is considered a comment and skipped.
      * If FALSE then only whitespace and normal comments are skipped.
      *
-     * @return array|null The token if exists, null otherwise.
+     * @return mixed[]|string|null The token if exists, null otherwise.
      */
     public function next($docCommentIsComment = true)
     {
@@ -109,7 +109,7 @@ class TokenParser
     /**
      * Parses a single use statement.
      *
-     * @return array A list with all found class names for a use statement.
+     * @return array<string, string> A list with all found class names for a use statement.
      */
     public function parseUseStatement()
     {
@@ -124,7 +124,10 @@ class TokenParser
                 $alias  = $token[1];
             } elseif ($explicitAlias && $token[0] === T_STRING) {
                 $alias = $token[1];
-            } elseif (PHP_VERSION_ID >= 80000 && ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)) {
+            } elseif (
+                PHP_VERSION_ID >= 80000 &&
+                ($token[0] === T_NAME_QUALIFIED || $token[0] === T_NAME_FULLY_QUALIFIED)
+            ) {
                 $class .= $token[1];
 
                 $classSplit = explode('\\', $token[1]);
@@ -161,7 +164,7 @@ class TokenParser
      *
      * @param string $namespaceName The namespace name of the reflected class.
      *
-     * @return array A list with all found use statements.
+     * @return array<string, string> A list with all found use statements.
      */
     public function parseUseStatements($namespaceName)
     {

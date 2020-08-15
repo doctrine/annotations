@@ -16,7 +16,7 @@ class ClassDDC1660
     public $foo;
 
     /**
-     * @param   string
+     * @param   string $param
      *
      * @return  string
      *
@@ -25,6 +25,6 @@ class ClassDDC1660
      */
     public function bar($param)
     {
-        return null;
+        return $param;
     }
 }

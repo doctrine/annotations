@@ -31,7 +31,13 @@ class DocLexerTest extends TestCase
     public function testScannerTokenizesDocBlockWhitConstants(): void
     {
         $lexer    = new DocLexer();
-        $docblock = '@AnnotationWithConstants(PHP_EOL, ClassWithConstants::SOME_VALUE, ClassWithConstants::CONSTANT_, ClassWithConstants::CONST_ANT3, \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE)';
+        $docblock = '@AnnotationWithConstants(
+            PHP_EOL,
+            ClassWithConstants::SOME_VALUE,
+            ClassWithConstants::CONSTANT_,
+            ClassWithConstants::CONST_ANT3,
+            \Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants::SOME_VALUE
+        )';
 
         $tokens = [
             [
@@ -51,52 +57,52 @@ class DocLexerTest extends TestCase
             ],
             [
                 'value'     => 'PHP_EOL',
-                'position'  => 25,
+                'position'  => 38,
                 'type'      => DocLexer::T_IDENTIFIER,
             ],
             [
                 'value'     => ',',
-                'position'  => 32,
+                'position'  => 45,
                 'type'      => DocLexer::T_COMMA,
             ],
             [
                 'value'     => 'ClassWithConstants::SOME_VALUE',
-                'position'  => 34,
+                'position'  => 59,
                 'type'      => DocLexer::T_IDENTIFIER,
             ],
             [
                 'value'     => ',',
-                'position'  => 64,
+                'position'  => 89,
                 'type'      => DocLexer::T_COMMA,
             ],
             [
                 'value'     => 'ClassWithConstants::CONSTANT_',
-                'position'  => 66,
+                'position'  => 103,
                 'type'      => DocLexer::T_IDENTIFIER,
             ],
             [
                 'value'     => ',',
-                'position'  => 95,
+                'position'  => 132,
                 'type'      => DocLexer::T_COMMA,
             ],
             [
                 'value'     => 'ClassWithConstants::CONST_ANT3',
-                'position'  => 97,
+                'position'  => 146,
                 'type'      => DocLexer::T_IDENTIFIER,
             ],
             [
                 'value'     => ',',
-                'position'  => 127,
+                'position'  => 176,
                 'type'      => DocLexer::T_COMMA,
             ],
             [
                 'value'     => '\\Doctrine\\Tests\\Common\\Annotations\\Fixtures\\InterfaceWithConstants::SOME_VALUE',
-                'position'  => 129,
+                'position'  => 190,
                 'type'      => DocLexer::T_IDENTIFIER,
             ],
             [
                 'value'     => ')',
-                'position'  => 207,
+                'position'  => 277,
                 'type'      => DocLexer::T_CLOSE_PARENTHESIS,
             ],
         ];
@@ -274,6 +280,9 @@ class DocLexerTest extends TestCase
         );
     }
 
+    /**
+     * @param list<array{value: mixed, position: int, type:int}> $expectedTokens
+     */
     private function expectDocblockTokens(string $docBlock, array $expectedTokens): void
     {
         $lexer = new DocLexer();

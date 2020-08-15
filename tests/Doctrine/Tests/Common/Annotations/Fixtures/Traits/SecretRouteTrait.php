@@ -8,10 +8,12 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
 trait SecretRouteTrait
 {
     /**
+     * @return mixed[]
+     *
      * @Route("/secret", name="_secret")
      * @Template()
      */
-    public function secretAction()
+    public function secretAction(): array
     {
         return [];
     }

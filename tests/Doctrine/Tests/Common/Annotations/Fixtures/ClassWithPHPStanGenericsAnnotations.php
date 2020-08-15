@@ -5,7 +5,7 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
 /**
  * @template T
  */
-interface WithPHPStanExtendsAnnotationsInterface
+interface WithPHPStanExtendsAnnotations
 {
 }
 
@@ -28,7 +28,8 @@ trait GenericPHPStanTrait
  * @implements WithPHPStanExtendsAnnotationsInterface<int>
  * @extends ClassWithPHPStanExtendsAnnotationsGeneric<int>
  */
-class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotationsGeneric implements WithPHPStanExtendsAnnotationsInterface
+class ClassWithPHPStanGenericsAnnotations extends ClassWithPHPStanExtendsAnnotationsGeneric implements
+    WithPHPStanExtendsAnnotations
 {
     /**
      * @use GenericPHPStanTrait<T>

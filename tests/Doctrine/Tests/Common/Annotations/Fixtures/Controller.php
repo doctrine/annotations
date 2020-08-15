@@ -12,28 +12,34 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Template;
 class Controller
 {
     /**
+     * @return mixed[]
+     *
      * @Route("/", name="_demo")
      * @Template()
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         return [];
     }
 
     /**
+     * @return mixed[]
+     *
      * @Route("/hello/{name}", name="_demo_hello")
      * @Template()
      */
-    public function helloAction($name)
+    public function helloAction(string $name): array
     {
         return ['name' => $name];
     }
 
     /**
+     * @return mixed[]
+     *
      * @Route("/contact", name="_demo_contact")
      * @Template()
      */
-    public function contactAction()
+    public function contactAction(): array
     {
         $form = ContactForm::create($this->get('form.context'), 'contact');
 
@@ -70,7 +76,8 @@ class Controller
      */
     private function createOrRetrieveClassId($classType)
     {
-        if (false !== $id = $this->connection->executeQuery($this->getSelectClassIdSql($classType))->fetchColumn()) {
+        $id = $this->connection->executeQuery($this->getSelectClassIdSql($classType))->fetchColumn();
+        if ($id !== false) {
             return $id;
         }
 
@@ -89,7 +96,8 @@ class Controller
      */
     private function createOrRetrieveSecurityIdentityId(SecurityIdentityInterface $sid)
     {
-        if (false !== $id = $this->connection->executeQuery($this->getSelectSecurityIdentityIdSql($sid))->fetchColumn()) {
+        $id = $this->connection->executeQuery($this->getSelectSecurityIdentityIdSql($sid))->fetchColumn();
+        if ($id !== false) {
             return $id;
         }
 
@@ -148,8 +156,8 @@ class Controller
     /**
      * This processes changes on an ACE related property (classFieldAces, or objectFieldAces).
      *
-     * @param string $name
-     * @param array  $changes
+     * @param string  $name
+     * @param mixed[] $changes
      */
     private function updateFieldAceProperty($name, array $changes): void
     {
@@ -176,8 +184,21 @@ class Controller
 
                     $objectIdentityId = $name === 'classFieldAces' ? null : $ace->getAcl()->getId();
 
-                    $this->connection->executeQuery($this->getInsertAccessControlEntrySql($classId, $objectIdentityId, $field, $i, $sid, $ace->getStrategy(), $ace->getMask(), $ace->isGranting(), $ace->isAuditSuccess(), $ace->isAuditFailure()));
-                    $aceId                    = $this->connection->executeQuery($this->getSelectAccessControlEntryIdSql($classId, $objectIdentityId, $field, $i))->fetchColumn();
+                    $this->connection->executeQuery($this->getInsertAccessControlEntrySql(
+                        $classId,
+                        $objectIdentityId,
+                        $field,
+                        $i,
+                        $sid,
+                        $ace->getStrategy(),
+                        $ace->getMask(),
+                        $ace->isGranting(),
+                        $ace->isAuditSuccess(),
+                        $ace->isAuditFailure()
+                    ));
+                    $aceId                    = $this->connection->executeQuery(
+                        $this->getSelectAccessControlEntryIdSql($classId, $objectIdentityId, $field, $i)
+                    )->fetchColumn();
                     $this->loadedAces[$aceId] = $ace;
 
                     $aceIdProperty = new \ReflectionProperty('Symfony\Component\Security\Acl\Domain\Entry', 'id');
@@ -206,8 +227,8 @@ class Controller
     /**
      * This processes changes on an ACE related property (classAces, or objectAces).
      *
-     * @param string $name
-     * @param array  $changes
+     * @param string  $name
+     * @param mixed[] $changes
      */
     private function updateAceProperty($name, array $changes): void
     {
@@ -235,8 +256,21 @@ class Controller
 
                 $objectIdentityId = $name === 'classAces' ? null : $ace->getAcl()->getId();
 
-                $this->connection->executeQuery($this->getInsertAccessControlEntrySql($classId, $objectIdentityId, null, $i, $sid, $ace->getStrategy(), $ace->getMask(), $ace->isGranting(), $ace->isAuditSuccess(), $ace->isAuditFailure()));
-                $aceId                    = $this->connection->executeQuery($this->getSelectAccessControlEntryIdSql($classId, $objectIdentityId, null, $i))->fetchColumn();
+                $this->connection->executeQuery($this->getInsertAccessControlEntrySql(
+                    $classId,
+                    $objectIdentityId,
+                    null,
+                    $i,
+                    $sid,
+                    $ace->getStrategy(),
+                    $ace->getMask(),
+                    $ace->isGranting(),
+                    $ace->isAuditSuccess(),
+                    $ace->isAuditFailure()
+                ));
+                $aceId                    = $this->connection->executeQuery(
+                    $this->getSelectAccessControlEntryIdSql($classId, $objectIdentityId, null, $i)
+                )->fetchColumn();
                 $this->loadedAces[$aceId] = $ace;
 
                 $aceIdProperty = new \ReflectionProperty($ace, 'id');
@@ -281,11 +315,17 @@ class Controller
             }
 
             if (isset($propertyChanges['auditSuccess'])) {
-                $sets[] = sprintf('audit_success = %s', $this->connection->getDatabasePlatform()->convertBooleans($propertyChanges['auditSuccess'][1]));
+                $sets[] = sprintf(
+                    'audit_success = %s',
+                    $this->connection->getDatabasePlatform()->convertBooleans($propertyChanges['auditSuccess'][1])
+                );
             }
 
             if (isset($propertyChanges['auditFailure'])) {
-                $sets[] = sprintf('audit_failure = %s', $this->connection->getDatabasePlatform()->convertBooleans($propertyChanges['auditFailure'][1]));
+                $sets[] = sprintf(
+                    'audit_failure = %s',
+                    $this->connection->getDatabasePlatform()->convertBooleans($propertyChanges['auditFailure'][1])
+                );
             }
 
             $this->connection->executeQuery($this->getUpdateAccessControlEntrySql($ace->getId(), $sets));

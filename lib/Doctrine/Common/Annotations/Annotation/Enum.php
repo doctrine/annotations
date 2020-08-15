@@ -41,18 +41,18 @@ use function sprintf;
  */
 final class Enum
 {
-    /** @var array */
+    /** @var list<scalar> */
     public $value;
 
     /**
      * Literal target declaration.
      *
-     * @var array
+     * @var mixed[]
      */
     public $literal;
 
     /**
-     * @param array $values
+     * @param array{literal?: mixed[], value: list<scalar>} $values
      *
      * @throws InvalidArgumentException
      */

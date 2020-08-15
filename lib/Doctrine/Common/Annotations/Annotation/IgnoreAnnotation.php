@@ -34,11 +34,11 @@ use function sprintf;
  */
 final class IgnoreAnnotation
 {
-    /** @var array */
+    /** @var list<string> */
     public $names;
 
     /**
-     * @param array $values
+     * @param array{value: string|list<string>} $values
      *
      * @throws RuntimeException
      */
@@ -49,7 +49,10 @@ final class IgnoreAnnotation
         }
 
         if (! is_array($values['value'])) {
-            throw new RuntimeException(sprintf('@IgnoreAnnotation expects either a string name, or an array of strings, but got %s.', json_encode($values['value'])));
+            throw new RuntimeException(sprintf(
+                '@IgnoreAnnotation expects either a string name, or an array of strings, but got %s.',
+                json_encode($values['value'])
+            ));
         }
 
         $this->names = $values['value'];

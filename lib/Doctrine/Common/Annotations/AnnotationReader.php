@@ -38,7 +38,7 @@ class AnnotationReader implements Reader
     /**
      * Global map for imports.
      *
-     * @var array
+     * @var array<string, class-string>
      */
     private static $globalImports = ['ignoreannotation' => 'Doctrine\Common\Annotations\Annotation\IgnoreAnnotation'];
 
@@ -47,7 +47,7 @@ class AnnotationReader implements Reader
      *
      * The names are case sensitive.
      *
-     * @var array
+     * @var array<string, true>
      */
     private static $globalIgnoredNames = [
         // Annotation tags
@@ -144,7 +144,7 @@ class AnnotationReader implements Reader
      *
      * The names are case sensitive.
      *
-     * @var array
+     * @var array<string, true>
      */
     private static $globalIgnoredNamespaces = [];
 
@@ -192,14 +192,14 @@ class AnnotationReader implements Reader
     /**
      * In-memory cache mechanism to store imported annotations per class.
      *
-     * @var array
+     * @var array<string, array<string, class-string>>
      */
     private $imports = [];
 
     /**
      * In-memory cache mechanism to store ignored annotations per class.
      *
-     * @var array
+     * @var array<string, array<string, true>>
      */
     private $ignoredAnnotationNames = [];
 
@@ -210,7 +210,10 @@ class AnnotationReader implements Reader
      */
     public function __construct(?DocParser $parser = null)
     {
-        if (extension_loaded('Zend Optimizer+') && (ini_get('zend_optimizerplus.save_comments') === '0' || ini_get('opcache.save_comments') === '0')) {
+        if (
+            extension_loaded('Zend Optimizer+') && (ini_get('zend_optimizerplus.save_comments') === '0' ||
+            ini_get('opcache.save_comments') === '0')
+        ) {
             throw AnnotationException::optimizerPlusSaveComments();
         }
 
@@ -328,7 +331,7 @@ class AnnotationReader implements Reader
     /**
      * Returns the ignored annotations for the given class.
      *
-     * @return array
+     * @return array<string, true>
      */
     private function getIgnoredAnnotationNames(ReflectionClass $class)
     {
@@ -345,7 +348,7 @@ class AnnotationReader implements Reader
     /**
      * Retrieves imports.
      *
-     * @return array
+     * @return array<string, class-string>
      */
     private function getClassImports(ReflectionClass $class)
     {
@@ -362,7 +365,7 @@ class AnnotationReader implements Reader
     /**
      * Retrieves imports for methods.
      *
-     * @return array
+     * @return array<string, class-string>
      */
     private function getMethodImports(ReflectionMethod $method)
     {
@@ -388,7 +391,7 @@ class AnnotationReader implements Reader
     /**
      * Retrieves imports for properties.
      *
-     * @return array
+     * @return array<string, class-string>
      */
     private function getPropertyImports(ReflectionProperty $property)
     {

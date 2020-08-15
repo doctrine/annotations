@@ -19,6 +19,7 @@ use function touch;
 
 class CachedReaderTest extends AbstractReaderTest
 {
+    /** @var int|ArrayCache */
     private $cache;
 
     public function testIgnoresStaleCache(): void
@@ -161,7 +162,7 @@ class CachedReaderTest extends AbstractReaderTest
         $route2->pattern = '/someotherprefix';
 
         $cache = $this->createMock('Doctrine\Common\Cache\Cache');
-        assert($cache instanceof Cache || $cache instanceof MockObject);
+        assert($cache instanceof Cache && $cache instanceof MockObject);
 
         $cache
             ->expects($this->exactly(6))
@@ -212,7 +213,7 @@ class CachedReaderTest extends AbstractReaderTest
         $this->assertEquals([$route2], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method2')));
     }
 
-    protected function doTestCacheStale($className, $lastCacheModification): CachedReader
+    protected function doTestCacheStale(string $className, int $lastCacheModification): CachedReader
     {
         $cacheKey = $className;
 
@@ -245,7 +246,7 @@ class CachedReaderTest extends AbstractReaderTest
         return $reader;
     }
 
-    protected function doTestCacheFresh($className, $lastCacheModification): void
+    protected function doTestCacheFresh(string $className, int $lastCacheModification): void
     {
         $cacheKey       = $className;
         $route          = new Route();

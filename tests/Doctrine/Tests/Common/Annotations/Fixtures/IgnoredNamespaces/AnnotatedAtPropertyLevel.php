@@ -4,6 +4,9 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces;
 
 class AnnotatedAtPropertyLevel
 {
-    /** @SomePropertyAnnotationNamespace\Subnamespace\Name */
-    private $property;
+    /**
+     * @var mixed
+     * @SomePropertyAnnotationNamespace\Subnamespace\Name
+     */
+    public $property;
 }
