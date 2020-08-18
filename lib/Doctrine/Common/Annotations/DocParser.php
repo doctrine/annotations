@@ -65,7 +65,7 @@ final class DocParser
     /**
      * An array of all valid tokens for a class name.
      *
-     * @var list<int>
+     * @phpstan-var list<int>
      */
     private static $classIdentifiers = [
         DocLexer::T_IDENTIFIER,
@@ -353,10 +353,10 @@ final class DocParser
      * @param string $input   The docblock string to parse.
      * @param string $context The parsing context.
      *
-     * @return list<object> Array of annotations. If no annotations are found, an empty array is returned.
-     *
      * @throws AnnotationException
      * @throws ReflectionException
+     *
+     * @phpstan-return list<object> Array of annotations. If no annotations are found, an empty array is returned.
      */
     public function parse($input, $context = '')
     {
@@ -422,9 +422,9 @@ final class DocParser
      * If any of them matches, this method updates the lookahead token; otherwise
      * a syntax error is raised.
      *
-     * @param list<mixed[]> $tokens
-     *
      * @throws AnnotationException
+     *
+     * @phpstan-param list<mixed[]> $tokens
      */
     private function matchAny(array $tokens): bool
     {
@@ -649,10 +649,10 @@ final class DocParser
     /**
      * Annotations ::= Annotation {[ "*" ]* [Annotation]}*
      *
-     * @return list<object>
-     *
      * @throws AnnotationException
      * @throws ReflectionException
+     *
+     * @phpstan-return list<object>
      */
     private function Annotations(): array
     {
@@ -1309,10 +1309,10 @@ EXCEPTION
      * KeyValuePair ::= Key ("=" | ":") PlainValue | Constant
      * Key ::= string | integer | Constant
      *
-     * @return array{mixed, mixed}
-     *
      * @throws AnnotationException
      * @throws ReflectionException
+     *
+     * @phpstan-return array{mixed, mixed}
      */
     private function ArrayEntry(): array
     {

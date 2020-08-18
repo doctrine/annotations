@@ -148,10 +148,11 @@ class AnnotationException extends Exception
      * @param string              $attributeName
      * @param string              $annotationName
      * @param string              $context
-     * @param list<string>        $available
      * @param object|class-string $given
      *
      * @return AnnotationException
+     *
+     * @phpstan-param list<string>        $available
      */
     public static function enumeratorError($attributeName, $annotationName, $context, $available, $given)
     {

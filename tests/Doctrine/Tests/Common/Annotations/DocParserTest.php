@@ -373,7 +373,7 @@ DOCBLOCK;
     }
 
     /**
-     * @return list<array{string, string}>
+     * @phpstan-return list<array{string, string}>
      */
     public function getAnnotationVarTypeProviderValid()
     {
@@ -435,7 +435,7 @@ DOCBLOCK;
     }
 
     /**
-     * @return list<array{string, string, string, string}>
+     * @phpstan-return list<array{string, string, string, string}>
      */
     public function getAnnotationVarTypeProviderInvalid(): array
     {
@@ -496,7 +496,7 @@ DOCBLOCK;
     }
 
     /**
-     * @return list<array{string, string, string, string}>
+     * @phpstan-return list<array{string, string, string, string}>
      */
     public function getAnnotationVarTypeArrayProviderInvalid()
     {
@@ -874,7 +874,7 @@ ANNOTATION;
     }
 
     /**
-     * @return array<string, array{string, mixed}>
+     * @phpstan-return array<string, array{string, mixed}>
      */
     public function getConstantsProvider(): array
     {
@@ -1158,7 +1158,7 @@ DOCBLOCK;
     }
 
     /**
-     * @return list<array{string, string}>
+     * @phpstan-return list<array{string, string}>
      */
     public function provideTestIgnoreWholeNamespaces(): array
     {

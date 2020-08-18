@@ -281,7 +281,7 @@ class DocLexerTest extends TestCase
     }
 
     /**
-     * @param list<array{value: mixed, position: int, type:int}> $expectedTokens
+     * @phpstan-param list<array{value: mixed, position: int, type:int}> $expectedTokens
      */
     private function expectDocblockTokens(string $docBlock, array $expectedTokens): void
     {

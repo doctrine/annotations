@@ -54,7 +54,7 @@ final class Target
         'ANNOTATION' => self::TARGET_ANNOTATION,
     ];
 
-    /** @var list<string> */
+    /** @phpstan-var list<string> */
     public $value;
 
     /**
@@ -72,9 +72,9 @@ final class Target
     public $literal;
 
     /**
-     * @param array{value?: string|list<string>} $values
-     *
      * @throws InvalidArgumentException
+     *
+     * @phpstan-param array{value?: string|list<string>} $values
      */
     public function __construct(array $values)
     {

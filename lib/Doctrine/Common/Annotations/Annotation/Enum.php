@@ -41,7 +41,7 @@ use function sprintf;
  */
 final class Enum
 {
-    /** @var list<scalar> */
+    /** @phpstan-var list<scalar> */
     public $value;
 
     /**
@@ -52,9 +52,9 @@ final class Enum
     public $literal;
 
     /**
-     * @param array{literal?: mixed[], value: list<scalar>} $values
-     *
      * @throws InvalidArgumentException
+     *
+     * @phpstan-param array{literal?: mixed[], value: list<scalar>} $values
      */
     public function __construct(array $values)
     {

@@ -63,7 +63,7 @@ class FileCacheReader implements Reader
     /** @var bool */
     private $debug;
 
-    /** @var array<string, list<object>> */
+    /** @phpstan-var array<string, list<object>> */
     private $loadedAnnotations = [];
 
     /** @var array<string, string> */

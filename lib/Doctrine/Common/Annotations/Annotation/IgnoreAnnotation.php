@@ -34,13 +34,13 @@ use function sprintf;
  */
 final class IgnoreAnnotation
 {
-    /** @var list<string> */
+    /** @phpstan-var list<string> */
     public $names;
 
     /**
-     * @param array{value: string|list<string>} $values
-     *
      * @throws RuntimeException
+     *
+     * @phpstan-param array{value: string|list<string>} $values
      */
     public function __construct(array $values)
     {

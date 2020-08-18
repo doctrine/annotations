@@ -43,7 +43,7 @@ class TokenParser
     /**
      * The token list.
      *
-     * @var list<mixed[]>
+     * @phpstan-var list<mixed[]>
      */
     private $tokens;
 

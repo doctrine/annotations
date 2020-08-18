@@ -94,7 +94,7 @@ final class AnnotationRegistry
      * @deprecated This method is deprecated and will be removed in
      *             doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      *
-     * @param string|list<string>|null $dirs
+     * @phpstan-param string|list<string>|null $dirs
      */
     public static function registerAutoloadNamespace(string $namespace, $dirs = null): void
     {
