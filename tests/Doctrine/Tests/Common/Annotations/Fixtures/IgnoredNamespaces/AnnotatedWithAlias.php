@@ -6,6 +6,9 @@ use SomePropertyAnnotationNamespace\Subnamespace as SomeAlias;
 
 class AnnotatedWithAlias
 {
-    /** @SomeAlias\Name */
-    private $property;
+    /**
+     * @var mixed
+     * @SomeAlias\Name
+     */
+    public $property;
 }

@@ -18,16 +18,17 @@ class DummyClass
      * @var mixed
      * @DummyAnnotation(dummyValue="fieldHello")
      */
-    private $field1;
+    public $field1;
 
     /**
+     * @var mixed;
      * @DummyJoinTable(name="join_table",
      *      joinColumns={@DummyJoinColumn(name="col1", referencedColumnName="col2")},
      *      inverseJoinColumns={
      *          @DummyJoinColumn(name="col3", referencedColumnName="col4")
      *      })
      */
-    private $field2;
+    public $field2;
 
     /**
      * Gets the value of field1.

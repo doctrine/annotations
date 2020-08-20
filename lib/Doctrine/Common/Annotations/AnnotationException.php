@@ -145,18 +145,19 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a invalid enummerator.
      *
-     * @param string $attributeName
-     * @param string $annotationName
-     * @param string $context
-     * @param array  $available
-     * @param mixed  $given
+     * @param string              $attributeName
+     * @param string              $annotationName
+     * @param string              $context
+     * @param object|class-string $given
      *
      * @return AnnotationException
+     *
+     * @phpstan-param list<string>        $available
      */
     public static function enumeratorError($attributeName, $annotationName, $context, $available, $given)
     {
         return new self(sprintf(
-            '[Enum Error] Attribute "%s" of @%s declared on %s accept only [%s], but got %s.',
+            '[Enum Error] Attribute "%s" of @%s declared on %s accepts only [%s], but got %s.',
             $attributeName,
             $annotationName,
             $context,

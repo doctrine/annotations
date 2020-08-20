@@ -40,6 +40,13 @@
         </properties>
     </rule>
 
+    <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
+        <exclude-pattern>*/lib/Doctrine/Common/Annotations/DocParser.php</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Classes.ValidClassName.NotCamelCaps">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/ClassNoNamespaceNoComment.php</exclude-pattern>
+    </rule>
+
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
     </rule>
@@ -78,5 +85,65 @@
 
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/PhpParserTest.php</exclude-pattern>
+    </rule>
+
+    <!-- It is easier to understand tests that involve annotations if you can
+        declare several dummy classes with annotations in the same file -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Classes.ClassFileName.NoMatch">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+
+    <rule ref="PSR1.Files.SideEffects.FoundWithSymbols">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Test.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/PhpParserTest.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/NamespaceWithClosureDeclaration.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/ClassWithRequire.php</exclude-pattern>
+    </rule>
+
+    <!-- these classes have unused properties, and is unused in a benchmark for the parser -->
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/NamespacedSingleClassLOC1000.php</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/Controller.php</exclude-pattern>
+    </rule>
+
+    <!-- these classes do not have a namespace on purpose -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/NonNamespacedClass.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/ClassNoNamespaceNoComment.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/TopLevelAnnotation.php</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint">
+        <!-- there is a class property with an empty var annotation on purpose -->
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/ClassWithValidAnnotationTarget.php</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse.DisallowedGroupUse">
+        <!-- The name of the file alone explains this -->
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/GroupUseStatement.php</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingTraversableTypeHintSpecification">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/AnnotationWithVarType.php</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/EmptyInterface.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/InterfaceThatExtendsAnInterface.php</exclude-pattern>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousPrefix">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/InterfaceThatExtendsAnInterface.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/InterfaceWithConstants.php</exclude-pattern>
     </rule>
 </ruleset>

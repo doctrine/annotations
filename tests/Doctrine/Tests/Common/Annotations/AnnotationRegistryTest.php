@@ -14,6 +14,7 @@ use function random_int;
 
 class AnnotationRegistryTest extends TestCase
 {
+    /** @var string */
     protected $class = AnnotationRegistry::class;
 
     /**
@@ -56,7 +57,10 @@ class AnnotationRegistryTest extends TestCase
         AnnotationRegistry::registerLoader('test' . random_int(10, 10000));
     }
 
-    protected function setStaticField($class, $field, $value): void
+    /**
+     * @param mixed[] $value
+     */
+    protected function setStaticField(string $class, string $field, array $value): void
     {
         $reflection = new ReflectionProperty($class, $field);
 
@@ -64,7 +68,10 @@ class AnnotationRegistryTest extends TestCase
         $reflection->setValue(null, $value);
     }
 
-    protected function getStaticField($class, $field)
+    /**
+     * @return mixed
+     */
+    protected function getStaticField(string $class, string $field)
     {
         $reflection = new ReflectionProperty($class, $field);
 

@@ -63,10 +63,10 @@ class FileCacheReader implements Reader
     /** @var bool */
     private $debug;
 
-    /** @var array */
+    /** @phpstan-var array<string, list<object>> */
     private $loadedAnnotations = [];
 
-    /** @var array */
+    /** @var array<string, string> */
     private $classNameHashes = [];
 
     /** @var int */
@@ -75,6 +75,7 @@ class FileCacheReader implements Reader
     /**
      * @param string $cacheDir
      * @param bool   $debug
+     * @param int    $umask
      *
      * @throws InvalidArgumentException
      */
@@ -91,7 +92,10 @@ class FileCacheReader implements Reader
         $this->umask  = $umask;
 
         if (! is_dir($cacheDir) && ! @mkdir($cacheDir, 0777 & (~$this->umask), true)) {
-            throw new InvalidArgumentException(sprintf('The directory "%s" does not exist and could not be created.', $cacheDir));
+            throw new InvalidArgumentException(sprintf(
+                'The directory "%s" does not exist and could not be created.',
+                $cacheDir
+            ));
         }
 
         $this->dir   = rtrim($cacheDir, '\\/');
@@ -121,9 +125,10 @@ class FileCacheReader implements Reader
             return $this->loadedAnnotations[$key] = $annot;
         }
 
+        $filename = $class->getFilename();
         if (
             $this->debug
-            && (false !== $filename = $class->getFileName())
+            && $filename !== false
             && filemtime($path) < filemtime($filename)
         ) {
             @unlink($path);
@@ -161,9 +166,10 @@ class FileCacheReader implements Reader
             return $this->loadedAnnotations[$key] = $annot;
         }
 
+        $filename = $class->getFilename();
         if (
             $this->debug
-            && (false !== $filename = $class->getFilename())
+            && $filename !== false
             && filemtime($path) < filemtime($filename)
         ) {
             @unlink($path);
@@ -201,9 +207,10 @@ class FileCacheReader implements Reader
             return $this->loadedAnnotations[$key] = $annot;
         }
 
+        $filename = $class->getFilename();
         if (
             $this->debug
-            && (false !== $filename = $class->getFilename())
+            && $filename !== false
             && filemtime($path) < filemtime($filename)
         ) {
             @unlink($path);
@@ -228,7 +235,15 @@ class FileCacheReader implements Reader
     private function saveCacheFile($path, $data)
     {
         if (! is_writable($this->dir)) {
-            throw new InvalidArgumentException(sprintf('The directory "%s" is not writable. Both, the webserver and the console user need access. You can manage access rights for multiple users with "chmod +a". If your system does not support this, check out the acl package.', $this->dir));
+            throw new InvalidArgumentException(sprintf(
+                <<<'EXCEPTION'
+The directory "%s" is not writable. Both the webserver and the console user need access.
+You can manage access rights for multiple users with "chmod +a".
+If your system does not support this, check out the acl package.,
+EXCEPTION
+                ,
+                $this->dir
+            ));
         }
 
         $tempfile = tempnam($this->dir, uniqid('', true));
@@ -239,7 +254,10 @@ class FileCacheReader implements Reader
 
         @chmod($tempfile, 0666 & (~$this->umask));
 
-        $written = file_put_contents($tempfile, '<?php return unserialize(' . var_export(serialize($data), true) . ');');
+        $written = file_put_contents(
+            $tempfile,
+            '<?php return unserialize(' . var_export(serialize($data), true) . ');'
+        );
 
         if ($written === false) {
             throw new RuntimeException(sprintf('Unable to write cached file to: %s', $tempfile));

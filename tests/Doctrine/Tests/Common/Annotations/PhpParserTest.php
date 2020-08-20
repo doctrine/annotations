@@ -81,7 +81,7 @@ class PhpParserTest extends TestCase
     public function testParseClassWhenClassIsInterface(): void
     {
         $parser = new PhpParser();
-        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\TestInterface');
+        $class  = new ReflectionClass(__NAMESPACE__ . '\Fixtures\HereForTesting');
 
         self::assertEquals([
             'secure' => __NAMESPACE__ . '\Fixtures\Annotation\Secure',

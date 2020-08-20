@@ -22,6 +22,7 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
+          tools: "cs2pr"
 
       - name: "Cache dependencies installed with composer"
         uses: "actions/cache@v1"
@@ -33,6 +34,5 @@ jobs:
       - name: "Install dependencies with composer"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      # https://github.com/doctrine/annotations/issues/349
       - name: "Run PHP Code Beautifier"
-        run: "vendor/bin/phpcbf"
+        run: "vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr"

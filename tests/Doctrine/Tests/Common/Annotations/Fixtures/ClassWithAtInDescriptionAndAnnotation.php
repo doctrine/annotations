@@ -16,6 +16,7 @@ class ClassWithAtInDescriptionAndAnnotation
      * }
      *
      * @AnnotationTargetPropertyMethod("Bar")
+     * @var mixed
      */
     public $foo;
 
@@ -29,6 +30,7 @@ class ClassWithAtInDescriptionAndAnnotation
      * }
      *
      * @AnnotationTargetPropertyMethod("Bar")
+     * @var mixed
      */
     public $bar;
 }

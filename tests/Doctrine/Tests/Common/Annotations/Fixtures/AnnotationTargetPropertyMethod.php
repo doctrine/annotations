@@ -8,7 +8,10 @@ namespace Doctrine\Tests\Common\Annotations\Fixtures;
  */
 final class AnnotationTargetPropertyMethod
 {
+    /** @var mixed */
     public $data;
+    /** @var mixed */
     public $name;
+    /** @var mixed */
     public $target;
 }

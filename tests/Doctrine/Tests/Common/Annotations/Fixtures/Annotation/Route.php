@@ -7,5 +7,6 @@ class Route
 {
     /** @var string @Required */
     public $pattern;
+    /** @var mixed */
     public $name;
 }
