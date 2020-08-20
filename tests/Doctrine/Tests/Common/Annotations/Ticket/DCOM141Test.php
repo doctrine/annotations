@@ -39,6 +39,7 @@ class DCOM141Test extends TestCase
  */
 class DCOM141Annotation
 {
+    /** @var mixed */
     public $classPath;
 }
 

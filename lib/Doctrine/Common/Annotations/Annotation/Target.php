@@ -27,7 +27,7 @@ final class Target
     public const TARGET_ANNOTATION = 8;
     public const TARGET_ALL        = 15;
 
-    /** @var array */
+    /** @var array<string, int> */
     private static $map = [
         'ALL'        => self::TARGET_ALL,
         'CLASS'      => self::TARGET_CLASS,
@@ -36,7 +36,7 @@ final class Target
         'ANNOTATION' => self::TARGET_ANNOTATION,
     ];
 
-    /** @var array */
+    /** @phpstan-var list<string> */
     public $value;
 
     /**
@@ -54,9 +54,9 @@ final class Target
     public $literal;
 
     /**
-     * @param array $values
-     *
      * @throws InvalidArgumentException
+     *
+     * @phpstan-param array{value?: string|list<string>} $values
      */
     public function __construct(array $values)
     {

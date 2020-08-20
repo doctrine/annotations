@@ -59,7 +59,8 @@ final class AnnotationRegistry
     /**
      * Registers file.
      *
-     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     * @deprecated This method is deprecated and will be removed in
+     *             doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerFile(string $file): void
     {
@@ -73,9 +74,10 @@ final class AnnotationRegistry
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     * @deprecated This method is deprecated and will be removed in
+     *             doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      *
-     * @param string|array|null $dirs
+     * @phpstan-param string|list<string>|null $dirs
      */
     public static function registerAutoloadNamespace(string $namespace, $dirs = null): void
     {
@@ -87,7 +89,8 @@ final class AnnotationRegistry
      *
      * Loading of this namespaces will be done with a PSR-0 namespace loading algorithm.
      *
-     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     * @deprecated This method is deprecated and will be removed in
+     *             doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      *
      * @param string[][]|string[]|null[] $namespaces indexed by namespace name
      */
@@ -102,7 +105,8 @@ final class AnnotationRegistry
      * NOTE: These class loaders HAVE to be silent when a class was not found!
      * IMPORTANT: Loaders have to return true if they loaded a class that could contain the searched annotation class.
      *
-     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     * @deprecated This method is deprecated and will be removed in
+     *             doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerLoader(callable $callable): void
     {
@@ -114,7 +118,8 @@ final class AnnotationRegistry
     /**
      * Registers an autoloading callable for annotations, if it is not already registered
      *
-     * @deprecated This method is deprecated and will be removed in doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
+     * @deprecated This method is deprecated and will be removed in
+     *             doctrine/annotations 2.0. Annotations will be autoloaded in 2.0.
      */
     public static function registerUniqueLoader(callable $callable): void
     {
@@ -146,7 +151,8 @@ final class AnnotationRegistry
             $file = str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
 
             if ($dirs === null) {
-                if ($path = stream_resolve_include_path($file)) {
+                $path = stream_resolve_include_path($file);
+                if ($path) {
                     require $path;
 
                     return true;
@@ -168,7 +174,12 @@ final class AnnotationRegistry
             }
         }
 
-        if (self::$loaders === [] && self::$autoloadNamespaces === [] && self::$registerFileUsed === false && class_exists($class)) {
+        if (
+            self::$loaders === [] &&
+            self::$autoloadNamespaces === [] &&
+            self::$registerFileUsed === false &&
+            class_exists($class)
+        ) {
             return true;
         }
 

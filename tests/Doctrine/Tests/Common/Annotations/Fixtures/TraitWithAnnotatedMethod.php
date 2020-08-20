@@ -6,7 +6,10 @@ use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload;
 
 trait TraitWithAnnotatedMethod
 {
-    /** @Autoload */
+    /**
+     * @var mixed
+     * @Autoload
+     */
     public $traitProperty;
 
     /**

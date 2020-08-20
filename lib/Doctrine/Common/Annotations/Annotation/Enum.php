@@ -23,20 +23,20 @@ use function sprintf;
  */
 final class Enum
 {
-    /** @var array */
+    /** @phpstan-var list<scalar> */
     public $value;
 
     /**
      * Literal target declaration.
      *
-     * @var array
+     * @var mixed[]
      */
     public $literal;
 
     /**
-     * @param array $values
-     *
      * @throws InvalidArgumentException
+     *
+     * @phpstan-param array{literal?: mixed[], value: list<scalar>} $values
      */
     public function __construct(array $values)
     {

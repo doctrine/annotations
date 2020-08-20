@@ -9,7 +9,10 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError;
  */
 class ClassWithAnnotationWithTargetSyntaxError
 {
-    /** @AnnotationWithTargetSyntaxError() */
+    /**
+     * @var mixed
+     * @AnnotationWithTargetSyntaxError()
+     */
     public $foo;
 
     /**

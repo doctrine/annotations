@@ -39,7 +39,7 @@ final class DocLexer extends AbstractLexer
     public const T_COLON               = 112;
     public const T_MINUS               = 113;
 
-    /** @var array */
+    /** @var array<string, int> */
     protected $noCase = [
         '@'  => self::T_AT,
         ','  => self::T_COMMA,
@@ -53,7 +53,7 @@ final class DocLexer extends AbstractLexer
         '\\' => self::T_NAMESPACE_SEPARATOR,
     ];
 
-    /** @var array */
+    /** @var array<string, int> */
     protected $withCase = [
         'true'  => self::T_TRUE,
         'false' => self::T_FALSE,

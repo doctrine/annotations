@@ -28,7 +28,7 @@ final class CachedReader implements Reader
     /** @var bool */
     private $debug;
 
-    /** @var array */
+    /** @var array<string, array<object>> */
     private $loadedAnnotations = [];
 
     /** @var int[] */
@@ -55,7 +55,8 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        if (($annots = $this->fetchFromCache($cacheKey, $class)) === false) {
+        $annots = $this->fetchFromCache($cacheKey, $class);
+        if ($annots === false) {
             $annots = $this->delegate->getClassAnnotations($class);
             $this->saveToCache($cacheKey, $annots);
         }
@@ -89,7 +90,8 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        if (($annots = $this->fetchFromCache($cacheKey, $class)) === false) {
+        $annots = $this->fetchFromCache($cacheKey, $class);
+        if ($annots === false) {
             $annots = $this->delegate->getPropertyAnnotations($property);
             $this->saveToCache($cacheKey, $annots);
         }
@@ -123,7 +125,8 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        if (($annots = $this->fetchFromCache($cacheKey, $class)) === false) {
+        $annots = $this->fetchFromCache($cacheKey, $class);
+        if ($annots === false) {
             $annots = $this->delegate->getMethodAnnotations($method);
             $this->saveToCache($cacheKey, $annots);
         }
@@ -165,7 +168,8 @@ final class CachedReader implements Reader
      */
     private function fetchFromCache($cacheKey, ReflectionClass $class)
     {
-        if (($data = $this->cache->fetch($cacheKey)) !== false) {
+        $data = $this->cache->fetch($cacheKey);
+        if ($data !== false) {
             if (! $this->debug || $this->isCacheFresh($cacheKey, $class)) {
                 return $data;
             }
@@ -211,10 +215,8 @@ final class CachedReader implements Reader
 
     /**
      * Returns the time the class was last modified, testing traits and parents
-     *
-     * @return int
      */
-    private function getLastModification(ReflectionClass $class)
+    private function getLastModification(ReflectionClass $class): int
     {
         $filename = $class->getFileName();
 
@@ -226,8 +228,12 @@ final class CachedReader implements Reader
 
         $lastModification =  max(array_merge(
             [$filename ? filemtime($filename) : 0],
-            array_map([$this, 'getTraitLastModificationTime'], $class->getTraits()),
-            array_map([$this, 'getLastModification'], $class->getInterfaces()),
+            array_map(function (ReflectionClass $reflectionTrait): int {
+                return $this->getTraitLastModificationTime($reflectionTrait);
+            }, $class->getTraits()),
+            array_map(function (ReflectionClass $class): int {
+                return $this->getLastModification($class);
+            }, $class->getInterfaces()),
             $parent ? [$this->getLastModification($parent)] : []
         ));
 
@@ -236,10 +242,7 @@ final class CachedReader implements Reader
         return $this->loadedFilemtimes[$filename] = $lastModification;
     }
 
-    /**
-     * @return int
-     */
-    private function getTraitLastModificationTime(ReflectionClass $reflectionTrait)
+    private function getTraitLastModificationTime(ReflectionClass $reflectionTrait): int
     {
         $fileName = $reflectionTrait->getFileName();
 
@@ -249,7 +252,9 @@ final class CachedReader implements Reader
 
         $lastModificationTime = max(array_merge(
             [$fileName ? filemtime($fileName) : 0],
-            array_map([$this, 'getTraitLastModificationTime'], $reflectionTrait->getTraits())
+            array_map(function (ReflectionClass $reflectionTrait): int {
+                return $this->getTraitLastModificationTime($reflectionTrait);
+            }, $reflectionTrait->getTraits())
         ));
 
         assert($lastModificationTime !== false);

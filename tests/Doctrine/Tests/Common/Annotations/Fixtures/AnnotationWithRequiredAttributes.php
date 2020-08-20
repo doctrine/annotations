@@ -9,12 +9,19 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation;
  * @Target("ALL")
  * @Attributes({
       @Attribute("value",   required = true ,   type = "string"),
-      @Attribute("annot",   required = true ,   type = "Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation"),
+      @Attribute(
+          "annot",
+          required = true ,
+          type = "Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAnnotation"
+      ),
    })
  */
 final class AnnotationWithRequiredAttributes
 {
-    final public function __construct(array $data)
+    /**
+     * @param mixed[] $data
+     */
+    public function __construct(array $data)
     {
         foreach ($data as $key => $value) {
             $this->$key = $value;

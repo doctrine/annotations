@@ -8,7 +8,10 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithVarType;
 
 class ClassWithAnnotationWithVarType
 {
-    /** @AnnotationWithVarType(string = "String Value") */
+    /**
+     * @var mixed
+     * @AnnotationWithVarType(string = "String Value")
+     */
     public $foo;
 
     /**
@@ -18,7 +21,10 @@ class ClassWithAnnotationWithVarType
     {
     }
 
-    /** @AnnotationWithVarType(string = 123) */
+    /**
+     * @var mixed
+     * @AnnotationWithVarType(string = 123)
+     */
     public $invalidProperty;
 
     /**

@@ -166,7 +166,9 @@ class AnnotationReaderTest extends AbstractReaderTest
         $class      = new ReflectionClass(Fixtures\ClassDDC1660::class);
         $testLoader = static function (string $className): bool {
             if ($className === 'since') {
-                throw new InvalidArgumentException('Globally ignored annotation names should never be passed to an autoloader.');
+                throw new InvalidArgumentException(
+                    'Globally ignored annotation names should never be passed to an autoloader.'
+                );
             }
 
             return false;
@@ -197,7 +199,11 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('foo')));
 
         $this->expectException('\Doctrine\Common\Annotations\AnnotationException');
-        $this->expectExceptionMessage('[Semantical Error] The annotation "@Template" in method Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations::twigTemplateFunctionName() was never imported.');
+        $this->expectExceptionMessage(
+            '[Semantical Error] The annotation "@Template" in method' .
+            ' Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPStanGenericsAnnotations' .
+            '::twigTemplateFunctionName() was never imported.'
+        );
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('twigTemplateFunctionName')));
     }
 

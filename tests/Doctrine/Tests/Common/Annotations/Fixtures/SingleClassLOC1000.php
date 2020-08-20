@@ -12,17 +12,26 @@ class SingleClassLOC1000
     public const TEST8 = 1234567890;
     public const TEST9 = 1234567890;
 
+    /** @var null */
     private $test1 = null;
+    /** @var null */
     private $test2 = null;
+    /** @var null */
     private $test3 = null;
+    /** @var null */
     private $test4 = null;
+    /** @var null */
     private $test5 = null;
+    /** @var null */
     private $test6 = null;
+    /** @var null */
     private $test7 = null;
+    /** @var null */
     private $test8 = null;
+    /** @var null */
     private $test9 = null;
 
-    public function test1()
+    public function test1(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -47,7 +56,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test2()
+    public function test2(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -72,7 +81,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test3()
+    public function test3(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -97,7 +106,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test4()
+    public function test4(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -122,7 +131,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test5()
+    public function test5(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -147,7 +156,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test6()
+    public function test6(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -172,7 +181,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test7()
+    public function test7(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -197,7 +206,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test8()
+    public function test8(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -222,7 +231,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test9()
+    public function test9(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -247,7 +256,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test10()
+    public function test10(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -272,7 +281,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test11()
+    public function test11(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -297,7 +306,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test12()
+    public function test12(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -322,7 +331,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test13()
+    public function test13(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -347,7 +356,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test14()
+    public function test14(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -372,7 +381,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test15()
+    public function test15(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -397,7 +406,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test16()
+    public function test16(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -422,7 +431,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test17()
+    public function test17(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -447,7 +456,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test18()
+    public function test18(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -472,7 +481,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test19()
+    public function test19(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -497,7 +506,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test20()
+    public function test20(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -522,7 +531,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test21()
+    public function test21(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -547,7 +556,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test22()
+    public function test22(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -572,7 +581,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test23()
+    public function test23(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -597,7 +606,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test24()
+    public function test24(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -622,7 +631,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test25()
+    public function test25(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -647,7 +656,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test26()
+    public function test26(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -672,7 +681,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test27()
+    public function test27(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -697,7 +706,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test28()
+    public function test28(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -722,7 +731,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test29()
+    public function test29(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -747,7 +756,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test30()
+    public function test30(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -772,7 +781,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test31()
+    public function test31(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -797,7 +806,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test32()
+    public function test32(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -822,7 +831,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test33()
+    public function test33(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -847,7 +856,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test34()
+    public function test34(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -872,7 +881,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test35()
+    public function test35(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -897,7 +906,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test36()
+    public function test36(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -922,7 +931,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test37()
+    public function test37(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -947,7 +956,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test38()
+    public function test38(): string
     {
         echo $this->test1;
         echo $this->test2;
@@ -972,7 +981,7 @@ class SingleClassLOC1000
         return $val;
     }
 
-    public function test39()
+    public function test39(): string
     {
         echo $this->test1;
         echo $this->test2;

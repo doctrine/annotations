@@ -20,7 +20,7 @@ final class PhpParser
      *
      * @param ReflectionClass $class A <code>ReflectionClass</code> object.
      *
-     * @return array A list with use statements in the form (Alias => FQN).
+     * @return array<string, class-string> A list with use statements in the form (Alias => FQN).
      */
     public function parseClass(ReflectionClass $class)
     {
@@ -28,7 +28,9 @@ final class PhpParser
             return $class->getUseStatements();
         }
 
-        if (false === $filename = $class->getFileName()) {
+        $filename = $class->getFileName();
+
+        if ($filename === false) {
             return [];
         }
 
