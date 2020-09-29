@@ -137,6 +137,10 @@ class AnnotationReader implements Reader
         'implements' => true,
         'extends' => true,
         'use' => true,
+        // Phan, Psalm, Infection
+        'phan' => true,
+        'psalm' => true,
+        'infection' => true,
     ];
 
     /**
