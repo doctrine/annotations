@@ -78,6 +78,67 @@ class AnnotationReaderTest extends AbstractReaderTest
         self::assertEquals([], $annotations);
     }
 
+    public function testClassAnnotationSupportsSelfAccessorForConstants(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(Fixtures\ClassWithAnnotationWithSelfConstantReference::class);
+
+        $annotations = $reader->getClassAnnotations($ref);
+
+        self::assertCount(1, $annotations);
+
+        $annotation = $annotations[0];
+        self::assertInstanceOf(Fixtures\AnnotationWithConstants::class, $annotation);
+        self::assertEquals(
+            $annotation->value,
+            Fixtures\ClassWithAnnotationWithSelfConstantReference::VALUE_FOR_CLASS
+        );
+    }
+
+    public function testPropertyAnnotationSupportsSelfAccessorForConstants(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(Fixtures\ClassWithAnnotationWithSelfConstantReference::class);
+
+        $classProperty   = $ref->getProperty('classProperty');
+        $classAnnotation = $reader->getPropertyAnnotation($classProperty, Fixtures\AnnotationWithConstants::class);
+        self::assertNotNull($classAnnotation);
+        self::assertEquals(
+            $classAnnotation->value,
+            Fixtures\ClassWithAnnotationWithSelfConstantReference::VALUE_FOR_CLASS
+        );
+
+        $traitProperty   = $ref->getProperty('traitProperty');
+        $traitAnnotation = $reader->getPropertyAnnotation($traitProperty, Fixtures\AnnotationWithConstants::class);
+        self::assertNotNull($traitAnnotation);
+        self::assertEquals(
+            $traitAnnotation->value,
+            Fixtures\ClassWithAnnotationWithSelfConstantReference::VALUE_FOR_TRAIT
+        );
+    }
+
+    public function testMethodAnnotationSupportsSelfAccessorForConstants(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(Fixtures\ClassWithAnnotationWithSelfConstantReference::class);
+
+        $classMethod     = $ref->getMethod('classMethod');
+        $classAnnotation = $reader->getMethodAnnotation($classMethod, Fixtures\AnnotationWithConstants::class);
+        self::assertNotNull($classAnnotation);
+        self::assertEquals(
+            $classAnnotation->value,
+            Fixtures\ClassWithAnnotationWithSelfConstantReference::VALUE_FOR_CLASS
+        );
+
+        $traitMethod     = $ref->getMethod('traitMethod');
+        $traitAnnotation = $reader->getMethodAnnotation($traitMethod, Fixtures\AnnotationWithConstants::class);
+        self::assertNotNull($traitAnnotation);
+        self::assertEquals(
+            $traitAnnotation->value,
+            Fixtures\ClassWithAnnotationWithSelfConstantReference::VALUE_FOR_TRAIT
+        );
+    }
+
     /**
      * @group 45
      * @runInSeparateProcess
