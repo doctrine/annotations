@@ -1547,7 +1547,7 @@ DOCBLOCK;
 
         self::assertCount(1, $result);
         self::assertInstanceOf(NamedAnnotation::class, $result[0]);
-        self::assertSame("baz", $result[0]->getFoo());
+        self::assertSame('baz', $result[0]->getFoo());
         self::assertSame(2222, $result[0]->getBar());
     }
 
@@ -1559,7 +1559,7 @@ DOCBLOCK;
 
         self::assertCount(1, $result);
         self::assertInstanceOf(NamedAnnotation::class, $result[0]);
-        self::assertSame("baz", $result[0]->getFoo());
+        self::assertSame('baz', $result[0]->getFoo());
         self::assertSame(1234, $result[0]->getBar());
     }
 }
@@ -1567,7 +1567,9 @@ DOCBLOCK;
 /** @Annotation */
 class NamedAnnotation implements NamedArgumentConstructorAnnotation
 {
+    /** @var string */
     private $foo;
+    /** @var int */
     private $bar;
 
     public function __construct(string $foo, int $bar = 1234)
@@ -1576,12 +1578,12 @@ class NamedAnnotation implements NamedArgumentConstructorAnnotation
         $this->bar = $bar;
     }
 
-    public function getFoo() : string
+    public function getFoo(): string
     {
         return $this->foo;
     }
 
-    public function getBar() : int
+    public function getBar(): int
     {
         return $this->bar;
     }
