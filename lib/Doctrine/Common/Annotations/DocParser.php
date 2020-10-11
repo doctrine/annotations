@@ -502,6 +502,7 @@ final class DocParser
         $metadata    = [
             'default_property' => null,
             'has_constructor'  => $constructor !== null && $constructor->getNumberOfParameters() > 0,
+            'constructor_args' => [],
             'properties'       => [],
             'property_types'   => [],
             'attribute_types'  => [],
@@ -509,6 +510,15 @@ final class DocParser
             'targets'          => Target::TARGET_ALL,
             'is_annotation'    => strpos($docComment, '@Annotation') !== false,
         ];
+
+        if (PHP_VERSION_ID < 80000 && $class->implementsInterface(NamedArgumentConstructorAnnotation::class)) {
+            foreach ($constructor->getParameters() as $parameter) {
+                $metadata['constructor_args'][$parameter->getName()] = [
+                    'position' => $parameter->getPosition(),
+                    'default' => $parameter->isOptional() ? $parameter->getDefaultValue() : null,
+                ];
+            }
+        }
 
         // verify that the class is really meant to be an annotation
         if ($metadata['is_annotation']) {
@@ -895,6 +905,38 @@ EXCEPTION
                     $values[$property]
                 );
             }
+        }
+
+        if (is_subclass_of($name, NamedArgumentConstructorAnnotation::class)) {
+            if (PHP_VERSION_ID >= 80000) {
+                return new $name(...$values);
+            }
+
+            $positionalValues = [];
+            foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
+                $positionalValues[$parameter['position']] = $parameter['default'];
+            }
+
+            foreach ($values as $property => $value) {
+                if (! isset(self::$annotationMetadata[$name]['constructor_args'][$property])) {
+                    throw AnnotationException::creationError(sprintf(
+                        <<<'EXCEPTION'
+The annotation @%s declared on %s does not have a property named "%s"
+that can be set through its named arguments constructor.
+Available named arguments: %s
+EXCEPTION
+                        ,
+                        $originalName,
+                        $this->context,
+                        $property,
+                        implode(', ', array_keys(self::$annotationMetadata[$name]['constructor_args']))
+                    ));
+                }
+
+                $positionalValues[self::$annotationMetadata[$name]['constructor_args'][$property]['position']] = $value;
+            }
+
+            return new $name(...$positionalValues);
         }
 
         // check if the annotation expects values via the constructor,
