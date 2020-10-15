@@ -84,7 +84,7 @@ from the named arguments in the annotation syntax.
 
     /** Useable with @Bar(foo="baz") */
 
-In combination with PHP 8s constructor property promotion feature
+In combination with PHP 8's constructor property promotion feature
 you can simplify this to:
 
 .. code-block:: php
