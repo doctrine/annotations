@@ -1543,6 +1543,18 @@ DOCBLOCK;
     {
         $result = $this
             ->createTestParser()
+            ->parse('/** @NamedAnnotation(foo="baz", bar=2222) */');
+
+        self::assertCount(1, $result);
+        self::assertInstanceOf(NamedAnnotation::class, $result[0]);
+        self::assertSame('baz', $result[0]->getFoo());
+        self::assertSame(2222, $result[0]->getBar());
+    }
+
+    public function testNamedReorderedArgumentsConstructorAnnotation(): void
+    {
+        $result = $this
+            ->createTestParser()
             ->parse('/** @NamedAnnotation(bar=2222, foo="baz") */');
 
         self::assertCount(1, $result);
