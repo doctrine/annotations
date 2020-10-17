@@ -331,7 +331,10 @@ class AnnotationReader implements Reader
         $this->imports[$name] = array_merge(
             self::$globalImports,
             $this->phpParser->parseClass($class),
-            ['__NAMESPACE__' => $class->getNamespaceName()]
+            [
+                '__NAMESPACE__' => $class->getNamespaceName(),
+                'self' => $name,
+            ]
         );
 
         $this->ignoredAnnotationNames[$name] = $ignoredAnnotationNames;
