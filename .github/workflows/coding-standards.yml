@@ -1,12 +1,12 @@
 
-name: "Continuous Integration"
+name: "Coding Standards"
 
 on: ["pull_request", "push"]
 
 jobs:
   coding-standards:
     name: "Coding Standards"
-    runs-on: "ubuntu-latest"
+    runs-on: "ubuntu-20.04"
 
     strategy:
       matrix:
@@ -24,15 +24,16 @@ jobs:
           php-version: "${{ matrix.php-version }}"
           tools: "cs2pr"
 
-      - name: "Cache dependencies installed with composer"
-        uses: "actions/cache@v1"
+      - name: "Cache dependencies installed with Composer"
+        uses: "actions/cache@v2"
         with:
           path: "~/.composer/cache"
           key: "php-${{ matrix.php-version }}-composer-locked-${{ hashFiles('composer.lock') }}"
           restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
 
-      - name: "Install dependencies with composer"
+      - name: "Install dependencies with Composer"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
-      - name: "Run PHP Code Beautifier"
+      # https://github.com/doctrine/.github/issues/3
+      - name: "Run PHP_CodeSniffer"
         run: "vendor/bin/phpcs -q --no-colors --report=checkstyle | cs2pr"
