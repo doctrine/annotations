@@ -53,6 +53,52 @@ values into public properties directly:
         public $bar;
     }
 
+Optional: Constructors with Named Parameters
+--------------------------------------------
+
+Starting with Annotations v1.11 a new annotation instantiation strategy
+is available that aims at compatibility of Annotation classes with the PHP 8
+attribute feature.
+
+You can implement the
+``Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation`` interface
+and then declare a constructor with regular parameter names that are matched
+from the named arguments in the annotation syntax.
+
+.. code-block:: php
+
+    namespace MyCompany\Annotations;
+
+    use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+
+    /** @Annotation */
+    class Bar implements NamedArgumentConstructorAnnotation
+    {
+        private $foo;
+
+        public function __construct(string $foo)
+        {
+            $this->foo = $foo;
+        }
+    }
+
+    /** Useable with @Bar(foo="baz") */
+
+In combination with PHP 8's constructor property promotion feature
+you can simplify this to:
+
+.. code-block:: php
+
+    namespace MyCompany\Annotations;
+
+    use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
+
+    /** @Annotation */
+    class Bar implements NamedArgumentConstructorAnnotation
+    {
+        public function __construct(private string $foo) {}
+    }
+
 Annotation Target
 -----------------
 
