@@ -26,9 +26,11 @@ interface Reader
      *
      * @param ReflectionClass $class          The ReflectionClass of the class from which
      *          the class annotations should be read.
-     * @param string          $annotationName The name of the annotation.
+     * @param class-string<T> $annotationName The name of the annotation.
      *
-     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return T|null The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @template T
      */
     public function getClassAnnotation(ReflectionClass $class, $annotationName);
 
@@ -46,9 +48,11 @@ interface Reader
      * Gets a method annotation.
      *
      * @param ReflectionMethod $method         The ReflectionMethod to read the annotations from.
-     * @param string           $annotationName The name of the annotation.
+     * @param class-string<T>  $annotationName The name of the annotation.
      *
-     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return T|null The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @template T
      */
     public function getMethodAnnotation(ReflectionMethod $method, $annotationName);
 
@@ -66,9 +70,11 @@ interface Reader
      * Gets a property annotation.
      *
      * @param ReflectionProperty $property       The ReflectionProperty to read the annotations from.
-     * @param string             $annotationName The name of the annotation.
+     * @param class-string<T>    $annotationName The name of the annotation.
      *
-     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
+     * @return T|null The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @template T
      */
     public function getPropertyAnnotation(ReflectionProperty $property, $annotationName);
 }
