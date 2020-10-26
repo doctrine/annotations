@@ -23,6 +23,7 @@ final class AnnotationTest extends TestCase
             Annotation::class
         ));
 
+         // @phpstan-ignore-next-line This is expected not to exist
         $annotation->{$name};
     }
 
@@ -39,6 +40,7 @@ final class AnnotationTest extends TestCase
             Annotation::class
         ));
 
+         // @phpstan-ignore-next-line This is expected not to exist
         $annotation->{$name} = 9001;
     }
 }
