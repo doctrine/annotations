@@ -50,11 +50,11 @@ jobs:
           restore-keys: "php-${{ matrix.php-version }}-composer-locked-"
 
       - name: "Update dependencies with composer"
-        run: "composer update --no-interaction --no-progress --no-suggest"
+        run: "composer update --no-interaction --no-progress"
         if: "${{ matrix.deps == 'normal' }}"
 
       - name: "Install lowest possible dependencies with composer"
-        run: "composer update --no-interaction --no-progress --no-suggest --prefer-dist --prefer-lowest"
+        run: "composer update --no-interaction --no-progress --prefer-dist --prefer-lowest"
         if: "${{ matrix.deps == 'low' }}"
 
       - name: "Run PHPUnit"
