@@ -145,6 +145,8 @@ final class ImplicitlyIgnoredAnnotationNames
         'use' => true,
     ];
 
+    private const Rector = ['noRector' => true];
+
     public const LIST = self::Reserved
         + self::WidelyUsedNonStandard
         + self::PhpDocumentor1
@@ -157,7 +159,8 @@ final class ImplicitlyIgnoredAnnotationNames
         + self::Symfony
         + self::SlevomatCodingStandard
         + self::PhpCodeSniffer
-        + self::PhpStan;
+        + self::PhpStan
+        + self::Rector;
 
     private function __construct()
     {
