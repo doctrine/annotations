@@ -4,3 +4,4 @@
 /phpbench.json
 /phpunit.xml
 /.phpcs-cache
+/.phpunit.result.cache
