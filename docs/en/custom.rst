@@ -99,6 +99,22 @@ you can simplify this to:
         public function __construct(private string $foo) {}
     }
 
+Alternatively, you can annotate your annotation class with
+``@NamedArgumentConstructor`` in case you cannot use the marker interface.
+
+.. code-block:: php
+
+    namespace MyCompany\Annotations;
+
+    /**
+     * @Annotation
+     * @NamedArgumentConstructor
+     */
+    class Bar
+    {
+        public function __construct(private string $foo) {}
+    }
+
 Annotation Target
 -----------------
 
