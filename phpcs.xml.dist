@@ -151,4 +151,8 @@
         <!-- Usage of mixed case constants seems pretty deliberate here -->
         <exclude-pattern>*/lib/Doctrine/Common/Annotations/ImplicitlyIgnoredAnnotationNames.php</exclude-pattern>
     </rule>
+
+    <rule ref="Squiz.Functions.GlobalFunction.Found">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/functions.php</exclude-pattern>
+    </rule>
 </ruleset>
