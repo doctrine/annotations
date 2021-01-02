@@ -1,6 +1,8 @@
 # Doctrine Annotations
 
 [![Build Status](https://github.com/doctrine/annotations/workflows/Continuous%20Integration/badge.svg?label=build)](https://github.com/doctrine/persistence/actions)
+[![Dependency Status](https://www.versioneye.com/package/php--doctrine--annotations/badge.png)](https://www.versioneye.com/package/php--doctrine--annotations)
+[![Reference Status](https://www.versioneye.com/php/doctrine:annotations/reference_badge.svg)](https://www.versioneye.com/php/doctrine:annotations/references)
 [![Total Downloads](https://poser.pugx.org/doctrine/annotations/downloads.png)](https://packagist.org/packages/doctrine/annotations)
 [![Latest Stable Version](https://img.shields.io/packagist/v/doctrine/annotations.svg?label=stable)](https://packagist.org/packages/doctrine/annotations)
 

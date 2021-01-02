@@ -145,6 +145,8 @@ final class ImplicitlyIgnoredAnnotationNames
         'use' => true,
     ];
 
+    private const Phan = ['suppress' => true];
+
     private const Rector = ['noRector' => true];
 
     public const LIST = self::Reserved
@@ -160,6 +162,7 @@ final class ImplicitlyIgnoredAnnotationNames
         + self::SlevomatCodingStandard
         + self::PhpCodeSniffer
         + self::PhpStan
+        + self::Phan
         + self::Rector;
 
     private function __construct()

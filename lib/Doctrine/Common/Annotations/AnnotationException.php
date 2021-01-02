@@ -128,10 +128,10 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a invalid enummerator.
      *
-     * @param string              $attributeName
-     * @param string              $annotationName
-     * @param string              $context
-     * @param object|class-string $given
+     * @param string $attributeName
+     * @param string $annotationName
+     * @param string $context
+     * @param mixed  $given
      *
      * @return AnnotationException
      *
