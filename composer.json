@@ -38,10 +38,5 @@
             "tests/Doctrine/Tests/Common/Annotations/Fixtures/functions.php",
             "tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php"
         ]
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "1.11.x-dev"
-        }
     }
 }
