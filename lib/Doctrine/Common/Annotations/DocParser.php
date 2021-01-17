@@ -144,14 +144,14 @@ final class DocParser
      */
     private static $annotationMetadata = [
         Annotation\Target::class => [
-            'is_annotation'         => true,
-            'has_constructor'       => true,
-            'has_named_constructor' => false,
-            'properties'            => [],
-            'targets_literal'       => 'ANNOTATION_CLASS',
-            'targets'               => Target::TARGET_CLASS,
-            'default_property'      => 'value',
-            'attribute_types'       => [
+            'is_annotation'                  => true,
+            'has_constructor'                => true,
+            'has_named_argument_constructor' => false,
+            'properties'                     => [],
+            'targets_literal'                => 'ANNOTATION_CLASS',
+            'targets'                        => Target::TARGET_CLASS,
+            'default_property'               => 'value',
+            'attribute_types'                => [
                 'value'  => [
                     'required'   => false,
                     'type'       => 'array',
@@ -161,18 +161,18 @@ final class DocParser
             ],
         ],
         Annotation\Attribute::class => [
-            'is_annotation'         => true,
-            'has_constructor'       => false,
-            'has_named_constructor' => false,
-            'targets_literal'       => 'ANNOTATION_ANNOTATION',
-            'targets'               => Target::TARGET_ANNOTATION,
-            'default_property'      => 'name',
-            'properties'            => [
+            'is_annotation'                  => true,
+            'has_constructor'                => false,
+            'has_named_argument_constructor' => false,
+            'targets_literal'                => 'ANNOTATION_ANNOTATION',
+            'targets'                        => Target::TARGET_ANNOTATION,
+            'default_property'               => 'name',
+            'properties'                     => [
                 'name'      => 'name',
                 'type'      => 'type',
                 'required'  => 'required',
             ],
-            'attribute_types'       => [
+            'attribute_types'                => [
                 'value'  => [
                     'required'  => true,
                     'type'      => 'string',
@@ -191,14 +191,14 @@ final class DocParser
             ],
         ],
         Annotation\Attributes::class => [
-            'is_annotation'         => true,
-            'has_constructor'       => false,
-            'has_named_constructor' => false,
-            'targets_literal'       => 'ANNOTATION_CLASS',
-            'targets'               => Target::TARGET_CLASS,
-            'default_property'      => 'value',
-            'properties'            => ['value' => 'value'],
-            'attribute_types'       => [
+            'is_annotation'                  => true,
+            'has_constructor'                => false,
+            'has_named_argument_constructor' => false,
+            'targets_literal'                => 'ANNOTATION_CLASS',
+            'targets'                        => Target::TARGET_CLASS,
+            'default_property'               => 'value',
+            'properties'                     => ['value' => 'value'],
+            'attribute_types'                => [
                 'value' => [
                     'type'      => 'array',
                     'required'  => true,
@@ -208,14 +208,14 @@ final class DocParser
             ],
         ],
         Annotation\Enum::class => [
-            'is_annotation'         => true,
-            'has_constructor'       => true,
-            'has_named_constructor' => false,
-            'targets_literal'       => 'ANNOTATION_PROPERTY',
-            'targets'               => Target::TARGET_PROPERTY,
-            'default_property'      => 'value',
-            'properties'            => ['value' => 'value'],
-            'attribute_types'       => [
+            'is_annotation'                  => true,
+            'has_constructor'                => true,
+            'has_named_argument_constructor' => false,
+            'targets_literal'                => 'ANNOTATION_PROPERTY',
+            'targets'                        => Target::TARGET_PROPERTY,
+            'default_property'               => 'value',
+            'properties'                     => ['value' => 'value'],
+            'attribute_types'                => [
                 'value' => [
                     'type'      => 'array',
                     'required'  => true,
@@ -227,14 +227,14 @@ final class DocParser
             ],
         ],
         Annotation\Annotation::class => [
-            'is_annotation'         => true,
-            'has_constructor'       => false,
-            'has_named_constructor' => false,
-            'targets_literal'       => 'ANNOTATION_CLASS',
-            'targets'               => Target::TARGET_CLASS,
-            'default_property'      => null,
-            'properties'            => ['namedArgumentConstructor' => 'namedArgumentConstructor'],
-            'attribute_types'       => [],
+            'is_annotation'                  => true,
+            'has_constructor'                => false,
+            'has_named_argument_constructor' => false,
+            'targets_literal'                => 'ANNOTATION_CLASS',
+            'targets'                        => Target::TARGET_CLASS,
+            'default_property'               => null,
+            'properties'                     => ['namedArgumentConstructor' => 'namedArgumentConstructor'],
+            'attribute_types'                => [],
         ],
     ];
 
@@ -529,7 +529,7 @@ final class DocParser
             'is_annotation'    => strpos($docComment, '@Annotation') !== false,
         ];
 
-        $metadata['has_named_constructor'] = $metadata['has_constructor']
+        $metadata['has_named_argument_constructor'] = $metadata['has_constructor']
             && $class->implementsInterface(NamedArgumentConstructorAnnotation::class);
 
         // verify that the class is really meant to be an annotation
@@ -545,7 +545,7 @@ final class DocParser
                 }
 
                 if ($annotation instanceof Annotation\Annotation && $annotation->namedArgumentConstructor !== null) {
-                    $metadata['has_named_constructor']
+                    $metadata['has_named_argument_constructor']
                         = $metadata['has_constructor'] && $annotation->namedArgumentConstructor;
                 }
 
@@ -603,7 +603,7 @@ final class DocParser
 
                 // choose the first property as default property
                 $metadata['default_property'] = reset($metadata['properties']);
-            } elseif (PHP_VERSION_ID < 80000 && $metadata['has_named_constructor']) {
+            } elseif (PHP_VERSION_ID < 80000 && $metadata['has_named_argument_constructor']) {
                 foreach ($constructor->getParameters() as $parameter) {
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
@@ -931,7 +931,7 @@ EXCEPTION
             }
         }
 
-        if (self::$annotationMetadata[$name]['has_named_constructor']) {
+        if (self::$annotationMetadata[$name]['has_named_argument_constructor']) {
             if (PHP_VERSION_ID >= 80000) {
                 return new $name(...$values);
             }
