@@ -547,6 +547,10 @@ final class DocParser
 
                 if ($annotation instanceof NamedArgumentConstructor) {
                     $metadata['has_named_argument_constructor'] = $metadata['has_constructor'];
+                    if ($metadata['has_named_argument_constructor']) {
+                        // choose the first argument as the default property
+                        $metadata['default_property'] = $constructor->getParameters()[0]->getName();
+                    }
                 }
 
                 if (! ($annotation instanceof Attributes)) {
@@ -859,7 +863,17 @@ EXCEPTION
             );
         }
 
-        $values = $this->MethodCall();
+        $defaultProperty = 'value';
+        // Change the default property only if the @NamedArgumentConstructor
+        // tag and the default_property are set
+        if (
+            self::$annotationMetadata[$name]['has_named_argument_constructor']
+            && self::$annotationMetadata[$name]['default_property'] !== null
+        ) {
+            $defaultProperty = self::$annotationMetadata[$name]['default_property'];
+        }
+
+        $values = $this->MethodCall($defaultProperty);
 
         if (isset(self::$annotationMetadata[$name]['enum'])) {
             // checks all declared attributes
@@ -1013,7 +1027,7 @@ EXCEPTION
      * @throws AnnotationException
      * @throws ReflectionException
      */
-    private function MethodCall(): array
+    private function MethodCall(string $defaultProperty): array
     {
         $values = [];
 
@@ -1024,7 +1038,7 @@ EXCEPTION
         $this->match(DocLexer::T_OPEN_PARENTHESIS);
 
         if (! $this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
-            $values = $this->Values();
+            $values = $this->Values($defaultProperty);
         }
 
         $this->match(DocLexer::T_CLOSE_PARENTHESIS);
@@ -1040,7 +1054,7 @@ EXCEPTION
      * @throws AnnotationException
      * @throws ReflectionException
      */
-    private function Values(): array
+    private function Values(string $defaultProperty): array
     {
         $values = [$this->Value()];
 
@@ -1064,14 +1078,14 @@ EXCEPTION
         foreach ($values as $k => $value) {
             if (is_object($value) && $value instanceof stdClass) {
                 $values[$value->name] = $value->value;
-            } elseif (! isset($values['value'])) {
-                $values['value'] = $value;
+            } elseif (! isset($values[$defaultProperty])) {
+                $values[$defaultProperty] = $value;
             } else {
-                if (! is_array($values['value'])) {
-                    $values['value'] = [$values['value']];
+                if (! is_array($values[$defaultProperty])) {
+                    $values[$defaultProperty] = [$values[$defaultProperty]];
                 }
 
-                $values['value'][] = $value;
+                $values[$defaultProperty][] = $value;
             }
 
             unset($values[$k]);

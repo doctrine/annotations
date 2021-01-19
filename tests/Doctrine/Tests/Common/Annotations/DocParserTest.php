@@ -1611,6 +1611,41 @@ DOCBLOCK;
         self::assertSame('baz', $result[0]->getFoo());
         self::assertSame(1234, $result[0]->getBar());
     }
+
+    public function testNamedArgumentsConstructorAnnotationWithDefaultProperty(): void
+    {
+        $result = $this
+            ->createTestParser()
+            ->parse('/** @AnotherNamedAnnotation("baz") */');
+
+        self::assertCount(1, $result);
+        self::assertInstanceOf(AnotherNamedAnnotation::class, $result[0]);
+        self::assertSame('baz', $result[0]->getFoo());
+        self::assertSame(1234, $result[0]->getBar());
+    }
+
+    public function testNamedArgumentsConstructorAnnotationWithDefaultPropertyAsArray(): void
+    {
+        $result = $this
+            ->createTestParser()
+            ->parse('/** @NamedAnnotationWithArray({"foo","bar","baz"},bar=567) */');
+
+        self::assertCount(1, $result);
+        self::assertInstanceOf(NamedAnnotationWithArray::class, $result[0]);
+        self::assertSame(['foo', 'bar', 'baz'], $result[0]->getFoo());
+        self::assertSame(567, $result[0]->getBar());
+    }
+
+    public function testNamedArgumentsConstructorAnnotationWithDefaultPropertySet(): void
+    {
+        $result = $this
+            ->createTestParser()
+            ->parse('/** @AnotherNamedAnnotation("baz", foo="bar") */');
+
+        self::assertCount(1, $result);
+        self::assertInstanceOf(AnotherNamedAnnotation::class, $result[0]);
+        self::assertSame('bar', $result[0]->getFoo());
+    }
 }
 
 /** @Annotation */
@@ -1656,6 +1691,38 @@ class AnotherNamedAnnotation
     }
 
     public function getFoo(): string
+    {
+        return $this->foo;
+    }
+
+    public function getBar(): int
+    {
+        return $this->bar;
+    }
+}
+
+/**
+ * @Annotation
+ * @NamedArgumentConstructor
+ */
+class NamedAnnotationWithArray
+{
+    /** @var mixed[] */
+    private $foo;
+    /** @var int */
+    private $bar;
+
+    /**
+     * @param mixed[] $foo
+     */
+    public function __construct(array $foo, int $bar = 1234)
+    {
+        $this->foo = $foo;
+        $this->bar = $bar;
+    }
+
+    /** @return mixed[] */
+    public function getFoo(): array
     {
         return $this->foo;
     }
