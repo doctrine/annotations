@@ -15,8 +15,10 @@ use stdClass;
 
 use function array_keys;
 use function array_map;
+use function array_values;
 use function class_exists;
 use function constant;
+use function count;
 use function defined;
 use function explode;
 use function gettype;
@@ -607,7 +609,7 @@ final class DocParser
 
                 // choose the first property as default property
                 $metadata['default_property'] = reset($metadata['properties']);
-            } elseif (PHP_VERSION_ID < 80000 && $metadata['has_named_argument_constructor']) {
+            } elseif ($metadata['has_named_argument_constructor']) {
                 foreach ($constructor->getParameters() as $parameter) {
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
@@ -863,17 +865,36 @@ EXCEPTION
             );
         }
 
-        $defaultProperty = 'value';
-        // Change the default property only if the @NamedArgumentConstructor
-        // tag and the default_property are set
+        $arguments = $this->MethodCall();
+
+        $positionalArguments = $arguments['positional_arguments'] ?? [];
+        $namedArguments      = $arguments['named_arguments'] ?? [];
+
         if (
             self::$annotationMetadata[$name]['has_named_argument_constructor']
             && self::$annotationMetadata[$name]['default_property'] !== null
         ) {
-            $defaultProperty = self::$annotationMetadata[$name]['default_property'];
-        }
+            $values = $namedArguments;
+            foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
+                $position = $parameter['position'];
+                if (isset($values[$property]) || ! isset($positionalArguments[$position])) {
+                    continue;
+                }
 
-        $values = $this->MethodCall($defaultProperty);
+                $values[$property] = $positionalArguments[$position];
+            }
+        } else {
+            $values = $namedArguments;
+            if (! empty($positionalArguments) && ! isset($values['value'])) {
+                if (count($positionalArguments) === 1) {
+                    $value = $positionalArguments[0];
+                } else {
+                    $value = array_values($positionalArguments);
+                }
+
+                $values['value'] = $value;
+            }
+        }
 
         if (isset(self::$annotationMetadata[$name]['enum'])) {
             // checks all declared attributes
@@ -1027,7 +1048,7 @@ EXCEPTION
      * @throws AnnotationException
      * @throws ReflectionException
      */
-    private function MethodCall(string $defaultProperty): array
+    private function MethodCall(): array
     {
         $values = [];
 
@@ -1038,7 +1059,7 @@ EXCEPTION
         $this->match(DocLexer::T_OPEN_PARENTHESIS);
 
         if (! $this->lexer->isNextToken(DocLexer::T_CLOSE_PARENTHESIS)) {
-            $values = $this->Values($defaultProperty);
+            $values = $this->Values();
         }
 
         $this->match(DocLexer::T_CLOSE_PARENTHESIS);
@@ -1054,7 +1075,7 @@ EXCEPTION
      * @throws AnnotationException
      * @throws ReflectionException
      */
-    private function Values(string $defaultProperty): array
+    private function Values(): array
     {
         $values = [$this->Value()];
 
@@ -1075,23 +1096,17 @@ EXCEPTION
             $values[] = $value;
         }
 
+        $namedArguments      = [];
+        $positionalArguments = [];
         foreach ($values as $k => $value) {
             if (is_object($value) && $value instanceof stdClass) {
-                $values[$value->name] = $value->value;
-            } elseif (! isset($values[$defaultProperty])) {
-                $values[$defaultProperty] = $value;
+                $namedArguments[$value->name] = $value->value;
             } else {
-                if (! is_array($values[$defaultProperty])) {
-                    $values[$defaultProperty] = [$values[$defaultProperty]];
-                }
-
-                $values[$defaultProperty][] = $value;
+                $positionalArguments[$k] = $value;
             }
-
-            unset($values[$k]);
         }
 
-        return $values;
+        return ['named_arguments' => $namedArguments, 'positional_arguments' => $positionalArguments];
     }
 
     /**
