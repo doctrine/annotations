@@ -87,6 +87,15 @@ class DocParserTest extends TestCase
         self::assertInstanceOf(Name::class, $annot->value[0]);
         self::assertInstanceOf(Name::class, $annot->value[1]);
 
+        // Multiple scalar values
+        $result = $parser->parse('@Name("foo", "bar")');
+        $annot  = $result[0];
+
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertIsArray($annot->value);
+        self::assertEquals('foo', $annot->value[0]);
+        self::assertEquals('bar', $annot->value[1]);
+
         // Multiple types as values
         $result = $parser->parse('@Name(foo="Bar", @Name, {"key1"="value1", "key2"="value2"})');
         $annot  = $result[0];
@@ -1646,6 +1655,16 @@ DOCBLOCK;
         self::assertInstanceOf(AnotherNamedAnnotation::class, $result[0]);
         self::assertSame('bar', $result[0]->getFoo());
     }
+
+    public function testNamedArgumentsConstructorAnnotationWithInvalidArguments(): void
+    {
+        $parser = $this->createTestParser();
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessage(
+            '[Syntax Error] Expected Positional arguments after named arguments is not allowed'
+        );
+        $parser->parse('/** @AnotherNamedAnnotation("foo", bar=666, "hey") */');
+    }
 }
 
 /** @Annotation */
@@ -1683,11 +1702,14 @@ class AnotherNamedAnnotation
     private $foo;
     /** @var int */
     private $bar;
+    /** @var string */
+    private $baz;
 
-    public function __construct(string $foo, int $bar = 1234)
+    public function __construct(string $foo, int $bar = 1234, string $baz = 'baz')
     {
         $this->foo = $foo;
         $this->bar = $bar;
+        $this->baz = $baz;
     }
 
     public function getFoo(): string
@@ -1698,6 +1720,11 @@ class AnotherNamedAnnotation
     public function getBar(): int
     {
         return $this->bar;
+    }
+
+    public function getBaz(): string
+    {
+        return $this->baz;
     }
 }
 

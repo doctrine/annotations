@@ -1061,10 +1061,6 @@ EXCEPTION
             $token = $this->lexer->lookahead;
             $value = $this->Value();
 
-            if (! is_object($value) && ! is_array($value)) {
-                throw $this->syntaxError('Value', $token);
-            }
-
             $values[] = $value;
         }
 
@@ -1423,6 +1419,20 @@ EXCEPTION
             self::$annotationMetadata[$name]['has_named_argument_constructor']
             && self::$annotationMetadata[$name]['default_property'] !== null
         ) {
+            // We must ensure that we don't have positional arguments after named ones
+            $positions    = array_keys($positionalArguments);
+            $lastPosition = null;
+            foreach ($positions as $position) {
+                if (
+                    ($lastPosition === null && $position !== 0 ) ||
+                    ($lastPosition !== null && $position !== $lastPosition + 1)
+                ) {
+                    throw $this->syntaxError('Positional arguments after named arguments is not allowed');
+                }
+
+                $lastPosition = $position;
+            }
+
             foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
                 $position = $parameter['position'];
                 if (isset($values[$property]) || ! isset($positionalArguments[$position])) {
