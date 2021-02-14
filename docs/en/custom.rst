@@ -58,13 +58,60 @@ Optional: Constructors with Named Parameters
 
 Starting with Annotations v1.11 a new annotation instantiation strategy
 is available that aims at compatibility of Annotation classes with the PHP 8
-attribute feature.
+attribute feature. You need to declare a constructor with regular parameter 
+names that match the named arguments in the annotation syntax.
 
-You can implement the
+To enable this feature, you can tag your annotation class with 
+``@NamedArgumentConstructor`` (available from v1.12) or implement the
 ``Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation`` interface
-and then declare a constructor with regular parameter names that are matched
-from the named arguments in the annotation syntax.
+(available from v1.11 and deprecated as of v1.12).
+When using the ``@NamedArgumentConstructor`` tag, the first argument of the
+constructor is considered as the default one.
 
+
+Usage with the ``@NamedArgumentContrustor`` tag
+
+.. code-block:: php
+
+    namespace MyCompany\Annotations;
+
+    /** 
+     * @Annotation 
+     * @NamedArgumentConstructor
+     */
+    class Bar implements NamedArgumentConstructorAnnotation
+    {
+        private $foo;
+
+        public function __construct(string $foo)
+        {
+            $this->foo = $foo;
+        }
+    }
+
+    /** Usable with @Bar(foo="baz") */
+    /** Usable with @Bar("baz") */
+
+In combination with PHP 8's constructor property promotion feature
+you can simplify this to:
+
+.. code-block:: php
+
+    namespace MyCompany\Annotations;
+
+    /** 
+     * @Annotation 
+     * @NamedArgumentConstructor
+     */
+    class Bar implements NamedArgumentConstructorAnnotation
+    {
+        public function __construct(private string $foo) {}
+    }
+
+
+Usage with the 
+``Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation``
+interface (v1.11, deprecated as of v1.12):
 .. code-block:: php
 
     namespace MyCompany\Annotations;
@@ -76,44 +123,10 @@ from the named arguments in the annotation syntax.
     {
         private $foo;
 
-        public function __construct(string $foo)
-        {
-            $this->foo = $foo;
-        }
-    }
-
-    /** Useable with @Bar(foo="baz") */
-
-In combination with PHP 8's constructor property promotion feature
-you can simplify this to:
-
-.. code-block:: php
-
-    namespace MyCompany\Annotations;
-
-    use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
-
-    /** @Annotation */
-    class Bar implements NamedArgumentConstructorAnnotation
-    {
         public function __construct(private string $foo) {}
     }
 
-Alternatively, you can annotate your annotation class with
-``@NamedArgumentConstructor`` in case you cannot use the marker interface.
-
-.. code-block:: php
-
-    namespace MyCompany\Annotations;
-
-    /**
-     * @Annotation
-     * @NamedArgumentConstructor
-     */
-    class Bar
-    {
-        public function __construct(private string $foo) {}
-    }
+    /** Usable with @Bar(foo="baz") */
 
 Annotation Target
 -----------------

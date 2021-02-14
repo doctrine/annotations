@@ -15,8 +15,10 @@ use stdClass;
 
 use function array_keys;
 use function array_map;
+use function array_values;
 use function class_exists;
 use function constant;
+use function count;
 use function defined;
 use function explode;
 use function gettype;
@@ -547,6 +549,10 @@ final class DocParser
 
                 if ($annotation instanceof NamedArgumentConstructor) {
                     $metadata['has_named_argument_constructor'] = $metadata['has_constructor'];
+                    if ($metadata['has_named_argument_constructor']) {
+                        // choose the first argument as the default property
+                        $metadata['default_property'] = $constructor->getParameters()[0]->getName();
+                    }
                 }
 
                 if (! ($annotation instanceof Attributes)) {
@@ -595,7 +601,7 @@ final class DocParser
                         }
 
                         $metadata['enum'][$property->name]['value']   = $annotation->value;
-                        $metadata['enum'][$property->name]['literal'] = ( ! empty($annotation->literal))
+                        $metadata['enum'][$property->name]['literal'] = (! empty($annotation->literal))
                             ? $annotation->literal
                             : $annotation->value;
                     }
@@ -603,7 +609,7 @@ final class DocParser
 
                 // choose the first property as default property
                 $metadata['default_property'] = reset($metadata['properties']);
-            } elseif (PHP_VERSION_ID < 80000 && $metadata['has_named_argument_constructor']) {
+            } elseif ($metadata['has_named_argument_constructor']) {
                 foreach ($constructor->getParameters() as $parameter) {
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
@@ -859,7 +865,8 @@ EXCEPTION
             );
         }
 
-        $values = $this->MethodCall();
+        $arguments = $this->MethodCall();
+        $values    = $this->resolvePositionalValues($arguments, $name);
 
         if (isset(self::$annotationMetadata[$name]['enum'])) {
             // checks all declared attributes
@@ -1054,30 +1061,20 @@ EXCEPTION
             $token = $this->lexer->lookahead;
             $value = $this->Value();
 
-            if (! is_object($value) && ! is_array($value)) {
-                throw $this->syntaxError('Value', $token);
-            }
-
             $values[] = $value;
         }
 
+        $namedArguments      = [];
+        $positionalArguments = [];
         foreach ($values as $k => $value) {
             if (is_object($value) && $value instanceof stdClass) {
-                $values[$value->name] = $value->value;
-            } elseif (! isset($values['value'])) {
-                $values['value'] = $value;
+                $namedArguments[$value->name] = $value->value;
             } else {
-                if (! is_array($values['value'])) {
-                    $values['value'] = [$values['value']];
-                }
-
-                $values['value'][] = $value;
+                $positionalArguments[$k] = $value;
             }
-
-            unset($values[$k]);
         }
 
-        return $values;
+        return ['named_arguments' => $namedArguments, 'positional_arguments' => $positionalArguments];
     }
 
     /**
@@ -1103,9 +1100,9 @@ EXCEPTION
                 case ! empty($this->namespaces):
                     foreach ($this->namespaces as $ns) {
                         if (class_exists($ns . '\\' . $className) || interface_exists($ns . '\\' . $className)) {
-                             $className = $ns . '\\' . $className;
-                             $found     = true;
-                             break;
+                            $className = $ns . '\\' . $className;
+                            $found     = true;
+                            break;
                         }
                     }
 
@@ -1132,7 +1129,7 @@ EXCEPTION
             }
 
             if ($found) {
-                 $identifier = $className . '::' . $const;
+                $identifier = $className . '::' . $const;
             }
         }
 
@@ -1404,5 +1401,58 @@ EXCEPTION
         }
 
         return false;
+    }
+
+    /**
+     * Resolve positional arguments (without name) to named ones
+     *
+     * @param array<string,mixed> $arguments
+     *
+     * @return array<string,mixed>
+     */
+    private function resolvePositionalValues(array $arguments, string $name): array
+    {
+        $positionalArguments = $arguments['positional_arguments'] ?? [];
+        $values              = $arguments['named_arguments'] ?? [];
+
+        if (
+            self::$annotationMetadata[$name]['has_named_argument_constructor']
+            && self::$annotationMetadata[$name]['default_property'] !== null
+        ) {
+            // We must ensure that we don't have positional arguments after named ones
+            $positions    = array_keys($positionalArguments);
+            $lastPosition = null;
+            foreach ($positions as $position) {
+                if (
+                    ($lastPosition === null && $position !== 0 ) ||
+                    ($lastPosition !== null && $position !== $lastPosition + 1)
+                ) {
+                    throw $this->syntaxError('Positional arguments after named arguments is not allowed');
+                }
+
+                $lastPosition = $position;
+            }
+
+            foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
+                $position = $parameter['position'];
+                if (isset($values[$property]) || ! isset($positionalArguments[$position])) {
+                    continue;
+                }
+
+                $values[$property] = $positionalArguments[$position];
+            }
+        } else {
+            if (count($positionalArguments) > 0 && ! isset($values['value'])) {
+                if (count($positionalArguments) === 1) {
+                    $value = $positionalArguments[0];
+                } else {
+                    $value = array_values($positionalArguments);
+                }
+
+                $values['value'] = $value;
+            }
+        }
+
+        return $values;
     }
 }
