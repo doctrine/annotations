@@ -33,7 +33,7 @@ use function var_export;
  *
  * @deprecated the FileCacheReader is deprecated and will be removed
  *             in version 2.0.0 of doctrine/annotations. Please use the
- *             {@see \Doctrine\Common\Annotations\CachedReader} instead.
+ *             {@see \Doctrine\Common\Annotations\PsrCachedReader} instead.
  */
 class FileCacheReader implements Reader
 {
