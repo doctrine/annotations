@@ -87,6 +87,24 @@ class DocParserTest extends TestCase
         self::assertInstanceOf(Name::class, $annot->value[0]);
         self::assertInstanceOf(Name::class, $annot->value[1]);
 
+        // Positionals arguments following named arguments
+        $result = $parser->parse('@Name(foo="bar", @Name)');
+        $annot  = $result[0];
+
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertEquals('bar', $annot->foo);
+        self::assertInstanceOf(Name::class, $annot->value);
+
+        // Multiple positionals arguments following named arguments
+        $result = $parser->parse('@Name(@Name, foo="baz", @Name)');
+        $annot  = $result[0];
+
+        self::assertInstanceOf(Name::class, $annot);
+        self::assertEquals('baz', $annot->foo);
+        self::assertIsArray($annot->value);
+        self::assertInstanceOf(Name::class, $annot->value[0]);
+        self::assertInstanceOf(Name::class, $annot->value[1]);
+
         // Multiple scalar values
         $result = $parser->parse('@Name("foo", "bar")');
         $annot  = $result[0];
