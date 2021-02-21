@@ -13,6 +13,13 @@ namespace Doctrine\Tests\Common\Annotations;
 class DummyClass
 {
     /**
+     * A nice constant.
+     *
+     * @DummyAnnotation(dummyValue="constantHello")
+     */
+    const SOME_CONSTANT = "foo";
+
+    /**
      * A nice property.
      *
      * @var mixed

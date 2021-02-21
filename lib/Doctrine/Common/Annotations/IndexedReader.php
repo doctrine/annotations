@@ -12,7 +12,7 @@ use function get_class;
 /**
  * Allows the reader to be used in-place of Doctrine's reader.
  */
-class IndexedReader implements Reader
+class IndexedReader implements Reader, ReaderWithConstantsAnnotations
 {
     /** @var Reader */
     private $delegate;
@@ -83,6 +83,27 @@ class IndexedReader implements Reader
     public function getPropertyAnnotation(ReflectionProperty $property, $annotation)
     {
         return $this->delegate->getPropertyAnnotation($property, $annotation);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(\ReflectionClassConstant $constant): array
+    {
+        $annotations = [];
+        foreach ($this->delegate->getConstantAnnotations($constant) as $annot) {
+            $annotations[get_class($annot)] = $annot;
+        }
+
+        return $annotations;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(\ReflectionClassConstant $constant, $annotation)
+    {
+        return $this->delegate->getConstantAnnotation($constant, $annotation);
     }
 
     /**

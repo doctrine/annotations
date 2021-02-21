@@ -17,7 +17,7 @@ use function ini_get;
 /**
  * A reader for docblock annotations.
  */
-class AnnotationReader implements Reader
+class AnnotationReader implements Reader, ReaderWithConstantsAnnotations
 {
     /**
      * Global map for imports.
@@ -227,6 +227,38 @@ class AnnotationReader implements Reader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(\ReflectionClassConstant $constant): array
+    {
+        $class   = $constant->getDeclaringClass();
+        $context = 'constant ' . $class->getName() . "::" . $constant->getName();
+
+        $this->parser->setTarget(Target::TARGET_CONSTANT);
+        $this->parser->setImports($this->getConstantImports($constant));
+        $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
+        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
+
+        return $this->parser->parse($constant->getDocComment(), $context);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(\ReflectionClassConstant $constant, $annotationName)
+    {
+        $annotations = $this->getConstantAnnotations($constant);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the annotations applied to a function.
      *
      * @phpstan-return list<object> An array of Annotations.
@@ -352,6 +384,28 @@ class AnnotationReader implements Reader
         return array_merge($classImports, $traitImports);
     }
 
+    /**
+     * Retrieves imports for constants.
+     */
+    private function getConstantImports(\ReflectionClassConstant $constant): array
+    {
+        $class = $constant->getDeclaringClass();
+        $classImports = $this->getImports($class);
+        if (!method_exists($class, 'getTraits')) {
+            return $classImports;
+        }
+
+        $traitImports = array();
+
+        foreach ($class->getTraits() as $trait) {
+            if ($trait->hasConstant($constant->getName())) {
+                $traitImports = array_merge($traitImports, $this->phpParser->parseClass($trait));
+            }
+        }
+
+        return array_merge($classImports, $traitImports);
+    }
+    
     /**
      * Collects parsing metadata for a given class or function.
      *

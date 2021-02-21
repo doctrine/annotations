@@ -17,7 +17,7 @@ use function time;
 /**
  * A cache aware annotation reader.
  */
-final class CachedReader implements Reader
+final class CachedReader implements Reader, ReaderWithConstantsAnnotations
 {
     /** @var Reader */
     private $delegate;
@@ -105,6 +105,41 @@ final class CachedReader implements Reader
     public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
     {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
+            if ($annot instanceof $annotationName) {
+                return $annot;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(\ReflectionClassConstant $constant): array
+    {
+        $class = $constant->getDeclaringClass();
+        $cacheKey = $class->getName().'::'.$constant->getName();
+
+        if (isset($this->loadedAnnotations[$cacheKey])) {
+            return $this->loadedAnnotations[$cacheKey];
+        }
+
+        $annots = $this->fetchFromCache($cacheKey, $class);
+        if ($annots === false) {
+            $annots = $this->delegate->getConstantAnnotations($constant);
+            $this->saveToCache($cacheKey, $annots);
+        }
+
+        return $this->loadedAnnotations[$cacheKey] = $annots;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(\ReflectionClassConstant $constant, $annotationName)
+    {
+        foreach ($this->getConstantAnnotations($constant) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
             }
