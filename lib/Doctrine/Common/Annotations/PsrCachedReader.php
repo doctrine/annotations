@@ -2,31 +2,29 @@
 
 namespace Doctrine\Common\Annotations;
 
-use Doctrine\Common\Cache\Cache;
+use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
+use Reflector;
 
 use function array_map;
 use function array_merge;
 use function assert;
 use function filemtime;
 use function max;
+use function rawurlencode;
 use function time;
 
 /**
  * A cache aware annotation reader.
- *
- * @deprecated the CachedReader is deprecated and will be removed
- *             in version 2.0.0 of doctrine/annotations. Please use the
- *             {@see \Doctrine\Common\Annotations\PsrCachedReader} instead.
  */
-final class CachedReader implements Reader
+final class PsrCachedReader implements Reader
 {
     /** @var Reader */
     private $delegate;
 
-    /** @var Cache */
+    /** @var CacheItemPoolInterface */
     private $cache;
 
     /** @var bool */
@@ -38,10 +36,7 @@ final class CachedReader implements Reader
     /** @var int[] */
     private $loadedFilemtimes = [];
 
-    /**
-     * @param bool $debug
-     */
-    public function __construct(Reader $reader, Cache $cache, $debug = false)
+    public function __construct(Reader $reader, CacheItemPoolInterface $cache, bool $debug = false)
     {
         $this->delegate = $reader;
         $this->cache    = $cache;
@@ -59,11 +54,7 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        $annots = $this->fetchFromCache($cacheKey, $class);
-        if ($annots === false) {
-            $annots = $this->delegate->getClassAnnotations($class);
-            $this->saveToCache($cacheKey, $annots);
-        }
+        $annots = $this->fetchFromCache($cacheKey, $class, 'getClassAnnotations', $class);
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -94,11 +85,7 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        $annots = $this->fetchFromCache($cacheKey, $class);
-        if ($annots === false) {
-            $annots = $this->delegate->getPropertyAnnotations($property);
-            $this->saveToCache($cacheKey, $annots);
-        }
+        $annots = $this->fetchFromCache($cacheKey, $class, 'getPropertyAnnotations', $property);
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -129,11 +116,7 @@ final class CachedReader implements Reader
             return $this->loadedAnnotations[$cacheKey];
         }
 
-        $annots = $this->fetchFromCache($cacheKey, $class);
-        if ($annots === false) {
-            $annots = $this->delegate->getMethodAnnotations($method);
-            $this->saveToCache($cacheKey, $annots);
-        }
+        $annots = $this->fetchFromCache($cacheKey, $class, 'getMethodAnnotations', $method);
 
         return $this->loadedAnnotations[$cacheKey] = $annots;
     }
@@ -152,69 +135,50 @@ final class CachedReader implements Reader
         return null;
     }
 
-    /**
-     * Clears loaded annotations.
-     *
-     * @return void
-     */
-    public function clearLoadedAnnotations()
+    public function clearLoadedAnnotations(): void
     {
         $this->loadedAnnotations = [];
         $this->loadedFilemtimes  = [];
     }
 
-    /**
-     * Fetches a value from the cache.
-     *
-     * @param string $cacheKey The cache key.
-     *
-     * @return mixed The cached value or false when the value is not in cache.
-     */
-    private function fetchFromCache($cacheKey, ReflectionClass $class)
-    {
-        $data = $this->cache->fetch($cacheKey);
-        if ($data !== false) {
-            if (! $this->debug || $this->isCacheFresh($cacheKey, $class)) {
-                return $data;
-            }
+    /** @return mixed[] */
+    private function fetchFromCache(
+        string $cacheKey,
+        ReflectionClass $class,
+        string $method,
+        Reflector $reflector
+    ): array {
+        $cacheKey = rawurlencode($cacheKey);
+
+        $item = $this->cache->getItem($cacheKey);
+        if (! $item->isHit() || ($this->debug && ! $this->refresh($cacheKey, $class))) {
+            $this->cache->save($item->set($this->delegate->{$method}($reflector)));
         }
 
-        return false;
+        return $item->get();
     }
 
     /**
-     * Saves a value to the cache.
+     * Used in debug mode to check if the cache is fresh.
      *
-     * @param string $cacheKey The cache key.
-     * @param mixed  $value    The value.
-     *
-     * @return void
+     * @return bool Returns true if the cache was fresh, or false if the class
+     * being read was modified since writing to the cache.
      */
-    private function saveToCache($cacheKey, $value)
-    {
-        $this->cache->save($cacheKey, $value);
-        if (! $this->debug) {
-            return;
-        }
-
-        $this->cache->save('[C]' . $cacheKey, time());
-    }
-
-    /**
-     * Checks if the cache is fresh.
-     *
-     * @param string $cacheKey
-     *
-     * @return bool
-     */
-    private function isCacheFresh($cacheKey, ReflectionClass $class)
+    private function refresh(string $cacheKey, ReflectionClass $class): bool
     {
         $lastModification = $this->getLastModification($class);
         if ($lastModification === 0) {
             return true;
         }
 
-        return $this->cache->fetch('[C]' . $cacheKey) >= $lastModification;
+        $item = $this->cache->getItem('[C]' . $cacheKey);
+        if ($item->isHit() && $item->get() >= $lastModification) {
+            return true;
+        }
+
+        $this->cache->save($item->set(time()));
+
+        return false;
     }
 
     /**
