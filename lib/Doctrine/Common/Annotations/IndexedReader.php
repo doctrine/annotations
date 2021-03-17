@@ -3,6 +3,7 @@
 namespace Doctrine\Common\Annotations;
 
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -83,6 +84,27 @@ class IndexedReader implements Reader
     public function getPropertyAnnotation(ReflectionProperty $property, $annotation)
     {
         return $this->delegate->getPropertyAnnotation($property, $annotation);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(ReflectionClassConstant $constant)
+    {
+        $annotations = [];
+        foreach ($this->delegate->getConstantAnnotations($constant) as $annot) {
+            $annotations[get_class($annot)] = $annot;
+        }
+
+        return $annotations;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(ReflectionClassConstant $constant, $annotationName)
+    {
+        return $this->delegate->getConstantAnnotation($constant, $annotationName);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Doctrine\Common\Annotations;
 
-use ReflectionClassConstant;
 use InvalidArgumentException;
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
 use RuntimeException;

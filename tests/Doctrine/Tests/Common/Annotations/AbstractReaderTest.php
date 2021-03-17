@@ -2,19 +2,21 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
-use ReflectionClassConstant;
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
 use Test;
 use TopLevelAnnotation;
+
 use function class_exists;
 use function reset;
+use function sprintf;
 
 require_once __DIR__ . '/TopLevelAnnotation.php';
 
@@ -195,9 +197,12 @@ abstract class AbstractReaderTest extends TestCase
         if ($this->expectException) {
             $this->expectException(AnnotationException::class);
             $this->expectExceptionMessage(
-                '[Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on constant' .
-                ' Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtConstant::SOME_CONSTANT.' .
-                ' You may only use this annotation on these code elements: CLASS'
+                sprintf(
+                    '[Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on constant' .
+                    ' %s::SOME_CONSTANT.' .
+                    ' You may only use this annotation on these code elements: CLASS',
+                    Fixtures\ClassWithInvalidAnnotationTargetAtConstant::class
+                )
             );
         }
 
@@ -443,7 +448,7 @@ abstract class AbstractReaderTest extends TestCase
 
     public function testGetAnnotationOnClassConstant(): void
     {
-        $reader      = $this->getReader();
+        $reader        = $this->getReader();
         $fooAnnotation = $reader->getConstantAnnotation(
             new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'FOO'),
             DummyAnnotation::class
@@ -657,14 +662,12 @@ class TestClassWithAnnotationOnConstant
 {
     /**
      * @DummyAnnotation(42)
-     * @var string
      */
     public const FOO = 'ClassWithAnnotationOnConstant.FOO';
 
     /**
      * @DummyAnnotation(31)
      * @DummyGeneratedValue()
-     * @var string
      */
     public const BAR = 'ClassWithAnnotationOnConstant.BAR';
 }

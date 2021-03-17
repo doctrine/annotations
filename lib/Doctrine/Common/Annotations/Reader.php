@@ -3,9 +3,9 @@
 namespace Doctrine\Common\Annotations;
 
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
-use ReflectionClassConstant;
 
 /**
  * Interface for annotation readers.

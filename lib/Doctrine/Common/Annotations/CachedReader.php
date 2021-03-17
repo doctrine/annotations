@@ -2,9 +2,9 @@
 
 namespace Doctrine\Common\Annotations;
 
-use ReflectionClassConstant;
 use Doctrine\Common\Cache\Cache;
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
 

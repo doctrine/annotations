@@ -2,9 +2,9 @@
 
 namespace Doctrine\Common\Annotations;
 
-use ReflectionClassConstant;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
 use Reflector;
@@ -172,7 +172,6 @@ final class PsrCachedReader implements Reader
 
         return null;
     }
-
 
     /** @return mixed[] */
     private function fetchFromCache(

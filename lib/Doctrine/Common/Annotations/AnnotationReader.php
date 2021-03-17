@@ -2,10 +2,10 @@
 
 namespace Doctrine\Common\Annotations;
 
-use ReflectionClassConstant;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
