@@ -2,6 +2,7 @@
 
 namespace Doctrine\Tests\Common\Annotations;
 
+use ReflectionClassConstant;
 use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\Reader;
@@ -12,7 +13,6 @@ use ReflectionMethod;
 use ReflectionProperty;
 use Test;
 use TopLevelAnnotation;
-
 use function class_exists;
 use function reset;
 
@@ -96,6 +96,7 @@ abstract class AbstractReaderTest extends TestCase
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('foo')));
         self::assertCount(1, $reader->getMethodAnnotations($class->getMethod('someFunction')));
         self::assertCount(1, $reader->getPropertyAnnotations($class->getProperty('nested')));
+        self::assertCount(1, $reader->getConstantAnnotations($class->getReflectionConstant('SOME_CONSTANT')));
     }
 
     public function testAnnotationsWithVarType(): void
@@ -185,6 +186,24 @@ abstract class AbstractReaderTest extends TestCase
         $reader->getPropertyAnnotations(new ReflectionProperty(
             Fixtures\ClassWithInvalidAnnotationTargetAtProperty::class,
             'bar'
+        ));
+    }
+
+    public function testClassWithInvalidAnnotationTargetAtConstantDocBlock(): void
+    {
+        $reader = $this->getReader();
+        if ($this->expectException) {
+            $this->expectException(AnnotationException::class);
+            $this->expectExceptionMessage(
+                '[Semantical Error] Annotation @AnnotationTargetClass is not allowed to be declared on constant' .
+                ' Doctrine\Tests\Common\Annotations\Fixtures\ClassWithInvalidAnnotationTargetAtConstant::SOME_CONSTANT.' .
+                ' You may only use this annotation on these code elements: CLASS'
+            );
+        }
+
+        $reader->getConstantAnnotations(new ReflectionClassConstant(
+            Fixtures\ClassWithInvalidAnnotationTargetAtConstant::class,
+            'SOME_CONSTANT'
         ));
     }
 
@@ -403,6 +422,56 @@ abstract class AbstractReaderTest extends TestCase
         self::assertInstanceOf(TopLevelAnnotation::class, reset($annotations));
     }
 
+    public function testGetMultipleAnnotationOnClassConstant(): void
+    {
+        $reader      = $this->getReader();
+        $annotations = $reader->getConstantAnnotations(
+            new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'FOO')
+        );
+        $this->assertCount(1, $annotations);
+        $this->assertInstanceOf(DummyAnnotation::class, $annotations[0]);
+        $this->assertEquals(42, $annotations[0]->value);
+
+        $annotations = $reader->getConstantAnnotations(
+            new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'BAR')
+        );
+        $this->assertCount(2, $annotations);
+        $this->assertInstanceOf(DummyAnnotation::class, $annotations[0]);
+        $this->assertInstanceOf(DummyGeneratedValue::class, $annotations[1]);
+        $this->assertEquals(31, $annotations[0]->value);
+    }
+
+    public function testGetAnnotationOnClassConstant(): void
+    {
+        $reader      = $this->getReader();
+        $fooAnnotation = $reader->getConstantAnnotation(
+            new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'FOO'),
+            DummyAnnotation::class
+        );
+        $this->assertInstanceOf(DummyAnnotation::class, $fooAnnotation);
+        $this->assertEquals(42, $fooAnnotation->value);
+
+        $this->assertNull(
+            $reader->getConstantAnnotation(
+                new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'FOO'),
+                DummyGeneratedValue::class
+            )
+        );
+
+        $barDummyAnnotation = $reader->getConstantAnnotation(
+            new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'BAR'),
+            DummyAnnotation::class
+        );
+        $this->assertInstanceOf(DummyAnnotation::class, $barDummyAnnotation);
+        $this->assertEquals(31, $barDummyAnnotation->value);
+
+        $barGeneratedAnnotation = $reader->getConstantAnnotation(
+            new ReflectionClassConstant(TestClassWithAnnotationOnConstant::class, 'BAR'),
+            DummyGeneratedValue::class
+        );
+        $this->assertInstanceOf(DummyGeneratedValue::class, $barGeneratedAnnotation);
+    }
+
     public function testIgnoresAnnotationsNotPrefixedWithWhitespace(): void
     {
         $reader = $this->getReader();
@@ -582,6 +651,22 @@ If it is indeed no annotation, then you need to add @IgnoreAnnotation("NoAnnotat
     }
 
     abstract protected function getReader(): Reader;
+}
+
+class TestClassWithAnnotationOnConstant
+{
+    /**
+     * @DummyAnnotation(42)
+     * @var string
+     */
+    public const FOO = 'ClassWithAnnotationOnConstant.FOO';
+
+    /**
+     * @DummyAnnotation(31)
+     * @DummyGeneratedValue()
+     * @var string
+     */
+    public const BAR = 'ClassWithAnnotationOnConstant.BAR';
 }
 
 /**

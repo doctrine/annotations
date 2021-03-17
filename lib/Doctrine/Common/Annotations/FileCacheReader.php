@@ -2,6 +2,7 @@
 
 namespace Doctrine\Common\Annotations;
 
+use ReflectionClassConstant;
 use InvalidArgumentException;
 use ReflectionClass;
 use ReflectionMethod;
@@ -205,6 +206,63 @@ class FileCacheReader implements Reader
         }
 
         return $this->loadedAnnotations[$key] = include $path;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(ReflectionClassConstant $constant)
+    {
+        $class = $constant->getDeclaringClass();
+        if (! isset($this->classNameHashes[$class->name])) {
+            $this->classNameHashes[$class->name] = sha1($class->name);
+        }
+
+        $key = $this->classNameHashes[$class->name] . '::' . $constant->getName();
+
+        if (isset($this->loadedAnnotations[$key])) {
+            return $this->loadedAnnotations[$key];
+        }
+
+        $path = $this->dir . '/' . strtr($key, '\\', '-') . '.cache.php';
+        if (! is_file($path)) {
+            $annot = $this->reader->getConstantAnnotations($constant);
+            $this->saveCacheFile($path, $annot);
+
+            return $this->loadedAnnotations[$key] = $annot;
+        }
+
+        $filename = $class->getFilename();
+        if (
+            $this->debug
+            && $filename !== false
+            && filemtime($path) < filemtime($filename)
+        ) {
+            @unlink($path);
+
+            $annot = $this->reader->getConstantAnnotations($constant);
+            $this->saveCacheFile($path, $annot);
+
+            return $this->loadedAnnotations[$key] = $annot;
+        }
+
+        return $this->loadedAnnotations[$key] = include $path;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(ReflectionClassConstant $constant, $annotationName)
+    {
+        $annotations = $this->getConstantAnnotations($constant);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
     }
 
     /**

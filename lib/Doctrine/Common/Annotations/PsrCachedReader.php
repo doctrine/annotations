@@ -2,6 +2,7 @@
 
 namespace Doctrine\Common\Annotations;
 
+use ReflectionClassConstant;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
 use ReflectionMethod;
@@ -140,6 +141,38 @@ final class PsrCachedReader implements Reader
         $this->loadedAnnotations = [];
         $this->loadedFilemtimes  = [];
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(ReflectionClassConstant $constant)
+    {
+        $class    = $constant->getDeclaringClass();
+        $cacheKey = $class->getName() . '::' . $constant->getName();
+
+        if (isset($this->loadedAnnotations[$cacheKey])) {
+            return $this->loadedAnnotations[$cacheKey];
+        }
+
+        $annots = $this->fetchFromCache($cacheKey, $class, 'getConstantAnnotations', $constant);
+
+        return $this->loadedAnnotations[$cacheKey] = $annots;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(ReflectionClassConstant $constant, $annotationName)
+    {
+        foreach ($this->getConstantAnnotations($constant) as $annot) {
+            if ($annot instanceof $annotationName) {
+                return $annot;
+            }
+        }
+
+        return null;
+    }
+
 
     /** @return mixed[] */
     private function fetchFromCache(

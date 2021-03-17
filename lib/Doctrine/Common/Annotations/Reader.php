@@ -5,6 +5,7 @@ namespace Doctrine\Common\Annotations;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionProperty;
+use ReflectionClassConstant;
 
 /**
  * Interface for annotation readers.
@@ -77,4 +78,26 @@ interface Reader
      * @template T
      */
     public function getPropertyAnnotation(ReflectionProperty $property, $annotationName);
+
+    /**
+     * Gets the annotations applied to a constant.
+     *
+     * @param ReflectionClassConstant $constant The ReflectionClassConstant of the constant
+     *                                          from which the annotations should be read.
+     *
+     * @return array<object> An array of Annotations.
+     */
+    public function getConstantAnnotations(ReflectionClassConstant $constant);
+
+    /**
+     * Gets a constant annotation.
+     *
+     * @param ReflectionClassConstant $constant       The ReflectionClassConstant to read the annotations from.
+     * @param class-string<T>         $annotationName The name of the annotation.
+     *
+     * @return T|null The Annotation or NULL, if the requested annotation does not exist.
+     *
+     * @template T
+     */
+    public function getConstantAnnotation(ReflectionClassConstant $constant, $annotationName);
 }

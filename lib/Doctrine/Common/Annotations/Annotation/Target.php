@@ -26,7 +26,8 @@ final class Target
     public const TARGET_PROPERTY   = 4;
     public const TARGET_ANNOTATION = 8;
     public const TARGET_FUNCTION   = 16;
-    public const TARGET_ALL        = 31;
+    public const TARGET_CONSTANT   = 32;
+    public const TARGET_ALL        = 63;
 
     /** @var array<string, int> */
     private static $map = [
@@ -35,6 +36,7 @@ final class Target
         'METHOD'     => self::TARGET_METHOD,
         'PROPERTY'   => self::TARGET_PROPERTY,
         'FUNCTION'   => self::TARGET_FUNCTION,
+        'CONSTANT'   => self::TARGET_CONSTANT,
         'ANNOTATION' => self::TARGET_ANNOTATION,
     ];
 

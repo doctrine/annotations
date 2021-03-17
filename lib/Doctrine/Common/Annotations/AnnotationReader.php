@@ -2,6 +2,7 @@
 
 namespace Doctrine\Common\Annotations;
 
+use ReflectionClassConstant;
 use Doctrine\Common\Annotations\Annotation\IgnoreAnnotation;
 use Doctrine\Common\Annotations\Annotation\Target;
 use ReflectionClass;
@@ -262,6 +263,38 @@ class AnnotationReader implements Reader
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(ReflectionClassConstant $constant)
+    {
+        $class   = $constant->getDeclaringClass();
+        $context = 'constant ' . $class->getName() . '::' . $constant->getName();
+
+        $this->parser->setTarget(Target::TARGET_CONSTANT);
+        $this->parser->setImports($this->getConstantImports($constant));
+        $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
+        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
+
+        return $this->parser->parse($constant->getDocComment(), $context);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(ReflectionClassConstant $constant, $annotationName)
+    {
+        $annotations = $this->getConstantAnnotations($constant);
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the ignored annotations for the given class or function.
      *
      * @param ReflectionClass|ReflectionFunction $reflection
@@ -385,5 +418,28 @@ class AnnotationReader implements Reader
         );
 
         $this->ignoredAnnotationNames[$type][$name] = $ignoredAnnotationNames;
+    }
+
+    /**
+     * Retrieves imports for constants.
+     *
+     * @return array<string, class-string>
+     */
+    private function getConstantImports(ReflectionClassConstant $constant)
+    {
+        $class        = $constant->getDeclaringClass();
+        $classImports = $this->getImports($class);
+
+        $traitImports = [];
+
+        foreach ($class->getTraits() as $trait) {
+            if (! $trait->hasConstant($constant->getName())) {
+                continue;
+            }
+
+            $traitImports = array_merge($traitImports, $this->phpParser->parseUseStatements($trait));
+        }
+
+        return array_merge($classImports, $traitImports);
     }
 }

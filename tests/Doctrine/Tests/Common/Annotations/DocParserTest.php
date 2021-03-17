@@ -359,6 +359,13 @@ DOCBLOCK;
         $parser->setTarget(Target::TARGET_METHOD);
         self::assertNotNull($parser->parse($docComment, $context));
 
+        $constant   = $class->getReflectionConstant('SOME_CONSTANT');
+        $docComment = $constant->getDocComment();
+        $context    = 'method ' . $class->getName() . '::' . $constant->getName();
+
+        $parser->setTarget(Target::TARGET_CONSTANT);
+        self::assertNotNull($parser->parse($docComment, $context));
+
         try {
             $class      = new ReflectionClass(Fixtures\ClassWithInvalidAnnotationTargetAtClass::class);
             $context    = 'class ' . $class->getName();
@@ -1102,7 +1109,7 @@ DOCBLOCK;
         $parser->setTarget(Target::TARGET_CLASS);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage(
-            'Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, ANNOTATION]'
+            'Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, CONSTANT, ANNOTATION]'
         );
         $parser->parse($docblock, $context);
     }
