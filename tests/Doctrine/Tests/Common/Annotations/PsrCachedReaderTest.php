@@ -189,11 +189,15 @@ final class PsrCachedReaderTest extends AbstractReaderTest
 
         touch(__DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTraitWithMethods.php', $cacheTime - 20);
         touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cacheTime - 20);
+        clearstatcache(null, __DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTraitWithMethods.php');
+        clearstatcache(null, __DIR__ . '/Fixtures/Traits/EmptyTrait.php');
         $this->assertEquals([$route1], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method1')));
 
         // only filemtime changes, but not cleared => no change
         touch(__DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTrait.php', $cacheTime + 5);
         touch(__DIR__ . '/Fixtures/Traits/EmptyTrait.php', $cacheTime + 5);
+        clearstatcache(null, __DIR__ . '/Fixtures/ClassThatUsesTraitThatUsesAnotherTrait.php');
+        clearstatcache(null, __DIR__ . '/Fixtures/Traits/EmptyTrait.php');
         $this->assertEquals([$route2], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method2')));
 
         $reader->clearLoadedAnnotations();
