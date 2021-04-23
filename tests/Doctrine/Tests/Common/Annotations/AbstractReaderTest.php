@@ -595,6 +595,7 @@ class TestParseAnnotationClass
 
 /**
  * @Name
+ * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 class TestIgnoresNonAnnotationsClass
 {
