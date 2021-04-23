@@ -409,9 +409,9 @@ abstract class AbstractReaderTest extends TestCase
 
         $annotation = $reader->getClassAnnotation(
             new ReflectionClass(new TestIgnoresNonAnnotationsClass()),
-            Name::class
+            NameBar::class
         );
-        self::assertInstanceOf(Name::class, $annotation);
+        self::assertInstanceOf(NameBar::class, $annotation);
     }
 
     private static $testResetsPhpParserAfterUseRun = false;
@@ -594,7 +594,7 @@ class TestParseAnnotationClass
 }
 
 /**
- * @Name
+ * @NameBar
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
 class TestIgnoresNonAnnotationsClass
@@ -667,6 +667,10 @@ class DummyClass2
     public $id;
 }
 
+/** @Annotation */
+class NameBar extends Annotation
+{
+}
 /** @Annotation */
 class DummyId extends Annotation
 {
