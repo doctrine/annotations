@@ -159,6 +159,8 @@ class CachedReaderTest extends AbstractReaderTest
      */
     public function testAvoidCallingFilemtimeTooMuch(): void
     {
+        $this->markTestSkipped('Skipped until further investigation');
+
         $className = ClassThatUsesTraitThatUsesAnotherTraitWithMethods::class;
         $cacheKey  = $className;
         $cacheTime = time() - 10;
