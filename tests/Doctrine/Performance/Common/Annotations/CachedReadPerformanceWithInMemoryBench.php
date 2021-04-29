@@ -5,17 +5,17 @@ declare(strict_types=1);
 namespace Doctrine\Performance\Common\Annotations;
 
 use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Tests\Common\Annotations\Fixtures\Controller;
 use ReflectionMethod;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 /**
  * @BeforeMethods({"initialize"})
  */
 final class CachedReadPerformanceWithInMemoryBench
 {
-    /** @var CachedReader */
+    /** @var PsrCachedReader */
     private $reader;
 
     /** @var ReflectionMethod */
@@ -23,7 +23,7 @@ final class CachedReadPerformanceWithInMemoryBench
 
     public function initialize(): void
     {
-        $this->reader = new CachedReader(new AnnotationReader(), new ArrayCache());
+        $this->reader = new PsrCachedReader(new AnnotationReader(), new ArrayAdapter());
         $this->method = new ReflectionMethod(Controller::class, 'helloAction');
     }
 
