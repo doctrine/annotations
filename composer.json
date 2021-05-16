@@ -22,7 +22,7 @@
         "doctrine/cache": "^1.11 || ^2.0",
         "doctrine/coding-standard": "^6.0 || ^8.1",
         "phpstan/phpstan": "^0.12.20",
-        "phpunit/phpunit": "^7.5 || ^9.1.5",
+        "phpunit/phpunit": "^7.5 || ^8.0 || ^9.1.5",
         "symfony/cache": "^4.4 || ^5.2"
     },
     "config": {

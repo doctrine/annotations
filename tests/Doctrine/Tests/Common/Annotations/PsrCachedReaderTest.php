@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTraitWithMethods;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithClassAnnotationOnly;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
@@ -200,6 +201,23 @@ final class PsrCachedReaderTest extends AbstractReaderTest
 
         $reader->clearLoadedAnnotations();
         $this->assertEquals([$route2], $reader->getMethodAnnotations(new ReflectionMethod($className, 'method2')));
+    }
+
+    public function testReaderIsNotHitIfCacheIsFresh(): void
+    {
+        $cache = new ArrayAdapter();
+
+        $readAnnotations = (new PsrCachedReader(new AnnotationReader(), $cache, true))
+            ->getClassAnnotations(new ReflectionClass(ClassWithClassAnnotationOnly::class));
+
+        $throwingReader = $this->createMock(Reader::class);
+        $throwingReader->expects(self::never())->method(self::anything());
+
+        self::assertEquals(
+            $readAnnotations,
+            (new PsrCachedReader($throwingReader, $cache, true))
+                ->getClassAnnotations(new ReflectionClass(ClassWithClassAnnotationOnly::class))
+        );
     }
 
     protected function doTestCacheStale(string $className, int $lastCacheModification): PsrCachedReader

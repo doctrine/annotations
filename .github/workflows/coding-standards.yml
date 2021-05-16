@@ -1,7 +1,13 @@
 
 name: "Coding Standards"
 
-on: ["pull_request", "push"]
+on:
+  pull_request:
+    branches:
+      - "*.x"
+  push:
+    branches:
+      - "*.x"
 
 jobs:
   coding-standards:
@@ -26,6 +32,8 @@ jobs:
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v1"
+        with:
+          dependency-versions: "highest"
 
       # https://github.com/doctrine/.github/issues/3
       - name: "Run PHP_CodeSniffer"

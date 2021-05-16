@@ -1,9 +1,14 @@
 parameters:
+    level: 3
+    paths:
+        - lib
+        - tests
     excludes_analyse:
-        - %currentWorkingDirectory%/tests/*/Fixtures/*
-        - %currentWorkingDirectory%/tests/Doctrine/Tests/Common/Annotations/ReservedKeywordsClasses.php
-        - %currentWorkingDirectory%/tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
-        - %currentWorkingDirectory%/tests/Doctrine/Tests/DoctrineTestCase.php
+        - tests/*/Fixtures/*
+        - tests/Doctrine/Tests/Common/Annotations/ReservedKeywordsClasses.php
+        - tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
+        - tests/Doctrine/Tests/DoctrineTestCase.php
+        - tests/Doctrine/Tests/Common/Annotations/CachedReaderTest.php
     polluteScopeWithLoopInitialAssignments: true
     ignoreErrors:
         - '#Instantiated class Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment not found#'

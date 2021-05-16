@@ -1,14 +1,13 @@
+
 name: "Static Analysis"
 
 on:
   pull_request:
     branches:
       - "*.x"
-      - "master"
   push:
     branches:
       - "*.x"
-      - "master"
 
 jobs:
   static-analysis-phpstan:
@@ -29,10 +28,11 @@ jobs:
         with:
           coverage: "none"
           php-version: "${{ matrix.php-version }}"
-          tools: "cs2pr"
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v1"
+        with:
+          dependency-versions: "highest"
 
       - name: "Run a static analysis with phpstan/phpstan"
-        run: "vendor/bin/phpstan analyse -l 3 -c phpstan.neon --error-format=checkstyle lib/ tests/ | cs2pr"
+        run: "vendor/bin/phpstan analyse"
