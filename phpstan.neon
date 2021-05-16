@@ -1,4 +1,8 @@
 parameters:
+    level: 3
+    paths:
+        - lib
+        - tests
     excludes_analyse:
         - tests/*/Fixtures/*
         - tests/Doctrine/Tests/Common/Annotations/ReservedKeywordsClasses.php
