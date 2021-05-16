@@ -151,7 +151,7 @@ final class PsrCachedReader implements Reader
         $cacheKey = rawurlencode($cacheKey);
 
         $item = $this->cache->getItem($cacheKey);
-        if (! $item->isHit() || ($this->debug && ! $this->refresh($cacheKey, $class))) {
+        if (($this->debug && ! $this->refresh($cacheKey, $class)) || ! $item->isHit()) {
             $this->cache->save($item->set($this->delegate->{$method}($reflector)));
         }
 
