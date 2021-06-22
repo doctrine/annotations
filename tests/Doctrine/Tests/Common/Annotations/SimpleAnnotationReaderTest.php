@@ -95,6 +95,18 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     }
 
     /**
+     * Contrary to the behavior of the default annotation reader, we do just ignore
+     * these in the simple annotation reader (so, no expected exception here).
+     *
+     * @doesNotPerformAssertions
+     */
+    public function testClassWithInvalidAnnotationTargetAtConstantDocBlock(): void
+    {
+        $this->ignoreIssues();
+        parent::testClassWithInvalidAnnotationTargetAtConstantDocBlock();
+    }
+
+    /**
      * The SimpleAnnotationReader doens't include the @IgnoreAnnotation in the results.
      */
     public function testInvalidAnnotationUsageButIgnoredClass(): void

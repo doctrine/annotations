@@ -850,7 +850,6 @@ EXCEPTION
 
         // Next will be nested
         $this->isNestedAnnotation = true;
-
         //if annotation does not support current target
         if ((self::$annotationMetadata[$name]['targets'] & $target) === 0 && $target) {
             throw AnnotationException::semanticalError(

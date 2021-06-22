@@ -3,6 +3,7 @@
 namespace Doctrine\Common\Annotations;
 
 use ReflectionClass;
+use ReflectionClassConstant;
 use ReflectionMethod;
 use ReflectionProperty;
 
@@ -104,6 +105,31 @@ class SimpleAnnotationReader implements Reader
     public function getPropertyAnnotation(ReflectionProperty $property, $annotationName)
     {
         foreach ($this->getPropertyAnnotations($property) as $annot) {
+            if ($annot instanceof $annotationName) {
+                return $annot;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotations(ReflectionClassConstant $constant)
+    {
+        return $this->parser->parse(
+            $constant->getDocComment(),
+            'constant ' . $constant->getDeclaringClass()->name . '::' . $constant->getName()
+        );
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getConstantAnnotation(ReflectionClassConstant $constant, $annotationName)
+    {
+        foreach ($this->getConstantAnnotations($constant) as $annot) {
             if ($annot instanceof $annotationName) {
                 return $annot;
             }
