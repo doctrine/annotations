@@ -51,6 +51,7 @@
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations.AnnotationForbidden">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php</exclude-pattern>
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
     </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash.UseStartsWithBackslash">
