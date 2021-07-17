@@ -12,12 +12,13 @@ namespace Doctrine\Common\Annotations;
 final class ImplicitlyIgnoredAnnotationNames
 {
     private const Reserved = [
-        'Annotation' => true,
-        'Attribute'  => true,
-        'Attributes' => true,
+        'Annotation'               => true,
+        'Attribute'                => true,
+        'Attributes'               => true,
         /* Can we enable this? 'Enum' => true, */
-        'Required'   => true,
-        'Target'     => true,
+        'Required'                 => true,
+        'Target'                   => true,
+        'NamedArgumentConstructor' => true,
     ];
 
     private const WidelyUsedNonStandard = [
