@@ -12,12 +12,13 @@ namespace Doctrine\Common\Annotations;
 final class ImplicitlyIgnoredAnnotationNames
 {
     private const Reserved = [
-        'Annotation' => true,
-        'Attribute'  => true,
-        'Attributes' => true,
+        'Annotation'               => true,
+        'Attribute'                => true,
+        'Attributes'               => true,
         /* Can we enable this? 'Enum' => true, */
-        'Required'   => true,
-        'Target'     => true,
+        'Required'                 => true,
+        'Target'                   => true,
+        'NamedArgumentConstructor' => true,
     ];
 
     private const WidelyUsedNonStandard = [
@@ -138,16 +139,21 @@ final class ImplicitlyIgnoredAnnotationNames
 
     private const SlevomatCodingStandard = ['phpcsSuppress' => true];
 
-    private const PhpStan = [
+    private const Phan = ['suppress' => true];
+
+    private const Rector = ['noRector' => true];
+
+    private const StaticAnalysis = [
+        // PHPStan, Psalm
         'extends' => true,
         'implements' => true,
         'template' => true,
         'use' => true,
+
+        // Psalm
+        'pure' => true,
+        'immutable' => true,
     ];
-
-    private const Phan = ['suppress' => true];
-
-    private const Rector = ['noRector' => true];
 
     public const LIST = self::Reserved
         + self::WidelyUsedNonStandard
@@ -161,9 +167,9 @@ final class ImplicitlyIgnoredAnnotationNames
         + self::Symfony
         + self::SlevomatCodingStandard
         + self::PhpCodeSniffer
-        + self::PhpStan
         + self::Phan
-        + self::Rector;
+        + self::Rector
+        + self::StaticAnalysis;
 
     private function __construct()
     {
