@@ -423,9 +423,9 @@ class AnnotationReader implements Reader
     /**
      * Retrieves imports for constants.
      *
-     * @return array<string, class-string>
+     * @return array<string, class-string|trait-string>
      */
-    private function getConstantImports(ReflectionClassConstant $constant)
+    private function getConstantImports(ReflectionClassConstant $constant): array
     {
         $class        = $constant->getDeclaringClass();
         $classImports = $this->getImports($class);
