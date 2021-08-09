@@ -4,6 +4,7 @@ namespace Doctrine\Common\Annotations;
 
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionProperty;
 use Reflector;
@@ -135,23 +136,69 @@ final class PsrCachedReader implements Reader
         return null;
     }
 
+    /**
+     * Gets the annotations applied to a function.
+     *
+     * @param ReflectionFunction $function The ReflectionFunction of the function from which
+     * the annotations should be read.
+     *
+     * @return array<object> An array of Annotations.
+     */
+    public function getFunctionAnnotations(ReflectionFunction $function): array
+    {
+        $cacheKey = 'function-' . $function->getName();
+
+        if (isset($this->loadedAnnotations[$cacheKey])) {
+            return $this->loadedAnnotations[$cacheKey];
+        }
+
+        $annots = $this->fetchFromCache($cacheKey, $function, 'getFunctionAnnotations', $function);
+
+        return $this->loadedAnnotations[$cacheKey] = $annots;
+    }
+
+    /**
+     * Gets a function annotation.
+     *
+     * @param ReflectionFunction $function       The ReflectionFunction of the function from which
+     * the annotations should be read.
+     * @param string             $annotationName The name of the annotation.
+     *
+     * @return object|null The Annotation or NULL, if the requested annotation does not exist.
+     */
+    public function getFunctionAnnotation(ReflectionFunction $function, string $annotationName)
+    {
+        foreach ($this->getFunctionAnnotations($function) as $annotation) {
+            if ($annotation instanceof $annotationName) {
+                return $annotation;
+            }
+        }
+
+        return null;
+    }
+
     public function clearLoadedAnnotations(): void
     {
         $this->loadedAnnotations = [];
         $this->loadedFilemtimes  = [];
     }
 
-    /** @return mixed[] */
+    /**
+     * @param ReflectionClass|ReflectionFunction $reflection The ReflectionClass or ReflectionFunction in which to check
+     * last modification time on.
+     *
+     * @return mixed[]
+     */
     private function fetchFromCache(
         string $cacheKey,
-        ReflectionClass $class,
+        /**ReflectionClass|ReflectionFunction*/ $reflection,
         string $method,
         Reflector $reflector
     ): array {
         $cacheKey = rawurlencode($cacheKey);
 
         $item = $this->cache->getItem($cacheKey);
-        if (($this->debug && ! $this->refresh($cacheKey, $class)) || ! $item->isHit()) {
+        if (($this->debug && ! $this->refresh($cacheKey, $reflection)) || ! $item->isHit()) {
             $this->cache->save($item->set($this->delegate->{$method}($reflector)));
         }
 
@@ -161,12 +208,15 @@ final class PsrCachedReader implements Reader
     /**
      * Used in debug mode to check if the cache is fresh.
      *
+     * @param ReflectionClass|ReflectionFunction $reflection The ReflectionClass or ReflectionFunction in which to check
+     * last modification time on.
+     *
      * @return bool Returns true if the cache was fresh, or false if the class
      * being read was modified since writing to the cache.
      */
-    private function refresh(string $cacheKey, ReflectionClass $class): bool
+    private function refresh(string $cacheKey, /*ReflectionClass|ReflectionFunction*/ $reflection): bool
     {
-        $lastModification = $this->getLastModification($class);
+        $lastModification = $this->getLastModification($reflection);
         if ($lastModification === 0) {
             return true;
         }
@@ -183,27 +233,36 @@ final class PsrCachedReader implements Reader
 
     /**
      * Returns the time the class was last modified, testing traits and parents
+     *
+     * @param ReflectionClass|ReflectionFunction $reflection The ReflectionClass or ReflectionFunction in which to check
+     * last modification time on.
      */
-    private function getLastModification(ReflectionClass $class): int
+    private function getLastModification(/*ReflectionClass|ReflectionFunction*/ $reflection): int
     {
-        $filename = $class->getFileName();
+        $filename = $reflection->getFileName();
 
         if (isset($this->loadedFilemtimes[$filename])) {
             return $this->loadedFilemtimes[$filename];
         }
 
-        $parent = $class->getParentClass();
+        $lastModification = $filename ? filemtime($filename) : 0;
 
-        $lastModification =  max(array_merge(
-            [$filename ? filemtime($filename) : 0],
-            array_map(function (ReflectionClass $reflectionTrait): int {
-                return $this->getTraitLastModificationTime($reflectionTrait);
-            }, $class->getTraits()),
-            array_map(function (ReflectionClass $class): int {
-                return $this->getLastModification($class);
-            }, $class->getInterfaces()),
-            $parent ? [$this->getLastModification($parent)] : []
-        ));
+        if ($reflection instanceof ReflectionClass) {
+            $parent = $reflection->getParentClass();
+
+            $lastModification = max(
+                array_merge(
+                    [$lastModification],
+                    array_map(function (ReflectionClass $reflectionTrait): int {
+                        return $this->getTraitLastModificationTime($reflectionTrait);
+                    }, $reflection->getTraits()),
+                    array_map(function (ReflectionClass $class): int {
+                        return $this->getLastModification($class);
+                    }, $reflection->getInterfaces()),
+                    $parent ? [$this->getLastModification($parent)] : []
+                )
+            );
+        }
 
         assert($lastModification !== false);
 

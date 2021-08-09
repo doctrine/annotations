@@ -6,12 +6,14 @@ use Closure;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\PsrCachedReader;
 use Doctrine\Common\Annotations\Reader;
+use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Autoload;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\Route;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassThatUsesTraitThatUsesAnotherTraitWithMethods;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithClassAnnotationOnly;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use ReflectionClass;
+use ReflectionFunction;
 use ReflectionMethod;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\CacheItem;
@@ -87,6 +89,14 @@ final class PsrCachedReaderTest extends AbstractReaderTest
             Fixtures\InterfaceThatExtendsAnInterface::class,
             $cache
         );
+    }
+
+    public function testIgnoresStaleCacheWithFunctions(): void
+    {
+        $cache = time() - 10;
+        touch(__DIR__ . '/Fixtures/functions.php', $cache + 10);
+
+        $this->doTestCacheStale('Doctrine\Tests\Common\Annotations\Fixtures\foo', $cache, true);
     }
 
     /**
@@ -220,12 +230,36 @@ final class PsrCachedReaderTest extends AbstractReaderTest
         );
     }
 
-    protected function doTestCacheStale(string $className, int $lastCacheModification): PsrCachedReader
+    public function testReaderIsNotHitIfCacheIsFreshForFunctions(): void
     {
-        $cacheKey = rawurlencode($className);
+        $cache = new ArrayAdapter();
 
-        $route          = new Route();
-        $route->pattern = '/someprefix';
+        $readAnnotations = (new PsrCachedReader(new AnnotationReader(), $cache, true))
+            ->getFunctionAnnotations(new ReflectionFunction('Doctrine\Tests\Common\Annotations\Fixtures\foo'));
+
+        $throwingReader = $this->createMock(Reader::class);
+        $throwingReader->expects(self::never())->method(self::anything());
+
+        self::assertEquals(
+            $readAnnotations,
+            (new PsrCachedReader($throwingReader, $cache, true))
+                ->getFunctionAnnotations(new ReflectionFunction('Doctrine\Tests\Common\Annotations\Fixtures\foo'))
+        );
+    }
+
+    protected function doTestCacheStale(
+        string $classOrFunctionName,
+        int $lastCacheModification,
+        bool $isFunction = false
+    ): PsrCachedReader {
+        $cacheKey = $isFunction ? rawurlencode('function-' . $classOrFunctionName) : rawurlencode($classOrFunctionName);
+
+        if ($isFunction) {
+            $autoload = new Autoload();
+        } else {
+            $route          = new Route();
+            $route->pattern = '/someprefix';
+        }
 
         $cacheItem     = $this->createCacheItem($cacheKey, true, []);
         $timeCacheItem = $this->createCacheItem('[C]' . $cacheKey, true, $lastCacheModification);
@@ -244,7 +278,14 @@ final class PsrCachedReaderTest extends AbstractReaderTest
 
         $reader = new PsrCachedReader(new AnnotationReader(), $cache, true);
 
-        self::assertEquals([$route], $reader->getClassAnnotations(new ReflectionClass($className)));
+        if ($isFunction === true) {
+            self::assertEquals(
+                [$autoload],
+                $reader->getFunctionAnnotations(new ReflectionFunction($classOrFunctionName))
+            );
+        } else {
+            self::assertEquals([$route], $reader->getClassAnnotations(new ReflectionClass($classOrFunctionName)));
+        }
 
         return $reader;
     }
