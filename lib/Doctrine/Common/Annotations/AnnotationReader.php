@@ -24,7 +24,7 @@ class AnnotationReader implements Reader
      *
      * @var array<string, class-string>
      */
-    private static $globalImports = [
+    protected static $globalImports = [
         'ignoreannotation' => Annotation\IgnoreAnnotation::class,
     ];
 
@@ -35,7 +35,7 @@ class AnnotationReader implements Reader
      *
      * @var array<string, true>
      */
-    private static $globalIgnoredNames = ImplicitlyIgnoredAnnotationNames::LIST;
+    protected static $globalIgnoredNames = ImplicitlyIgnoredAnnotationNames::LIST;
 
     /**
      * A list with annotations that are not causing exceptions when not resolved to an annotation class.
@@ -44,7 +44,7 @@ class AnnotationReader implements Reader
      *
      * @var array<string, true>
      */
-    private static $globalIgnoredNamespaces = [];
+    protected static $globalIgnoredNamespaces = [];
 
     /**
      * Add a new annotation to the globally ignored annotation names with regard to exception handling.
@@ -53,7 +53,7 @@ class AnnotationReader implements Reader
      */
     public static function addGlobalIgnoredName($name)
     {
-        self::$globalIgnoredNames[$name] = true;
+        static::$globalIgnoredNames[$name] = true;
     }
 
     /**
@@ -63,7 +63,7 @@ class AnnotationReader implements Reader
      */
     public static function addGlobalIgnoredNamespace($namespace)
     {
-        self::$globalIgnoredNamespaces[$namespace] = true;
+        static::$globalIgnoredNamespaces[$namespace] = true;
     }
 
     /**
@@ -126,9 +126,9 @@ class AnnotationReader implements Reader
 
         $this->preParser = new DocParser();
 
-        $this->preParser->setImports(self::$globalImports);
+        $this->preParser->setImports(static::$globalImports);
         $this->preParser->setIgnoreNotImportedAnnotations(true);
-        $this->preParser->setIgnoredAnnotationNames(self::$globalIgnoredNames);
+        $this->preParser->setIgnoredAnnotationNames(static::$globalIgnoredNames);
 
         $this->phpParser = new PhpParser();
     }
@@ -141,7 +141,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_CLASS);
         $this->parser->setImports($this->getImports($class));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
-        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
+        $this->parser->setIgnoredAnnotationNamespaces(static::$globalIgnoredNamespaces);
 
         return $this->parser->parse($class->getDocComment(), 'class ' . $class->getName());
     }
@@ -173,7 +173,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_PROPERTY);
         $this->parser->setImports($this->getPropertyImports($property));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
-        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
+        $this->parser->setIgnoredAnnotationNamespaces(static::$globalIgnoredNamespaces);
 
         return $this->parser->parse($property->getDocComment(), $context);
     }
@@ -205,7 +205,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_METHOD);
         $this->parser->setImports($this->getMethodImports($method));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($class));
-        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
+        $this->parser->setIgnoredAnnotationNamespaces(static::$globalIgnoredNamespaces);
 
         return $this->parser->parse($method->getDocComment(), $context);
     }
@@ -238,7 +238,7 @@ class AnnotationReader implements Reader
         $this->parser->setTarget(Target::TARGET_FUNCTION);
         $this->parser->setImports($this->getImports($function));
         $this->parser->setIgnoredAnnotationNames($this->getIgnoredAnnotationNames($function));
-        $this->parser->setIgnoredAnnotationNamespaces(self::$globalIgnoredNamespaces);
+        $this->parser->setIgnoredAnnotationNamespaces(static::$globalIgnoredNamespaces);
 
         return $this->parser->parse($function->getDocComment(), $context);
     }
@@ -268,7 +268,7 @@ class AnnotationReader implements Reader
      *
      * @return array<string, true>
      */
-    private function getIgnoredAnnotationNames($reflection): array
+    protected function getIgnoredAnnotationNames($reflection): array
     {
         $type = $reflection instanceof ReflectionClass ? 'class' : 'function';
         $name = $reflection->getName();
@@ -289,7 +289,7 @@ class AnnotationReader implements Reader
      *
      * @return array<string, class-string>
      */
-    private function getImports($reflection): array
+    protected function getImports($reflection): array
     {
         $type = $reflection instanceof ReflectionClass ? 'class' : 'function';
         $name = $reflection->getName();
@@ -308,7 +308,7 @@ class AnnotationReader implements Reader
      *
      * @return array<string, class-string>
      */
-    private function getMethodImports(ReflectionMethod $method)
+    protected function getMethodImports(ReflectionMethod $method)
     {
         $class        = $method->getDeclaringClass();
         $classImports = $this->getImports($class);
@@ -334,7 +334,7 @@ class AnnotationReader implements Reader
      *
      * @return array<string, class-string>
      */
-    private function getPropertyImports(ReflectionProperty $property)
+    protected function getPropertyImports(ReflectionProperty $property)
     {
         $class        = $property->getDeclaringClass();
         $classImports = $this->getImports($class);
@@ -357,12 +357,12 @@ class AnnotationReader implements Reader
      *
      * @param ReflectionClass|ReflectionFunction $reflection
      */
-    private function collectParsingMetadata($reflection): void
+    protected function collectParsingMetadata($reflection): void
     {
         $type = $reflection instanceof ReflectionClass ? 'class' : 'function';
         $name = $reflection->getName();
 
-        $ignoredAnnotationNames = self::$globalIgnoredNames;
+        $ignoredAnnotationNames = static::$globalIgnoredNames;
         $annotations            = $this->preParser->parse($reflection->getDocComment(), $type . ' ' . $name);
 
         foreach ($annotations as $annotation) {
@@ -376,7 +376,7 @@ class AnnotationReader implements Reader
         }
 
         $this->imports[$type][$name] = array_merge(
-            self::$globalImports,
+            static::$globalImports,
             $this->phpParser->parseUseStatements($reflection),
             [
                 '__NAMESPACE__' => $reflection->getNamespaceName(),
