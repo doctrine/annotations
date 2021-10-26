@@ -144,12 +144,12 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 45
      * @runInSeparateProcess
      */
-    public function testClassAnnotationIsIgnored(): void
+    public function testClassAnnotationIsIgnoredByGlobalName(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedAtClassLevel::class);
 
-        $reader::addGlobalIgnoredNamespace('SomeClassAnnotationNamespace');
+        $reader::addGlobalIgnoredName('SomeClassAnnotationNamespace\\Subnamespace\\Name');
 
         self::assertEmpty($reader->getClassAnnotations($ref));
     }
@@ -158,12 +158,52 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 45
      * @runInSeparateProcess
      */
-    public function testMethodAnnotationIsIgnored(): void
+    public function testClassAnnotationIsIgnoredByGlobalNamespace(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(AnnotatedAtClassLevel::class);
+
+        $reader::addGlobalIgnoredNamespace('SomeClassAnnotationNamespace');
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
+
+        $reader->addIgnoredNamespace('FooBar');
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
+    }
+
+    /**
+     * @group 45
+     * @runInSeparateProcess
+     */
+    public function testClassAnnotationIsIgnoredByNamespace(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(AnnotatedAtClassLevel::class);
+
+        $reader->addIgnoredNamespace('SomeClassAnnotationNamespace');
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
+
+        $reader::addGlobalIgnoredNamespace('fooBar');
+
+        self::assertEmpty($reader->getClassAnnotations($ref));
+    }
+
+    /**
+     * @group 45
+     * @runInSeparateProcess
+     */
+    public function testMethodAnnotationIsIgnoredByGlobalNamespace(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedAtMethodLevel::class);
 
         $reader::addGlobalIgnoredNamespace('SomeMethodAnnotationNamespace');
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
+
+        $reader->addIgnoredNamespace('FooBar');
 
         self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
     }
@@ -172,12 +212,52 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 45
      * @runInSeparateProcess
      */
-    public function testPropertyAnnotationIsIgnored(): void
+    public function testMethodAnnotationIsIgnoredByNamespace(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(AnnotatedAtMethodLevel::class);
+
+        $reader->addIgnoredNamespace('SomeMethodAnnotationNamespace');
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
+
+        $reader::addGlobalIgnoredNamespace('fooBar');
+
+        self::assertEmpty($reader->getMethodAnnotations($ref->getMethod('test')));
+    }
+
+    /**
+     * @group 45
+     * @runInSeparateProcess
+     */
+    public function testPropertyAnnotationIsIgnoredByGlobalNamespace(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedAtPropertyLevel::class);
 
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+
+        $reader->addIgnoredNamespace('fooBar');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+    }
+
+    /**
+     * @group 45
+     * @runInSeparateProcess
+     */
+    public function testPropertyAnnotationIsIgnoredByNamespace(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(AnnotatedAtPropertyLevel::class);
+
+        $reader->addIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+
+        $reader::addGlobalIgnoredNamespace('fooBar');
 
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
@@ -186,12 +266,34 @@ class AnnotationReaderTest extends AbstractReaderTest
      * @group 244
      * @runInSeparateProcess
      */
-    public function testAnnotationWithAliasIsIgnored(): void
+    public function testAnnotationWithAliasIsIgnoredByGlobalNamespace(): void
     {
         $reader = $this->getReader();
         $ref    = new ReflectionClass(AnnotatedWithAlias::class);
 
         $reader::addGlobalIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+
+        $reader->addIgnoredNamespace('fooBar');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+    }
+
+    /**
+     * @group 244
+     * @runInSeparateProcess
+     */
+    public function testAnnotationWithAliasIsIgnoredByNamespace(): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(AnnotatedWithAlias::class);
+
+        $reader->addIgnoredNamespace('SomePropertyAnnotationNamespace');
+
+        self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
+
+        $reader::addGlobalIgnoredNamespace('fooBar');
 
         self::assertEmpty($reader->getPropertyAnnotations($ref->getProperty('property')));
     }
