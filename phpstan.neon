@@ -13,6 +13,7 @@ parameters:
     ignoreErrors:
         - '#Instantiated class Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment not found#'
         - '#Property Doctrine\\Tests\\Common\\Annotations\\DummyClassNonAnnotationProblem::\$foo has unknown class#'
+        - '#Call to an undefined static method PHPUnit\\Framework\\TestCase::expectExceptionMessageRegExp\(\)#'
 
         # That tag is empty on purpose
         - '#PHPDoc tag @var has invalid value \(\)\: Unexpected token "\*/", expected type at offset 9#'

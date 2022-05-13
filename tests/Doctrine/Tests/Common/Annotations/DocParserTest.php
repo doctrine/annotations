@@ -14,15 +14,19 @@ use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\InterfaceWithConstants;
 use InvalidArgumentException;
+use PHPUnit\Framework\Constraint\ExceptionMessage;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
+use TypeError;
 
 use function array_column;
 use function array_combine;
 use function assert;
 use function class_exists;
 use function extension_loaded;
+use function get_parent_class;
 use function ini_get;
+use function method_exists;
 use function sprintf;
 use function ucfirst;
 
@@ -886,9 +890,16 @@ ANNOTATION;
         $docblock = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumInvalid("foo")';
 
         $parser->setIgnoreNotImportedAnnotations(false);
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('@Enum supports only scalar values "array" given.');
-        $parser->parse($docblock);
+        $this->expectException(AnnotationException::class);
+        try {
+            $parser->parse($docblock);
+        } catch (AnnotationException $exc) {
+            $previous = $exc->getPrevious();
+            $this->assertInstanceOf(InvalidArgumentException::class, $previous);
+            $this->assertThat($previous, new ExceptionMessage('@Enum supports only scalar values "array" given.'));
+
+            throw $exc;
+        }
     }
 
     public function testAnnotationEnumInvalidLiteralDeclarationException(): void
@@ -897,9 +908,19 @@ ANNOTATION;
         $docblock = '@Doctrine\Tests\Common\Annotations\Fixtures\AnnotationEnumLiteralInvalid("foo")';
 
         $parser->setIgnoreNotImportedAnnotations(false);
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Undefined enumerator value "3" for literal "AnnotationEnumLiteral::THREE".');
-        $parser->parse($docblock);
+        $this->expectException(AnnotationException::class);
+        try {
+            $parser->parse($docblock);
+        } catch (AnnotationException $exc) {
+            $previous = $exc->getPrevious();
+            $this->assertInstanceOf(InvalidArgumentException::class, $previous);
+            $this->assertThat(
+                $previous,
+                new ExceptionMessage('Undefined enumerator value "3" for literal "AnnotationEnumLiteral::THREE".')
+            );
+
+            throw $exc;
+        }
     }
 
     /**
@@ -1100,11 +1121,21 @@ DOCBLOCK;
 DOCBLOCK;
 
         $parser->setTarget(Target::TARGET_CLASS);
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage(
-            'Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, ANNOTATION]'
-        );
-        $parser->parse($docblock, $context);
+        $this->expectException(AnnotationException::class);
+        try {
+            $parser->parse($docblock, $context);
+        } catch (AnnotationException $exc) {
+            $previous = $exc->getPrevious();
+            $this->assertInstanceOf(InvalidArgumentException::class, $previous);
+            $this->assertThat(
+                $previous,
+                new ExceptionMessage(
+                    'Invalid Target "Foo". Available targets: [ALL, CLASS, METHOD, PROPERTY, FUNCTION, ANNOTATION]'
+                )
+            );
+
+            throw $exc;
+        }
     }
 
     public function testAnnotationWithTargetEmptyError(): void
@@ -1118,9 +1149,19 @@ DOCBLOCK;
 DOCBLOCK;
 
         $parser->setTarget(Target::TARGET_CLASS);
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('@Target expects either a string value, or an array of strings, "NULL" given.');
-        $parser->parse($docblock, $context);
+        $this->expectException(AnnotationException::class);
+        try {
+            $parser->parse($docblock, $context);
+        } catch (AnnotationException $exc) {
+            $previous = $exc->getPrevious();
+            $this->assertInstanceOf(InvalidArgumentException::class, $previous);
+            $this->assertThat(
+                $previous,
+                new ExceptionMessage('@Target expects either a string value, or an array of strings, "NULL" given.')
+            );
+
+            throw $exc;
+        }
     }
 
     /**
@@ -1682,6 +1723,37 @@ DOCBLOCK;
             '[Syntax Error] Expected Positional arguments after named arguments is not allowed'
         );
         $parser->parse('/** @AnotherNamedAnnotation("foo", bar=666, "hey") */');
+    }
+
+    public function testNamedArgumentsConstructorAnnotationWithWrongArgumentType(): void
+    {
+        $context  = 'property SomeClassName::invalidProperty.';
+        $docblock = '@NamedAnnotationWithArray(foo = "no array!")';
+        $parser   = $this->createTestParser();
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessageMatches(
+            '/\[Creation Error\] An error occurred while instantiating the annotation '
+            . '@NamedAnnotationWithArray declared on property SomeClassName::invalidProperty\.: ".*"\.$/'
+        );
+        try {
+            $parser->parse($docblock, $context);
+        } catch (AnnotationException $exc) {
+            $this->assertInstanceOf(TypeError::class, $exc->getPrevious());
+
+            throw $exc;
+        }
+    }
+
+    /**
+     * Override for BC with PHPUnit <8
+     */
+    public function expectExceptionMessageMatches(string $regularExpression): void
+    {
+        if (method_exists(get_parent_class($this), 'expectExceptionMessageMatches')) {
+            parent::expectExceptionMessageMatches($regularExpression);
+        } else {
+            parent::expectExceptionMessageRegExp($regularExpression);
+        }
     }
 }
 
