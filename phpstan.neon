@@ -3,7 +3,12 @@ parameters:
     paths:
         - lib
         - tests
-    excludes_analyse:
+    scanFiles:
+        - tests/Doctrine/Tests/Common/Annotations/Fixtures/GlobalNamespacesPerFileWithClassAsFirst.php
+        - tests/Doctrine/Tests/Common/Annotations/Fixtures/GlobalNamespacesPerFileWithClassAsLast.php
+        - tests/Doctrine/Tests/Common/Annotations/Fixtures/NonNamespacedClass.php
+        - tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
+    excludePaths:
         - tests/*/Fixtures/*
         - tests/Doctrine/Tests/Common/Annotations/ReservedKeywordsClasses.php
         - tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
