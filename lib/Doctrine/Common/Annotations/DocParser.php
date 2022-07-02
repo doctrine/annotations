@@ -12,6 +12,7 @@ use ReflectionException;
 use ReflectionProperty;
 use RuntimeException;
 use stdClass;
+use Throwable;
 
 use function array_keys;
 use function array_map;
@@ -941,7 +942,7 @@ EXCEPTION
 
         if (self::$annotationMetadata[$name]['has_named_argument_constructor']) {
             if (PHP_VERSION_ID >= 80000) {
-                return new $name(...$values);
+                return $this->instantiateAnnotiation($originalName, $this->context, $name, $values);
             }
 
             $positionalValues = [];
@@ -968,16 +969,16 @@ EXCEPTION
                 $positionalValues[self::$annotationMetadata[$name]['constructor_args'][$property]['position']] = $value;
             }
 
-            return new $name(...$positionalValues);
+            return $this->instantiateAnnotiation($originalName, $this->context, $name, $positionalValues);
         }
 
         // check if the annotation expects values via the constructor,
         // or directly injected into public properties
         if (self::$annotationMetadata[$name]['has_constructor'] === true) {
-            return new $name($values);
+            return $this->instantiateAnnotiation($originalName, $this->context, $name, [$values]);
         }
 
-        $instance = new $name();
+        $instance = $this->instantiateAnnotiation($originalName, $this->context, $name, []);
 
         foreach ($values as $property => $value) {
             if (! isset(self::$annotationMetadata[$name]['properties'][$property])) {
@@ -1455,5 +1456,32 @@ EXCEPTION
         }
 
         return $values;
+    }
+
+    /**
+     * Try to instantiate the annotation and catch and process any exceptions related to failure
+     *
+     * @param class-string        $name
+     * @param array<string,mixed> $arguments
+     *
+     * @return object
+     *
+     * @throws AnnotationException
+     */
+    private function instantiateAnnotiation(string $originalName, string $context, string $name, array $arguments)
+    {
+        try {
+            return new $name(...$arguments);
+        } catch (Throwable $exception) {
+            throw AnnotationException::creationError(
+                sprintf(
+                    'An error occurred while instantiating the annotation @%s declared on %s: "%s".',
+                    $originalName,
+                    $context,
+                    $exception->getMessage()
+                ),
+                $exception
+            );
+        }
     }
 }

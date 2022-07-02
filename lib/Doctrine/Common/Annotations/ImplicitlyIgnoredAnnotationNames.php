@@ -147,6 +147,7 @@ final class ImplicitlyIgnoredAnnotationNames
         // PHPStan, Psalm
         'extends' => true,
         'implements' => true,
+        'readonly' => true,
         'template' => true,
         'use' => true,
 

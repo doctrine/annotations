@@ -3,7 +3,12 @@ parameters:
     paths:
         - lib
         - tests
-    excludes_analyse:
+    scanFiles:
+        - tests/Doctrine/Tests/Common/Annotations/Fixtures/GlobalNamespacesPerFileWithClassAsFirst.php
+        - tests/Doctrine/Tests/Common/Annotations/Fixtures/GlobalNamespacesPerFileWithClassAsLast.php
+        - tests/Doctrine/Tests/Common/Annotations/Fixtures/NonNamespacedClass.php
+        - tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
+    excludePaths:
         - tests/*/Fixtures/*
         - tests/Doctrine/Tests/Common/Annotations/ReservedKeywordsClasses.php
         - tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
@@ -13,6 +18,7 @@ parameters:
     ignoreErrors:
         - '#Instantiated class Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment not found#'
         - '#Property Doctrine\\Tests\\Common\\Annotations\\DummyClassNonAnnotationProblem::\$foo has unknown class#'
+        - '#Call to an undefined static method PHPUnit\\Framework\\TestCase::expectExceptionMessageRegExp\(\)#'
 
         # That tag is empty on purpose
         - '#PHPDoc tag @var has invalid value \(\)\: Unexpected token "\*/", expected type at offset 9#'
