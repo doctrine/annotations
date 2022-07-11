@@ -195,7 +195,7 @@ final class PsrCachedReader implements Reader
         $parent = $class->getParentClass();
 
         $lastModification =  max(array_merge(
-            [$filename ? filemtime($filename) : 0],
+            [file_exists($filename) ? filemtime($filename) : 0],
             array_map(function (ReflectionClass $reflectionTrait): int {
                 return $this->getTraitLastModificationTime($reflectionTrait);
             }, $class->getTraits()),
@@ -219,7 +219,7 @@ final class PsrCachedReader implements Reader
         }
 
         $lastModificationTime = max(array_merge(
-            [$fileName ? filemtime($fileName) : 0],
+            [file_exists($fileName) ? filemtime($fileName) : 0],
             array_map(function (ReflectionClass $reflectionTrait): int {
                 return $this->getTraitLastModificationTime($reflectionTrait);
             }, $reflectionTrait->getTraits())
