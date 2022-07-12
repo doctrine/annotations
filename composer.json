@@ -39,10 +39,10 @@
     },
     "require-dev": {
         "doctrine/cache": "^1.11 || ^2.0",
-        "doctrine/coding-standard": "^6.0 || ^8.1",
-        "phpstan/phpstan": "^1.4.10 || ^1.8.0",
-        "phpunit/phpunit": "^7.5 || ^8.0 || ^9.1.5",
-        "symfony/cache": "^4.4 || ^5.2",
+        "doctrine/coding-standard": "^9",
+        "phpstan/phpstan": "~1.4.10 || ^1.8.0",
+        "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
+        "symfony/cache": "^4.4 || ^5.4 || ^6",
         "vimeo/psalm": "^4.10"
     },
     "autoload": {
