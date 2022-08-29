@@ -691,6 +691,29 @@ class DummyAnnotation extends Annotation
     /** @var mixed */
     public $dummyValue;
 }
+/** @Annotation */
+class DummyTable extends Annotation
+{
+    /** @var string */
+    public $name;
+    /**
+     * @var array<DummyIndex>
+     */
+    public $indexes;
+}
+/** @Annotation */
+class DummyIndex extends Annotation
+{
+    /**
+     * @var string
+     */
+    public $name;
+
+    /**
+     * @var array<string>
+     */
+    public $columns;
+}
 
 /**
  * @Annotation
