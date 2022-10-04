@@ -1157,7 +1157,7 @@ EXCEPTION
 
 		/** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
 		if (interface_exists('\UnitEnum') && $value instanceof \UnitEnum) {
-			if (!property_exists($value, 'value')) {
+			if (!interface_exists('\BackedEnum') || !($value instanceof \BackedEnum)) {
 				throw AnnotationException::semanticalErrorConstants('Enum ' . $identifier. ' is not backed enum, only backed enums can be used!');
 			}
 			$value = $value->value;
