@@ -45,6 +45,9 @@
         "symfony/cache": "^4.4 || ^5.4 || ^6",
         "vimeo/psalm": "^4.10"
     },
+    "suggest": {
+        "php": "PHP 8.0 or higher comes with attributes, a native replacement for annotations"
+    },
     "autoload": {
         "psr-4": {
             "Doctrine\\Common\\Annotations\\": "lib/Doctrine/Common/Annotations"
