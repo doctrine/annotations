@@ -426,7 +426,7 @@ final class DocParser
      * If any of them matches, this method updates the lookahead token; otherwise
      * a syntax error is raised.
      *
-     * @phpstan-param list<mixed[]> $tokens
+     * @phpstan-param list<int|string> $tokens
      *
      * @throws AnnotationException
      */
@@ -1153,7 +1153,17 @@ EXCEPTION
             throw AnnotationException::semanticalErrorConstants($identifier, $this->context);
         }
 
-        return constant($identifier);
+		$value = constant($identifier);
+
+		/** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection */
+		if (interface_exists('\UnitEnum') && $value instanceof \UnitEnum) {
+			if (!property_exists($value, 'value')) {
+				throw AnnotationException::semanticalErrorConstants('Enum ' . $identifier. ' is not backed enum, only backed enums can be used!');
+			}
+			$value = $value->value;
+		}
+
+        return $value;
     }
 
     private function identifierStartsWithBackslash(string $identifier): bool
