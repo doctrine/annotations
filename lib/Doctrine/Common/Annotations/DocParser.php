@@ -1239,7 +1239,11 @@ EXCEPTION
         }
 
         if ($this->lexer->isNextToken(DocLexer::T_AT)) {
-            return $this->Annotation();
+            $annotation = $this->Annotation();
+            if ($annotation === false) {
+                return null;
+            }
+            return $annotation;
         }
 
         if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
@@ -1341,6 +1345,10 @@ EXCEPTION
 
         foreach ($values as $value) {
             [$key, $val] = $value;
+
+            if ($key === null && $val === null) {
+                continue;
+            }
 
             if ($key !== null) {
                 $array[$key] = $val;
