@@ -426,7 +426,7 @@ final class DocParser
      * If any of them matches, this method updates the lookahead token; otherwise
      * a syntax error is raised.
      *
-     * @phpstan-param list<int|string> $tokens
+     * @phpstan-param list<mixed[]> $tokens
      *
      * @throws AnnotationException
      */
