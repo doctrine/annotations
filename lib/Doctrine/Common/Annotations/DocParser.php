@@ -1166,9 +1166,7 @@ EXCEPTION
         return $this->getClassConstantPositionInIdentifier($identifier) === strlen($identifier) - strlen('::class');
     }
 
-    /**
-     * @return int|false
-     */
+    /** @return int|false */
     private function getClassConstantPositionInIdentifier(string $identifier)
     {
         return stripos($identifier, '::class');

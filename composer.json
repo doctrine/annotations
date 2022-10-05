@@ -39,7 +39,7 @@
     },
     "require-dev": {
         "doctrine/cache": "^1.11 || ^2.0",
-        "doctrine/coding-standard": "^9",
+        "doctrine/coding-standard": "^9 || ^10",
         "phpstan/phpstan": "~1.4.10 || ^1.8.0",
         "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
         "symfony/cache": "^4.4 || ^5.4 || ^6",

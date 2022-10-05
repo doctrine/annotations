@@ -149,9 +149,7 @@ class AnnotationException extends Exception
         ));
     }
 
-    /**
-     * @return AnnotationException
-     */
+    /** @return AnnotationException */
     public static function optimizerPlusSaveComments()
     {
         return new self(
@@ -159,9 +157,7 @@ class AnnotationException extends Exception
         );
     }
 
-    /**
-     * @return AnnotationException
-     */
+    /** @return AnnotationException */
     public static function optimizerPlusLoadComments()
     {
         return new self(
