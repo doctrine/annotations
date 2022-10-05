@@ -148,4 +148,9 @@
     <rule ref="Squiz.Functions.GlobalFunction.Found">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/functions.php</exclude-pattern>
     </rule>
+
+    <!-- Single-line PHPDoc blocks will confuse PHPUnit 7.5 -->
+    <rule ref="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment">
+        <exclude-pattern>*/tests</exclude-pattern>
+    </rule>
 </ruleset>
