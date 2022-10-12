@@ -130,7 +130,7 @@ class DocParserTest extends TestCase
         self::assertEquals('value2', $annot->value[1]['key2']);
 
         // Complete docblock
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * Some nifty class.
  *
@@ -174,7 +174,7 @@ DOCBLOCK;
         $parser = new DocParser();
         $parser->setIgnoreNotImportedAnnotations(true);
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * Some nifty class.
  *
@@ -200,14 +200,14 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * Some nifty method.
  *
  * @since 2.0
  * @Doctrine\Tests\Common\Annotations\Name(foo="bar")
- * @param string \$foo This is foo.
- * @param mixed \$bar This is bar.
+ * @param string $foo This is foo.
+ * @param mixed $bar This is bar.
  * @return string Foo and bar.
  * @This is irrelevant
  * @Marker
@@ -229,7 +229,7 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor("Some data")
  */
@@ -245,7 +245,7 @@ DOCBLOCK;
         self::assertNotNull($annot->data);
         self::assertEquals($annot->data, 'Some data');
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor(name="Some Name", data = "Some data")
  */
@@ -261,7 +261,7 @@ DOCBLOCK;
         self::assertEquals($annot->name, 'Some Name');
         self::assertEquals($annot->data, 'Some data');
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor(data = "Some data")
  */
@@ -274,7 +274,7 @@ DOCBLOCK;
         self::assertEquals($annot->data, 'Some data');
         self::assertNull($annot->name);
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor(name = "Some name")
  */
@@ -287,7 +287,7 @@ DOCBLOCK;
         self::assertEquals($annot->name, 'Some name');
         self::assertNull($annot->data);
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor("Some data")
  */
@@ -300,7 +300,7 @@ DOCBLOCK;
         self::assertEquals($annot->data, 'Some data');
         self::assertNull($annot->name);
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor("Some data",name = "Some name")
  */
@@ -313,7 +313,7 @@ DOCBLOCK;
         self::assertEquals($annot->name, 'Some name');
         self::assertEquals($annot->data, 'Some data');
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationWithConstructorWithoutParams(name = "Some name")
  */
@@ -326,7 +326,7 @@ DOCBLOCK;
         self::assertEquals($annot->name, 'Some name');
         self::assertEquals($annot->data, 'Some data');
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructorAndProperties()
  */
@@ -1058,7 +1058,7 @@ ANNOTATION
     public function testWithoutConstructorWhenIsNotDefaultValue(): void
     {
         $parser   = $this->createTestParser();
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructorAndProperties("Foo")
  */
@@ -1076,7 +1076,7 @@ DOCBLOCK;
     public function testWithoutConstructorWhenHasNoProperties(): void
     {
         $parser   = $this->createTestParser();
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructorAndProperties(value = "Foo")
  */
@@ -1095,7 +1095,7 @@ DOCBLOCK;
     {
         $parser   = $this->createTestParser();
         $context  = 'class SomeClassName';
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithTargetSyntaxError()
  */
@@ -1114,7 +1114,7 @@ DOCBLOCK;
     {
         $parser   = $this->createTestParser();
         $context  = 'class SomeClassName';
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @AnnotationWithInvalidTargetDeclaration()
  */
@@ -1142,7 +1142,7 @@ DOCBLOCK;
     {
         $parser   = $this->createTestParser();
         $context  = 'class SomeClassName';
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @AnnotationWithTargetEmpty()
  */
@@ -1171,7 +1171,7 @@ DOCBLOCK;
     {
         $parser = $this->createTestParser();
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @Name
  *
@@ -1183,7 +1183,7 @@ DOCBLOCK;
 
         self::assertInstanceOf(Name::class, $result[0]);
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @Name
  * @Marker
@@ -1359,7 +1359,7 @@ DOCBLOCK;
      */
     public function testSyntaxErrorWithUnknownCharacters(): void
     {
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @test at.
  */
@@ -1384,7 +1384,7 @@ DOCBLOCK;
      */
     public function testIgnorePHPDocThrowTag(): void
     {
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @throws \RuntimeException
  */
@@ -1454,7 +1454,7 @@ DOCBLOCK;
 
     public function testSetValuesException(): void
     {
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationClassNameWithoutConstructor(invalidaProperty = "Some val")
  */
@@ -1494,7 +1494,7 @@ Available properties: data, name'
 
     public function testTabPrefixIsAllowed(): void
     {
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
 /**
  *	@Name
  */
@@ -1578,7 +1578,7 @@ DOCBLOCK;
             $this->markTestSkipped('This test requires mbstring function overloading is turned on');
         }
 
-        $docblock = <<<DOCBLOCK
+        $docblock = <<<'DOCBLOCK'
         /**
          * Мультибайтовый текст ломал парсер при оверлоадинге строковых функций
          * @Doctrine\Tests\Common\Annotations\Name

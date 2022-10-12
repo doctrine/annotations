@@ -69,7 +69,7 @@ When using the ``@NamedArgumentConstructor`` tag, the first argument of the
 constructor is considered as the default one.
 
 
-Usage with the ``@NamedArgumentContrustor`` tag
+Usage with the ``@NamedArgumentConstructor`` tag
 
 .. code-block:: php
 

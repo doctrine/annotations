@@ -12,6 +12,8 @@
     <!-- Show progress of the run and show sniff names -->
     <arg value="ps"/>
 
+    <config name="php_version" value="70100"/>
+
     <file>lib</file>
     <file>tests</file>
 
@@ -105,16 +107,6 @@
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/ClassWithRequire.php</exclude-pattern>
     </rule>
 
-    <!-- these classes have unused properties, and is unused in a benchmark for the parser -->
-    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedProperty">
-        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php</exclude-pattern>
-        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/NamespacedSingleClassLOC1000.php</exclude-pattern>
-    </rule>
-
-    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements.UnusedMethod">
-        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/Controller.php</exclude-pattern>
-    </rule>
-
     <!-- these classes do not have a namespace on purpose -->
     <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/SingleClassLOC1000.php</exclude-pattern>
@@ -155,5 +147,10 @@
 
     <rule ref="Squiz.Functions.GlobalFunction.Found">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/functions.php</exclude-pattern>
+    </rule>
+
+    <!-- Single-line PHPDoc blocks will confuse PHPUnit 7.5 -->
+    <rule ref="SlevomatCodingStandard.Commenting.RequireOneLineDocComment.MultiLineDocComment">
+        <exclude-pattern>*/tests</exclude-pattern>
     </rule>
 </ruleset>

@@ -56,9 +56,9 @@ final class Target
     public $literal;
 
     /**
-     * @throws InvalidArgumentException
-     *
      * @phpstan-param array{value?: string|list<string>} $values
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(array $values)
     {
