@@ -15,6 +15,8 @@ use function substr;
 
 /**
  * Simple lexer for docblock annotations.
+ *
+ * @template-extends AbstractLexer<DocLexer::T_*>
  */
 final class DocLexer extends AbstractLexer
 {
@@ -39,7 +41,7 @@ final class DocLexer extends AbstractLexer
     public const T_COLON               = 112;
     public const T_MINUS               = 113;
 
-    /** @var array<string, int> */
+    /** @var array<string, self::T*> */
     protected $noCase = [
         '@'  => self::T_AT,
         ','  => self::T_COMMA,
@@ -53,7 +55,7 @@ final class DocLexer extends AbstractLexer
         '\\' => self::T_NAMESPACE_SEPARATOR,
     ];
 
-    /** @var array<string, int> */
+    /** @var array<string, self::T*> */
     protected $withCase = [
         'true'  => self::T_TRUE,
         'false' => self::T_FALSE,
@@ -125,5 +127,13 @@ final class DocLexer extends AbstractLexer
         }
 
         return $type;
+    }
+
+    /** @return array{value: int|string, type:self::T_*|null, position:int} */
+    public function peek(): array
+    {
+        $token = parent::peek();
+
+        return (array) $token;
     }
 }
