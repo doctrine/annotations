@@ -6,6 +6,8 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Tests\Common\Annotations\Fixtures\Annotation\SingleUseAnnotation;
+use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithEnumProperty;
+use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithEnumAnnotations;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithFullPathUseStatement;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithImportedIgnoredAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithPHPCodeSnifferAnnotation;
@@ -15,6 +17,7 @@ use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtClas
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtMethodLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedAtPropertyLevel;
 use Doctrine\Tests\Common\Annotations\Fixtures\IgnoredNamespaces\AnnotatedWithAlias;
+use Doctrine\Tests\Common\Annotations\Fixtures\Suit;
 use InvalidArgumentException;
 use LogicException;
 use ReflectionClass;
@@ -23,6 +26,8 @@ use ReflectionFunction;
 use function class_exists;
 use function spl_autoload_register;
 use function spl_autoload_unregister;
+
+use const PHP_VERSION_ID;
 
 class AnnotationReaderTest extends AbstractReaderTest
 {
@@ -294,5 +299,34 @@ class AnnotationReaderTest extends AbstractReaderTest
 
         $annotation = $reader->getFunctionAnnotation($ref, Fixtures\Annotation\Autoload::class);
         self::assertInstanceOf(Fixtures\Annotation\Autoload::class, $annotation);
+    }
+
+    /**
+     * @requires PHP 8.1
+     * @dataProvider provideEnumProperties
+     */
+    public function testAnnotationWithEnum(string $property, Suit $expectedValue): void
+    {
+        $reader = $this->getReader();
+        $ref    = new ReflectionClass(ClassWithEnumAnnotations::class);
+
+        $annotation = $reader->getPropertyAnnotation($ref->getProperty($property), AnnotationWithEnumProperty::class);
+
+        self::assertSame($expectedValue, $annotation->suit);
+    }
+
+    /**
+     * @return array<string, array{string, Suit}>
+     */
+    public function provideEnumProperties(): array
+    {
+        if (PHP_VERSION_ID < 80100) {
+            return [];
+        }
+
+        return [
+            'annotationWithDefaults' => ['annotationWithDefaults', Suit::Hearts],
+            'annotationWithSpades' => ['annotationWithSpades', Suit::Spades],
+        ];
     }
 }
