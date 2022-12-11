@@ -22,3 +22,5 @@ parameters:
 
         # That tag is empty on purpose
         - '#PHPDoc tag @var has invalid value \(\)\: Unexpected token "\*/", expected type at offset 9#'
+        # Backwards-compatibility
+        - '#^Return type.*of method.*DocLexer::peek.*should be compatible.*$#'

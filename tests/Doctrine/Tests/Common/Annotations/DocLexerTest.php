@@ -19,9 +19,11 @@ class DocLexerTest extends TestCase
 
         self::assertTrue($lexer->moveNext());
         self::assertNull($lexer->token);
+        self::assertNotNull($lexer->lookahead);
         self::assertEquals('@', $lexer->lookahead['value']);
 
         self::assertTrue($lexer->moveNext());
+        self::assertNotNull($lexer->token);
         self::assertEquals('@', $lexer->token['value']);
         self::assertEquals('Name', $lexer->lookahead['value']);
 
