@@ -320,4 +320,9 @@ class DocLexerTest extends TestCase
         self::assertFalse($lexer->nextTokenIsAdjacent());
         self::assertFalse($lexer->moveNext());
     }
+
+    public function testItReturnsNullWhenThereIsNothingToParse(): void
+    {
+        self::assertNull((new DocLexer())->peek());
+    }
 }

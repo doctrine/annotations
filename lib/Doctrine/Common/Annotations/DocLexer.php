@@ -130,9 +130,13 @@ final class DocLexer extends AbstractLexer
     }
 
     /** @return array{value: int|string, type:self::T_*|null, position:int} */
-    public function peek(): array
+    public function peek(): ?array
     {
         $token = parent::peek();
+
+        if ($token === null) {
+            return null;
+        }
 
         return (array) $token;
     }
