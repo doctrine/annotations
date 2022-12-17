@@ -454,7 +454,7 @@ final class DocParser
         $message  = sprintf('Expected %s, got ', $expected);
         $message .= $this->lexer->lookahead === null
             ? 'end of string'
-            : sprintf("'%s' at position %s", $token['value'], $token['position']);
+            : sprintf("'%s' at position %s", $token->value, $token->position);
 
         if (strlen($this->context)) {
             $message .= ' in ' . $this->context;
@@ -684,7 +684,7 @@ final class DocParser
         $annotations = [];
 
         while ($this->lexer->lookahead !== null) {
-            if ($this->lexer->lookahead['type'] !== DocLexer::T_AT) {
+            if ($this->lexer->lookahead->type !== DocLexer::T_AT) {
                 $this->lexer->moveNext();
                 continue;
             }
@@ -692,8 +692,8 @@ final class DocParser
             // make sure the @ is preceded by non-catchable pattern
             if (
                 $this->lexer->token !== null &&
-                $this->lexer->lookahead['position'] === $this->lexer->token['position'] + strlen(
-                    $this->lexer->token['value']
+                $this->lexer->lookahead->position === $this->lexer->token->position + strlen(
+                    $this->lexer->token->value
                 )
             ) {
                 $this->lexer->moveNext();
@@ -705,12 +705,12 @@ final class DocParser
             $peek = $this->lexer->glimpse();
             if (
                 ($peek === null)
-                || ($peek['type'] !== DocLexer::T_NAMESPACE_SEPARATOR && ! in_array(
-                    $peek['type'],
+                || ($peek->type !== DocLexer::T_NAMESPACE_SEPARATOR && ! in_array(
+                    $peek->type,
                     self::$classIdentifiers,
                     true
                 ))
-                || $peek['position'] !== $this->lexer->lookahead['position'] + 1
+                || $peek->position !== $this->lexer->lookahead->position + 1
             ) {
                 $this->lexer->moveNext();
                 continue;
@@ -1186,18 +1186,18 @@ EXCEPTION
 
         $this->lexer->moveNext();
 
-        $className = $this->lexer->token['value'];
+        $className = $this->lexer->token->value;
 
         while (
             $this->lexer->lookahead !== null &&
-            $this->lexer->lookahead['position'] === ($this->lexer->token['position'] +
-            strlen($this->lexer->token['value'])) &&
+            $this->lexer->lookahead->position === ($this->lexer->token->position +
+            strlen($this->lexer->token->value)) &&
             $this->lexer->isNextToken(DocLexer::T_NAMESPACE_SEPARATOR)
         ) {
             $this->match(DocLexer::T_NAMESPACE_SEPARATOR);
             $this->matchAny(self::$classIdentifiers);
 
-            $className .= '\\' . $this->lexer->token['value'];
+            $className .= '\\' . $this->lexer->token->value;
         }
 
         return $className;
@@ -1215,7 +1215,7 @@ EXCEPTION
     {
         $peek = $this->lexer->glimpse();
 
-        if ($peek['type'] === DocLexer::T_EQUALS) {
+        if ($peek->type === DocLexer::T_EQUALS) {
             return $this->FieldAssignment();
         }
 
@@ -1244,21 +1244,21 @@ EXCEPTION
             return $this->Constant();
         }
 
-        switch ($this->lexer->lookahead['type']) {
+        switch ($this->lexer->lookahead->type) {
             case DocLexer::T_STRING:
                 $this->match(DocLexer::T_STRING);
 
-                return $this->lexer->token['value'];
+                return $this->lexer->token->value;
 
             case DocLexer::T_INTEGER:
                 $this->match(DocLexer::T_INTEGER);
 
-                return (int) $this->lexer->token['value'];
+                return (int) $this->lexer->token->value;
 
             case DocLexer::T_FLOAT:
                 $this->match(DocLexer::T_FLOAT);
 
-                return (float) $this->lexer->token['value'];
+                return (float) $this->lexer->token->value;
 
             case DocLexer::T_TRUE:
                 $this->match(DocLexer::T_TRUE);
@@ -1290,7 +1290,7 @@ EXCEPTION
     private function FieldAssignment(): stdClass
     {
         $this->match(DocLexer::T_IDENTIFIER);
-        $fieldName = $this->lexer->token['value'];
+        $fieldName = $this->lexer->token->value;
 
         $this->match(DocLexer::T_EQUALS);
 
@@ -1365,14 +1365,14 @@ EXCEPTION
         $peek = $this->lexer->glimpse();
 
         if (
-            $peek['type'] === DocLexer::T_EQUALS
-                || $peek['type'] === DocLexer::T_COLON
+            $peek->type === DocLexer::T_EQUALS
+                || $peek->type === DocLexer::T_COLON
         ) {
             if ($this->lexer->isNextToken(DocLexer::T_IDENTIFIER)) {
                 $key = $this->Constant();
             } else {
                 $this->matchAny([DocLexer::T_INTEGER, DocLexer::T_STRING]);
-                $key = $this->lexer->token['value'];
+                $key = $this->lexer->token->value;
             }
 
             $this->matchAny([DocLexer::T_EQUALS, DocLexer::T_COLON]);
