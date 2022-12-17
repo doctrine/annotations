@@ -1,7 +1,5 @@
 <?php
 
-use Doctrine\Common\Annotations\AnnotationRegistry;
-
 /*
  * This file bootstraps the test environment.
  */
@@ -22,8 +20,3 @@ spl_autoload_register(static function ($class) {
 });
 
 require_once __DIR__ . '/../../../vendor/autoload.php';
-
-AnnotationRegistry::registerAutoloadNamespace(
-    'Doctrine\Tests\Common\Annotations\Fixtures',
-    __DIR__ . '/../../'
-);
