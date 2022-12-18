@@ -6,7 +6,6 @@ use Doctrine\Common\Annotations\Annotation;
 use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\AnnotationException;
-use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
@@ -1314,11 +1313,6 @@ DOCBLOCK;
         );
 
         $parser = new DocParser();
-
-        AnnotationRegistry::registerAutoloadNamespace(
-            'Doctrine\Tests\Common\Annotations\Fixtures\Annotation',
-            __DIR__ . '/../../../../'
-        );
 
         $parser->setImports([
             'autoload' => Fixtures\Annotation\Autoload::class,

@@ -79,23 +79,11 @@ with Doctrine Annotations requires this setup:
 .. code-block:: php
 
     use Doctrine\Common\Annotations\AnnotationReader;
-    use Doctrine\Common\Annotations\AnnotationRegistry;
-
-    AnnotationRegistry::registerFile("/path/to/doctrine/lib/Doctrine/ORM/Mapping/Driver/DoctrineAnnotations.php");
-    AnnotationRegistry::registerAutoloadNamespace("Symfony\Component\Validator\Constraint", "/path/to/symfony/src");
-    AnnotationRegistry::registerAutoloadNamespace("MyProject\Annotations", "/path/to/myproject/src");
 
     $reader = new AnnotationReader();
     AnnotationReader::addGlobalIgnoredName('dummy');
 
-The second block with the annotation registry calls registers all the
-three different annotation namespaces that are used.
-Doctrine Annotations saves all its annotations in a single file, that is
-why ``AnnotationRegistry#registerFile`` is used in contrast to
-``AnnotationRegistry#registerAutoloadNamespace`` which creates a PSR-0
-compatible loading mechanism for class to file names.
-
-In the third block, we create the actual ``AnnotationReader`` instance.
+We create the actual ``AnnotationReader`` instance.
 Note that we also add ``dummy`` to the global list of ignored
 annotations for which we do not throw exceptions. Setting this is
 necessary in our example case, otherwise ``@dummy`` would trigger an
@@ -164,57 +152,6 @@ class name you can wrap the reader in an ``IndexedReader``:
     only the other way around. This way you can re-use the cache with
     indexed or numeric keys, otherwise your code may experience failures
     due to caching in a numerical or indexed format.
-
-Registering Annotations
-~~~~~~~~~~~~~~~~~~~~~~~
-
-As explained in the introduction, Doctrine Annotations uses its own
-autoloading mechanism to determine if a given annotation has a
-corresponding PHP class that can be autoloaded. For annotation
-autoloading you have to configure the
-``Doctrine\Common\Annotations\AnnotationRegistry``. There are three
-different mechanisms to configure annotation autoloading:
-
-- Calling ``AnnotationRegistry#registerFile($file)`` to register a file
-  that contains one or more annotation classes.
-- Calling ``AnnotationRegistry#registerNamespace($namespace, $dirs =
-  null)`` to register that the given namespace contains annotations and
-  that their base directory is located at the given $dirs or in the
-  include path if ``NULL`` is passed. The given directories should *NOT*
-  be the directory where classes of the namespace are in, but the base
-  directory of the root namespace. The AnnotationRegistry uses a
-  namespace to directory separator approach to resolve the correct path.
-- Calling ``AnnotationRegistry#registerLoader($callable)`` to register
-  an autoloader callback. The callback accepts the class as first and
-  only parameter and has to return ``true`` if the corresponding file
-  was found and included.
-
-.. note::
-
-    Loaders have to fail silently, if a class is not found even if it
-    matches for example the namespace prefix of that loader. Never is a
-    loader to throw a warning or exception if the loading failed
-    otherwise parsing doc block annotations will become a huge pain.
-
-A sample loader callback could look like:
-
-.. code-block:: php
-
-    use Doctrine\Common\Annotations\AnnotationRegistry;
-    use Symfony\Component\ClassLoader\UniversalClassLoader;
-
-    AnnotationRegistry::registerLoader(function($class) {
-        $file = str_replace("\\", DIRECTORY_SEPARATOR, $class) . ".php";
-
-        if (file_exists("/my/base/path/" . $file)) {
-            // file_exists() makes sure that the loader fails silently
-            require "/my/base/path/" . $file;
-        }
-    });
-
-    $loader = new UniversalClassLoader();
-    AnnotationRegistry::registerLoader(array($loader, "loadClass"));
-
 
 Ignoring missing exceptions
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
