@@ -19,11 +19,9 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a Syntax error.
      *
-     * @param string $message Exception message
-     *
      * @return AnnotationException
      */
-    public static function syntaxError($message)
+    public static function syntaxError(string $message)
     {
         return new self('[Syntax Error] ' . $message);
     }
@@ -31,11 +29,9 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a Semantical error.
      *
-     * @param string $message Exception message
-     *
      * @return AnnotationException
      */
-    public static function semanticalError($message)
+    public static function semanticalError(string $message)
     {
         return new self('[Semantical Error] ' . $message);
     }
@@ -44,11 +40,9 @@ class AnnotationException extends Exception
      * Creates a new AnnotationException describing an error which occurred during
      * the creation of the annotation.
      *
-     * @param string $message
-     *
      * @return AnnotationException
      */
-    public static function creationError($message, ?Throwable $previous = null)
+    public static function creationError(string $message, ?Throwable $previous = null)
     {
         return new self('[Creation Error] ' . $message, 0, $previous);
     }
@@ -56,11 +50,9 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a type error.
      *
-     * @param string $message
-     *
      * @return AnnotationException
      */
-    public static function typeError($message)
+    public static function typeError(string $message)
     {
         return new self('[Type Error] ' . $message);
     }
@@ -68,12 +60,9 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a constant semantical error.
      *
-     * @param string $identifier
-     * @param string $context
-     *
      * @return AnnotationException
      */
-    public static function semanticalErrorConstants($identifier, $context = null)
+    public static function semanticalErrorConstants(string $identifier, ?string $context = null)
     {
         return self::semanticalError(sprintf(
             "Couldn't find constant %s%s.",
@@ -85,16 +74,17 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing an type error of an attribute.
      *
-     * @param string $attributeName
-     * @param string $annotationName
-     * @param string $context
-     * @param string $expected
-     * @param mixed  $actual
+     * @param mixed $actual
      *
      * @return AnnotationException
      */
-    public static function attributeTypeError($attributeName, $annotationName, $context, $expected, $actual)
-    {
+    public static function attributeTypeError(
+        string $attributeName,
+        string $annotationName,
+        string $context,
+        string $expected,
+        $actual
+    ) {
         return self::typeError(sprintf(
             'Attribute "%s" of @%s declared on %s expects %s, but got %s.',
             $attributeName,
@@ -108,15 +98,14 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing an required error of an attribute.
      *
-     * @param string $attributeName
-     * @param string $annotationName
-     * @param string $context
-     * @param string $expected
-     *
      * @return AnnotationException
      */
-    public static function requiredError($attributeName, $annotationName, $context, $expected)
-    {
+    public static function requiredError(
+        string $attributeName,
+        string $annotationName,
+        string $context,
+        string $expected
+    ) {
         return self::typeError(sprintf(
             'Attribute "%s" of @%s declared on %s expects %s. This value should not be null.',
             $attributeName,
@@ -129,16 +118,18 @@ class AnnotationException extends Exception
     /**
      * Creates a new AnnotationException describing a invalid enummerator.
      *
-     * @param string $attributeName
-     * @param string $annotationName
-     * @param string $context
-     * @param mixed  $given
-     * @phpstan-param list<string>        $available
+     * @param mixed $given
+     * @phpstan-param list<string> $available
      *
      * @return AnnotationException
      */
-    public static function enumeratorError($attributeName, $annotationName, $context, $available, $given)
-    {
+    public static function enumeratorError(
+        string $attributeName,
+        string $annotationName,
+        string $context,
+        array $available,
+        $given
+    ) {
         return new self(sprintf(
             '[Enum Error] Attribute "%s" of @%s declared on %s accepts only [%s], but got %s.',
             $attributeName,

@@ -48,20 +48,16 @@ class AnnotationReader implements Reader
 
     /**
      * Add a new annotation to the globally ignored annotation names with regard to exception handling.
-     *
-     * @param string $name
      */
-    public static function addGlobalIgnoredName($name)
+    public static function addGlobalIgnoredName(string $name)
     {
         self::$globalIgnoredNames[$name] = true;
     }
 
     /**
      * Add a new annotation to the globally ignored annotation namespaces with regard to exception handling.
-     *
-     * @param string $namespace
      */
-    public static function addGlobalIgnoredNamespace($namespace)
+    public static function addGlobalIgnoredNamespace(string $namespace)
     {
         self::$globalIgnoredNamespaces[$namespace] = true;
     }

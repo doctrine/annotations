@@ -286,7 +286,7 @@ final class DocParser
      *
      * @return void
      */
-    public function setIgnoredAnnotationNamespaces($ignoredAnnotationNamespaces)
+    public function setIgnoredAnnotationNamespaces(array $ignoredAnnotationNamespaces)
     {
         $this->ignoredAnnotationNamespaces = $ignoredAnnotationNamespaces;
     }
@@ -294,25 +294,21 @@ final class DocParser
     /**
      * Sets ignore on not-imported annotations.
      *
-     * @param bool $bool
-     *
      * @return void
      */
-    public function setIgnoreNotImportedAnnotations($bool)
+    public function setIgnoreNotImportedAnnotations(bool $bool)
     {
-        $this->ignoreNotImportedAnnotations = (bool) $bool;
+        $this->ignoreNotImportedAnnotations = $bool;
     }
 
     /**
      * Sets the default namespaces.
      *
-     * @param string $namespace
-     *
      * @return void
      *
      * @throws RuntimeException
      */
-    public function addNamespace($namespace)
+    public function addNamespace(string $namespace)
     {
         if ($this->imports) {
             throw new RuntimeException('You must either use addNamespace(), or setImports(), but not both.');
@@ -342,11 +338,9 @@ final class DocParser
     /**
      * Sets current target context as bitmask.
      *
-     * @param int $target
-     *
      * @return void
      */
-    public function setTarget($target)
+    public function setTarget(int $target)
     {
         $this->target = $target;
     }
@@ -354,15 +348,12 @@ final class DocParser
     /**
      * Parses the given docblock string for annotations.
      *
-     * @param string $input   The docblock string to parse.
-     * @param string $context The parsing context.
-     *
      * @phpstan-return list<object> Array of annotations. If no annotations are found, an empty array is returned.
      *
      * @throws AnnotationException
      * @throws ReflectionException
      */
-    public function parse($input, $context = '')
+    public function parse(string $input, string $context = '')
     {
         $pos = $this->findInitialTokenPosition($input);
         if ($pos === null) {
@@ -379,10 +370,8 @@ final class DocParser
 
     /**
      * Finds the first valid annotation
-     *
-     * @param string $input The docblock string to parse
      */
-    private function findInitialTokenPosition($input): ?int
+    private function findInitialTokenPosition(string $input): ?int
     {
         $pos = 0;
 

@@ -5,5 +5,9 @@
 implement `ArrayAccess` as a way for you to still be able to treat them as
 arrays in some ways.
 - `CachedReader` and `FileCacheReader` have been removed.
-- `AnnotationRegistry` method related to registering annotations instead of
+- `AnnotationRegistry` methods related to registering annotations instead of
   using autoloading have been removed.
+- Parameter type declarations have been added to all methods of all classes. If
+you have classes inheriting from classes inside this package, you should add
+parameter and return type declarations.
+- Support for PHP < 7.2 has been removed
