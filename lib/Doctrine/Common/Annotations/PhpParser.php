@@ -70,7 +70,7 @@ final class PhpParser
      *
      * @return string|null The content of the file or null if the file does not exist.
      */
-    private function getFileContent($filename, $lineNumber)
+    private function getFileContent(string $filename, $lineNumber)
     {
         if (! is_file($filename)) {
             return null;

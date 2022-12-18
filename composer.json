@@ -32,17 +32,17 @@
     ],
     "homepage": "https://www.doctrine-project.org/projects/annotations.html",
     "require": {
-        "php": "^7.1 || ^8.0",
+        "php": "^7.2 || ^8.0",
         "ext-tokenizer": "*",
         "doctrine/lexer": "^2",
         "psr/cache": "^1 || ^2 || ^3"
     },
     "require-dev": {
-        "doctrine/cache": "^1.11 || ^2.0",
-        "doctrine/coding-standard": "^9 || ^10",
-        "phpstan/phpstan": "~1.4.10 || ^1.8.0",
+        "doctrine/cache": "^2.0",
+        "doctrine/coding-standard": "^10",
+        "phpstan/phpstan": "^1.8.0",
         "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-        "symfony/cache": "^4.4 || ^5.4 || ^6",
+        "symfony/cache": "^5.4 || ^6",
         "vimeo/psalm": "^4.10"
     },
     "suggest": {
