@@ -14,3 +14,5 @@ arrays in some ways.
 you have classes inheriting from classes inside this package, you should add
 parameter and return type declarations.
 - Support for PHP < 7.2 has been removed
+- `PhpParser::parseClass()` has been removed. Use
+  `PhpParser::parseUseStatements()` instead.

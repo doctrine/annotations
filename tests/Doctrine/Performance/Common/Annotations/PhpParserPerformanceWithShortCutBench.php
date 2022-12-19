@@ -31,6 +31,6 @@ final class PhpParserPerformanceWithShortCutBench
      */
     public function bench(): void
     {
-        $this->parser->parseClass($this->class);
+        $this->parser->parseUseStatements($this->class);
     }
 }
