@@ -7,7 +7,6 @@ use Doctrine\Common\Annotations\Annotation\NamedArgumentConstructor;
 use Doctrine\Common\Annotations\Annotation\Target;
 use Doctrine\Common\Annotations\AnnotationException;
 use Doctrine\Common\Annotations\DocParser;
-use Doctrine\Common\Annotations\NamedArgumentConstructorAnnotation;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationTargetAll;
 use Doctrine\Tests\Common\Annotations\Fixtures\AnnotationWithConstants;
 use Doctrine\Tests\Common\Annotations\Fixtures\ClassWithConstants;
@@ -1602,42 +1601,6 @@ DOCBLOCK;
         self::assertInstanceOf(SomeAnnotationClassNameWithoutConstructorAndProperties::class, $result[0]);
     }
 
-    public function testNamedArgumentsConstructorInterface(): void
-    {
-        $result = $this
-            ->createTestParser()
-            ->parse('/** @NamedAnnotation(foo="baz", bar=2222) */');
-
-        self::assertCount(1, $result);
-        self::assertInstanceOf(NamedAnnotation::class, $result[0]);
-        self::assertSame('baz', $result[0]->getFoo());
-        self::assertSame(2222, $result[0]->getBar());
-    }
-
-    public function testNamedReorderedArgumentsConstructorInterface(): void
-    {
-        $result = $this
-            ->createTestParser()
-            ->parse('/** @NamedAnnotation(bar=2222, foo="baz") */');
-
-        self::assertCount(1, $result);
-        self::assertInstanceOf(NamedAnnotation::class, $result[0]);
-        self::assertSame('baz', $result[0]->getFoo());
-        self::assertSame(2222, $result[0]->getBar());
-    }
-
-    public function testNamedArgumentsConstructorInterfaceWithDefaultValue(): void
-    {
-        $result = $this
-            ->createTestParser()
-            ->parse('/** @NamedAnnotation(foo="baz") */');
-
-        self::assertCount(1, $result);
-        self::assertInstanceOf(NamedAnnotation::class, $result[0]);
-        self::assertSame('baz', $result[0]->getFoo());
-        self::assertSame(1234, $result[0]->getBar());
-    }
-
     public function testNamedArgumentsConstructorAnnotation(): void
     {
         $result = $this
@@ -1748,31 +1711,6 @@ DOCBLOCK;
         } else {
             parent::expectExceptionMessageRegExp($regularExpression);
         }
-    }
-}
-
-/** @Annotation */
-class NamedAnnotation implements NamedArgumentConstructorAnnotation
-{
-    /** @var string */
-    private $foo;
-    /** @var int */
-    private $bar;
-
-    public function __construct(string $foo, int $bar = 1234)
-    {
-        $this->foo = $foo;
-        $this->bar = $bar;
-    }
-
-    public function getFoo(): string
-    {
-        return $this->foo;
-    }
-
-    public function getBar(): int
-    {
-        return $this->bar;
     }
 }
 

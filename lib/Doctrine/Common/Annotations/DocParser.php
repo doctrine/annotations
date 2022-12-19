@@ -523,8 +523,7 @@ final class DocParser
             'is_annotation'    => strpos($docComment, '@Annotation') !== false,
         ];
 
-        $metadata['has_named_argument_constructor'] = $metadata['has_constructor']
-            && $class->implementsInterface(NamedArgumentConstructorAnnotation::class);
+        $metadata['has_named_argument_constructor'] = false;
 
         // verify that the class is really meant to be an annotation
         if ($metadata['is_annotation']) {
