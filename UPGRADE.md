@@ -1,5 +1,7 @@
 # Upgrade from 1.0.x to 2.0.x
 
+- The `NamedArgumentConstructorAnnotation` has been removed. Use the `@NamedArgumentConstructor`
+  annotation instead.
 - `SimpleAnnotationReader` has been removed.
 - `DocLexer::peek()` and `DocLexer::glimpse` now return
 `Doctrine\Common\Lexer\Token` objects. When using `doctrine/lexer` 2, these
