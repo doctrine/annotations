@@ -940,31 +940,7 @@ EXCEPTION
                 return $this->instantiateAnnotiation($originalName, $this->context, $name, $values);
             }
 
-            $positionalValues = [];
-            foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
-                $positionalValues[$parameter['position']] = $parameter['default'];
-            }
-
-            foreach ($values as $property => $value) {
-                if (! isset(self::$annotationMetadata[$name]['constructor_args'][$property])) {
-                    throw AnnotationException::creationError(sprintf(
-                        <<<'EXCEPTION'
-The annotation @%s declared on %s does not have a property named "%s"
-that can be set through its named arguments constructor.
-Available named arguments: %s
-EXCEPTION
-                        ,
-                        $originalName,
-                        $this->context,
-                        $property,
-                        implode(', ', array_keys(self::$annotationMetadata[$name]['constructor_args']))
-                    ));
-                }
-
-                $positionalValues[self::$annotationMetadata[$name]['constructor_args'][$property]['position']] = $value;
-            }
-
-            return $this->instantiateAnnotiation($originalName, $this->context, $name, $positionalValues);
+            return $this->instantiateAnnotiation($originalName, $this->context, $name, array_values($values));
         }
 
         // check if the annotation expects values via the constructor,
