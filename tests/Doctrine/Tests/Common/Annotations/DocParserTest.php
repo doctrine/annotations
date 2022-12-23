@@ -29,6 +29,7 @@ use function sprintf;
 use function ucfirst;
 
 use const PHP_EOL;
+use const PHP_VERSION_ID;
 
 class DocParserTest extends TestCase
 {
@@ -326,8 +327,6 @@ DOCBLOCK;
  */
 DOCBLOCK;
 
-        // todo: remove if we need incorrect (legacy) behavior
-        // self::expectExceptionMessage('Named parameter $name overwrites previous argument', $e->getMessage());
         $result = $parser->parse($docblock);
         self::assertCount(1, $result);
         $annot = $result[0];
@@ -1953,7 +1952,7 @@ class SomeAnnotationWithConstructorWithVariadicParam
         $this->data = $data;
     }
 
-    /** @var array */
+    /** @var mixed */
     public $data;
 
     /** @var string */

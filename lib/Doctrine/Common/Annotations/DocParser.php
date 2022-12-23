@@ -607,11 +607,13 @@ final class DocParser
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
                     ];
-                    if (! $parameter->isVariadic()) {
-                        $metadata['constructor_args'][$parameter->getName()]['default'] = $parameter->isOptional()
-                            ? $parameter->getDefaultValue()
-                            : null;
+                    if ($parameter->isVariadic()) {
+                        continue;
                     }
+
+                    $metadata['constructor_args'][$parameter->getName()]['default'] = $parameter->isOptional()
+                        ? $parameter->getDefaultValue()
+                        : null;
                 }
             }
         }
@@ -1414,19 +1416,9 @@ EXCEPTION
 
                 switch (true) {
                     case $hasPositional && $hasNamed:
-                        // Legacy behavior
                         $value = $namedArguments[$property];
                         unset($namedArguments[$property], $positionalArguments[$position]);
                         break;
-
-                        /**
-                         * todo: remove if we need the legacy behavior that is incorrect for PHP attributes
-                         * @see \Doctrine\Tests\Common\Annotations\DocParserTest::testNamedArgumentsConstructorAnnotationWithDefaultPropertySet
-                         */
-                        // // Valid behavior
-                        // throw AnnotationException::semanticalError(
-                        //     sprintf('Named parameter $%s overwrites previous argument.', $property)
-                        // );
                     case $hasPositional:
                         $value = $positionalArguments[$position];
                         unset($positionalArguments[$position]);
