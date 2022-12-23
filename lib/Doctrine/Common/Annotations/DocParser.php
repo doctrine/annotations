@@ -538,7 +538,6 @@ final class DocParser
 
         $metadata['has_named_argument_constructor'] = $metadata['has_constructor']
             && $class->implementsInterface(NamedArgumentConstructorAnnotation::class);
-        $metadata['is_variadic']                    = $metadata['has_constructor'] && $constructor->isVariadic();
 
         // verify that the class is really meant to be an annotation
         if ($metadata['is_annotation']) {
@@ -618,6 +617,7 @@ final class DocParser
                 foreach ($constructor->getParameters() as $parameter) {
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
+                        'is_variadic' => $parameter->isVariadic(),
                     ];
                     if ($parameter->isVariadic()) {
                         continue;
@@ -954,7 +954,34 @@ EXCEPTION
                 return $this->instantiateAnnotiation($originalName, $this->context, $name, $values);
             }
 
-            return $this->instantiateAnnotiation($originalName, $this->context, $name, array_values($values));
+            $positionalValues = [];
+            foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
+                if (!array_key_exists('default', $parameter)) {
+                    break;
+                }
+                $positionalValues[$parameter['position']] = $parameter['default'];
+            }
+
+            foreach ($values as $property => $value) {
+                if (! isset(self::$annotationMetadata[$name]['constructor_args'][$property])) {
+                    throw AnnotationException::creationError(sprintf(
+                        <<<'EXCEPTION'
+The annotation @%s declared on %s does not have a property named "%s"
+that can be set through its named arguments constructor.
+Available named arguments: %s
+EXCEPTION
+                        ,
+                        $originalName,
+                        $this->context,
+                        $property,
+                        implode(', ', array_keys(self::$annotationMetadata[$name]['constructor_args']))
+                    ));
+                }
+
+                $positionalValues[self::$annotationMetadata[$name]['constructor_args'][$property]['position']] = $value;
+            }
+
+            return $this->instantiateAnnotiation($originalName, $this->context, $name, $positionalValues);
         }
 
         // check if the annotation expects values via the constructor,
@@ -1419,41 +1446,32 @@ EXCEPTION
                 $lastPosition = $position;
             }
 
-            $isVariadic = self::$annotationMetadata[$name]['is_variadic'] ?? false;
             foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
+                if ($parameter['is_variadic']) {
+                    break;
+                }
+                if (array_key_exists($property, $namedArguments)) {
+                    $values[$property] = $namedArguments[$property];
+                    unset($namedArguments[$property]);
+                    continue;
+                }
                 $position = $parameter['position'];
-
-                $hasPositional = array_key_exists($position, $positionalArguments);
-                $hasNamed      = array_key_exists($property, $namedArguments);
-
-                switch (true) {
-                    case $hasPositional && $hasNamed:
-                        $value = $namedArguments[$property];
-                        unset($namedArguments[$property], $positionalArguments[$position]);
-                        break;
-                    case $hasPositional:
-                        $value = $positionalArguments[$position];
-                        unset($positionalArguments[$position]);
-                        break;
-                    case $hasNamed:
-                        $value = $namedArguments[$property];
-                        unset($namedArguments[$property]);
-                        break;
-                    case array_key_exists('default', $parameter):
-                        $value = $parameter['default'];
-                        break;
-                    default:
-                        break 2;
+                if (isset($values[$property]) || ! isset($positionalArguments[$position])) {
+                    continue;
                 }
 
-                $values[] = $value;
+                $values[$property] = $positionalArguments[$position];
             }
 
-            if ($isVariadic) {
-                $values = array_merge($values, $positionalArguments, $namedArguments);
+            if ($namedArguments !== []) {
+                throw AnnotationException::creationError(sprintf(
+                    'The annotation constructor has no supported parameter%s %s.',
+                    count($namedArguments) > 1 ? 's' : '',
+                    '$' . implode(', $', array_keys($namedArguments))
+                ));
             }
         } else {
-            $values = $namedArguments;
+            $values = $arguments['named_arguments'] ?? [];
 
             if (count($positionalArguments) > 0 && ! isset($values['value'])) {
                 if (count($positionalArguments) === 1) {

@@ -226,7 +226,95 @@ DOCBLOCK;
         self::assertInstanceOf(Marker::class, $marker);
     }
 
-    public function testAnnotationWithConstructorWithVariadicParam(): void
+    public function testAnnotationWithConstructorWithVariadicParamAndExtraNamedArguments(): void
+    {
+        $parser = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", foo = "Foo", bar = "Bar")
+ */
+DOCBLOCK;
+
+        self::expectException(AnnotationException::class);
+        self::expectExceptionMessage('The annotation constructor has no supported parameters $foo, $bar');
+
+        $result = $parser->parse($docblock);
+        self::assertCount(1, $result);
+        $annot = $result[0];
+
+        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
+
+        self::assertSame('Some data', $annot->name);
+        self::assertSame([], $annot->data);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamAndExtraNamedArgumentsShuffled(): void
+    {
+        $parser = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam(foo = "Foo", name = "Some data", bar = "Bar")
+ */
+DOCBLOCK;
+
+        self::expectException(AnnotationException::class);
+        self::expectExceptionMessage('The annotation constructor has no supported parameters $foo, $bar');
+
+        $result = $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamAndCombinedNamedAndPositionalArguments(): void
+    {
+        $parser = $this->createTestParser();
+        // With positional first and combined variadic arguments
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", bar = "Bar")
+ */
+DOCBLOCK;
+
+        self::expectException(AnnotationException::class);
+        self::expectExceptionMessage('The annotation constructor has no supported parameter $bar');
+
+        $result = $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamPassOneNamedArgument(): void
+    {
+        $parser = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", data = "Foo")
+ */
+DOCBLOCK;
+
+        self::expectException(AnnotationException::class);
+        self::expectExceptionMessage('The annotation constructor has no supported parameter $data');
+
+        $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamPassPositionalArguments(): void
+    {
+        $parser = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", "Bar")
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+        self::assertCount(1, $result);
+        $annot = $result[0];
+
+        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
+
+        self::assertSame('Some data', $annot->name);
+        // Positional extra arguments will be ignored
+        self::assertSame([], $annot->data);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamNoArgs(): void
     {
         $parser = $this->createTestParser();
 
@@ -245,102 +333,6 @@ DOCBLOCK;
 
         self::assertSame('Some data', $annot->name);
         self::assertSame([], $annot->data);
-
-        // With named arguments
-        $docblock = <<<'DOCBLOCK'
-/**
- * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", foo = "Foo", bar = "Bar")
- */
-DOCBLOCK;
-
-        $result = $parser->parse($docblock);
-        self::assertCount(1, $result);
-        $annot = $result[0];
-
-        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
-
-        self::assertSame('Some data', $annot->name);
-        if (PHP_VERSION_ID >= 80000) {
-            self::assertSame(['foo' => 'Foo', 'bar' => 'Bar'], $annot->data);
-        } else {
-            self::assertSame(['Foo', 'Bar'], $annot->data);
-        }
-
-        // With named arguments shuffled
-        $docblock = <<<'DOCBLOCK'
-/**
- * @SomeAnnotationWithConstructorWithVariadicParam(foo = "Foo", name = "Some data", bar = "Bar")
- */
-DOCBLOCK;
-
-        $result = $parser->parse($docblock);
-        self::assertCount(1, $result);
-        $annot = $result[0];
-
-        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
-
-        self::assertSame('Some data', $annot->name);
-        if (PHP_VERSION_ID >= 80000) {
-            self::assertSame(['foo' => 'Foo', 'bar' => 'Bar'], $annot->data);
-        } else {
-            self::assertSame(['Foo', 'Bar'], $annot->data);
-        }
-
-        // Unnamed arguments
-        $docblock = <<<'DOCBLOCK'
-/**
- * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", "Bar")
- */
-DOCBLOCK;
-
-        $result = $parser->parse($docblock);
-        self::assertCount(1, $result);
-        $annot = $result[0];
-
-        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
-
-        self::assertSame('Some data', $annot->name);
-        self::assertSame(['Foo', 'Bar'], $annot->data);
-
-        // With positional first and combined variadic arguments
-        $docblock = <<<'DOCBLOCK'
-/**
- * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", bar = "Bar")
- */
-DOCBLOCK;
-
-        $result = $parser->parse($docblock);
-        self::assertCount(1, $result);
-        $annot = $result[0];
-
-        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
-
-        self::assertSame('Some data', $annot->name);
-        if (PHP_VERSION_ID >= 80000) {
-            self::assertSame(['Foo', 'bar' => 'Bar'], $annot->data);
-        } else {
-            self::assertSame(['Foo', 'Bar'], $annot->data);
-        }
-
-        // With named variadic argument that conflicts with the first parameter
-        $docblock = <<<'DOCBLOCK'
-/**
- * @SomeAnnotationWithConstructorWithVariadicParam("Some data", foo = "Foo", name = "Test", bar = "Bar")
- */
-DOCBLOCK;
-
-        $result = $parser->parse($docblock);
-        self::assertCount(1, $result);
-        $annot = $result[0];
-
-        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
-
-        self::assertSame('Test', $annot->name);
-        if (PHP_VERSION_ID >= 80000) {
-            self::assertSame(['foo' => 'Foo', 'bar' => 'Bar'], $annot->data);
-        } else {
-            self::assertSame(['Foo', 'Bar'], $annot->data);
-        }
     }
 
     public function testAnnotationWithoutConstructor(): void
