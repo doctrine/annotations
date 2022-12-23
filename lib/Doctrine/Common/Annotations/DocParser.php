@@ -17,7 +17,6 @@ use Throwable;
 use function array_key_exists;
 use function array_keys;
 use function array_map;
-use function array_merge;
 use function array_pop;
 use function array_values;
 use function class_exists;
@@ -956,9 +955,10 @@ EXCEPTION
 
             $positionalValues = [];
             foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
-                if (!array_key_exists('default', $parameter)) {
+                if (! array_key_exists('default', $parameter)) {
                     break;
                 }
+
                 $positionalValues[$parameter['position']] = $parameter['default'];
             }
 
@@ -1450,11 +1450,13 @@ EXCEPTION
                 if ($parameter['is_variadic']) {
                     break;
                 }
+
                 if (array_key_exists($property, $namedArguments)) {
                     $values[$property] = $namedArguments[$property];
                     unset($namedArguments[$property]);
                     continue;
                 }
+
                 $position = $parameter['position'];
                 if (isset($values[$property]) || ! isset($positionalArguments[$position])) {
                     continue;

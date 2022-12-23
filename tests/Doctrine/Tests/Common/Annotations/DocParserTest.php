@@ -31,7 +31,6 @@ use function sprintf;
 use function ucfirst;
 
 use const PHP_EOL;
-use const PHP_VERSION_ID;
 
 class DocParserTest extends TestCase
 {
@@ -228,7 +227,7 @@ DOCBLOCK;
 
     public function testAnnotationWithConstructorWithVariadicParamAndExtraNamedArguments(): void
     {
-        $parser = $this->createTestParser();
+        $parser   = $this->createTestParser();
         $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", foo = "Foo", bar = "Bar")
@@ -250,7 +249,7 @@ DOCBLOCK;
 
     public function testAnnotationWithConstructorWithVariadicParamAndExtraNamedArgumentsShuffled(): void
     {
-        $parser = $this->createTestParser();
+        $parser   = $this->createTestParser();
         $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationWithConstructorWithVariadicParam(foo = "Foo", name = "Some data", bar = "Bar")
@@ -265,8 +264,7 @@ DOCBLOCK;
 
     public function testAnnotationWithConstructorWithVariadicParamAndCombinedNamedAndPositionalArguments(): void
     {
-        $parser = $this->createTestParser();
-        // With positional first and combined variadic arguments
+        $parser   = $this->createTestParser();
         $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", bar = "Bar")
@@ -276,12 +274,12 @@ DOCBLOCK;
         self::expectException(AnnotationException::class);
         self::expectExceptionMessage('The annotation constructor has no supported parameter $bar');
 
-        $result = $parser->parse($docblock);
+        $parser->parse($docblock);
     }
 
     public function testAnnotationWithConstructorWithVariadicParamPassOneNamedArgument(): void
     {
-        $parser = $this->createTestParser();
+        $parser   = $this->createTestParser();
         $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", data = "Foo")
@@ -296,7 +294,7 @@ DOCBLOCK;
 
     public function testAnnotationWithConstructorWithVariadicParamPassPositionalArguments(): void
     {
-        $parser = $this->createTestParser();
+        $parser   = $this->createTestParser();
         $docblock = <<<'DOCBLOCK'
 /**
  * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", "Bar")
