@@ -616,7 +616,6 @@ final class DocParser
                 foreach ($constructor->getParameters() as $parameter) {
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
-                        'is_variadic' => $parameter->isVariadic(),
                     ];
                     if ($parameter->isVariadic()) {
                         continue;
@@ -1447,7 +1446,8 @@ EXCEPTION
             }
 
             foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
-                if ($parameter['is_variadic']) {
+                // The parameter is variadic
+                if (!array_key_exists('default', $parameter)) {
                     break;
                 }
 
