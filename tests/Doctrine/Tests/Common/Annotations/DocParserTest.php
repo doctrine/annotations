@@ -2010,7 +2010,7 @@ class SomeAnnotationWithConstructorWithVariadicParam
         $this->data = $data;
     }
 
-    /** @var mixed */
+    /** @var string[] */
     public $data;
 
     /** @var string */
