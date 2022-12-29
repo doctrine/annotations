@@ -614,16 +614,16 @@ final class DocParser
                 $metadata['default_property'] = reset($metadata['properties']);
             } elseif ($metadata['has_named_argument_constructor']) {
                 foreach ($constructor->getParameters() as $parameter) {
-                    $metadata['constructor_args'][$parameter->getName()] = [
-                        'position' => $parameter->getPosition(),
-                    ];
                     if ($parameter->isVariadic()) {
-                        continue;
+                        break;
                     }
 
-                    $metadata['constructor_args'][$parameter->getName()]['default'] = $parameter->isOptional()
-                        ? $parameter->getDefaultValue()
-                        : null;
+                    $metadata['constructor_args'][$parameter->getName()] = [
+                        'position' => $parameter->getPosition(),
+                        'default'  => $parameter->isOptional()
+                            ? $parameter->getDefaultValue()
+                            : null,
+                    ];
                 }
             }
         }
@@ -954,10 +954,6 @@ EXCEPTION
 
             $positionalValues = [];
             foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
-                if (! array_key_exists('default', $parameter)) {
-                    break;
-                }
-
                 $positionalValues[$parameter['position']] = $parameter['default'];
             }
 
@@ -1446,11 +1442,6 @@ EXCEPTION
             }
 
             foreach (self::$annotationMetadata[$name]['constructor_args'] as $property => $parameter) {
-                // The parameter is variadic
-                if (!array_key_exists('default', $parameter)) {
-                    break;
-                }
-
                 if (array_key_exists($property, $namedArguments)) {
                     $values[$property] = $namedArguments[$property];
                     unset($namedArguments[$property]);
