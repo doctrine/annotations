@@ -5,21 +5,25 @@
     "docsSlug": "doctrine-annotations",
     "versions": [
         {
-            "name": "1.14",
-            "branchName": "1.14.x",
-            "slug": "latest",
-            "upcoming": true
-        },
-        {
-            "name": "1.13",
-            "branchName": "1.13.x",
-            "slug": "1.13",
+            "name": "2.0",
+            "branchName": "2.0.x",
             "aliases": [
                 "current",
                 "stable"
             ],
             "current": true,
             "maintained": true
+        },
+        {
+            "name": "1.14",
+            "branchName": "1.14.x",
+            "maintained": true
+        },
+        {
+            "name": "1.13",
+            "branchName": "1.13.x",
+            "slug": "1.13",
+            "maintained": false
         },
         {
             "name": "1.12",
