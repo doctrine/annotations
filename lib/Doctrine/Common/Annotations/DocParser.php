@@ -613,6 +613,10 @@ final class DocParser
                 $metadata['default_property'] = reset($metadata['properties']);
             } elseif ($metadata['has_named_argument_constructor']) {
                 foreach ($constructor->getParameters() as $parameter) {
+                    if ($parameter->isVariadic()) {
+                        break;
+                    }
+
                     $metadata['constructor_args'][$parameter->getName()] = [
                         'position' => $parameter->getPosition(),
                         'default' => $parameter->isOptional() ? $parameter->getDefaultValue() : null,
@@ -942,6 +946,23 @@ EXCEPTION
 
         if (self::$annotationMetadata[$name]['has_named_argument_constructor']) {
             if (PHP_VERSION_ID >= 80000) {
+                foreach ($values as $property => $value) {
+                    if (! isset(self::$annotationMetadata[$name]['constructor_args'][$property])) {
+                        throw AnnotationException::creationError(sprintf(
+                            <<<'EXCEPTION'
+The annotation @%s declared on %s does not have a property named "%s"
+that can be set through its named arguments constructor.
+Available named arguments: %s
+EXCEPTION
+                            ,
+                            $originalName,
+                            $this->context,
+                            $property,
+                            implode(', ', array_keys(self::$annotationMetadata[$name]['constructor_args']))
+                        ));
+                    }
+                }
+
                 return $this->instantiateAnnotiation($originalName, $this->context, $name, $values);
             }
 
