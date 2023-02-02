@@ -1649,6 +1649,18 @@ DOCBLOCK;
         self::assertSame(1234, $result[0]->getBar());
     }
 
+    public function testNamedArgumentsConstructorAnnotationWithExtraArguments(): void
+    {
+        $docParser = $this->createTestParser();
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessageMatches(
+            '/does not have a property named "invalid"\s.*\sAvailable named arguments: foo, bar/'
+        );
+
+        $docParser->parse('/** @AnotherNamedAnnotation(foo="baz", invalid="uh oh") */');
+    }
+
     public function testNamedArgumentsConstructorAnnotationWithDefaultPropertyAsArray(): void
     {
         $result = $this
@@ -1699,6 +1711,115 @@ DOCBLOCK;
 
             throw $exc;
         }
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamAndExtraNamedArguments(): void
+    {
+        $parser   = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", foo = "Foo", bar = "Bar")
+ */
+DOCBLOCK;
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessageMatches(
+            '/does not have a property named "foo"\s.*\sAvailable named arguments: name/'
+        );
+
+        $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamAndExtraNamedArgumentsShuffled(): void
+    {
+        $parser   = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam(foo = "Foo", name = "Some data", bar = "Bar")
+ */
+DOCBLOCK;
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessageMatches(
+            '/does not have a property named "foo"\s.*\sAvailable named arguments: name/'
+        );
+
+        $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamAndCombinedNamedAndPositionalArguments(): void
+    {
+        $parser   = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", bar = "Bar")
+ */
+DOCBLOCK;
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessageMatches(
+            '/does not have a property named "bar"\s.*\sAvailable named arguments: name/'
+        );
+
+        $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamPassOneNamedArgument(): void
+    {
+        $parser   = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam(name = "Some data", data = "Foo")
+ */
+DOCBLOCK;
+
+        $this->expectException(AnnotationException::class);
+        $this->expectExceptionMessageMatches(
+            '/does not have a property named "data"\s.*\sAvailable named arguments: name/'
+        );
+
+        $parser->parse($docblock);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamPassPositionalArguments(): void
+    {
+        $parser   = $this->createTestParser();
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam("Some data", "Foo", "Bar")
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+        self::assertCount(1, $result);
+        $annot = $result[0];
+
+        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
+
+        self::assertSame('Some data', $annot->name);
+        // Positional extra arguments will be ignored
+        self::assertSame([], $annot->data);
+    }
+
+    public function testAnnotationWithConstructorWithVariadicParamNoArgs(): void
+    {
+        $parser = $this->createTestParser();
+
+        // Without variadic arguments
+        $docblock = <<<'DOCBLOCK'
+/**
+ * @SomeAnnotationWithConstructorWithVariadicParam("Some data")
+ */
+DOCBLOCK;
+
+        $result = $parser->parse($docblock);
+        self::assertCount(1, $result);
+        $annot = $result[0];
+
+        self::assertInstanceOf(SomeAnnotationWithConstructorWithVariadicParam::class, $annot);
+
+        self::assertSame('Some data', $annot->name);
+        self::assertSame([], $annot->data);
     }
 
     /**
@@ -1780,6 +1901,25 @@ class NamedAnnotationWithArray
     {
         return $this->bar;
     }
+}
+
+/**
+ * @Annotation
+ * @NamedArgumentConstructor
+ */
+class SomeAnnotationWithConstructorWithVariadicParam
+{
+    public function __construct(string $name, string ...$data)
+    {
+        $this->name = $name;
+        $this->data = $data;
+    }
+
+    /** @var string[] */
+    public $data;
+
+    /** @var string */
+    public $name;
 }
 
 /** @Annotation */
