@@ -7,7 +7,7 @@
 `Doctrine\Common\Lexer\Token` objects. When using `doctrine/lexer` 2, these
 implement `ArrayAccess` as a way for you to still be able to treat them as
 arrays in some ways.
-- `CachedReader` and `FileCacheReader` have been removed.
+- `CachedReader` and `FileCacheReader` have been removed use `PsrCachedReader` instead.
 - `AnnotationRegistry` methods related to registering annotations instead of
   using autoloading have been removed.
 - Parameter type declarations have been added to all methods of all classes. If
