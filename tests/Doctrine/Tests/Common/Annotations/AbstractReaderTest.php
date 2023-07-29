@@ -661,7 +661,9 @@ class TestImportWithConcreteAnnotation
 class DummyClass2
 {
     /**
-     * @DummyId @DummyColumn(type="integer") @DummyGeneratedValue
+     * @DummyId
+     * @DummyColumn(type="integer")
+     * @DummyGeneratedValue
      * @var int
      */
     public $id;

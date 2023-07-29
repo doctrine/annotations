@@ -21,7 +21,7 @@ class DummyClass
     public $field1;
 
     /**
-     * @var mixed;
+     * @var mixed
      * @DummyJoinTable(name="join_table",
      *      joinColumns={@DummyJoinColumn(name="col1", referencedColumnName="col2")},
      *      inverseJoinColumns={
