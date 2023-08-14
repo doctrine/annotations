@@ -16,7 +16,6 @@ class ClassWithInvalidAnnotationTargetAtProperty
      */
     public $foo;
 
-
     /**
      * @var mixed
      * @AnnotationTargetAnnotation("Foo")

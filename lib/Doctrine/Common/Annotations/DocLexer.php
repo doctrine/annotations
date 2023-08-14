@@ -74,7 +74,7 @@ final class DocLexer extends AbstractLexer
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getCatchablePatterns()
     {
@@ -86,7 +86,7 @@ final class DocLexer extends AbstractLexer
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getNonCatchablePatterns()
     {
@@ -94,7 +94,7 @@ final class DocLexer extends AbstractLexer
     }
 
     /**
-     * {@inheritdoc}
+     * {@inheritDoc}
      */
     protected function getType(&$value)
     {

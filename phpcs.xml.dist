@@ -56,6 +56,11 @@
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php</exclude-pattern>
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
     </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.DocCommentSpacing">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/SimpleAnnotationReaderTest.php</exclude-pattern>
+    </rule>
     <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash.UseStartsWithBackslash">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
     </rule>
@@ -88,6 +93,7 @@
 
     <rule ref="SlevomatCodingStandard.Namespaces.ReferenceUsedNamesOnly.ReferenceViaFullyQualifiedName">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/PhpParserTest.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM141Test.php</exclude-pattern>
     </rule>
 
     <!-- It is easier to understand tests that involve annotations if you can
@@ -119,6 +125,7 @@
     <rule ref="SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingAnyTypeHint">
         <!-- there is a class property with an empty var annotation on purpose -->
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php</exclude-pattern>
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/DummyClass.php</exclude-pattern>
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/ClassWithValidAnnotationTarget.php</exclude-pattern>
     </rule>
 
