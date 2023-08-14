@@ -40,10 +40,10 @@
     "require-dev": {
         "doctrine/cache": "^1.11 || ^2.0",
         "doctrine/coding-standard": "^9 || ^12",
-        "phpstan/phpstan": "~1.4.10 || ^1.8.0",
+        "phpstan/phpstan": "~1.4.10 || ^1.10.28",
         "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
         "symfony/cache": "^4.4 || ^5.4 || ^6",
-        "vimeo/psalm": "^4.10"
+        "vimeo/psalm": "^4.30 || ^5.14"
     },
     "suggest": {
         "php": "PHP 8.0 or higher comes with attributes, a native replacement for annotations"
