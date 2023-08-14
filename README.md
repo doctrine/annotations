@@ -4,6 +4,13 @@ which are a native replacement for annotations. As such, this library is
 considered feature complete, and should receive exclusively bugfixes and
 security fixes.
 
+We do not recommend using this library in new projects and encourage authors
+of downstream libraries to offer support for attributes as an alternative to
+Doctrine Annotations.
+
+Have a look at [our blog](https://www.doctrine-project.org/2022/11/04/annotations-to-attributes.html)
+to learn more.
+
 # Doctrine Annotations
 
 [![Build Status](https://github.com/doctrine/annotations/workflows/Continuous%20Integration/badge.svg?label=build)](https://github.com/doctrine/persistence/actions)
