@@ -14,7 +14,6 @@ class ClassWithValidAnnotationTarget
     /** @AnnotationTargetPropertyMethod("Some data") */
     public $foo;
 
-
     /** @AnnotationTargetAll("Some data",name="Some name") */
     public $name;
 

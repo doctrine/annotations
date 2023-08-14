@@ -19,6 +19,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testImportDetectsNotImportedAnnotation(): void
     {
         $this->ignoreIssues();
+
         parent::testImportDetectsNotImportedAnnotation();
     }
 
@@ -31,6 +32,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testImportDetectsNonExistentAnnotation(): void
     {
         $this->ignoreIssues();
+
         parent::testImportDetectsNonExistentAnnotation();
     }
 
@@ -43,6 +45,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testClassWithInvalidAnnotationTargetAtClassDocBlock(): void
     {
         $this->ignoreIssues();
+
         parent::testClassWithInvalidAnnotationTargetAtClassDocBlock();
     }
 
@@ -55,6 +58,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testClassWithInvalidAnnotationTargetAtPropertyDocBlock(): void
     {
         $this->ignoreIssues();
+
         parent::testClassWithInvalidAnnotationTargetAtPropertyDocBlock();
     }
 
@@ -67,6 +71,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock(): void
     {
         $this->ignoreIssues();
+
         parent::testClassWithInvalidNestedAnnotationTargetAtPropertyDocBlock();
     }
 
@@ -79,6 +84,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testClassWithInvalidAnnotationTargetAtMethodDocBlock(): void
     {
         $this->ignoreIssues();
+
         parent::testClassWithInvalidAnnotationTargetAtMethodDocBlock();
     }
 
@@ -91,6 +97,7 @@ class SimpleAnnotationReaderTest extends AbstractReaderTest
     public function testErrorWhenInvalidAnnotationIsUsed(): void
     {
         $this->ignoreIssues();
+
         parent::testErrorWhenInvalidAnnotationIsUsed();
     }
 
