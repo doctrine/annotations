@@ -49,6 +49,8 @@ use const PHP_VERSION_ID;
  * A parser for docblock annotations.
  *
  * It is strongly discouraged to change the default annotation parsing process.
+ *
+ * @psalm-type Arguments = array{positional_arguments?: array<int, mixed>, named_arguments?: array<string, mixed>}
  */
 final class DocParser
 {
@@ -1038,7 +1040,7 @@ EXCEPTION
     /**
      * MethodCall ::= ["(" [Values] ")"]
      *
-     * @return mixed[]
+     * @psalm-return Arguments
      *
      * @throws AnnotationException
      * @throws ReflectionException
@@ -1065,7 +1067,7 @@ EXCEPTION
     /**
      * Values ::= Array | Value {"," Value}* [","]
      *
-     * @return mixed[]
+     * @psalm-return Arguments
      *
      * @throws AnnotationException
      * @throws ReflectionException
@@ -1427,7 +1429,7 @@ EXCEPTION
     /**
      * Resolve positional arguments (without name) to named ones
      *
-     * @param array<string,mixed> $arguments
+     * @psalm-param Arguments $arguments
      *
      * @return array<string,mixed>
      */
