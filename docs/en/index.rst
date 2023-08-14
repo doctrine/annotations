@@ -7,6 +7,10 @@ which are a native replacement for annotations. As such, this library is
 considered feature complete, and should receive exclusively bugfixes and
 security fixes.
 
+We do not recommend using this library in new projects and encourage authors
+of downstream libraries to offer support for attributes as an alternative to
+Doctrine Annotations.
+
 Introduction
 ============
 
@@ -38,7 +42,7 @@ You can install the Annotation component with composer:
 
 .. code-block::
 
-    $ composer require doctrine/annotations
+    $ composer require doctrine/annotations
 
 Create an annotation class
 ==========================
