@@ -1,5 +1,5 @@
 {
-    "active": true,
+    "active": false,
     "name": "Annotations",
     "slug": "annotations",
     "docsSlug": "doctrine-annotations",
