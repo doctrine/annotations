@@ -43,6 +43,11 @@ final class PhpParser
             return $reflection->getUseStatements();
         }
 
+        // we can't rely on the file's namespaces when the class is anonymous
+        if ($reflection->isAnonymous()) {
+            return [];
+        }
+
         $filename = $reflection->getFileName();
 
         if ($filename === false) {
