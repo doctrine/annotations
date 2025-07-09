@@ -137,7 +137,7 @@ type is applicable. Then you could define one or more targets:
 -  ``CLASS`` Allowed in class docblocks
 -  ``PROPERTY`` Allowed in property docblocks
 -  ``METHOD`` Allowed in the method docblocks
--  ``FUNCTION`` Allowed in function dockblocks
+-  ``FUNCTION`` Allowed in function docblocks
 -  ``ALL`` Allowed in class, property, method and function docblocks
 -  ``ANNOTATION`` Allowed inside other annotations
 
