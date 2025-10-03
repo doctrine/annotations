@@ -16,6 +16,6 @@ jobs:
     name: "PHPUnit"
     uses: "doctrine/.github/.github/workflows/continuous-integration.yml@5.0.1"
     with:
-      php-versions: '["7.2", "7.3", "7.4", "8.0", "8.1", "8.2", "8.3", "8.4"]'
+      php-versions: '["7.2", "7.3", "7.4", "8.0", "8.1", "8.2", "8.3", "8.4", "8.5"]'
     secrets:
       CODECOV_TOKEN: "${{ secrets.CODECOV_TOKEN }}"
