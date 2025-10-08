@@ -1,5 +1,6 @@
 {
     "name": "doctrine/annotations",
+    "abandoned": true,
     "description": "Docblock Annotations Parser",
     "license": "MIT",
     "type": "library",
