@@ -20,6 +20,8 @@ use function rawurlencode;
 use function time;
 use function touch;
 
+use const PHP_VERSION_ID;
+
 final class PsrCachedReaderTest extends AbstractReaderTest
 {
     /** @var CacheItemPoolInterface */
@@ -124,11 +126,17 @@ final class PsrCachedReaderTest extends AbstractReaderTest
         $classReader = new ReflectionClass(PsrCachedReader::class);
 
         $loadedAnnotationsProperty = $classReader->getProperty('loadedAnnotations');
-        $loadedAnnotationsProperty->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $loadedAnnotationsProperty->setAccessible(true);
+        }
+
         $this->assertCount(1, $loadedAnnotationsProperty->getValue($reader));
 
         $loadedFilemtimesProperty = $classReader->getProperty('loadedFilemtimes');
-        $loadedFilemtimesProperty->setAccessible(true);
+        if (PHP_VERSION_ID < 80100) {
+            $loadedFilemtimesProperty->setAccessible(true);
+        }
+
         $this->assertCount(3, $loadedFilemtimesProperty->getValue($reader));
 
         $reader->clearLoadedAnnotations();

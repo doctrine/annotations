@@ -85,6 +85,15 @@
     <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine.MultipleUsesPerLine">
         <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
     </rule>
+    <rule ref="Generic.WhiteSpace.LanguageConstructSpacing">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Classes.ValidClassName">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <exclude-pattern>*/tests/Doctrine/Tests/Common/Annotations/Fixtures/*</exclude-pattern>
+    </rule>
 
     <!-- https://github.com/slevomat/coding-standard/issues/1066 -->
     <rule ref="SlevomatCodingStandard.PHP.UselessParentheses">

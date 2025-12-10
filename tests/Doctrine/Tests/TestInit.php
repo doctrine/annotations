@@ -3,7 +3,7 @@
 /*
  * This file bootstraps the test environment.
  */
-error_reporting(E_ALL | E_STRICT);
+error_reporting(E_ALL);
 
 // register silently failing autoloader
 spl_autoload_register(static function ($class) {
