@@ -1,6 +1,6 @@
 parameters:
     level: 3
-    phpVersion: 80200
+    phpVersion: 80500
     paths:
         - lib
         - tests
@@ -14,12 +14,12 @@ parameters:
         - tests/Doctrine/Tests/Common/Annotations/ReservedKeywordsClasses.php
         - tests/Doctrine/Tests/Common/Annotations/Ticket/DCOM58Entity.php
         - tests/Doctrine/Tests/DoctrineTestCase.php
-        - tests/Doctrine/Tests/Common/Annotations/CachedReaderTest.php
     polluteScopeWithLoopInitialAssignments: true
     ignoreErrors:
         - '#Instantiated class Doctrine_Tests_Common_Annotations_Fixtures_ClassNoNamespaceNoComment not found#'
         - '#Property Doctrine\\Tests\\Common\\Annotations\\DummyClassNonAnnotationProblem::\$foo has unknown class#'
         - '#Call to an undefined static method PHPUnit\\Framework\\TestCase::expectExceptionMessageRegExp\(\)#'
 
-        # That tag is empty on purpose
-        - '#PHPDoc tag @var has invalid value \(\)\: Unexpected token "\*/", expected type at offset 9#'
+        -
+            identifier: phpDoc.parseError
+            path: tests/Doctrine/Tests/Common/Annotations/AbstractReaderTest.php

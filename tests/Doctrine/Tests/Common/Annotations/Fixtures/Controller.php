@@ -202,7 +202,10 @@ class Controller
                     $this->loadedAces[$aceId] = $ace;
 
                     $aceIdProperty = new \ReflectionProperty('Symfony\Component\Security\Acl\Domain\Entry', 'id');
-                    $aceIdProperty->setAccessible(true);
+                    if (PHP_VERSION_ID < 80100) {
+                        $aceIdProperty->setAccessible(true);
+                    }
+
                     $aceIdProperty->setValue($ace, (int) $aceId);
                 } else {
                     $currentIds[$ace->getId()] = true;
@@ -274,7 +277,10 @@ class Controller
                 $this->loadedAces[$aceId] = $ace;
 
                 $aceIdProperty = new \ReflectionProperty($ace, 'id');
-                $aceIdProperty->setAccessible(true);
+                if (PHP_VERSION_ID < 80100) {
+                    $aceIdProperty->setAccessible(true);
+                }
+
                 $aceIdProperty->setValue($ace, (int) $aceId);
             } else {
                 $currentIds[$ace->getId()] = true;

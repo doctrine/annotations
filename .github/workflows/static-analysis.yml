@@ -10,6 +10,28 @@ on:
       - "*.x"
 
 jobs:
-  static-analysis:
+  phpstan:
     name: "Static Analysis"
-    uses: "doctrine/.github/.github/workflows/static-analysis.yml@5.0.1"
+    uses: "doctrine/.github/.github/workflows/phpstan.yml@13.1.0"
+
+  psalm:
+    name: "Psalm (PHP: 8.2)"
+    runs-on: "ubuntu-22.04"
+
+    steps:
+      - name: "Checkout code"
+        uses: "actions/checkout@v6"
+
+      - name: "Install PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          coverage: "none"
+          php-version: "8.2"
+
+      - name: "Install dependencies with Composer"
+        uses: "ramsey/composer-install@v3"
+        with:
+          dependency-versions: "highest"
+
+      - name: "Run a static analysis with vimeo/psalm"
+        run: "vendor/bin/psalm --show-info=false --stats --output-format=github --threads=$(nproc)"

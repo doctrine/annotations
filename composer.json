@@ -1,9 +1,9 @@
 {
     "name": "doctrine/annotations",
-    "abandoned": true,
     "description": "Docblock Annotations Parser",
     "license": "MIT",
     "type": "library",
+    "abandoned": true,
     "keywords": [
         "annotations",
         "docblock",
@@ -39,11 +39,10 @@
         "psr/cache": "^1 || ^2 || ^3"
     },
     "require-dev": {
-        "doctrine/cache": "^2.0",
-        "doctrine/coding-standard": "^10",
-        "phpstan/phpstan": "^1.10.28",
+        "doctrine/coding-standard": "^11.1 || ^14",
+        "phpstan/phpstan": "^1.11 || ^2.1",
         "phpunit/phpunit": "^7.5 || ^8.5 || ^9.5",
-        "symfony/cache": "^5.4 || ^6.4 || ^7",
+        "symfony/cache": "^5.4 || ^6.4 || ^7.4 || ^8",
         "vimeo/psalm": "^4.30 || ^5.14"
     },
     "suggest": {
